@@ -36,26 +36,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 require 'header.php';
 ?>
 
-<!-- Breadcrumb -->
-<div class="w-full bg-slate-100 border-b border-slate-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center gap-2 text-sm text-slate-500">
-        <a href="index.php" class="hover:text-primary transition-colors flex items-center gap-1">
-            <span class="material-symbols-outlined text-base">home</span>Home
-        </a>
-        <span class="material-symbols-outlined text-base">chevron_right</span>
-        <span class="text-slate-800 font-semibold">Contact Us</span>
-    </div>
-</div>
-
 <main>
 <!-- Hero -->
-<section class="relative h-[400px] flex items-center justify-center overflow-hidden">
+<section class="relative h-[420px] flex items-center justify-center overflow-hidden">
     <div class="absolute inset-0 z-0">
-        <div class="absolute inset-0 bg-slate-900/60 z-10"></div>
         <img alt="Contact Hero" class="w-full h-full object-cover"
-             src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmOLTRvP0kIObCGKf40MDtQiiwGmO5sp1d8dzcjyBYU_CKcNUjuBJxopZXuD76rgayW732UTKMW1Qnr8cxd8FFIhAhWvzJWQgWNicYBWdcJjSt0Ek77WPV8UxkVCOrzH2DQLBYGQIG46Hgg5h1DiFG27QqJ0DebCiKMSZ0yqbmPV7b7_buEwQDN3XVND_P76nkBLOR4Amhrqo8dxRwwQWl96SNMOo73yfCxGG0pK1Qq5iNYpNq_yvjuiMQkt1Jwbc-MVzRKVoi4kus"/>
+             src="https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=1600&q=80"/>
+        <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-[#0a0705]"></div>
     </div>
-    <div class="relative z-20 text-center px-4 max-w-4xl mx-auto">
+    <!-- Breadcrumb at very top of hero -->
+    <div class="absolute top-0 left-0 right-0 z-20 pt-5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-2 text-sm text-white/60 flex-wrap">
+            <a href="index.php" class="hover:text-white transition-colors flex items-center gap-1">
+                <span class="material-symbols-outlined text-base">home</span>Home
+            </a>
+            <span class="material-symbols-outlined text-base">chevron_right</span>
+            <span class="text-white font-semibold">Contact Us</span>
+        </div>
+    </div>
+    <div class="relative z-10 text-center px-4 max-w-4xl mx-auto">
         <h1 class="text-5xl md:text-6xl font-serif font-black text-white mb-6">Get in Touch</h1>
         <p class="text-lg text-white/80 max-w-2xl mx-auto leading-relaxed">
             Our travel experts are available to help you plan the perfect Sambhajinagar experience. Reach out anytime.

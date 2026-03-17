@@ -51,47 +51,64 @@ $extra_styles = "
 require 'header.php';
 ?>
 
-<!-- Breadcrumb -->
-<div class="w-full bg-slate-100 border-b border-slate-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center gap-2 text-sm text-slate-500">
-        <a href="index.php" class="hover:text-primary transition-colors flex items-center gap-1">
-            <span class="material-symbols-outlined text-base">home</span>Home
-        </a>
-        <span class="material-symbols-outlined text-base">chevron_right</span>
-        <span class="text-slate-800 font-semibold">Blogs</span>
-        <?php if ($cat_filter): ?>
-        <span class="material-symbols-outlined text-base">chevron_right</span>
-        <span class="text-primary font-semibold"><?php echo htmlspecialchars($cat_filter); ?></span>
-        <?php endif; ?>
-    </div>
-</div>
-
 <main class="bg-white min-h-screen">
 
-<?php if ($featured): ?>
-<!-- Featured Article Hero (full width) -->
-<section class="relative overflow-hidden group">
-    <div class="h-[500px] md:h-[560px] w-full relative">
-        <img class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-             src="<?php echo htmlspecialchars($featured['image'] ?? ''); ?>"
-             alt="<?php echo htmlspecialchars($featured['title']); ?>"
-             onerror="this.src='https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=1200&q=80'"/>
-        <div class="absolute inset-0 bg-gradient-to-t from-[#0a0705]/90 via-[#0a0705]/40 to-transparent"></div>
+<!-- Shared hero with breadcrumb at top -->
+<section class="relative h-[420px] flex items-center justify-center overflow-hidden">
+    <div class="absolute inset-0 z-0">
+        <img class="w-full h-full object-cover"
+             src="https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=1600&q=80"
+             alt="CSNExplore Blogs"/>
+        <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-[#0a0705]"></div>
     </div>
-    <div class="absolute bottom-0 left-0 right-0 p-8 md:p-16 flex flex-col items-start gap-4 max-w-7xl mx-auto">
-        <div class="flex items-center gap-3">
-            <span class="bg-primary text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">Featured Story</span>
-            <span class="text-slate-200 text-sm font-medium"><?php echo htmlspecialchars($featured['read_time'] ?? '5 min read'); ?> · <?php echo htmlspecialchars($featured['category']); ?></span>
+    <!-- Breadcrumb at very top of hero -->
+    <div class="absolute top-0 left-0 right-0 z-20 pt-5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-2 text-sm text-white/60 flex-wrap">
+            <a href="index.php" class="hover:text-white transition-colors flex items-center gap-1">
+                <span class="material-symbols-outlined text-base">home</span>Home
+            </a>
+            <span class="material-symbols-outlined text-base">chevron_right</span>
+            <span class="text-white font-semibold">Blogs</span>
+            <?php if ($cat_filter): ?>
+            <span class="material-symbols-outlined text-base">chevron_right</span>
+            <span class="text-primary font-semibold"><?php echo htmlspecialchars($cat_filter); ?></span>
+            <?php endif; ?>
         </div>
-        <h2 class="text-white text-4xl md:text-5xl font-serif font-black leading-tight max-w-3xl">
-            <?php echo htmlspecialchars($featured['title']); ?>
-        </h2>
-        <p class="text-slate-200 text-lg max-w-2xl hidden md:block"><?php echo htmlspecialchars($featured['meta_description'] ?? ''); ?></p>
-        <a href="<?php echo blogSlug($featured); ?>" class="mt-4 bg-primary hover:bg-orange-600 text-white font-bold py-4 px-8 rounded-xl transition-all shadow-lg flex items-center gap-2">
-            Read Full Story <span class="material-symbols-outlined">arrow_forward</span>
-        </a>
+    </div>
+    <div class="relative z-10 text-center px-4 max-w-4xl">
+        <span class="inline-block px-4 py-1.5 rounded-full bg-primary/20 text-primary font-bold text-xs uppercase tracking-widest mb-4">Travel Stories</span>
+        <h1 class="text-5xl md:text-6xl font-serif font-black text-white mb-4 leading-tight">
+            <?php echo $cat_filter ? htmlspecialchars($cat_filter) : 'Explore Our Blogs'; ?>
+        </h1>
+        <p class="text-white/70 text-lg max-w-2xl mx-auto">Guides, tips and stories from Chhatrapati Sambhajinagar.</p>
     </div>
 </section>
+
+<?php if ($featured): ?>
+<!-- Featured Article strip below hero -->
+<div class="bg-[#0a0705] py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <a href="<?php echo blogSlug($featured); ?>" class="group flex flex-col md:flex-row gap-6 items-center bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl p-5 transition-all">
+            <div class="w-full md:w-64 h-40 rounded-xl overflow-hidden shrink-0">
+                <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                     src="<?php echo htmlspecialchars($featured['image'] ?? ''); ?>"
+                     alt="<?php echo htmlspecialchars($featured['title']); ?>"
+                     onerror="this.src='https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=600&q=80'"/>
+            </div>
+            <div class="flex-1">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="bg-primary text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">Featured Story</span>
+                    <span class="text-white/50 text-sm"><?php echo htmlspecialchars($featured['read_time'] ?? '5 min read'); ?> · <?php echo htmlspecialchars($featured['category']); ?></span>
+                </div>
+                <h2 class="text-white text-xl md:text-2xl font-serif font-black leading-tight mb-2 group-hover:text-primary transition-colors">
+                    <?php echo htmlspecialchars($featured['title']); ?>
+                </h2>
+                <p class="text-white/50 text-sm line-clamp-2"><?php echo htmlspecialchars($featured['meta_description'] ?? ''); ?></p>
+                <span class="mt-3 inline-flex items-center gap-1 text-primary font-bold text-sm">Read Full Story <span class="material-symbols-outlined text-base">arrow_forward</span></span>
+            </div>
+        </a>
+    </div>
+</div>
 <?php endif; ?>
 
 <?php

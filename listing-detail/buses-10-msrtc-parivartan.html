@@ -67,36 +67,42 @@
   </div>
   <script>document.getElementById("mob-btn").addEventListener("click",function(){document.getElementById("mob-menu").classList.toggle("hidden");});</script>
 </header>
-<!-- Breadcrumb -->
-<div class="w-full bg-slate-100 border-b border-slate-200">
-  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center gap-2 text-sm text-slate-500 flex-wrap">
-    <a href="../index.php" class="hover:text-[#ec5b13] transition-colors flex items-center gap-1"><span class="material-symbols-outlined text-base">home</span>Home</a>
-    <span class="material-symbols-outlined text-base">chevron_right</span>
-    <a href="../listing.php?type=buses" class="hover:text-[#ec5b13] transition-colors">Buses</a>
-    <span class="material-symbols-outlined text-base">chevron_right</span>
-    <span class="text-slate-700 font-semibold">MSRTC Parivartan</span>
+<main class="bg-slate-50 min-h-screen">
+  <!-- Hero: shared image with breadcrumb at top, item name at bottom -->
+  <div class="relative h-64 md:h-80 overflow-hidden">
+    <img src="https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=1600&q=80" alt="MSRTC Parivartan" class="w-full h-full object-cover"/>
+    <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-[#0a0705]"></div>
+    <!-- Breadcrumb at very top -->
+    <div class="absolute top-0 left-0 right-0 pt-5">
+      <div class="max-w-6xl mx-auto px-4 flex items-center gap-2 text-sm text-white/60 flex-wrap">
+        <a href="../index.php" class="hover:text-white transition-colors flex items-center gap-1"><span class="material-symbols-outlined text-base">home</span>Home</a>
+        <span class="material-symbols-outlined text-base">chevron_right</span>
+        <a href="../listing.php?type=buses" class="hover:text-white transition-colors">Buses</a>
+        <span class="material-symbols-outlined text-base">chevron_right</span>
+        <span class="text-white/80 font-semibold">MSRTC Parivartan</span>
+      </div>
+    </div>
+    <!-- Title at bottom -->
+    <div class="absolute bottom-0 left-0 right-0 pb-6">
+      <div class="max-w-6xl mx-auto px-4">
+        <span class="text-xs font-bold text-[#ec5b13] uppercase tracking-widest mb-2 block">Buses</span>
+        <h1 class="text-white text-2xl md:text-3xl font-serif font-black leading-tight">MSRTC Parivartan</h1>
+      </div>
+    </div>
   </div>
-</div>
-<main class="bg-slate-50 min-h-screen py-10">
-  <div class="max-w-6xl mx-auto px-4">
+  <div class="max-w-6xl mx-auto px-4 py-8">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <!-- Left: details -->
       <div class="lg:col-span-2 space-y-6">
-        <!-- Hero image -->
-        <div class="rounded-2xl overflow-hidden h-72 md:h-96 shadow-lg">
-          <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800&amp;q=80" alt="MSRTC Parivartan" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80'"/>
-        </div>
-        <!-- Title & rating -->
+        <!-- Title & rating card -->
         <div class="bg-white rounded-2xl p-6 shadow-sm">
           <div class="flex items-start justify-between gap-4 mb-3">
             <div>
-              <span class="text-xs font-bold text-[#ec5b13] uppercase tracking-widest mb-1 block">Buses</span>
-              <h1 class="text-2xl md:text-3xl font-serif font-black">MSRTC Parivartan</h1>
-            </div>
-            <div class="flex items-center gap-1 bg-amber-50 px-3 py-1.5 rounded-xl shrink-0">
-              <span class="material-symbols-outlined text-amber-400 text-lg">star</span>
-              <span class="font-bold text-lg">7.9</span>
-              <span class="text-slate-400 text-xs">(267 reviews)</span>
+              <div class="flex items-center gap-1 bg-amber-50 px-3 py-1.5 rounded-xl">
+                <span class="material-symbols-outlined text-amber-400 text-lg">star</span>
+                <span class="font-bold text-lg">7.9</span>
+                <span class="text-slate-400 text-xs">(267 reviews)</span>
+              </div>
             </div>
           </div>
           <div class="flex items-center gap-2 text-slate-500 text-sm mb-4">
@@ -144,18 +150,21 @@
           </form>
           <p class="text-center text-xs text-slate-400 mt-3">Free cancellation · No hidden charges</p>
         </div>
-        <div class="bg-white rounded-2xl p-5 shadow-sm text-center">
-          <p class="text-sm text-slate-500 mb-3">Need help? Call or WhatsApp us</p>
-          <a href="tel:+918600968888" class="flex items-center justify-center gap-2 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold py-3 px-4 rounded-xl text-sm transition-colors mb-2">
-            <span class="material-symbols-outlined text-base text-[#ec5b13]">call</span>+91 86009 68888
-          </a>
-          <a href="https://wa.me/918600968888" class="flex items-center justify-center gap-2 bg-green-50 hover:bg-green-100 text-green-700 font-bold py-3 px-4 rounded-xl text-sm transition-colors">
-            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.417-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.305 1.652zm6.599-3.825c1.63.975 3.41 1.487 5.23 1.488 5.439 0 9.861-4.422 9.863-9.861.001-2.636-1.024-5.115-2.884-6.977-1.862-1.864-4.341-2.887-6.979-2.888-5.439 0-9.861 4.422-9.863 9.862 0 1.842.511 3.641 1.478 5.187l-.995 3.637 3.73-.978zm11.367-7.643c-.31-.155-1.837-.906-2.12-.108-.285.103-.55.515-.674.654-.124.14-.248.155-.558.001-.31-.155-1.31-.483-2.498-1.543-.924-.824-1.548-1.841-1.73-2.15-.181-.31-.019-.477.135-.631.14-.139.31-.36.465-.541.155-.181.206-.31.31-.515.103-.206.052-.386-.026-.541-.077-.155-.674-1.626-.924-2.228-.243-.585-.491-.504-.674-.513-.175-.008-.375-.01-.575-.01s-.525.075-.8.375c-.275.3-1.05 1.026-1.05 2.5s1.075 2.9 1.225 3.1c.15.2 2.11 3.221 5.113 4.513.714.307 1.272.49 1.706.629.718.227 1.37.195 1.886.118.575-.085 1.837-.75 2.096-1.475.258-.725.258-1.346.181-1.475-.077-.129-.283-.206-.593-.361z"/></svg>
-            WhatsApp
-          </a>
-        </div>
-        <a href="../listing.php?type=buses" class="flex items-center gap-2 text-[#ec5b13] font-bold text-sm hover:underline">
-          <span class="material-symbols-outlined text-base">arrow_back</span>Back to Buses
+      </div>
+    </div>
+    <!-- Back button + Need help — always visible below the grid -->
+    <div class="mt-8 flex flex-col sm:flex-row items-start sm:items-center gap-4 pt-6 border-t border-slate-200">
+      <a href="../listing.php?type=buses" class="flex items-center gap-2 text-[#ec5b13] font-bold text-sm hover:underline">
+        <span class="material-symbols-outlined text-base">arrow_back</span>Back to Buses
+      </a>
+      <div class="flex items-center gap-3 ml-auto">
+        <span class="text-sm text-slate-500">Need help?</span>
+        <a href="tel:+918600968888" class="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2 px-4 rounded-xl text-sm transition-colors">
+          <span class="material-symbols-outlined text-base text-[#ec5b13]">call</span>+91 86009 68888
+        </a>
+        <a href="https://wa.me/918600968888" class="flex items-center gap-2 bg-green-50 hover:bg-green-100 text-green-700 font-bold py-2 px-4 rounded-xl text-sm transition-colors">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.417-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.305 1.652zm6.599-3.825c1.63.975 3.41 1.487 5.23 1.488 5.439 0 9.861-4.422 9.863-9.861.001-2.636-1.024-5.115-2.884-6.977-1.862-1.864-4.341-2.887-6.979-2.888-5.439 0-9.861 4.422-9.863 9.862 0 1.842.511 3.641 1.478 5.187l-.995 3.637 3.73-.978zm11.367-7.643c-.31-.155-1.837-.906-2.12-.108-.285.103-.55.515-.674.654-.124.14-.248.155-.558.001-.31-.155-1.31-.483-2.498-1.543-.924-.824-1.548-1.841-1.73-2.15-.181-.31-.019-.477.135-.631.14-.139.31-.36.465-.541.155-.181.206-.31.31-.515.103-.206.052-.386-.026-.541-.077-.155-.674-1.626-.924-2.228-.243-.585-.491-.504-.674-.513-.175-.008-.375-.01-.575-.01s-.525.075-.8.375c-.275.3-1.05 1.026-1.05 2.5s1.075 2.9 1.225 3.1c.15.2 2.11 3.221 5.113 4.513.714.307 1.272.49 1.706.629.718.227 1.37.195 1.886.118.575-.085 1.837-.75 2.096-1.475.258-.725.258-1.346.181-1.475-.077-.129-.283-.206-.593-.361z"/></svg>
+          WhatsApp
         </a>
       </div>
     </div>

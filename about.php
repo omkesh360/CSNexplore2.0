@@ -7,24 +7,23 @@ $extra_styles = "
 require 'header.php';
 ?>
 
-<!-- Breadcrumb (full width bg, boxed content) -->
-<div class="w-full bg-slate-100 dark:bg-white/5 border-b border-slate-200 dark:border-white/10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
-        <a href="index.php" class="hover:text-primary transition-colors flex items-center gap-1">
-            <span class="material-symbols-outlined text-base">home</span>Home
-        </a>
-        <span class="material-symbols-outlined text-base">chevron_right</span>
-        <span class="text-slate-800 dark:text-white font-semibold">About Us</span>
-    </div>
-</div>
-
 <main>
-<!-- Hero (full width) -->
-<section class="relative h-[500px] flex items-center justify-center overflow-hidden">
+<!-- Hero -->
+<section class="relative h-[480px] flex items-center justify-center overflow-hidden">
     <div class="absolute inset-0 z-0">
         <img alt="Ellora Caves Heritage Site" class="w-full h-full object-cover"
-             src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgSV2n1WK6eBXmMxJpaEJ4A_mz_lSoLyhD1MWD1syV3gfYBzo7EthA9p1PcCVfPNtlpCGQiO8rC-WU9ppGoSJZnPEzKF933n68TXeRhF3Zx_2NHzA-MHvxdm0yosfKgEt0-LkwV1trx8AQXrg0RrO6b6vRDz85ASg_lUJx8cThGDu4W7btLBbDCjPiCOePZmdoeoo1vaQcl4yJq4yAAwH6Y96t-NhlbNXJb7yLaaRm_FCaIErLujYsA76FehGteyJ9sD6LRZUuN9Sa"/>
-        <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-[#0a0705]"></div>
+             src="https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=1600&q=80"/>
+        <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-[#0a0705]"></div>
+    </div>
+    <!-- Breadcrumb at very top of hero -->
+    <div class="absolute top-0 left-0 right-0 z-20 pt-5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-2 text-sm text-white/60 flex-wrap">
+            <a href="index.php" class="hover:text-white transition-colors flex items-center gap-1">
+                <span class="material-symbols-outlined text-base">home</span>Home
+            </a>
+            <span class="material-symbols-outlined text-base">chevron_right</span>
+            <span class="text-white font-semibold">About Us</span>
+        </div>
     </div>
     <div class="relative z-10 text-center px-4 max-w-4xl">
         <span class="inline-block px-4 py-1.5 rounded-full bg-primary/20 text-primary font-bold text-xs uppercase tracking-widest mb-6">Established 2012</span>

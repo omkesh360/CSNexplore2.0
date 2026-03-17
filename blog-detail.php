@@ -31,32 +31,31 @@ $extra_styles = "
 require 'header.php';
 ?>
 
-<!-- Breadcrumb -->
-<div class="w-full bg-slate-100 dark:bg-white/5 border-b border-slate-200 dark:border-white/10">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 flex-wrap">
-        <a href="index.php" class="hover:text-primary transition-colors flex items-center gap-1">
-            <span class="material-symbols-outlined text-base">home</span>Home
-        </a>
-        <span class="material-symbols-outlined text-base">chevron_right</span>
-        <a href="blogs.php" class="hover:text-primary transition-colors">Blogs</a>
-        <span class="material-symbols-outlined text-base">chevron_right</span>
-        <a href="blogs.php?category=<?php echo urlencode($blog['category']); ?>" class="hover:text-primary transition-colors">
-            <?php echo htmlspecialchars($blog['category']); ?>
-        </a>
-        <span class="material-symbols-outlined text-base">chevron_right</span>
-        <span class="text-slate-700 dark:text-white font-semibold truncate max-w-xs"><?php echo htmlspecialchars($blog['title']); ?></span>
-    </div>
-</div>
+<main class="bg-white min-h-screen">
 
-<main class="bg-white dark:bg-[#0a0705] min-h-screen">
-
-    <!-- Hero Image -->
-    <div class="w-full h-[380px] md:h-[480px] relative overflow-hidden">
-        <img src="<?php echo htmlspecialchars($blog['image'] ?? ''); ?>"
-             alt="<?php echo htmlspecialchars($blog['title']); ?>"
-             class="w-full h-full object-cover"
-             onerror="this.src='https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=1200&q=80'"/>
-        <div class="absolute inset-0 bg-gradient-to-t from-[#0a0705]/80 via-[#0a0705]/20 to-transparent"></div>
+    <!-- Hero: shared bg image with breadcrumb at top, blog title at bottom -->
+    <div class="w-full h-[420px] md:h-[500px] relative overflow-hidden">
+        <img src="https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=1600&q=80"
+             alt="Blog Hero"
+             class="w-full h-full object-cover"/>
+        <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-[#0a0705]"></div>
+        <!-- Breadcrumb at very top of hero -->
+        <div class="absolute top-0 left-0 right-0 z-10 pt-5">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-2 text-sm text-white/60 flex-wrap">
+                <a href="index.php" class="hover:text-white transition-colors flex items-center gap-1">
+                    <span class="material-symbols-outlined text-base">home</span>Home
+                </a>
+                <span class="material-symbols-outlined text-base">chevron_right</span>
+                <a href="blogs.php" class="hover:text-white transition-colors">Blogs</a>
+                <span class="material-symbols-outlined text-base">chevron_right</span>
+                <a href="blogs.php?category=<?php echo urlencode($blog['category']); ?>" class="hover:text-white transition-colors">
+                    <?php echo htmlspecialchars($blog['category']); ?>
+                </a>
+                <span class="material-symbols-outlined text-base">chevron_right</span>
+                <span class="text-white/80 font-semibold truncate max-w-xs"><?php echo htmlspecialchars($blog['title']); ?></span>
+            </div>
+        </div>
+        <!-- Blog title at bottom -->
         <div class="absolute bottom-0 left-0 right-0 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
             <span class="inline-block bg-primary text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-4">
                 <?php echo htmlspecialchars($blog['category']); ?>

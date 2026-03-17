@@ -159,13 +159,32 @@ $category_nav = [
 ?>
 <!-- Category Sub-Nav is in header.php for listing pages -->
 
-<!-- Breadcrumb -->
-<div class="bg-white border-b border-slate-100">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center gap-2 text-xs text-slate-400">
-    <a href="index.php" class="hover:text-primary transition-colors">Home</a>
-    <span class="material-symbols-outlined text-[12px]">chevron_right</span>
-    <span class="text-slate-600 font-medium"><?php echo htmlspecialchars($c['label']); ?></span>
-  </div>
+<!-- Hero Banner with breadcrumb at top -->
+<div class="relative h-52 md:h-72 overflow-hidden">
+    <img src="https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=1600&q=80"
+         alt="<?php echo htmlspecialchars($c['label']); ?>"
+         class="w-full h-full object-cover"/>
+    <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-[#0a0705]"></div>
+    <!-- Breadcrumb at very top -->
+    <div class="absolute top-0 left-0 right-0 pt-5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-2 text-sm text-white/60 flex-wrap">
+            <a href="index.php" class="hover:text-white transition-colors flex items-center gap-1">
+                <span class="material-symbols-outlined text-base">home</span>Home
+            </a>
+            <span class="material-symbols-outlined text-base">chevron_right</span>
+            <span class="text-white font-semibold"><?php echo htmlspecialchars($c['label']); ?></span>
+        </div>
+    </div>
+    <!-- Title at bottom -->
+    <div class="absolute bottom-0 left-0 right-0 pb-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 class="text-white text-2xl md:text-4xl font-serif font-black flex items-center gap-3">
+                <span class="material-symbols-outlined text-primary text-3xl"><?php echo htmlspecialchars($c['icon']); ?></span>
+                <?php echo htmlspecialchars($c['hero_h1']); ?>
+            </h1>
+            <p class="text-white/60 text-sm mt-1"><?php echo htmlspecialchars($c['hero_sub']); ?></p>
+        </div>
+    </div>
 </div>
 
 <main class="min-h-screen" style="background:#f8f6f6">
