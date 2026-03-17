@@ -12,8 +12,7 @@ requireAdmin();
 
 $uploadDir = __DIR__ . '/../../images/uploads/';
 $baseUrl   = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http')
-           . '://' . $_SERVER['HTTP_HOST']
-           . rtrim(dirname(dirname(dirname($_SERVER['SCRIPT_NAME']))), '/') . '/images/uploads/';
+           . '://' . $_SERVER['HTTP_HOST'] . '/images/uploads/';
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if (!is_dir($uploadDir)) { sendJson([]); }

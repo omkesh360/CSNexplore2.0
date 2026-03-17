@@ -38,6 +38,6 @@ if (!move_uploaded_file($file['tmp_name'], $dest)) sendError('Failed to save fil
 
 $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http')
      . '://' . $_SERVER['HTTP_HOST']
-     . rtrim(dirname(dirname(dirname($_SERVER['SCRIPT_NAME']))), '/') . '/images/uploads/' . $filename;
+     . '/images/uploads/' . $filename;
 
 sendJson(['url' => $url, 'filename' => $filename]);
