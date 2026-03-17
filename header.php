@@ -52,6 +52,12 @@ $active_listing_type = $listing_type ?? '';
     <style>
         .glass { background:rgba(255,255,255,0.07); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border:1px solid rgba(255,255,255,0.12); }
         .glass-dark { background:rgba(10,7,5,0.7); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid rgba(236,91,19,0.1); }
+        .header-solid { background:#000000 !important; backdrop-filter:none !important; -webkit-backdrop-filter:none !important; }
+        /* Page transition */
+        html { background:#fff; }
+        body { opacity:0; will-change:opacity; backface-visibility:hidden; -webkit-backface-visibility:hidden; }
+        body.page-ready { animation: pageFadeIn 0.2s ease forwards; }
+        @keyframes pageFadeIn { from { opacity:0; } to { opacity:1; } }
         .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; font-family:'Material Symbols Outlined'; font-style:normal; display:inline-block; line-height:1; }
         <?php if (!empty($extra_styles)) echo $extra_styles; ?>
     </style>
@@ -144,6 +150,29 @@ $active_listing_type = $listing_type ?? '';
     <script>
         document.getElementById('mob-btn').addEventListener('click', function(){
             document.getElementById('mob-menu').classList.toggle('hidden');
+        });
+        (function(){
+            var h = document.getElementById('site-header');
+            function updateHeader() {
+                if (window.scrollY === 0) { h.classList.add('header-solid'); }
+                else { h.classList.remove('header-solid'); }
+            }
+            updateHeader();
+            window.addEventListener('scroll', updateHeader, {passive:true});
+        })();
+        // Fade in on load
+        function addPageReady(){document.body.classList.add('page-ready');}
+        if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',addPageReady);}else{addPageReady();}
+        // Fade out on navigation (opacity only — no translate to avoid jitter)
+        document.addEventListener('click', function(e) {
+            var a = e.target.closest('a');
+            if (!a) return;
+            var href = a.getAttribute('href');
+            if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('javascript') || a.target === '_blank') return;
+            e.preventDefault();
+            document.body.style.transition = 'opacity 0.18s ease';
+            document.body.style.opacity = '0';
+            setTimeout(function(){ window.location.href = href; }, 190);
         });
     </script>
 </header>

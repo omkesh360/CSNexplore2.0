@@ -63,7 +63,8 @@ require 'header.php';
 </section>
 
 <!-- Contact Content -->
-<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 relative z-30 pb-20">
+<section class="py-16 bg-white">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
         <!-- Info Cards -->
@@ -212,6 +213,7 @@ https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3752.0!2d75.3433!3d19.8762
             <p class="text-xs text-slate-500">Samarth Nagar, Central Bus Stand</p>
         </div>
     </div>
+</div>
 </section>
 </main>
 

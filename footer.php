@@ -73,5 +73,30 @@
         </div>
     </div>
 </footer>
+
+<!-- Go to Top Button -->
+<button id="go-top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+    style="position:fixed;bottom:28px;right:24px;z-index:9999;width:48px;height:48px;border-radius:50%;background:#ec5b13;color:#fff;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(236,91,19,0.5);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity .25s ease,visibility .25s ease,transform .25s ease;"
+    aria-label="Go to top">
+    <span class="material-symbols-outlined" style="font-size:22px;line-height:1;pointer-events:none;">arrow_upward</span>
+</button>
+<script>
+(function(){
+    var btn = document.getElementById('go-top-btn');
+    function updateBtn() {
+        if (window.scrollY > 200) {
+            btn.style.opacity = '1';
+            btn.style.visibility = 'visible';
+            btn.style.transform = 'translateY(0)';
+        } else {
+            btn.style.opacity = '0';
+            btn.style.visibility = 'hidden';
+            btn.style.transform = 'translateY(12px)';
+        }
+    }
+    updateBtn();
+    window.addEventListener('scroll', updateBtn, {passive:true});
+})();
+</script>
 </body>
 </html>

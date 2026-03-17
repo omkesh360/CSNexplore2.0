@@ -10,6 +10,10 @@
 <script>tailwind.config={theme:{extend:{colors:{"primary":"#ec5b13"},fontFamily:{display:["Inter","sans-serif"],serif:["Playfair Display","serif"]}}}}</script>
 <style>
 .glass-dark{background:rgba(10,7,5,0.7);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(236,91,19,0.1);}
+.header-solid{background:#000000!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
+body{opacity:0;will-change:opacity;backface-visibility:hidden;-webkit-backface-visibility:hidden;}
+body.page-ready{animation:pageFadeIn 0.2s ease forwards;}
+@keyframes pageFadeIn{from{opacity:0;}to{opacity:1;}}
 .material-symbols-outlined{font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;font-family:"Material Symbols Outlined";font-style:normal;display:inline-block;line-height:1;}
 .prose h2{font-size:1.5rem;font-weight:800;margin:2rem 0 0.75rem;}
 .prose h3{font-size:1.2rem;font-weight:700;margin:1.5rem 0 0.5rem;}
@@ -65,7 +69,17 @@
       <a href="../register.php" class="flex-1 text-center bg-[#ec5b13] text-white text-sm font-bold py-2 rounded-xl hover:bg-orange-600 transition-all">Register</a>
     </div>
   </div>
-  <script>document.getElementById("mob-btn").addEventListener("click",function(){document.getElementById("mob-menu").classList.toggle("hidden");});</script>
+  <script>
+  document.getElementById("mob-btn").addEventListener("click",function(){document.getElementById("mob-menu").classList.toggle("hidden");});
+  (function(){
+    var h=document.querySelector("header");
+    if(h){function u(){if(window.scrollY===0){h.classList.add("header-solid");}else{h.classList.remove("header-solid");}}u();window.addEventListener("scroll",u,{passive:true});}
+  })();
+  // Fade in — works whether DOMContentLoaded already fired or not
+  function addPageReady(){document.body.classList.add("page-ready");}
+  if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",addPageReady);}else{addPageReady();}
+  document.addEventListener("click",function(e){var a=e.target.closest("a");if(!a)return;var href=a.getAttribute("href");if(!href||href.startsWith("#")||href.startsWith("mailto:")||href.startsWith("tel:")||href.startsWith("javascript")||a.target==="_blank")return;e.preventDefault();document.body.style.transition="opacity 0.18s ease";document.body.style.opacity="0";setTimeout(function(){window.location.href=href;},190);});
+  </script>
 </header>
 <main class="bg-slate-50 min-h-screen">
   <!-- Hero: shared image with breadcrumb at top, item name at bottom -->
@@ -122,6 +136,17 @@
       <!-- Right: booking card -->
       <div class="space-y-4">
         <div class="bg-white rounded-2xl p-6 shadow-sm sticky top-24">
+          <!-- Need help? -->
+          <div class="flex flex-col gap-2 mb-4 pb-4 border-b border-slate-100">
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Need help?</p>
+            <a href="tel:+918600968888" class="flex items-center gap-2 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold py-2.5 px-3 rounded-xl text-sm transition-colors">
+              <span class="material-symbols-outlined text-base text-[#ec5b13]">call</span>+91 86009 68888
+            </a>
+            <a href="https://wa.me/918600968888" class="flex items-center gap-2 bg-green-50 hover:bg-green-100 text-green-700 font-bold py-2.5 px-3 rounded-xl text-sm transition-colors">
+              <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.417-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.305 1.652zm6.599-3.825c1.63.975 3.41 1.487 5.23 1.488 5.439 0 9.861-4.422 9.863-9.861.001-2.636-1.024-5.115-2.884-6.977-1.862-1.864-4.341-2.887-6.979-2.888-5.439 0-9.861 4.422-9.863 9.862 0 1.842.511 3.641 1.478 5.187l-.995 3.637 3.73-.978zm11.367-7.643c-.31-.155-1.837-.906-2.12-.108-.285.103-.55.515-.674.654-.124.14-.248.155-.558.001-.31-.155-1.31-.483-2.498-1.543-.924-.824-1.548-1.841-1.73-2.15-.181-.31-.019-.477.135-.631.14-.139.31-.36.465-.541.155-.181.206-.31.31-.515.103-.206.052-.386-.026-.541-.077-.155-.674-1.626-.924-2.228-.243-.585-.491-.504-.674-.513-.175-.008-.375-.01-.575-.01s-.525.075-.8.375c-.275.3-1.05 1.026-1.05 2.5s1.075 2.9 1.225 3.1c.15.2 2.11 3.221 5.113 4.513.714.307 1.272.49 1.706.629.718.227 1.37.195 1.886.118.575-.085 1.837-.75 2.096-1.475.258-.725.258-1.346.181-1.475-.077-.129-.283-.206-.593-.361z"/></svg>
+              WhatsApp
+            </a>
+          </div>
           <div class="mb-4">
             <span class="text-3xl font-black text-[#ec5b13]">₹650</span>
             <span class="text-slate-400 text-sm font-medium">/ day</span>
@@ -237,4 +262,20 @@ document.getElementById("booking-form").addEventListener("submit", async functio
     </div>
   </div>
 </footer>
+<button id="go-top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+    style="position:fixed;bottom:28px;right:24px;z-index:9999;width:48px;height:48px;border-radius:50%;background:#ec5b13;color:#fff;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(236,91,19,0.5);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity .25s ease,visibility .25s ease,transform .25s ease;"
+    aria-label="Go to top">
+    <span class="material-symbols-outlined" style="font-size:22px;line-height:1;pointer-events:none;">arrow_upward</span>
+</button>
+<script>
+(function(){
+    var btn=document.getElementById("go-top-btn");
+    function updateBtn(){
+        if(window.scrollY>200){btn.style.opacity="1";btn.style.visibility="visible";btn.style.transform="translateY(0)";}
+        else{btn.style.opacity="0";btn.style.visibility="hidden";btn.style.transform="translateY(12px)";}
+    }
+    updateBtn();
+    window.addEventListener("scroll",updateBtn,{passive:true});
+})();
+</script>
 </body></html>

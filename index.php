@@ -50,30 +50,36 @@ $hp_blogs        = $db->fetchAll("SELECT * FROM blogs WHERE status='published' O
         .marquee { animation: marquee 30s linear infinite; }
         .glass { background:rgba(255,255,255,0.07); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border:1px solid rgba(255,255,255,0.12); }
         .glass-dark { background:rgba(10,7,5,0.7); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid rgba(236,91,19,0.1); }
+        .header-solid { background:#000000 !important; backdrop-filter:none !important; -webkit-backdrop-filter:none !important; }
+        /* Page transition */
+        html { background:#0a0705; }
+        body { opacity:0; will-change:opacity; backface-visibility:hidden; -webkit-backface-visibility:hidden; }
+        body.page-ready { animation: pageFadeIn 0.2s ease forwards; }
+        @keyframes pageFadeIn { from { opacity:0; } to { opacity:1; } }
         .hide-scrollbar::-webkit-scrollbar { display:none; }
         .hide-scrollbar { -ms-overflow-style:none; scrollbar-width:none; }
         .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; font-family:'Material Symbols Outlined'; font-style:normal; display:inline-block; line-height:1; }
         .card-hover:hover { box-shadow:0 0 30px rgba(236,91,19,0.15); }
         #hero-label, #hero-pre, #hero-highlight, #hero-post, #hero-desc { transition: opacity 0.25s ease; }
-        .search-box { background:rgba(255,255,255,0.08); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,0.15); border-radius:12px; padding:14px 16px; }
-        .tab-btn { display:flex; align-items:center; gap:4px; padding:5px 11px; border-radius:50px; font-size:11px; font-weight:700; color:rgba(255,255,255,0.55); cursor:pointer; transition:all .2s; border:none; background:transparent; white-space:nowrap; }
+        .search-box { background:rgba(255,255,255,0.08); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,0.15); border-radius:16px; padding:20px 22px; }
+        .tab-btn { display:flex; align-items:center; gap:6px; padding:8px 16px; border-radius:50px; font-size:13px; font-weight:700; color:rgba(255,255,255,0.55); cursor:pointer; transition:all .2s; border:none; background:transparent; white-space:nowrap; }
         .tab-btn:hover { color:#fff; background:rgba(255,255,255,0.08); }
         .tab-btn.active { color:#fff; background:#ec5b13; box-shadow:0 3px 10px rgba(236,91,19,0.35); }
-        .tab-btn .material-symbols-outlined { font-size:14px; }
-        .search-field { display:flex; align-items:center; gap:7px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.12); border-radius:9px; padding:0 12px; flex:1; min-width:0; height:42px; transition:border-color .2s; }
+        .tab-btn .material-symbols-outlined { font-size:17px; }
+        .search-field { display:flex; align-items:center; gap:9px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:0 16px; flex:1; min-width:0; height:54px; transition:border-color .2s; }
         .search-field:focus-within { border-color:#ec5b13; }
-        .search-field .material-symbols-outlined { color:rgba(255,255,255,0.4); font-size:17px; flex-shrink:0; }
-        .search-field input { background:transparent; border:none; outline:none; color:#fff; font-size:13px; font-weight:500; width:100%; min-width:0; box-shadow:none; -webkit-appearance:none; }
+        .search-field .material-symbols-outlined { color:rgba(255,255,255,0.4); font-size:20px; flex-shrink:0; }
+        .search-field input { background:transparent; border:none; outline:none; color:#fff; font-size:15px; font-weight:500; width:100%; min-width:0; box-shadow:none; -webkit-appearance:none; }
         .search-field input::placeholder { color:rgba(255,255,255,0.4); }
-        .date-field { display:flex; align-items:center; gap:7px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.12); border-radius:9px; padding:0 12px; cursor:pointer; transition:border-color .2s; flex:1; min-width:0; height:42px; }
+        .date-field { display:flex; align-items:center; gap:9px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:0 16px; cursor:pointer; transition:border-color .2s; flex:1; min-width:0; height:54px; }
         .date-field:focus-within { border-color:#ec5b13; }
-        .date-field .material-symbols-outlined { color:rgba(255,255,255,0.4); font-size:17px; flex-shrink:0; }
-        .date-field input { background:transparent; border:none; outline:none; color:#fff; font-size:13px; font-weight:500; width:100%; cursor:pointer; min-width:0; box-shadow:none; -webkit-appearance:none; }
+        .date-field .material-symbols-outlined { color:rgba(255,255,255,0.4); font-size:20px; flex-shrink:0; }
+        .date-field input { background:transparent; border:none; outline:none; color:#fff; font-size:15px; font-weight:500; width:100%; cursor:pointer; min-width:0; box-shadow:none; -webkit-appearance:none; }
         .date-field input::placeholder { color:rgba(255,255,255,0.4); }
-        .search-row { display:flex; gap:7px; align-items:center; flex-wrap:nowrap; width:100%; }
-        .search-btn { background:#ec5b13; color:#fff; font-weight:800; font-size:13px; padding:0 20px; border-radius:9px; border:none; cursor:pointer; display:flex; align-items:center; gap:5px; transition:background .2s; white-space:nowrap; flex-shrink:0; height:42px; }
+        .search-row { display:flex; gap:10px; align-items:center; flex-wrap:nowrap; width:100%; }
+        .search-btn { background:#ec5b13; color:#fff; font-weight:800; font-size:15px; padding:0 28px; border-radius:12px; border:none; cursor:pointer; display:flex; align-items:center; gap:6px; transition:background .2s; white-space:nowrap; flex-shrink:0; height:54px; }
         .search-btn:hover { background:#d44e0e; }
-        .search-btn .material-symbols-outlined { font-size:16px; }
+        .search-btn .material-symbols-outlined { font-size:18px; }
         .search-panel { display:none; }
         .search-panel.active { display:flex; flex-direction:column; gap:8px; }
         .flatpickr-calendar { background:#1c1410 !important; border:1px solid rgba(236,91,19,0.3) !important; border-radius:16px !important; box-shadow:0 20px 60px rgba(0,0,0,0.6) !important; }
@@ -166,6 +172,29 @@ $nav_links_home = [
         document.getElementById('mob-btn').addEventListener('click', function(){
             document.getElementById('mob-menu').classList.toggle('hidden');
         });
+        (function(){
+            var h = document.getElementById('site-header');
+            function updateHeader() {
+                if (window.scrollY === 0) { h.classList.add('header-solid'); }
+                else { h.classList.remove('header-solid'); }
+            }
+            updateHeader();
+            window.addEventListener('scroll', updateHeader, {passive:true});
+        })();
+        // Fade in on load
+        function addPageReady(){document.body.classList.add('page-ready');}
+        if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',addPageReady);}else{addPageReady();}
+        // Fade out on navigation
+        document.addEventListener('click', function(e) {
+            var a = e.target.closest('a');
+            if (!a) return;
+            var href = a.getAttribute('href');
+            if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('javascript') || a.target === '_blank') return;
+            e.preventDefault();
+            document.body.style.transition = 'opacity 0.18s ease';
+            document.body.style.opacity = '0';
+            setTimeout(function(){ window.location.href = href; }, 190);
+        });
     </script>
 </header>
 
@@ -186,8 +215,8 @@ $nav_links_home = [
         <p id="hero-desc" class="text-white/70 text-base md:text-lg mb-10 max-w-2xl mx-auto">Stays, cars, bikes, restaurants, attractions and buses — all in one place.</p>
 
         <!-- Search Box -->
-        <div class="search-box max-w-3xl mx-auto">
-            <div class="flex flex-wrap gap-1 mb-3 pb-2 border-b border-white/10 justify-center">
+        <div class="search-box max-w-4xl mx-auto">
+            <div class="flex flex-wrap gap-1.5 mb-4 pb-3 border-b border-white/10 justify-center">
                 <?php
                 $tabs = [
                     ['id' => 'stays',       'icon' => 'bed',                  'label' => 'Stays'],
@@ -294,25 +323,25 @@ function doSearch(tab) {
     var params = new URLSearchParams();
     if (tab==='stays') {
         var loc=document.getElementById('stays-location').value, ci=document.getElementById('stays-checkin').value, co=document.getElementById('stays-checkout').value;
-        if(loc) params.set('location',loc); if(ci) params.set('checkin',ci); if(co) params.set('checkout',co);
+        if(loc) params.set('search',loc); if(ci) params.set('checkin',ci); if(co) params.set('checkout',co);
     } else if (tab==='cars') {
         var pu=document.getElementById('cars-pickup').value, dr=document.getElementById('cars-drop').value, dt=document.getElementById('cars-date').value;
-        if(pu) params.set('pickup',pu); if(dr) params.set('drop',dr); if(dt) params.set('date',dt);
+        if(dr) params.set('search',dr); if(dt) params.set('date',dt);
     } else if (tab==='bikes') {
         var loc=document.getElementById('bikes-location').value, dt=document.getElementById('bikes-date').value, rt=document.getElementById('bikes-return').value;
-        if(loc) params.set('location',loc); if(dt) params.set('date',dt); if(rt) params.set('return',rt);
+        if(loc) params.set('search',loc); if(dt) params.set('date',dt); if(rt) params.set('return',rt);
     } else if (tab==='attractions') {
         var loc=document.getElementById('attractions-location').value, dt=document.getElementById('attractions-date').value;
-        if(loc) params.set('location',loc); if(dt) params.set('date',dt);
+        if(loc) params.set('search',loc); if(dt) params.set('date',dt);
     } else if (tab==='dine') {
         var loc=document.getElementById('dine-location').value, dt=document.getElementById('dine-date').value;
-        if(loc) params.set('location',loc); if(dt) params.set('date',dt);
+        if(loc) params.set('search',loc); if(dt) params.set('date',dt);
     } else if (tab==='buses') {
         var fr=document.getElementById('buses-from').value, to=document.getElementById('buses-to').value, dt=document.getElementById('buses-date').value;
-        if(fr) params.set('from',fr); if(to) params.set('to',to); if(dt) params.set('date',dt);
+        if(to) params.set('search',to); if(dt) params.set('date',dt);
     }
     var qs = params.toString();
-    window.location.href = searchUrls[tab] + (qs ? '?' + qs : '');
+    window.location.href = searchUrls[tab] + (qs ? '&' + qs : '');
 }
 document.addEventListener('DOMContentLoaded', function() {
     var today = new Date(), tomorrow = new Date(today);
@@ -496,8 +525,12 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
             <?php if (!empty($hp_blogs)): foreach ($hp_blogs as $blog):
                 $read_time = max(3, intval(strlen(strip_tags($blog['content'] ?? '')) / 1000));
+                $t = strtolower(trim($blog['title']));
+                $t = preg_replace('/[^a-z0-9\s-]/', '', $t);
+                $t = preg_replace('/[\s-]+/', '-', $t);
+                $blog_slug = 'blogs/' . $blog['id'] . '-' . substr(trim($t, '-'), 0, 60) . '.html';
             ?>
-            <a href="blogs.php" class="group cursor-pointer">
+            <a href="<?php echo $blog_slug; ?>" class="group cursor-pointer">
                 <div class="rounded-2xl overflow-hidden aspect-[16/10] mb-3 shadow-md relative">
                     <img alt="<?php echo htmlspecialchars($blog['title']); ?>" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="<?php echo htmlspecialchars($blog['image'] ?? ''); ?>"/>
                     <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -585,5 +618,30 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     </div>
 </footer>
+
+<!-- Go to Top Button -->
+<button id="go-top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+    style="position:fixed;bottom:28px;right:24px;z-index:9999;width:48px;height:48px;border-radius:50%;background:#ec5b13;color:#fff;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(236,91,19,0.5);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity .25s ease,visibility .25s ease,transform .25s ease;"
+    aria-label="Go to top">
+    <span class="material-symbols-outlined" style="font-size:22px;line-height:1;pointer-events:none;">arrow_upward</span>
+</button>
+<script>
+(function(){
+    var btn = document.getElementById('go-top-btn');
+    function updateBtn() {
+        if (window.scrollY > 200) {
+            btn.style.opacity = '1';
+            btn.style.visibility = 'visible';
+            btn.style.transform = 'translateY(0)';
+        } else {
+            btn.style.opacity = '0';
+            btn.style.visibility = 'hidden';
+            btn.style.transform = 'translateY(12px)';
+        }
+    }
+    updateBtn();
+    window.addEventListener('scroll', updateBtn, {passive:true});
+})();
+</script>
 </body>
 </html>

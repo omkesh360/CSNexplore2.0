@@ -10,6 +10,10 @@
 <script>tailwind.config={theme:{extend:{colors:{"primary":"#ec5b13"},fontFamily:{display:["Inter","sans-serif"],serif:["Playfair Display","serif"]}}}}</script>
 <style>
 .glass-dark{background:rgba(10,7,5,0.7);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(236,91,19,0.1);}
+.header-solid{background:#000000!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
+body{opacity:0;will-change:opacity;backface-visibility:hidden;-webkit-backface-visibility:hidden;}
+body.page-ready{animation:pageFadeIn 0.2s ease forwards;}
+@keyframes pageFadeIn{from{opacity:0;}to{opacity:1;}}
 .material-symbols-outlined{font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;font-family:"Material Symbols Outlined";font-style:normal;display:inline-block;line-height:1;}
 .prose h2{font-size:1.5rem;font-weight:800;margin:2rem 0 0.75rem;}
 .prose h3{font-size:1.2rem;font-weight:700;margin:1.5rem 0 0.5rem;}
@@ -65,7 +69,17 @@
       <a href="../register.php" class="flex-1 text-center bg-[#ec5b13] text-white text-sm font-bold py-2 rounded-xl hover:bg-orange-600 transition-all">Register</a>
     </div>
   </div>
-  <script>document.getElementById("mob-btn").addEventListener("click",function(){document.getElementById("mob-menu").classList.toggle("hidden");});</script>
+  <script>
+  document.getElementById("mob-btn").addEventListener("click",function(){document.getElementById("mob-menu").classList.toggle("hidden");});
+  (function(){
+    var h=document.querySelector("header");
+    if(h){function u(){if(window.scrollY===0){h.classList.add("header-solid");}else{h.classList.remove("header-solid");}}u();window.addEventListener("scroll",u,{passive:true});}
+  })();
+  // Fade in — works whether DOMContentLoaded already fired or not
+  function addPageReady(){document.body.classList.add("page-ready");}
+  if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",addPageReady);}else{addPageReady();}
+  document.addEventListener("click",function(e){var a=e.target.closest("a");if(!a)return;var href=a.getAttribute("href");if(!href||href.startsWith("#")||href.startsWith("mailto:")||href.startsWith("tel:")||href.startsWith("javascript")||a.target==="_blank")return;e.preventDefault();document.body.style.transition="opacity 0.18s ease";document.body.style.opacity="0";setTimeout(function(){window.location.href=href;},190);});
+  </script>
 </header>
 <main class="bg-white min-h-screen">
   <!-- Hero: shared image with breadcrumb at top, blog title at bottom -->
@@ -208,4 +222,20 @@
     </div>
   </div>
 </footer>
+<button id="go-top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+    style="position:fixed;bottom:28px;right:24px;z-index:9999;width:48px;height:48px;border-radius:50%;background:#ec5b13;color:#fff;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(236,91,19,0.5);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity .25s ease,visibility .25s ease,transform .25s ease;"
+    aria-label="Go to top">
+    <span class="material-symbols-outlined" style="font-size:22px;line-height:1;pointer-events:none;">arrow_upward</span>
+</button>
+<script>
+(function(){
+    var btn=document.getElementById("go-top-btn");
+    function updateBtn(){
+        if(window.scrollY>200){btn.style.opacity="1";btn.style.visibility="visible";btn.style.transform="translateY(0)";}
+        else{btn.style.opacity="0";btn.style.visibility="hidden";btn.style.transform="translateY(12px)";}
+    }
+    updateBtn();
+    window.addEventListener("scroll",updateBtn,{passive:true});
+})();
+</script>
 </body></html>
