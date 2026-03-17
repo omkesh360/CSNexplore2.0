@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TravelHub - Explore Your Next Adventure</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec5b13",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221610",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .glassy {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .dark .glassy {
+            background: rgba(34, 22, 16, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-50 glassy border-b border-slate-200 dark:border-slate-800">
+<div class="max-w-[1440px] mx-auto px-6 h-20 flex items-center justify-between">
+<div class="flex items-center gap-12">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-4xl font-bold">explore</span>
+<h2 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">TravelHub</h2>
+</div>
+<nav class="hidden lg:flex items-center gap-8">
+<a class="text-sm font-semibold text-primary border-b-2 border-primary pb-1" href="#">Stays</a>
+<a class="text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary transition-colors" href="#">Cars</a>
+<a class="text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary transition-colors" href="#">Bikes</a>
+<a class="text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary transition-colors" href="#">Restaurants</a>
+<a class="text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary transition-colors" href="#">Attractions</a>
+<a class="text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary transition-colors" href="#">Buses</a>
+</nav>
+</div>
+<div class="flex items-center gap-6 flex-1 justify-end max-w-xl">
+<div class="relative w-full max-w-md">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+<span class="material-symbols-outlined text-xl">search</span>
+</div>
+<input class="block w-full pl-10 pr-3 py-2 border-none rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 focus:ring-2 focus:ring-primary/50 transition-all sm:text-sm" placeholder="Search destinations, cars, or hotels..." type="text"/>
+</div>
+<div class="size-10 rounded-full bg-cover bg-center border-2 border-primary/20" data-alt="User profile avatar portrait" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDyJadFMKfMaexnMUWI0_hrspORxYyDnCkeomi6MIdC5gX2AGXmjdoiFgk9AXOFOrDfoxgClQ9a4KOC4njnXnufC5shhjYL7Y5oA8glu6FVX_OVIL6yVHxps1yumZrraEDwrQqZlQmQRvy8E7CaiEl2f1xMp42AX7hUaH53-aGAM_4dUqN4M0azMmHcR6U_C8FT4u_85uJEgCzZ7XWOsxIPNJeiYRFVazFufbSauxjygZ_huetQ5BkCof-NoyhhV9hYOiZ55WXyVOtA')"></div>
+</div>
+</div>
+</header>
+<main class="max-w-[1440px] mx-auto px-6 py-8">
+<div class="flex flex-col lg:flex-row gap-8">
+<!-- Sidebar Filters -->
+<aside class="w-full lg:w-72 shrink-0 space-y-8">
+<div class="glassy p-6 rounded-2xl shadow-sm">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-lg font-bold">Filters</h3>
+<button class="text-sm text-primary font-medium">Reset</button>
+</div>
+<!-- Category Filter -->
+<div class="mb-8">
+<p class="text-sm font-bold text-slate-500 dark:text-slate-400 mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">category</span> Categories
+                        </p>
+<div class="space-y-3">
+<label class="flex items-center gap-3 cursor-pointer group">
+<input checked="" class="rounded text-primary focus:ring-primary size-5 bg-transparent border-slate-300" type="checkbox"/>
+<span class="text-sm font-medium group-hover:text-primary transition-colors">Luxury Stays</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="rounded text-primary focus:ring-primary size-5 bg-transparent border-slate-300" type="checkbox"/>
+<span class="text-sm font-medium group-hover:text-primary transition-colors">Boutique Hotels</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="rounded text-primary focus:ring-primary size-5 bg-transparent border-slate-300" type="checkbox"/>
+<span class="text-sm font-medium group-hover:text-primary transition-colors">Apartments</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="rounded text-primary focus:ring-primary size-5 bg-transparent border-slate-300" type="checkbox"/>
+<span class="text-sm font-medium group-hover:text-primary transition-colors">Resorts</span>
+</label>
+</div>
+</div>
+<!-- Price Range -->
+<div class="mb-8">
+<p class="text-sm font-bold text-slate-500 dark:text-slate-400 mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">payments</span> Price Range
+                        </p>
+<div class="px-2">
+<div class="relative h-1 w-full bg-slate-200 dark:bg-slate-700 rounded-full mb-6">
+<div class="absolute left-1/4 right-1/4 h-full bg-primary"></div>
+<div class="absolute left-1/4 top-1/2 -translate-y-1/2 size-4 rounded-full bg-primary border-2 border-white dark:border-background-dark shadow-md cursor-pointer"></div>
+<div class="absolute right-1/4 top-1/2 -translate-y-1/2 size-4 rounded-full bg-primary border-2 border-white dark:border-background-dark shadow-md cursor-pointer"></div>
+</div>
+<div class="flex justify-between text-xs font-bold">
+<span>$100</span>
+<span>$850</span>
+</div>
+</div>
+</div>
+<!-- Ratings -->
+<div>
+<p class="text-sm font-bold text-slate-500 dark:text-slate-400 mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">star</span> Guest Rating
+                        </p>
+<div class="space-y-3">
+<label class="flex items-center gap-3 cursor-pointer">
+<input class="text-primary focus:ring-primary size-5 bg-transparent border-slate-300" name="rating" type="radio"/>
+<span class="text-sm font-medium flex items-center gap-1">4.5+ <span class="material-symbols-outlined text-sm text-amber-400 fill-1">star</span> Exceptional</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer">
+<input class="text-primary focus:ring-primary size-5 bg-transparent border-slate-300" name="rating" type="radio"/>
+<span class="text-sm font-medium flex items-center gap-1">4.0+ <span class="material-symbols-outlined text-sm text-amber-400 fill-1">star</span> Very Good</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer">
+<input class="text-primary focus:ring-primary size-5 bg-transparent border-slate-300" name="rating" type="radio"/>
+<span class="text-sm font-medium flex items-center gap-1">3.5+ <span class="material-symbols-outlined text-sm text-amber-400 fill-1">star</span> Good</span>
+</label>
+</div>
+</div>
+</div>
+<!-- Ad/Promo Card -->
+<div class="rounded-2xl bg-primary overflow-hidden relative p-6 text-white h-48 flex flex-col justify-end">
+<div class="absolute top-0 right-0 p-4 opacity-20">
+<span class="material-symbols-outlined text-8xl">local_offer</span>
+</div>
+<h4 class="text-xl font-bold relative z-10">Get 20% Off</h4>
+<p class="text-sm opacity-90 relative z-10 mb-4">First car rental in Paris</p>
+<button class="w-fit px-4 py-2 bg-white text-primary rounded-lg text-sm font-bold relative z-10">Claim Now</button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<div class="flex-1">
+<div class="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4">
+<div>
+<h1 class="text-3xl font-extrabold tracking-tight">Top Stays in Santorini</h1>
+<p class="text-slate-500 dark:text-slate-400">124 properties found</p>
+</div>
+<div class="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
+<button class="px-4 py-2 bg-white dark:bg-slate-700 shadow-sm rounded-lg text-sm font-bold">Recommended</button>
+<button class="px-4 py-2 text-slate-500 text-sm font-bold">Price: Low to High</button>
+</div>
+</div>
+<!-- Grid of Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+<!-- Card 1 -->
+<div class="group glassy rounded-2xl overflow-hidden flex flex-col hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+<div class="relative h-60 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="White villa overlooking blue sea in Santorini" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCt5P-q6vBune1XdFy0xt2CR1TfTzrKo4WcAqKxf2MafD_Vt1UoGG4g15NJXHbU2WkGPXidKOPrbQuKM9fud0zPzSjeQ1OwmJbZjT85fpEcp1RaPct7o1yuZYGWKney-X0Z__TmzzWXHRWkHd92prhpMmpGdzAI2vlB_d6HVZLdOsti2HcQ5Sdptyj4AaoPqQUN5A215WXQhbYLs0pC-8V9kGznWEnzZHUYeJ4sTcjEOocgtHySJnnSmNOWbPKYJj1-fSyUNNvrr_YZ"/>
+<button class="absolute top-4 right-4 size-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/40 transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+<div class="absolute bottom-4 left-4">
+<span class="px-3 py-1 bg-primary text-white text-xs font-bold rounded-full">Top Rated</span>
+</div>
+</div>
+<div class="p-5 flex flex-col flex-1">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-lg font-bold leading-tight group-hover:text-primary transition-colors">Azure Horizon Villa</h3>
+<div class="flex items-center gap-1 text-sm font-bold">
+<span class="material-symbols-outlined text-amber-400 fill-1 text-lg">star</span>
+<span>4.9</span>
+</div>
+</div>
+<div class="flex items-center gap-1 text-slate-500 dark:text-slate-400 text-sm mb-4">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span>Oia, Santorini</span>
+</div>
+<div class="mt-auto flex items-center justify-between border-t border-slate-100 dark:border-slate-800 pt-4">
+<div>
+<span class="text-2xl font-black text-primary">$450</span>
+<span class="text-xs text-slate-400 font-medium">/ night</span>
+</div>
+<button class="px-4 py-2 bg-primary/10 text-primary hover:bg-primary hover:text-white rounded-xl text-sm font-bold transition-all">View Details</button>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group glassy rounded-2xl overflow-hidden flex flex-col hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+<div class="relative h-60 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Luxury hotel pool with palm trees" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOdNX-7setLVYiyyHaTUkvhWVA13YoHf2mAY63IE-7-l-g-OouyLyl5-ghRge3d2GM5CBY8H8SQKj05TqDm7N9_0ECHibz_eYxbVCgHGCMB_Tn5YvwDxAoNC_e-U6CK9axWX_yfLYMOv7nDZEy4JV_mc2uCPeovot-UFxt7_KtxF_Tahk_YOQnJNfqax65L-T1gHiHTJtVTnHXdjNzfVX9D7JbPWmVhbJQwarVGeynaWFxdJkV_w7hnz2XcPCPMfOAIns1A2PId9MV"/>
+<button class="absolute top-4 right-4 size-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/40 transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="p-5 flex flex-col flex-1">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-lg font-bold leading-tight group-hover:text-primary transition-colors">Sun-Drenched Resort</h3>
+<div class="flex items-center gap-1 text-sm font-bold">
+<span class="material-symbols-outlined text-amber-400 fill-1 text-lg">star</span>
+<span>4.7</span>
+</div>
+</div>
+<div class="flex items-center gap-1 text-slate-500 dark:text-slate-400 text-sm mb-4">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span>Fira, Santorini</span>
+</div>
+<div class="mt-auto flex items-center justify-between border-t border-slate-100 dark:border-slate-800 pt-4">
+<div>
+<span class="text-2xl font-black text-primary">$320</span>
+<span class="text-xs text-slate-400 font-medium">/ night</span>
+</div>
+<button class="px-4 py-2 bg-primary/10 text-primary hover:bg-primary hover:text-white rounded-xl text-sm font-bold transition-all">View Details</button>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group glassy rounded-2xl overflow-hidden flex flex-col hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+<div class="relative h-60 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Modern hotel lobby and check-in area" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjN9FO0GiCWCxLzecVU1eAXKDXFnH9cFCrAhrZ1xcCRNgX01hdWxg9LRaYJwoo9rh4ywpGp8uy40Fsj99CYHdRRegnKwY4FlSmo6ZgHwR79vcC_kJybr494hb61Yq9-IEn4dN0xoGrB1BE1Arv7lNvozBjrfCg9rtiwNsQgXa6SeT9GXcWKswJFwUHzUnadl7YvK-tMx3SvKqEvdlz9tVqOcZ-nVdz3rXPzFpnSvHvWxCsNU0DoIQ90MbrSKJ1dRHa52KgftW_aEny"/>
+<button class="absolute top-4 right-4 size-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/40 transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+<div class="absolute bottom-4 left-4">
+<span class="px-3 py-1 bg-green-500 text-white text-xs font-bold rounded-full">New Listing</span>
+</div>
+</div>
+<div class="p-5 flex flex-col flex-1">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-lg font-bold leading-tight group-hover:text-primary transition-colors">The Boutique Cave</h3>
+<div class="flex items-center gap-1 text-sm font-bold">
+<span class="material-symbols-outlined text-amber-400 fill-1 text-lg">star</span>
+<span>4.8</span>
+</div>
+</div>
+<div class="flex items-center gap-1 text-slate-500 dark:text-slate-400 text-sm mb-4">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span>Imerovigli, Santorini</span>
+</div>
+<div class="mt-auto flex items-center justify-between border-t border-slate-100 dark:border-slate-800 pt-4">
+<div>
+<span class="text-2xl font-black text-primary">$290</span>
+<span class="text-xs text-slate-400 font-medium">/ night</span>
+</div>
+<button class="px-4 py-2 bg-primary/10 text-primary hover:bg-primary hover:text-white rounded-xl text-sm font-bold transition-all">View Details</button>
+</div>
+</div>
+</div>
+<!-- Card 4 (Cars Example) -->
+<div class="group glassy rounded-2xl overflow-hidden flex flex-col hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+<div class="relative h-60 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Sleek modern sports car in white" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-Z_8YC_jsWBlnalO05kqGlJcKUYVMf6TED1IHidwQ_z7rDHpxoIl-xuxp66RYnOPb8UlR4Sij3hAgo_P6QLi3-SHEf0c90c2E6x2q2QdVDFkGkwzoWT8liiaKH5sQ9NOhZXN3vvuELzBbncWPKL3ywhztIfl46Ay9YcH9vteQLk97g3WMIL5-48Roizso0wwNJTPMNPsEz6FHki4gHa89M2-yJzQs70RroxNueGxh31mSX4CnqzjST3SiJGkOCKKDXEgAd-zXAs-g"/>
+<button class="absolute top-4 right-4 size-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/40 transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="p-5 flex flex-col flex-1">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-lg font-bold leading-tight group-hover:text-primary transition-colors">Luxury Convertible</h3>
+<div class="flex items-center gap-1 text-sm font-bold">
+<span class="material-symbols-outlined text-amber-400 fill-1 text-lg">star</span>
+<span>4.6</span>
+</div>
+</div>
+<div class="flex items-center gap-3 text-slate-500 dark:text-slate-400 text-sm mb-4">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">settings</span> Auto</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">person</span> 4 Seats</span>
+</div>
+<div class="mt-auto flex items-center justify-between border-t border-slate-100 dark:border-slate-800 pt-4">
+<div>
+<span class="text-2xl font-black text-primary">$110</span>
+<span class="text-xs text-slate-400 font-medium">/ day</span>
+</div>
+<button class="px-4 py-2 bg-primary/10 text-primary hover:bg-primary hover:text-white rounded-xl text-sm font-bold transition-all">Rent Now</button>
+</div>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="group glassy rounded-2xl overflow-hidden flex flex-col hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+<div class="relative h-60 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Portrait of people smiling on vacation" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_2sB-HUteR3nF9oYKYnE-HA3xjJA81VvT9zGiLT5DZakgCJVBIbJuw-x8lunFKtYh24i2zZZIkB1pcGC8XLV1Qf_uCRPJas1h0lvHpY-h93PXfdTyRXBJ6PtxmCJb-7rN5OX6C8WJ1ovwFHyHG5DmgdSPe4WQe8i0Hej2a0Hh637MtfcLsCtMBWQpSlgVfH9wEKlSBV6exAv_0JJXRZBu29xl2rZ3rZiMmf3GCwRIpXgKHdvvMWkw6Oj5j_YpyPPrmJKgfqLfJ2Sc"/>
+<button class="absolute top-4 right-4 size-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/40 transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="p-5 flex flex-col flex-1">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-lg font-bold leading-tight group-hover:text-primary transition-colors">Panoramic Suites</h3>
+<div class="flex items-center gap-1 text-sm font-bold">
+<span class="material-symbols-outlined text-amber-400 fill-1 text-lg">star</span>
+<span>4.9</span>
+</div>
+</div>
+<div class="flex items-center gap-1 text-slate-500 dark:text-slate-400 text-sm mb-4">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span>Akrotiri, Santorini</span>
+</div>
+<div class="mt-auto flex items-center justify-between border-t border-slate-100 dark:border-slate-800 pt-4">
+<div>
+<span class="text-2xl font-black text-primary">$380</span>
+<span class="text-xs text-slate-400 font-medium">/ night</span>
+</div>
+<button class="px-4 py-2 bg-primary/10 text-primary hover:bg-primary hover:text-white rounded-xl text-sm font-bold transition-all">View Details</button>
+</div>
+</div>
+</div>
+<!-- Card 6 -->
+<div class="group glassy rounded-2xl overflow-hidden flex flex-col hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+<div class="relative h-60 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Peaceful beach shore at sunset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCccVYKQLnMUeeBf7TV7A_GVMPlzeySp5k3RbfOmAUAdm5rye_urvijxDijPY5AM9LGaIw-cH0FrnjoNHlOSuSuCifqZAnborMBCtc6Nwj95ZLH041nTRo0lFDpoqGiFK5M2DqdJGDBLzIp6uPAUdHgLR7m_WfPtMkNKi1fsaPAAmnvOMx7sxbx0AwwuAJzEbULXAE0tT7QhRq_F0x0W_K-5LawR-gPIDXBUeKiIvRNMQWA0em3Urlehr070-f6kt16nvcUEmOl0VFy"/>
+<button class="absolute top-4 right-4 size-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/40 transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="p-5 flex flex-col flex-1">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-lg font-bold leading-tight group-hover:text-primary transition-colors">Sands Edge Villa</h3>
+<div class="flex items-center gap-1 text-sm font-bold">
+<span class="material-symbols-outlined text-amber-400 fill-1 text-lg">star</span>
+<span>4.5</span>
+</div>
+</div>
+<div class="flex items-center gap-1 text-slate-500 dark:text-slate-400 text-sm mb-4">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span>Perissa, Santorini</span>
+</div>
+<div class="mt-auto flex items-center justify-between border-t border-slate-100 dark:border-slate-800 pt-4">
+<div>
+<span class="text-2xl font-black text-primary">$195</span>
+<span class="text-xs text-slate-400 font-medium">/ night</span>
+</div>
+<button class="px-4 py-2 bg-primary/10 text-primary hover:bg-primary hover:text-white rounded-xl text-sm font-bold transition-all">View Details</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination -->
+<div class="mt-12 flex justify-center">
+<div class="flex items-center gap-2 p-1 glassy rounded-xl">
+<button class="size-10 flex items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="size-10 flex items-center justify-center rounded-lg bg-primary text-white font-bold">1</button>
+<button class="size-10 flex items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 font-bold">2</button>
+<button class="size-10 flex items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 font-bold">3</button>
+<span class="px-2">...</span>
+<button class="size-10 flex items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 font-bold">12</button>
+<button class="size-10 flex items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="mt-20 border-t border-slate-200 dark:border-slate-800 py-12">
+<div class="max-w-[1440px] mx-auto px-6">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+<div class="space-y-4">
+<div class="flex items-center gap-2 text-primary mb-4">
+<span class="material-symbols-outlined text-3xl font-bold">explore</span>
+<h2 class="text-xl font-bold tracking-tight">TravelHub</h2>
+</div>
+<p class="text-sm text-slate-500 leading-relaxed">Making your travel dreams a reality with luxury stays and seamless transportation services worldwide.</p>
+</div>
+<div>
+<h4 class="font-bold mb-6">Services</h4>
+<ul class="space-y-4 text-sm text-slate-500">
+<li><a class="hover:text-primary" href="#">Hotel Bookings</a></li>
+<li><a class="hover:text-primary" href="#">Car Rentals</a></li>
+<li><a class="hover:text-primary" href="#">Dining Reservations</a></li>
+<li><a class="hover:text-primary" href="#">Activity Passes</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-6">Support</h4>
+<ul class="space-y-4 text-sm text-slate-500">
+<li><a class="hover:text-primary" href="#">Help Center</a></li>
+<li><a class="hover:text-primary" href="#">Safety Information</a></li>
+<li><a class="hover:text-primary" href="#">Cancellation Options</a></li>
+<li><a class="hover:text-primary" href="#">Contact Us</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-6">Newsletter</h4>
+<p class="text-sm text-slate-500 mb-4">Get travel tips and exclusive deals.</p>
+<div class="flex gap-2">
+<input class="flex-1 rounded-xl bg-slate-100 dark:bg-slate-800 border-none px-4 text-sm focus:ring-primary" placeholder="Email" type="email"/>
+<button class="bg-primary text-white p-2 rounded-xl">
+<span class="material-symbols-outlined">send</span>
+</button>
+</div>
+</div>
+</div>
+<div class="mt-12 pt-8 border-t border-slate-100 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-400">
+<p>© 2024 TravelHub Inc. All rights reserved.</p>
+<div class="flex gap-6">
+<a class="hover:text-primary" href="#">Privacy Policy</a>
+<a class="hover:text-primary" href="#">Terms of Service</a>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

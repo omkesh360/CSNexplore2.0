@@ -1,0 +1,124 @@
+<?php
+// admin/admin-header.php – shared admin layout
+// Set $admin_page before including (e.g. 'dashboard', 'listings', 'bookings', 'blogs', 'users', 'content')
+$admin_page = $admin_page ?? '';
+$admin_title = $admin_title ?? 'Admin | CSNExplore';
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title><?php echo htmlspecialchars($admin_title); ?></title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<script>
+tailwind.config = {
+    theme: { extend: {
+        colors: { primary: '#ec5b13', 'primary-dark': '#c94d0e' },
+        fontFamily: { display: ['Inter','sans-serif'] }
+    }}
+}
+</script>
+<style>
+body { font-family: 'Inter', sans-serif; }
+.material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; }
+.sidebar-link.active { background: rgba(236,91,19,0.12); color: #ec5b13; }
+.sidebar-link.active .material-symbols-outlined { color: #ec5b13; }
+</style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen">
+
+<!-- Auth guard -->
+<script>
+(function(){
+    var token = localStorage.getItem('csn_admin_token');
+    var user  = JSON.parse(localStorage.getItem('csn_admin_user') || 'null');
+    if (!token || !user || user.role !== 'admin') {
+        window.location.href = '../adminexplorer.php';
+    }
+    window._adminToken = token;
+    window._adminUser  = user;
+})();
+</script>
+
+<div class="flex h-screen overflow-hidden">
+<!-- ── Sidebar ──────────────────────────────────────────────────────────── -->
+<aside id="sidebar" class="w-64 bg-white border-r border-slate-200 flex flex-col shrink-0 z-30 transition-transform duration-300">
+    <!-- Logo -->
+    <div class="h-16 flex items-center gap-2.5 px-5 border-b border-slate-100">
+        <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-white text-lg">explore</span>
+        </div>
+        <div>
+            <p class="font-bold text-sm text-slate-900 leading-none">CSNExplore</p>
+            <p class="text-[10px] text-slate-400 font-medium">Admin Panel</p>
+        </div>
+        <button id="sidebar-close" class="ml-auto md:hidden text-slate-400 hover:text-slate-600">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+    </div>
+
+    <!-- Nav -->
+    <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-0.5">
+        <?php
+        $nav = [
+            ['href'=>'dashboard.php', 'icon'=>'dashboard',       'label'=>'Dashboard',    'key'=>'dashboard'],
+            ['href'=>'listings.php',  'icon'=>'list_alt',         'label'=>'Listings',     'key'=>'listings'],
+            ['href'=>'bookings.php',  'icon'=>'book_online',      'label'=>'Bookings',     'key'=>'bookings'],
+            ['href'=>'blogs.php',     'icon'=>'article',          'label'=>'Blogs',        'key'=>'blogs'],
+            ['href'=>'users.php',     'icon'=>'group',            'label'=>'Users',        'key'=>'users'],
+            ['href'=>'content.php',   'icon'=>'edit_note',        'label'=>'Page Content', 'key'=>'content'],
+        ];
+        foreach ($nav as $n):
+            $active = ($admin_page === $n['key']) ? 'active' : '';
+        ?>
+        <a href="<?php echo $n['href']; ?>"
+           class="sidebar-link <?php echo $active; ?> flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all">
+            <span class="material-symbols-outlined text-xl text-slate-400"><?php echo $n['icon']; ?></span>
+            <?php echo $n['label']; ?>
+        </a>
+        <?php endforeach; ?>
+    </nav>
+
+    <!-- User + Logout -->
+    <div class="p-4 border-t border-slate-100">
+        <div class="flex items-center gap-3 mb-3">
+            <div class="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-primary text-base">person</span>
+            </div>
+            <div class="min-w-0">
+                <p id="admin-name" class="text-xs font-semibold text-slate-900 truncate">Admin</p>
+                <p id="admin-email" class="text-[10px] text-slate-400 truncate">admin@csnexplore.com</p>
+            </div>
+        </div>
+        <button onclick="adminLogout()"
+                class="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-500 hover:bg-red-50 rounded-xl transition-all font-medium">
+            <span class="material-symbols-outlined text-base">logout</span> Sign Out
+        </button>
+    </div>
+</aside>
+
+<!-- ── Main ─────────────────────────────────────────────────────────────── -->
+<div class="flex-1 flex flex-col overflow-hidden">
+    <!-- Top bar -->
+    <header class="h-16 bg-white border-b border-slate-200 flex items-center gap-4 px-6 shrink-0">
+        <button id="sidebar-toggle" class="md:hidden text-slate-500 hover:text-slate-700">
+            <span class="material-symbols-outlined">menu</span>
+        </button>
+        <h1 class="text-base font-bold text-slate-900"><?php echo htmlspecialchars($admin_title); ?></h1>
+        <div class="ml-auto flex items-center gap-3">
+            <a href="../index.php" target="_blank"
+               class="text-xs text-slate-500 hover:text-primary flex items-center gap-1 transition-colors">
+                <span class="material-symbols-outlined text-base">open_in_new</span> View Site
+            </a>
+            <div id="pending-badge" class="hidden items-center gap-1 bg-orange-50 text-primary text-xs font-bold px-3 py-1.5 rounded-full border border-primary/20">
+                <span class="material-symbols-outlined text-sm">notifications</span>
+                <span id="pending-count">0</span> pending
+            </div>
+        </div>
+    </header>
+
+    <!-- Page content -->
+    <main class="flex-1 overflow-y-auto p-6">

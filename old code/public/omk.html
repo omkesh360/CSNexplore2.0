@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>CSNExplore – Hotels, Bikes, Cars & Attractions in Chhatrapati Sambhajinagar</title>
+    <script src="https://cdn.tailwindcss.com?plugins=container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec5b13",
+                        "whatsapp": "#25D366",
+                        "background-dark": "#0a0705",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "serif": ["Playfair Display", "serif"]
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Flatpickr -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <style>
+        @keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+        .marquee { animation: marquee 30s linear infinite; }
+        .glass { background:rgba(255,255,255,0.07); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border:1px solid rgba(255,255,255,0.12); }
+        .glass-dark { background:rgba(10,7,5,0.7); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid rgba(236,91,19,0.1); }
+        .hide-scrollbar::-webkit-scrollbar { display:none; }
+        .hide-scrollbar { -ms-overflow-style:none; scrollbar-width:none; }
+        .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; font-family:'Material Symbols Outlined'; font-style:normal; display:inline-block; line-height:1; }
+        .card-hover:hover { box-shadow:0 0 30px rgba(236,91,19,0.15); }
+        #hero-label, #hero-pre, #hero-highlight, #hero-post, #hero-desc { transition: opacity 0.25s ease; }
+
+        /* Search box */
+        .search-box { background:rgba(255,255,255,0.08); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,0.15); border-radius:12px; padding:14px 16px; }
+        .tab-btn { display:flex; align-items:center; gap:4px; padding:5px 11px; border-radius:50px; font-size:11px; font-weight:700; color:rgba(255,255,255,0.55); cursor:pointer; transition:all .2s; border:none; background:transparent; white-space:nowrap; }
+        .tab-btn:hover { color:#fff; background:rgba(255,255,255,0.08); }
+        .tab-btn.active { color:#fff; background:#ec5b13; box-shadow:0 3px 10px rgba(236,91,19,0.35); }
+        .tab-btn .material-symbols-outlined { font-size:14px; }
+        .search-field { display:flex; align-items:center; gap:7px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.12); border-radius:9px; padding:0 12px; flex:1; min-width:0; height:42px; transition:border-color .2s; }
+        .search-field:focus-within { border-color:#ec5b13; }
+        .search-field .material-symbols-outlined { color:rgba(255,255,255,0.4); font-size:17px; flex-shrink:0; }
+        .search-field input { background:transparent; border:none; outline:none; color:#fff; font-size:13px; font-weight:500; width:100%; min-width:0; box-shadow:none; -webkit-appearance:none; }
+        .search-field input::placeholder { color:rgba(255,255,255,0.4); }
+        .search-field input:focus { outline:none; box-shadow:none; }
+        .date-field { display:flex; align-items:center; gap:7px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.12); border-radius:9px; padding:0 12px; cursor:pointer; transition:border-color .2s; flex:1; min-width:0; height:42px; }
+        .date-field:focus-within { border-color:#ec5b13; }
+        .date-field .material-symbols-outlined { color:rgba(255,255,255,0.4); font-size:17px; flex-shrink:0; }
+        .date-field input { background:transparent; border:none; outline:none; color:#fff; font-size:13px; font-weight:500; width:100%; cursor:pointer; min-width:0; box-shadow:none; -webkit-appearance:none; }
+        .date-field input::placeholder { color:rgba(255,255,255,0.4); }
+        .date-field input:focus { outline:none; box-shadow:none; }
+        .search-row { display:flex; gap:7px; align-items:center; flex-wrap:nowrap; width:100%; }
+        .search-btn { background:#ec5b13; color:#fff; font-weight:800; font-size:13px; padding:0 20px; border-radius:9px; border:none; cursor:pointer; display:flex; align-items:center; gap:5px; transition:background .2s; white-space:nowrap; flex-shrink:0; height:42px; }
+        .search-btn:hover { background:#d44e0e; }
+        .search-btn .material-symbols-outlined { font-size:16px; }
+        .search-field input, .date-field input { --tw-ring-shadow: none !important; --tw-ring-color: transparent !important; }
+        .search-box input { border:none !important; outline:none !important; box-shadow:none !important; ring:0 !important; background:transparent !important; }
+        .search-box input:focus { border:none !important; outline:none !important; box-shadow:none !important; }
+        .search-panel { display:none; }
+        .search-panel.active { display:flex; flex-direction:column; gap:8px; }
+
+        /* Flatpickr overrides for dark theme */
+        .flatpickr-calendar { background:#1c1410 !important; border:1px solid rgba(236,91,19,0.3) !important; border-radius:16px !important; box-shadow:0 20px 60px rgba(0,0,0,0.6) !important; }
+        .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange { background:#ec5b13 !important; border-color:#ec5b13 !important; }
+        .flatpickr-day.inRange { background:rgba(236,91,19,0.2) !important; border-color:transparent !important; }
+        .flatpickr-day:hover { background:rgba(236,91,19,0.3) !important; }
+        .flatpickr-months .flatpickr-month { color:#fff !important; }
+        .flatpickr-current-month { color:#fff !important; }
+        .flatpickr-weekday { color:rgba(255,255,255,0.5) !important; }
+        .flatpickr-day { color:#fff !important; }
+        .flatpickr-day.flatpickr-disabled { color:rgba(255,255,255,0.2) !important; }
+        .flatpickr-prev-month svg, .flatpickr-next-month svg { fill:#fff !important; }
+    </style>
+</head>
+<body class="bg-white dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+
+<!-- Marquee Bar -->
+<div class="bg-primary text-white py-1.5 overflow-hidden relative z-[60]">
+    <div class="max-w-7xl mx-auto px-4 flex justify-between items-center gap-4 text-[11px] font-semibold uppercase tracking-widest">
+        <div class="flex-1 overflow-hidden">
+            <div class="flex whitespace-nowrap marquee">
+                <span class="px-6">★ 20% OFF on first heritage tour booking</span>
+                <span class="px-6">★ Verified guides for Ajanta &amp; Ellora</span>
+                <span class="px-6">★ Free cancellation on bike rentals</span>
+                <span class="px-6">★ 24/7 tourist support available</span>
+                <span class="px-6">★ 20% OFF on first heritage tour booking</span>
+                <span class="px-6">★ Verified guides for Ajanta &amp; Ellora</span>
+                <span class="px-6">★ Free cancellation on bike rentals</span>
+                <span class="px-6">★ 24/7 tourist support available</span>
+            </div>
+        </div>
+        <div class="hidden md:flex items-center gap-4 shrink-0">
+            <a href="tel:+918600968888" class="flex items-center gap-1.5 hover:text-white/80 transition-colors">
+                <span class="material-symbols-outlined text-[14px]">call</span>+91 86009 68888
+            </a>
+            <a href="https://wa.me/918600968888" class="flex items-center gap-1.5 bg-white/15 px-3 py-0.5 rounded-full hover:bg-white/25 transition-all">
+                <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.417-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.305 1.652zm6.599-3.825c1.63.975 3.41 1.487 5.23 1.488 5.439 0 9.861-4.422 9.863-9.861.001-2.636-1.024-5.115-2.884-6.977-1.862-1.864-4.341-2.887-6.979-2.888-5.439 0-9.861 4.422-9.863 9.862 0 1.842.511 3.641 1.478 5.187l-.995 3.637 3.73-.978zm11.367-7.643c-.31-.155-1.837-.906-2.12-.108-.285.103-.55.515-.674.654-.124.14-.248.155-.558.001-.31-.155-1.31-.483-2.498-1.543-.924-.824-1.548-1.841-1.73-2.15-.181-.31-.019-.477.135-.631.14-.139.31-.36.465-.541.155-.181.206-.31.31-.515.103-.206.052-.386-.026-.541-.077-.155-.674-1.626-.924-2.228-.243-.585-.491-.504-.674-.513-.175-.008-.375-.01-.575-.01s-.525.075-.8.375c-.275.3-1.05 1.026-1.05 2.5s1.075 2.9 1.225 3.1c.15.2 2.11 3.221 5.113 4.513.714.307 1.272.49 1.706.629.718.227 1.37.195 1.886.118.575-.085 1.837-.75 2.096-1.475.258-.725.258-1.346.181-1.475-.077-.129-.283-.206-.593-.361z"/></svg>
+                WhatsApp
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Header -->
+<header class="sticky top-0 w-full z-50 glass-dark border-b border-white/5">
+    <nav class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+        <!-- Logo -->
+        <a href="omk.html" class="flex items-center gap-2 shrink-0">
+            <img src="images/travelhub.png" alt="CSNExplore"
+                 class="h-14 object-contain"
+                 onerror="this.style.display='none'; document.getElementById('logo-text').style.display='flex'"/>
+            <span id="logo-text" style="display:none" class="items-center gap-1.5">
+                <span class="material-symbols-outlined text-primary text-2xl">explore</span>
+                <span class="font-serif font-black text-white text-lg tracking-tight">CSNExplore</span>
+            </span>
+        </a>
+        <!-- Nav -->
+        <div class="hidden md:flex items-center gap-1">
+            <a href="omk.html" class="text-white text-sm font-semibold px-4 py-2 rounded-full hover:bg-white/10 transition-colors">Home</a>
+            <a href="about.html" class="text-white/70 text-sm font-semibold px-4 py-2 rounded-full hover:bg-white/10 hover:text-white transition-colors">About Us</a>
+            <a href="contact.html" class="text-white/70 text-sm font-semibold px-4 py-2 rounded-full hover:bg-white/10 hover:text-white transition-colors">Contact Us</a>
+            <a href="blogs.html" class="text-white/70 text-sm font-semibold px-4 py-2 rounded-full hover:bg-white/10 hover:text-white transition-colors">Blogs</a>
+        </div>
+        <!-- Auth -->
+        <div class="flex items-center gap-2">
+            <a href="login.html" class="text-white text-sm font-semibold px-4 py-1.5 hover:bg-white/10 rounded-full transition-all">Login</a>
+            <a href="register.html" class="bg-primary text-white text-sm font-bold px-5 py-1.5 rounded-full hover:bg-orange-600 transition-all shadow-lg shadow-primary/20">Register</a>
+            <!-- Mobile menu button -->
+            <button id="mob-btn" class="md:hidden text-white hover:bg-white/10 p-2 rounded-lg transition-colors ml-1">
+                <span class="material-symbols-outlined text-2xl">menu</span>
+            </button>
+        </div>
+    </nav>
+    <!-- Mobile Menu -->
+    <div id="mob-menu" class="hidden md:hidden border-t border-white/10 px-4 py-3 flex flex-col gap-1">
+        <a href="omk.html" class="text-white text-sm font-semibold px-4 py-2.5 rounded-xl hover:bg-white/10 transition-colors">Home</a>
+        <a href="about.html" class="text-white/70 text-sm font-semibold px-4 py-2.5 rounded-xl hover:bg-white/10 hover:text-white transition-colors">About Us</a>
+        <a href="contact.html" class="text-white/70 text-sm font-semibold px-4 py-2.5 rounded-xl hover:bg-white/10 hover:text-white transition-colors">Contact Us</a>
+        <a href="blogs.html" class="text-white/70 text-sm font-semibold px-4 py-2.5 rounded-xl hover:bg-white/10 hover:text-white transition-colors">Blogs</a>
+        <div class="flex gap-2 pt-2 border-t border-white/10 mt-1">
+            <a href="login.html" class="flex-1 text-center text-white text-sm font-semibold py-2 hover:bg-white/10 rounded-xl transition-all">Login</a>
+            <a href="register.html" class="flex-1 text-center bg-primary text-white text-sm font-bold py-2 rounded-xl hover:bg-orange-600 transition-all">Register</a>
+        </div>
+    </div>
+    <script>
+        document.getElementById('mob-btn').addEventListener('click', function() {
+            var m = document.getElementById('mob-menu');
+            m.classList.toggle('hidden');
+        });
+    </script>
+</header>
+
+<main>
+<!-- Hero -->
+<section class="relative min-h-[80vh] flex flex-col items-center justify-center overflow-hidden">
+    <div class="absolute inset-0 z-0">
+        <div class="absolute inset-0 bg-gradient-to-b from-black/75 via-black/50 to-[#0a0705] z-10"></div>
+        <div id="hero-bg" class="w-full h-full bg-cover bg-center transition-all duration-1000" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuDfTDZo8LglfsdX1vCy-PfHltcZor3jl-l4xxrXMYSU-zLgoKXxY-ouUImyR0WZq69V0y63PE1wDL2_EfqYwWhgQOHPVDJVHhyGGB7H8kZNyboNAXVxWDvlFW_Z_QRXuTKMBuuk7a9HgI3Gde3PidzWIcOhtgs4QAHX2DHA2V6QUaFo6mYDZzEhvq1Y7FwjBSsjTNmfwco23Zfvdb8laeVoTMZHDGMoMrH3yPn4aQDHZ9AJE-WXiuWGVG-c0BegSoJwB1zEXVVWIUie')"></div>
+    </div>
+    <div class="relative z-20 text-center px-4 w-full max-w-5xl mx-auto">
+        <p id="hero-label" class="text-primary font-bold text-xs uppercase tracking-widest mb-3 transition-all duration-500">Chhatrapati Sambhajinagar</p>
+        <h1 class="font-serif text-4xl md:text-6xl text-white mb-4 leading-tight font-black">
+            <span id="hero-pre">Explore </span><span class="text-primary" id="hero-highlight">Your City</span><span id="hero-post"> Your Way</span>
+        </h1>
+        <p id="hero-desc" class="text-white/70 text-base md:text-lg mb-10 max-w-2xl mx-auto transition-all duration-500">Stays, cars, bikes, restaurants, attractions and buses — all in one place.</p>
+
+        <!-- Search Box -->
+        <div class="search-box max-w-3xl mx-auto">
+            <!-- Tabs -->
+            <div class="flex flex-wrap gap-1 mb-3 pb-2 border-b border-white/10 justify-center">                <button class="tab-btn active" data-tab="stays" onclick="switchTab('stays')">
+                    <span class="material-symbols-outlined">bed</span>Stays
+                </button>
+                <button class="tab-btn" data-tab="cars" onclick="switchTab('cars')">
+                    <span class="material-symbols-outlined">directions_car</span>Cars
+                </button>
+                <button class="tab-btn" data-tab="bikes" onclick="switchTab('bikes')">
+                    <span class="material-symbols-outlined">motorcycle</span>Bikes
+                </button>
+                <button class="tab-btn" data-tab="attractions" onclick="switchTab('attractions')">
+                    <span class="material-symbols-outlined">confirmation_number</span>Attractions
+                </button>
+                <button class="tab-btn" data-tab="dine" onclick="switchTab('dine')">
+                    <span class="material-symbols-outlined">restaurant</span>Dine
+                </button>
+                <button class="tab-btn" data-tab="buses" onclick="switchTab('buses')">
+                    <span class="material-symbols-outlined">directions_bus</span>Buses
+                </button>
+            </div>
+
+            <!-- STAYS panel -->
+            <div id="panel-stays" class="search-panel active">
+                <div class="search-row">
+                    <div class="search-field">
+                        <span class="material-symbols-outlined">location_on</span>
+                        <input id="stays-location" type="text" placeholder="Chhatrapati Sambhajinagar" value="Chhatrapati Sambhajinagar"/>
+                    </div>
+                    <div class="date-field" onclick="document.getElementById('stays-checkin').focus()">
+                        <span class="material-symbols-outlined">calendar_month</span>
+                        <input id="stays-checkin" type="text" placeholder="Select date" readonly/>
+                    </div>
+                    <div class="date-field" onclick="document.getElementById('stays-checkout').focus()">
+                        <span class="material-symbols-outlined">calendar_month</span>
+                        <input id="stays-checkout" type="text" placeholder="Select date" readonly/>
+                    </div>
+                    <button class="search-btn" onclick="doSearch('stays')">
+                        <span class="material-symbols-outlined">search</span>Search
+                    </button>
+                </div>
+            </div>
+
+            <!-- CARS panel -->
+            <div id="panel-cars" class="search-panel">
+                <div class="search-row">
+                    <div class="search-field">
+                        <span class="material-symbols-outlined">trip_origin</span>
+                        <input id="cars-pickup" type="text" placeholder="Chhatrapati Sambhajinagar" value="Chhatrapati Sambhajinagar"/>
+                    </div>
+                    <div class="search-field">
+                        <span class="material-symbols-outlined">location_on</span>
+                        <input id="cars-drop" type="text" placeholder="Drop location"/>
+                    </div>
+                    <div class="date-field" onclick="document.getElementById('cars-date').focus()">
+                        <span class="material-symbols-outlined">calendar_month</span>
+                        <input id="cars-date" type="text" placeholder="Select date" readonly/>
+                    </div>
+                    <button class="search-btn" onclick="doSearch('cars')">
+                        <span class="material-symbols-outlined">search</span>Search
+                    </button>
+                </div>
+            </div>
+
+            <!-- BIKES panel -->
+            <div id="panel-bikes" class="search-panel">
+                <div class="search-row">
+                    <div class="search-field">
+                        <span class="material-symbols-outlined">location_on</span>
+                        <input id="bikes-location" type="text" placeholder="Chhatrapati Sambhajinagar" value="Chhatrapati Sambhajinagar"/>
+                    </div>
+                    <div class="date-field" onclick="document.getElementById('bikes-date').focus()">
+                        <span class="material-symbols-outlined">calendar_month</span>
+                        <input id="bikes-date" type="text" placeholder="Select date" readonly/>
+                    </div>
+                    <div class="date-field" onclick="document.getElementById('bikes-return').focus()">
+                        <span class="material-symbols-outlined">event_available</span>
+                        <input id="bikes-return" type="text" placeholder="Select date" readonly/>
+                    </div>
+                    <button class="search-btn" onclick="doSearch('bikes')">
+                        <span class="material-symbols-outlined">search</span>Search
+                    </button>
+                </div>
+            </div>
+
+            <!-- ATTRACTIONS panel -->
+            <div id="panel-attractions" class="search-panel">
+                <div class="search-row">
+                    <div class="search-field">
+                        <span class="material-symbols-outlined">location_on</span>
+                        <input id="attractions-location" type="text" placeholder="Chhatrapati Sambhajinagar" value="Chhatrapati Sambhajinagar"/>
+                    </div>
+                    <div class="date-field" onclick="document.getElementById('attractions-date').focus()">
+                        <span class="material-symbols-outlined">calendar_month</span>
+                        <input id="attractions-date" type="text" placeholder="Select date" readonly/>
+                    </div>
+                    <button class="search-btn" onclick="doSearch('attractions')">
+                        <span class="material-symbols-outlined">search</span>Search
+                    </button>
+                </div>
+            </div>
+
+            <!-- DINE panel -->
+            <div id="panel-dine" class="search-panel">
+                <div class="search-row">
+                    <div class="search-field">
+                        <span class="material-symbols-outlined">location_on</span>
+                        <input id="dine-location" type="text" placeholder="Chhatrapati Sambhajinagar" value="Chhatrapati Sambhajinagar"/>
+                    </div>
+                    <div class="date-field" onclick="document.getElementById('dine-date').focus()">
+                        <span class="material-symbols-outlined">calendar_month</span>
+                        <input id="dine-date" type="text" placeholder="Select date" readonly/>
+                    </div>
+                    <button class="search-btn" onclick="doSearch('dine')">
+                        <span class="material-symbols-outlined">search</span>Search
+                    </button>
+                </div>
+            </div>
+
+            <!-- BUSES panel -->
+            <div id="panel-buses" class="search-panel">
+                <div class="search-row">
+                    <div class="search-field">
+                        <span class="material-symbols-outlined">trip_origin</span>
+                        <input id="buses-from" type="text" placeholder="Chhatrapati Sambhajinagar" value="Chhatrapati Sambhajinagar"/>
+                    </div>
+                    <div class="search-field">
+                        <span class="material-symbols-outlined">location_on</span>
+                        <input id="buses-to" type="text" placeholder="Destination city"/>
+                    </div>
+                    <div class="date-field" onclick="document.getElementById('buses-date').focus()">
+                        <span class="material-symbols-outlined">calendar_month</span>
+                        <input id="buses-date" type="text" placeholder="Select date" readonly/>
+                    </div>
+                    <button class="search-btn" onclick="doSearch('buses')">
+                        <span class="material-symbols-outlined">search</span>Search
+                    </button>
+                </div>
+            </div>
+
+        </div><!-- end search-box -->
+    </div>
+</section>
+
+<script>
+function switchTab(tab, fromAuto) {
+    document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+    document.querySelector('[data-tab="'+tab+'"]').classList.add('active');
+    document.querySelectorAll('.search-panel').forEach(function(p){ p.classList.remove('active'); });
+    document.getElementById('panel-'+tab).classList.add('active');
+    // Update hero text
+    var heroData = {
+        stays:       { label:'Find Your Stay',       pre:'Discover ',   highlight:'Perfect Hotels',    post:' Near You',    desc:'The best hotels, guesthouses and homestays in Chhatrapati Sambhajinagar.' },
+        cars:        { label:'Rent a Car',            pre:'Drive in ',   highlight:'Premium Style',     post:' Today',       desc:'Luxury sedans, SUVs and hatchbacks with professional chauffeurs at your service.' },
+        bikes:       { label:'Rent a Bike',           pre:'Ride ',       highlight:'The Open Road',     post:' Your Way',    desc:'Scooters, cruisers and sports bikes — ride the city your way, anytime.' },
+        attractions: { label:'Discover Attractions',  pre:'Explore ',    highlight:'Ancient Marvels',   post:' Around You',  desc:'Ellora, Ajanta, Bibi Ka Maqbara and more — heritage wonders await you.' },
+        dine:        { label:'Taste the City',        pre:'Savour ',     highlight:'Local Flavours',    post:' Tonight',     desc:'From Mughlai feasts to street food — find the best restaurants near you.' },
+        buses:       { label:'Book a Bus',            pre:'Travel ',     highlight:'Your Way',          post:' Comfortably', desc:'AC sleepers, Volvo coaches and MSRTC buses to and from Sambhajinagar.' }
+    };
+    var d = heroData[tab];
+    var label = document.getElementById('hero-label');
+    var pre = document.getElementById('hero-pre');
+    var highlight = document.getElementById('hero-highlight');
+    var post = document.getElementById('hero-post');
+    var desc = document.getElementById('hero-desc');
+    label.style.opacity='0'; pre.style.opacity='0'; highlight.style.opacity='0'; post.style.opacity='0'; desc.style.opacity='0';
+    setTimeout(function(){
+        label.textContent = d.label;
+        pre.textContent = d.pre;
+        highlight.textContent = d.highlight;
+        post.textContent = d.post;
+        desc.textContent = d.desc;
+        label.style.opacity='1'; pre.style.opacity='1'; highlight.style.opacity='1'; post.style.opacity='1'; desc.style.opacity='1';
+    }, 250);
+    // Reset auto-rotate timer if user clicked manually
+    if (!fromAuto) { clearInterval(heroTimer); heroTimer = setInterval(autoRotate, 5000); }
+}
+var heroTabs = ['stays','cars','bikes','attractions','dine','buses'];
+var heroIndex = 0;
+function autoRotate() {
+    heroIndex = (heroIndex + 1) % heroTabs.length;
+    switchTab(heroTabs[heroIndex], true);
+}
+var heroTimer = setInterval(autoRotate, 5000);
+var searchUrls = { stays:'stays.html', cars:'car-rentals.html', bikes:'bike-rentals.html', attractions:'attraction.html', dine:'restaurant.html', buses:'bus.html' };
+function doSearch(tab) {
+    var params = new URLSearchParams();
+    if (tab==='stays') {
+        var loc=document.getElementById('stays-location').value, ci=document.getElementById('stays-checkin').value, co=document.getElementById('stays-checkout').value;
+        if(loc) params.set('location',loc); if(ci) params.set('checkin',ci); if(co) params.set('checkout',co);
+    } else if (tab==='cars') {
+        var pu=document.getElementById('cars-pickup').value, dr=document.getElementById('cars-drop').value, dt=document.getElementById('cars-date').value;
+        if(pu) params.set('pickup',pu); if(dr) params.set('drop',dr); if(dt) params.set('date',dt);
+    } else if (tab==='bikes') {
+        var loc=document.getElementById('bikes-location').value, dt=document.getElementById('bikes-date').value, rt=document.getElementById('bikes-return').value;
+        if(loc) params.set('location',loc); if(dt) params.set('date',dt); if(rt) params.set('return',rt);
+    } else if (tab==='attractions') {
+        var loc=document.getElementById('attractions-location').value, dt=document.getElementById('attractions-date').value;
+        if(loc) params.set('location',loc); if(dt) params.set('date',dt);
+    } else if (tab==='dine') {
+        var loc=document.getElementById('dine-location').value, dt=document.getElementById('dine-date').value;
+        if(loc) params.set('location',loc); if(dt) params.set('date',dt);
+    } else if (tab==='buses') {
+        var fr=document.getElementById('buses-from').value, to=document.getElementById('buses-to').value, dt=document.getElementById('buses-date').value;
+        if(fr) params.set('from',fr); if(to) params.set('to',to); if(dt) params.set('date',dt);
+    }
+    var qs=params.toString();
+    window.location.href = searchUrls[tab]+(qs?'?'+qs:'');
+}
+document.addEventListener('DOMContentLoaded', function() {
+    var today = new Date(), tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate()+1);
+    var opts = { dateFormat:'d M Y', minDate:'today', disableMobile:false };
+    var fpCI = flatpickr('#stays-checkin', Object.assign({},opts,{ defaultDate:today, onChange:function(s){ if(s[0]){ var n=new Date(s[0]); n.setDate(n.getDate()+1); fpCO.set('minDate',n); if(!fpCO.selectedDates[0]||fpCO.selectedDates[0]<=s[0]) fpCO.setDate(n); } } }));
+    var fpCO = flatpickr('#stays-checkout', Object.assign({},opts,{ defaultDate:tomorrow }));
+    flatpickr('#cars-date', Object.assign({},opts,{ defaultDate:today }));
+    var fpBD = flatpickr('#bikes-date', Object.assign({},opts,{ defaultDate:today, onChange:function(s){ if(s[0]){ var n=new Date(s[0]); n.setDate(n.getDate()+1); fpBR.set('minDate',n); if(!fpBR.selectedDates[0]||fpBR.selectedDates[0]<=s[0]) fpBR.setDate(n); } } }));
+    var fpBR = flatpickr('#bikes-return', Object.assign({},opts,{ defaultDate:tomorrow }));
+    flatpickr('#attractions-date', Object.assign({},opts,{ defaultDate:today }));
+    flatpickr('#dine-date', Object.assign({},opts,{ defaultDate:today }));
+    flatpickr('#buses-date', Object.assign({},opts,{ defaultDate:today }));
+});
+</script>
+
+<!-- Ride & Explore -->
+<section class="py-12 bg-white dark:bg-background-dark">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="flex items-end justify-between mb-6">
+            <div>
+                <p class="text-primary font-bold text-xs uppercase tracking-widest mb-1">Seamless Travel</p>
+                <h2 class="font-serif text-2xl md:text-3xl dark:text-white">Ride &amp; Explore</h2>
+            </div>
+            <div class="flex gap-3 text-sm font-bold text-primary">
+                <a href="car-rentals.html" class="hover:underline">Cars →</a>
+                <a href="bike-rentals.html" class="hover:underline">Bikes →</a>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div class="group relative overflow-hidden rounded-2xl h-64 shadow-lg card-hover transition-all">
+                <img alt="Luxury Car" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlDMSSDq5u4EWTtyLrL2T01rG1QVLx79iWAxTc-Q5v-4DB7Qaf3se4mMQ0OXya60SgJNz-esA3YItuP3cAQgCOUMELZ93GiboDiWUtyGlo3vcROCcNprMWU9HsV96e-umpDcBQWbOJp3OcHtPHXGe0NfG1iYfBR6dtozOW1-x0kzci9SbakuCN5LahXPRRgoI5AgrCPrXLIv8hlg56V8HPrYua2wCw58U5qNgwuVnf4hEy-HOTzh45fEkiS4W70yyelAJTlwjmXCUK"/>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-5">
+                    <h4 class="text-white text-xl font-serif mb-1">Premium Car Rentals</h4>
+                    <p class="text-white/70 text-xs mb-3">Luxury sedans with professional chauffeurs.</p>
+                    <a href="car-rentals.html" class="inline-block bg-white text-black px-5 py-2 rounded-full font-bold text-xs hover:bg-primary hover:text-white transition-all">Explore Cars</a>
+                </div>
+            </div>
+            <div class="group relative overflow-hidden rounded-2xl h-64 shadow-lg card-hover transition-all">
+                <img alt="Adventure Bike" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFYIfhiyxiKGSvW26EEi6qWok9NLO6cRlbBw0oCLlVCiV9F1e_mtQoiJK-2Dnb5uwU3K6b01miWgbmBQaNlDcPazf_LXbqwv3zx4f_F6Jsl627xYGPA3B5kQg_01L4gEPJseizInfQycEdL6o-IO9u7fAjGuMEnr_iPgYZShZ5e9VLbqTAdlhGFW8Tnss81gBfiFHSmzorGkalt_cF3Hi8ycEbYCGC_a4e9UyOZAQ8J4m9XHF2EcZwdaPo2OpFbnwwGvVRYdxLSxsT"/>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-5">
+                    <h4 class="text-white text-xl font-serif mb-1">Bike Rentals</h4>
+                    <p class="text-white/70 text-xs mb-3">Scooters to Royal Enfields for every road.</p>
+                    <a href="bike-rentals.html" class="inline-block bg-white text-black px-5 py-2 rounded-full font-bold text-xs hover:bg-primary hover:text-white transition-all">Explore Bikes</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Attractions -->
+<section class="py-12 bg-slate-50 dark:bg-slate-900/30">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="flex items-end justify-between mb-6">
+            <h2 class="font-serif text-2xl md:text-3xl dark:text-white">Ancient Marvels</h2>
+            <a href="attraction.html" class="text-sm font-bold text-primary hover:underline">See all →</a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div class="group overflow-hidden rounded-2xl bg-white dark:bg-white/5 border border-slate-100 dark:border-white/10 shadow-md card-hover transition-all">
+                <div class="h-44 overflow-hidden">
+                    <img alt="Ellora Caves" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfTDZo8LglfsdX1vCy-PfHltcZor3jl-l4xxrXMYSU-zLgoKXxY-ouUImyR0WZq69V0y63PE1wDL2_EfqYwWhgQOHPVDJVHhyGGB7H8kZNyboNAXVxWDvlFW_Z_QRXuTKMBuuk7a9HgI3Gde3PidzWIcOhtgs4QAHX2DHA2V6QUaFo6mYDZzEhvq1Y7FwjBSsjTNmfwco23Zfvdb8laeVoTMZHDGMoMrH3yPn4aQDHZ9AJE-WXiuWGVG-c0BegSoJwB1zEXVVWIUie"/>
+                </div>
+                <div class="p-4">
+                    <span class="text-primary text-[10px] font-bold uppercase tracking-widest">World Heritage</span>
+                    <h5 class="font-serif text-lg dark:text-white mt-1 mb-3">Ellora Caves</h5>
+                    <div class="flex items-center justify-between">
+                        <p class="font-black dark:text-white">₹40 <span class="text-xs text-slate-400 font-normal">entry</span></p>
+                        <a href="attraction-detail.html" class="bg-primary/10 text-primary px-4 py-1.5 rounded-full font-bold text-xs hover:bg-primary hover:text-white transition-all">Details</a>
+                    </div>
+                </div>
+            </div>
+            <div class="group overflow-hidden rounded-2xl bg-white dark:bg-white/5 border border-slate-100 dark:border-white/10 shadow-md card-hover transition-all">
+                <div class="h-44 overflow-hidden">
+                    <img alt="Bibi Ka Maqbara" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-D79qVGeL_kN4YxCqUZP2BKG-9x4p5sqXX-bx0TBbP7ZKU1EVKO-Jw5Emw0obv0VOq6md2Qzn1vqWm4o1V32OKXDNCFPuQqV_AcF7hgELzcZsE2TJ4S7h6v6mvvV08rRZxxhTTmP6woVo2zTsTcjrQSpVn_fWlQ_srrJ12DxixFiiNTPdmEfpgtbSvHMNMrYwK4BJubaMlVAZqAQJfCh5W7fpWsJ57_3zu0gTBtG7cIlIZBipNxLt3n2U-UadC2ONwF48y4nrSeOv"/>
+                </div>
+                <div class="p-4">
+                    <span class="text-primary text-[10px] font-bold uppercase tracking-widest">Mughal Architecture</span>
+                    <h5 class="font-serif text-lg dark:text-white mt-1 mb-3">Bibi Ka Maqbara</h5>
+                    <div class="flex items-center justify-between">
+                        <p class="font-black dark:text-white">₹25 <span class="text-xs text-slate-400 font-normal">entry</span></p>
+                        <a href="attraction-detail.html" class="bg-primary/10 text-primary px-4 py-1.5 rounded-full font-bold text-xs hover:bg-primary hover:text-white transition-all">Details</a>
+                    </div>
+                </div>
+            </div>
+            <div class="group overflow-hidden rounded-2xl bg-white dark:bg-white/5 border border-slate-100 dark:border-white/10 shadow-md card-hover transition-all">
+                <div class="h-44 overflow-hidden">
+                    <img alt="Daulatabad Fort" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBeBbY5fkgJvQzAWQFS4Cz5-MZDhZUTz0iY3JkRlba6oWNOkz-hSOeJixYskt3-FgETy9DQdV7xn0GCprWdMr5mEYy8xv2zMcKhxORdoKZAi5uzkmohi7j7_IRO3IlS6TmOUIAay0frtabGIudm5ciMPDm6x25ldTnG7ysnGXFwI3MjqbjGUd5rIa22CePGUhxmSCbLdyHBvHFyu_25Xl_-yuhLmp-IEWBaURvtPjytD56fJe5mQiQQ6guq4eXjFHU2XXhIxZQGwG7x"/>
+                </div>
+                <div class="p-4">
+                    <span class="text-primary text-[10px] font-bold uppercase tracking-widest">Hill Fortress</span>
+                    <h5 class="font-serif text-lg dark:text-white mt-1 mb-3">Daulatabad Fort</h5>
+                    <div class="flex items-center justify-between">
+                        <p class="font-black dark:text-white">₹35 <span class="text-xs text-slate-400 font-normal">entry</span></p>
+                        <a href="attraction-detail.html" class="bg-primary/10 text-primary px-4 py-1.5 rounded-full font-bold text-xs hover:bg-primary hover:text-white transition-all">Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Bike Rentals -->
+<section class="py-12 bg-white dark:bg-background-dark">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="flex items-end justify-between mb-6">
+            <h2 class="font-serif text-2xl md:text-3xl dark:text-white">Quick Bike Rentals</h2>
+            <a href="bike-rentals.html" class="text-sm font-bold text-primary hover:underline">See all →</a>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="glass-dark p-4 rounded-2xl border border-white/5 hover:border-primary/40 transition-all group card-hover">
+                <img alt="Royal Enfield Classic 350" class="w-full h-28 object-contain mb-3 group-hover:scale-105 transition-transform duration-400" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkXZsGBTMvoDTsJck_lsg-N6BAi2aGgrrEP7vQp6W2M5hn2zn5pPYvIf5c-Eqn49QFJKMe5ZLn1KQXOt4nKYPBjvAg9yz2uoYJo2oggR6xtVHN9TVx1MVHfkZyCmIdFukE9Ykx9pgIqI7tS2om4YOCkcn-RCinOFzWODJ09k_BRymMCKOX9uM2FrSYFjuEr4hPyEdDZNqqilKvzhiokShEJ9yGW-LH4Qip8ZIJNLuvQQ52a3FZMwM9t9kP1URcKvUlpSENZY5t2sXr"/>
+                <h5 class="text-white font-bold text-sm mb-0.5">Classic 350</h5>
+                <p class="text-white/40 text-[10px] uppercase tracking-wider mb-3">Cruiser</p>
+                <div class="flex items-center justify-between">
+                    <p class="text-primary font-black text-base">₹1,200<span class="text-[9px] text-white/30 font-normal">/day</span></p>
+                    <button class="bg-primary text-white p-1.5 rounded-lg hover:bg-orange-600 transition-all">
+                        <span class="material-symbols-outlined text-sm">add_shopping_cart</span>
+                    </button>
+                </div>
+            </div>
+            <div class="glass-dark p-4 rounded-2xl border border-white/5 hover:border-primary/40 transition-all group card-hover">
+                <img alt="Honda Activa 6G" class="w-full h-28 object-contain mb-3 group-hover:scale-105 transition-transform duration-400" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCu-MGYxKulvVTS26zEc3pMr1tIF3vnh4LjUkzasYmTXOEqGRA3_WmBmf4nose7rZh06xem65Y6oJOq3arbdRxwIZYy2FqRf3b6LdWvcJl756rsbe5wrXQ3lV_UnTnipzUwCxSkewwF5B9Job59_wpgDAgGpDOS_bnyh5ARiUiojiAohuQWYmS2tpRjcBL47ff4XEGbkQ02KrKCHfMUYMAwE0IuWsWwPezM01t7pqxbgxai1QlK5Wb-SJ0-4bFUE61E4GjPelvo9aaQ"/>
+                <h5 class="text-white font-bold text-sm mb-0.5">Activa 6G</h5>
+                <p class="text-white/40 text-[10px] uppercase tracking-wider mb-3">Scooter</p>
+                <div class="flex items-center justify-between">
+                    <p class="text-primary font-black text-base">₹500<span class="text-[9px] text-white/30 font-normal">/day</span></p>
+                    <button class="bg-primary text-white p-1.5 rounded-lg hover:bg-orange-600 transition-all">
+                        <span class="material-symbols-outlined text-sm">add_shopping_cart</span>
+                    </button>
+                </div>
+            </div>
+            <div class="glass-dark p-4 rounded-2xl border border-white/5 hover:border-primary/40 transition-all group card-hover">
+                <img alt="Yamaha Fascino 125" class="w-full h-28 object-contain mb-3 group-hover:scale-105 transition-transform duration-400" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRLFtJU8Ygd7RqMbcb-XvE7muS_dFif6BjHtq72I-kRVSreBVN3gX9oCRTcUj0dqFVux-BeyIM2oNYXX1rOWB_-48AkTGXCgY24cTJR85bpkEfDOmQeJNVuavpPa74l78lc70ZE_tKG8xbe9k_LktI3aUs4gkq2N1TWrTmoK456o0U9aoYBe56uUSsIiu2u5ThjzwLcr-xvUv2cqqZgrYnxAaVsKxAJORPp4I0UAZ-yYgK4ycyC53JmWCDo2TOuYB34c0g8vG77CiN"/>
+                <h5 class="text-white font-bold text-sm mb-0.5">Fascino 125</h5>
+                <p class="text-white/40 text-[10px] uppercase tracking-wider mb-3">Stylish</p>
+                <div class="flex items-center justify-between">
+                    <p class="text-primary font-black text-base">₹600<span class="text-[9px] text-white/30 font-normal">/day</span></p>
+                    <button class="bg-primary text-white p-1.5 rounded-lg hover:bg-orange-600 transition-all">
+                        <span class="material-symbols-outlined text-sm">add_shopping_cart</span>
+                    </button>
+                </div>
+            </div>
+            <div class="glass-dark p-4 rounded-2xl border border-white/5 hover:border-primary/40 transition-all group card-hover">
+                <img alt="KTM Duke 200" class="w-full h-28 object-contain mb-3 group-hover:scale-105 transition-transform duration-400" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3Zy6A1dfcSOH6HG-eKb7I8i13O9SjJ3LOk6IXb9VqbVtoI6ieWHQZgWJiX-dd4rBueV-jS7rIZgQ60C4-C6lStYGFYOg6AqLdoIDZ3-9WyEgXS_bDzxZ3hQkjpwIu4AaHmk7Q_quHRPMl3BQW4Y46-rp5cuWnj16baw19UZWAqYeMrLcKsC-O6hHpne4LtPTCHJ-Qby1RjsV7G5Bw_yBaCssRhsrT11cY2eVdXBFUKGir7KfSxkcVduYBhvZ-cqbiBv2LXCvapJzQ"/>
+                <h5 class="text-white font-bold text-sm mb-0.5">KTM Duke 200</h5>
+                <p class="text-white/40 text-[10px] uppercase tracking-wider mb-3">Performance</p>
+                <div class="flex items-center justify-between">
+                    <p class="text-primary font-black text-base">₹1,500<span class="text-[9px] text-white/30 font-normal">/day</span></p>
+                    <button class="bg-primary text-white p-1.5 rounded-lg hover:bg-orange-600 transition-all">
+                        <span class="material-symbols-outlined text-sm">add_shopping_cart</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Taste the City -->
+<section class="py-12 bg-slate-50 dark:bg-slate-900/30">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="flex items-end justify-between mb-6">
+            <h2 class="font-serif text-2xl md:text-3xl dark:text-white">Taste the City</h2>
+            <a href="restaurant.html" class="text-sm font-bold text-primary hover:underline">See all →</a>
+        </div>
+        <div class="flex gap-6 overflow-x-auto hide-scrollbar pb-2">
+            <div class="flex-shrink-0 text-center w-28 group cursor-pointer">
+                <div class="w-24 h-24 rounded-full mx-auto mb-3 overflow-hidden border-2 border-white dark:border-white/10 shadow-md group-hover:border-primary transition-all">
+                    <img alt="Saffron" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0eK082vF8AY2AVES6WpMWcFfL1c8qDOLHqUyQ2VpMTdoBMxsSr9uZLmpk3wSCnr1EDaZQa-7kfWbK-Y6CCS1qsNdL8iBPU4l9K91wQaBk7ZtjqR3osyFjj9BHZR2G-vKggYi_Hg-ThkXwKEnnLwWrlR5FwSxL7OTE14GfRKGETGMVSBV7AFeH7_UFWCdpQ-eEw96RPQbpWr75x3q8JAgZhOe-9BC46y-PPRJkrf8iOw5qTlLiyNx8evp1YO_pOSfU1rPyFbLpnd9J"/>
+                </div>
+                <p class="font-bold text-sm dark:text-white">Saffron</p>
+                <p class="text-primary text-[10px] font-bold uppercase">Mughlai</p>
+            </div>
+            <div class="flex-shrink-0 text-center w-28 group cursor-pointer">
+                <div class="w-24 h-24 rounded-full mx-auto mb-3 overflow-hidden border-2 border-white dark:border-white/10 shadow-md group-hover:border-primary transition-all">
+                    <img alt="Naivedya" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCA3gQlK1ERj5sCRlPrqtwO0nsvREtNkTDgMvX6i0EJ_I5Q_-khwY6jsdu23xFXcImbcoEuzacLUAJWJpyzqIXYgBZH7AVEQxBPTWyHKzjzTdFn9Nausr_YSq6uqasgV3cAz-8h_Mdz9cRtS16-5iGICgwOu0JBddKtqTZ7WKnYMI4cS7Sde7XA1nWr10TAkqmCBVbNVU_NhY4lIaARDNs923GBliYz88gOjod8fDdKtd9aLO-ZikzfixmReOpJhhG_2vMVpa_ZoFgf"/>
+                </div>
+                <p class="font-bold text-sm dark:text-white">Naivedya</p>
+                <p class="text-primary text-[10px] font-bold uppercase">Thali</p>
+            </div>
+            <div class="flex-shrink-0 text-center w-28 group cursor-pointer">
+                <div class="w-24 h-24 rounded-full mx-auto mb-3 overflow-hidden border-2 border-white dark:border-white/10 shadow-md group-hover:border-primary transition-all">
+                    <img alt="Great Sagar" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBe4WIxEN97LNP2DYRibnJh8OsUirZ4H8TpTItqHT3-eEV_oiVC2pPWCcdhO9r6EILdnjh1QXVxloCHMw57UBz3aV7zQatmokfs893yTaQY4alaf_vuzYN3cM1jekvaGKC1BFCyyzN8i0iMhLdWdH6km5N3IADbedzuQgKX0dxf8e0bknrrfnbfcvFhrVIZ19g8Nj-6MfJXr3WJQ-vXc7c7FBkt4IgCRQBv4puJLMzxefR_mMq-1hTwqV5pVTxCPmbdgM99ZWdJ76s"/>
+                </div>
+                <p class="font-bold text-sm dark:text-white">Great Sagar</p>
+                <p class="text-primary text-[10px] font-bold uppercase">Biryani</p>
+            </div>
+            <div class="flex-shrink-0 text-center w-28 group cursor-pointer">
+                <div class="w-24 h-24 rounded-full mx-auto mb-3 overflow-hidden border-2 border-white dark:border-white/10 shadow-md group-hover:border-primary transition-all">
+                    <img alt="The Bhoj" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYDYjPk4zwN5EywWGSXHCxcgYB9tLp7S-kS8cKJayAikEowD_4lcZqMWPmhVhuXTIkHqkpoGfJN441j809ZNPHynRLiib0mCmmwr5G1ED4gnm22VK6_PwSqqcJaHIKNZZXS5SjMtNJEBJJVIBzk0IrOxCXvWpPdWTfFq4Lc3dO5gkylKUbK1xu-b7SlcWG6V70ZFyvcOh4_Sv1SXV3qEaYxYZU1lrkPziH3tIthTMKX_hB-JDwVHlqDSCGFclOuNLu6yRzt5idaPCR"/>
+                </div>
+                <p class="font-bold text-sm dark:text-white">The Bhoj</p>
+                <p class="text-primary text-[10px] font-bold uppercase">Traditional</p>
+            </div>
+            <div class="flex-shrink-0 text-center w-28 group cursor-pointer">
+                <div class="w-24 h-24 rounded-full mx-auto mb-3 overflow-hidden border-2 border-white dark:border-white/10 shadow-md group-hover:border-primary transition-all">
+                    <img alt="Tara Pan" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6u_KQj8LZAKlYnMJftVKgpKiFtNBXhlIRCez9PVw-dtHVbERilFvfZpV53OhRFmSBv_WpuogDHWTbG2yNtV5U7GFpZcsy--LwjWJ7Z7bec9fwHz25yiZtzeehTnxZToydprEKofoE6XmeHTNJpBullF-34xP9fYTmAoRvGFwsLlJTQjRGCDCifCgnvlERai3vv-poQYHo_XKUWzOusN_WVjrpeTgk26tuVqxhNUqW-qZMQ9xyDM-KTBjPhSIz8aV4UYEWUfz3fUTC"/>
+                </div>
+                <p class="font-bold text-sm dark:text-white">Tara Pan</p>
+                <p class="text-primary text-[10px] font-bold uppercase">Street Food</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Travel Your Way (Buses) -->
+<section class="py-12 bg-white dark:bg-background-dark">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="flex items-end justify-between mb-6">
+            <h2 class="font-serif text-2xl md:text-3xl dark:text-white">Travel Your Way</h2>
+            <a href="bus.html" class="text-sm font-bold text-primary hover:underline">See all →</a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="glass-dark p-5 rounded-2xl flex items-center justify-between gap-4 hover:border-primary/30 transition-all card-hover">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-primary/15 rounded-xl flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-primary text-2xl">directions_bus</span>
+                    </div>
+                    <div>
+                        <p class="text-white font-bold text-sm">Neeta Travels <span class="text-[10px] font-normal text-white/50 bg-white/10 px-2 py-0.5 rounded ml-1">AC Sleeper</span></p>
+                        <p class="text-white/50 text-xs mt-0.5">Pune <span class="text-primary mx-1">→</span> Sambhajinagar</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 shrink-0">
+                    <p class="text-primary font-black text-xl">₹850</p>
+                    <a href="bus.html" class="bg-primary text-white px-4 py-2 rounded-xl font-bold text-xs hover:bg-orange-600 transition-all">Book</a>
+                </div>
+            </div>
+            <div class="glass-dark p-5 rounded-2xl flex items-center justify-between gap-4 hover:border-primary/30 transition-all card-hover">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-primary/15 rounded-xl flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-primary text-2xl">directions_bus</span>
+                    </div>
+                    <div>
+                        <p class="text-white font-bold text-sm">Prasanna Purple <span class="text-[10px] font-normal text-white/50 bg-white/10 px-2 py-0.5 rounded ml-1">Volvo</span></p>
+                        <p class="text-white/50 text-xs mt-0.5">Mumbai <span class="text-primary mx-1">→</span> Sambhajinagar</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 shrink-0">
+                    <p class="text-primary font-black text-xl">₹1,200</p>
+                    <a href="bus.html" class="bg-primary text-white px-4 py-2 rounded-xl font-bold text-xs hover:bg-orange-600 transition-all">Book</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Travel Blogs -->
+<section class="py-12 bg-slate-50 dark:bg-slate-900/30">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="flex items-end justify-between mb-6">
+            <div>
+                <p class="text-primary font-bold text-xs uppercase tracking-widest mb-1">Our Travel Journals</p>
+                <h2 class="font-serif text-2xl md:text-3xl dark:text-white">Travel Insights</h2>
+            </div>
+            <a href="blogs.html" class="text-sm font-bold text-primary hover:underline">Read more →</a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div class="group cursor-pointer">
+                <div class="rounded-2xl overflow-hidden aspect-[16/10] mb-3 shadow-md relative">
+                    <img alt="Paithani Saree" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDXtI36Ak_c1oZP6DBN6XuNcipOp1FZyPw7_5eZFyJqIOdw379DWRBbRRXte6mYOLJ41fORaujKPlbqKCgiAtknxK8WD15z2aap31vq9lcZa10hAxe8FtvE9ofYg-4g8RLQvsJk7-syHR6JOkr3oE5aCovzf5lWImP3Uhcg8xHdZkKXN7DRQA_s2iONPxGfPDcLRTiCA-gTbssnUVTvBcQEKndxQyNQlXmV6aeTeQgXBzimUbkiGVMrCQjYESOqk9VTJ9BqhJy4e8c"/>
+                    <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <span class="bg-white text-black px-4 py-1.5 rounded-full font-bold text-xs">READ POST</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="bg-primary/10 text-primary px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase">Heritage</span>
+                    <span class="text-slate-400 text-xs flex items-center gap-1"><span class="material-symbols-outlined text-sm">schedule</span>5 min</span>
+                </div>
+                <h4 class="font-serif text-lg dark:text-white group-hover:text-primary transition-colors">The Golden Thread: Weaver Stories</h4>
+            </div>
+            <div class="group cursor-pointer">
+                <div class="rounded-2xl overflow-hidden aspect-[16/10] mb-3 shadow-md relative">
+                    <img alt="Lonar Crater" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAIj__CDpESRFwR6xAYYw37kdQvkHTy5seuR-Ma_bH84a9T7P27_gmPUo-lSc8KkW_fVByifLuW45uJ0WCPAiFsghRYhsEBINf579L1sYbpfXOHpquLiVizkSZ8lnurOedj5GPcQjvRgwDEUaJ3XMAwTQgE7mUwvdnWwuN3-k9e1ql1RKo2JzRH20qHLgmzSf8GSAwWseV5C-zbc4DsHmMTCesNCz_A-2pFPuATXfNKGQy8tUwmppIvnKHv42o0CleBEwGq96jju05n"/>
+                    <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <span class="bg-white text-black px-4 py-1.5 rounded-full font-bold text-xs">READ POST</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="bg-primary/10 text-primary px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase">Nature</span>
+                    <span class="text-slate-400 text-xs flex items-center gap-1"><span class="material-symbols-outlined text-sm">schedule</span>8 min</span>
+                </div>
+                <h4 class="font-serif text-lg dark:text-white group-hover:text-primary transition-colors">A Meteor's Legacy: Lonar Secrets</h4>
+            </div>
+            <div class="group cursor-pointer">
+                <div class="rounded-2xl overflow-hidden aspect-[16/10] mb-3 shadow-md relative">
+                    <img alt="Mughlai Food" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAwOHbzGC4iPe-e8neBtLxAN4yaUk7-QpESKj9cIbPVVUs0qCRpORyT2eUw_77wag6qNYKqXqvAAWZ7dzez2J-K0IRYRo4WPCmWDYDN60oK86sQ2759o4f6AmcwvmgdJ5IsNYYNg5aVlTBFJ9NkpxJR9MKHh1ESOJd8H451r0_gUPcb5Se1d5uZAAik3HgX5D1-nbFI-g1rTPdD5oweX1488TkQoGJu-iQqmux2quuxYsuoEtJ1dhVogUNOxdCDzZgNWASd9C1-8W1"/>
+                    <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <span class="bg-white text-black px-4 py-1.5 rounded-full font-bold text-xs">READ POST</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="bg-primary/10 text-primary px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase">Cuisine</span>
+                    <span class="text-slate-400 text-xs flex items-center gap-1"><span class="material-symbols-outlined text-sm">schedule</span>4 min</span>
+                </div>
+                <h4 class="font-serif text-lg dark:text-white group-hover:text-primary transition-colors">The Royal Plate: A Culinary Tour</h4>
+            </div>
+        </div>
+    </div>
+</section>
+</main>
+
+<!-- Footer -->
+<footer class="bg-background-dark text-white pt-14 pb-8">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
+            <div>
+                <img src="images/travelhub.png" alt="CSNExplore" class="h-9 object-contain mb-4"
+                     onerror="this.style.display='none'; document.getElementById('footer-logo-text').style.display='flex'"/>
+                <span id="footer-logo-text" style="display:none" class="items-center gap-1.5 mb-4">
+                    <span class="material-symbols-outlined text-primary text-2xl">explore</span>
+                    <span class="font-serif font-black text-white text-lg tracking-tight">CSNExplore</span>
+                </span>
+                <p class="text-white/50 text-sm leading-relaxed mb-5">Your premium gateway to the wonders of Chhatrapati Sambhajinagar, Maharashtra.</p>
+                <div class="flex gap-3">
+                    <a href="#" class="w-9 h-9 rounded-full glass flex items-center justify-center hover:bg-primary transition-all"><span class="material-symbols-outlined text-sm">share</span></a>
+                    <a href="mailto:hello@csnexplore.com" class="w-9 h-9 rounded-full glass flex items-center justify-center hover:bg-primary transition-all"><span class="material-symbols-outlined text-sm">mail</span></a>
+                    <a href="https://wa.me/918600968888" class="w-9 h-9 rounded-full glass flex items-center justify-center hover:bg-primary transition-all">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.417-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.305 1.652zm6.599-3.825c1.63.975 3.41 1.487 5.23 1.488 5.439 0 9.861-4.422 9.863-9.861.001-2.636-1.024-5.115-2.884-6.977-1.862-1.864-4.341-2.887-6.979-2.888-5.439 0-9.861 4.422-9.863 9.862 0 1.842.511 3.641 1.478 5.187l-.995 3.637 3.73-.978zm11.367-7.643c-.31-.155-1.837-.906-2.12-.108-.285.103-.55.515-.674.654-.124.14-.248.155-.558.001-.31-.155-1.31-.483-2.498-1.543-.924-.824-1.548-1.841-1.73-2.15-.181-.31-.019-.477.135-.631.14-.139.31-.36.465-.541.155-.181.206-.31.31-.515.103-.206.052-.386-.026-.541-.077-.155-.674-1.626-.924-2.228-.243-.585-.491-.504-.674-.513-.175-.008-.375-.01-.575-.01s-.525.075-.8.375c-.275.3-1.05 1.026-1.05 2.5s1.075 2.9 1.225 3.1c.15.2 2.11 3.221 5.113 4.513.714.307 1.272.49 1.706.629.718.227 1.37.195 1.886.118.575-.085 1.837-.75 2.096-1.475.258-.725.258-1.346.181-1.475-.077-.129-.283-.206-.593-.361z"/></svg>
+                    </a>
+                </div>
+            </div>
+            <div>
+                <h5 class="font-bold text-sm mb-4">Quick Links</h5>
+                <ul class="flex flex-col gap-2.5 text-white/50 text-sm">
+                    <li><a href="stays.html" class="hover:text-primary transition-colors">Hotel Bookings</a></li>
+                    <li><a href="car-rentals.html" class="hover:text-primary transition-colors">Car Rentals</a></li>
+                    <li><a href="bike-rentals.html" class="hover:text-primary transition-colors">Bike Rentals</a></li>
+                    <li><a href="attraction.html" class="hover:text-primary transition-colors">Heritage Sites</a></li>
+                    <li><a href="bus.html" class="hover:text-primary transition-colors">Bus Tickets</a></li>
+                    <li><a href="blogs.html" class="hover:text-primary transition-colors">Travel Guide</a></li>
+                </ul>
+            </div>
+            <div>
+                <h5 class="font-bold text-sm mb-4">Contact Info</h5>
+                <ul class="flex flex-col gap-3 text-white/50 text-sm">
+                    <li class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-base">location_on</span>Station Road, Sambhajinagar</li>
+                    <li class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-base">call</span>+91 86009 68888</li>
+                    <li class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-base">mail</span>hello@csnexplore.com</li>
+                    <li class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-base">schedule</span>Mon–Sat: 9am – 7pm</li>
+                </ul>
+            </div>
+            <div>
+                <h5 class="font-bold text-sm mb-4">Stay Updated</h5>
+                <p class="text-white/50 text-sm mb-4">Get travel tips and exclusive deals in your inbox.</p>
+                <div class="flex flex-col gap-2">
+                    <input type="email" placeholder="Your email address" class="bg-white/5 border border-white/10 text-white placeholder:text-white/30 px-3 py-2.5 rounded-xl text-sm focus:outline-none focus:border-primary transition-colors"/>
+                    <button class="bg-primary text-white font-bold py-2.5 rounded-xl text-sm hover:bg-orange-600 transition-colors">Subscribe</button>
+                </div>
+            </div>
+        </div>
+        <div class="border-t border-white/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-white/30 text-xs">
+            <p>© 2025 CSNExplore. All rights reserved.</p>
+            <div class="flex gap-5">
+                <a href="#" class="hover:text-primary transition-colors">Privacy Policy</a>
+                <a href="#" class="hover:text-primary transition-colors">Terms of Service</a>
+                <a href="sitemap.xml" class="hover:text-primary transition-colors">Sitemap</a>
+            </div>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

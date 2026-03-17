@@ -1,0 +1,877 @@
+================================================================================
+  CSNEXPLORE - COMPLETE WEBSITE DESCRIPTION FOR UI REDESIGN
+  Project: Travel & Tourism Platform for Chhatrapati Sambhajinagar (Aurangabad), India
+  Tech Stack: PHP + SQLite backend, HTML/CSS/JS (Tailwind) frontend, JWT auth
+================================================================================
+
+================================================================================
+  PROJECT OVERVIEW
+================================================================================
+CSNExplore is a city-specific travel discovery and booking platform for
+Chhatrapati Sambhajinagar (formerly Aurangabad), Maharashtra, India.
+It lets users browse 6 service categories (stays, cars, bikes, restaurants,
+attractions, buses), read 80+ local travel blogs, and submit booking requests.
+Admins manage all content, listings, bookings, users, and site settings via
+a full-featured admin panel.
+
+================================================================================
+  SECTION 1: PUBLIC / USER-FACING PAGES
+================================================================================
+
+--------------------------------------------------------------------------------
+PAGE: index.html (Homepage)
+--------------------------------------------------------------------------------
+PURPOSE: Main landing page. First impression of the platform.
+SECTIONS:
+  - Preloader animation on first load
+  - Sticky top navbar: logo, nav links (Stays, Cars, Bikes, Restaurants,
+    Attractions, Buses, Blogs), Login/Register buttons
+  - Hero Section:
+      * Big headline: "Find Your Perfect Stay in Chhatrapati Sambhajinagar"
+      * Subtext: "Comfortable hotels, homestays, and budget rooms for every traveler"
+      * Phone number + WhatsApp contact button
+      * Scrolling marquee bar with promotions (e.g. "20% OFF on first booking")
+      * Image carousel cycling through all 6 categories
+  - Trending Transport Section:
+      * Cards for Cars and Bikes with image, title, description, CTA button
+  - Restaurant Circles Section:
+      * Circular image cards for featured restaurants with name, type, rating
+  - Bus Routes Section:
+      * Featured bus routes with operator, from/to, price
+  - Attractions Showcase Section:
+      * Featured tourist attractions with image, name, entry fee
+  - Bike Rentals Section:
+      * Featured bikes with image, name, price per day
+  - Featured Restaurants Section:
+      * Full cards for top restaurants
+  - Travel Insights / Blogs Section:
+      * Latest blog post cards with image, title, category, read time
+  - Footer: links, contact info, social media
+DATA SOURCE: /api/homepage (dynamic, editable via admin)
+
+
+--------------------------------------------------------------------------------
+PAGE: stays.html (Stays Listing)
+--------------------------------------------------------------------------------
+PURPOSE: Browse all hotels, guesthouses, heritage stays, budget rooms.
+SECTIONS:
+  - Page header with title and breadcrumb
+  - Filter sidebar / filter bar:
+      * Search by name/keyword
+      * Filter by location
+      * Price range slider (per night)
+      * Minimum rating filter
+      * Sort by: price, rating, name
+  - Listing grid: cards showing image, name, type, location, rating,
+    price per night, badge (e.g. "Top Rated"), book now button
+  - Pagination or load more
+DATA SOURCE: /api/listings/stays
+
+--------------------------------------------------------------------------------
+PAGE: stay-detail.html (Stay Detail)
+--------------------------------------------------------------------------------
+PURPOSE: Full details of a single hotel/stay.
+SECTIONS:
+  - Image gallery (main image + thumbnails)
+  - Name, type, location, rating, badge
+  - Description
+  - Amenities list (icons: WiFi, AC, Parking, etc.)
+  - Room types available
+  - Max guests
+  - Breakfast info
+  - Price per night
+  - Booking form: name, email, phone, check-in date, check-out date,
+    number of guests, notes — submits to /api/bookings
+  - Guest reviews section (name, rating, comment)
+DATA SOURCE: /api/listings/stays/{id}
+
+--------------------------------------------------------------------------------
+PAGE: car-rentals.html (Car Rentals Listing)
+--------------------------------------------------------------------------------
+PURPOSE: Browse all available rental cars.
+SECTIONS:
+  - Page header with title and breadcrumb
+  - Filter bar: search, location, price range (per day), rating, sort
+  - Listing grid: cards with image, car name, type, location, rating,
+    price per day, features summary, book now button
+DATA SOURCE: /api/listings/cars
+
+--------------------------------------------------------------------------------
+PAGE: car-rental-detail.html (Car Rental Detail)
+--------------------------------------------------------------------------------
+PURPOSE: Full details of a single rental car.
+SECTIONS:
+  - Image gallery
+  - Car name, type, location, rating, badge
+  - Description
+  - Features list (AC, GPS, Music System, etc.)
+  - Fuel type, transmission type, number of seats
+  - Price per day
+  - Booking form: name, email, phone, booking date, number of people, notes
+  - Guest reviews
+DATA SOURCE: /api/listings/cars/{id}
+
+--------------------------------------------------------------------------------
+PAGE: bike-rentals.html (Bike Rentals Listing)
+--------------------------------------------------------------------------------
+PURPOSE: Browse bikes and scooters for rent.
+SECTIONS:
+  - Page header with title and breadcrumb
+  - Filter bar: search, location, price range (per day), rating, sort
+  - Listing grid: cards with image, bike name, type, location, rating,
+    price per day, CC/engine info, book now button
+DATA SOURCE: /api/listings/bikes
+
+--------------------------------------------------------------------------------
+PAGE: bike-rental-detail.html (Bike Rental Detail)
+--------------------------------------------------------------------------------
+PURPOSE: Full details of a single bike/scooter.
+SECTIONS:
+  - Image gallery
+  - Bike name, type, location, rating, badge
+  - Description
+  - Features list
+  - Fuel type, engine CC
+  - Price per day
+  - Booking form
+  - Guest reviews
+DATA SOURCE: /api/listings/bikes/{id}
+
+
+--------------------------------------------------------------------------------
+PAGE: restaurant.html (Restaurants Listing)
+--------------------------------------------------------------------------------
+PURPOSE: Browse all restaurants and dining options.
+SECTIONS:
+  - Page header with title and breadcrumb
+  - Filter bar: search, location, price range (per person), cuisine type,
+    rating, sort
+  - Listing grid: cards with image, restaurant name, cuisine type, location,
+    rating, price per person, book now button
+DATA SOURCE: /api/listings/restaurants
+
+--------------------------------------------------------------------------------
+PAGE: restaurant-detail.html (Restaurant Detail)
+--------------------------------------------------------------------------------
+PURPOSE: Full details of a single restaurant.
+SECTIONS:
+  - Image gallery
+  - Restaurant name, cuisine type, location, rating, badge
+  - Description
+  - Menu highlights
+  - Opening hours
+  - Price per person
+  - Booking form
+  - Guest reviews
+DATA SOURCE: /api/listings/restaurants/{id}
+
+--------------------------------------------------------------------------------
+PAGE: attraction.html (Attractions Listing)
+--------------------------------------------------------------------------------
+PURPOSE: Browse tourist attractions in the city.
+SECTIONS:
+  - Page header with title and breadcrumb
+  - Filter bar: search, location, entry fee range, rating, sort
+  - Listing grid: cards with image, attraction name, type, location, rating,
+    entry fee, view details button
+DATA SOURCE: /api/listings/attractions
+
+--------------------------------------------------------------------------------
+PAGE: attraction-detail.html (Attraction Detail)
+--------------------------------------------------------------------------------
+PURPOSE: Full details of a single tourist attraction.
+SECTIONS:
+  - Image gallery
+  - Attraction name, type, location, rating, badge
+  - Description
+  - Opening hours
+  - Best time to visit
+  - Entry fee
+  - Booking/inquiry form
+  - Guest reviews
+DATA SOURCE: /api/listings/attractions/{id}
+
+--------------------------------------------------------------------------------
+PAGE: bus.html (Bus Routes Listing)
+--------------------------------------------------------------------------------
+PURPOSE: Browse available bus routes and operators.
+SECTIONS:
+  - Page header with title and breadcrumb
+  - Filter bar: search, from location, to location, price range, sort
+  - Listing grid: cards with bus name, operator, from/to locations,
+    departure/arrival time, duration, price, seats available, book now button
+DATA SOURCE: /api/listings/buses
+
+--------------------------------------------------------------------------------
+PAGE: bus-detail.html (Bus Route Detail)
+--------------------------------------------------------------------------------
+PURPOSE: Full details of a single bus route.
+SECTIONS:
+  - Bus name, operator, bus type (AC/Non-AC/Sleeper)
+  - From location, to location
+  - Departure time, arrival time, duration
+  - Price per seat
+  - Seats available
+  - Amenities (WiFi, charging points, etc.)
+  - Booking form
+  - Guest reviews
+DATA SOURCE: /api/listings/buses/{id}
+
+
+--------------------------------------------------------------------------------
+PAGE: blogs.html (Blog Listing)
+--------------------------------------------------------------------------------
+PURPOSE: Browse all travel blog articles about the city.
+SECTIONS:
+  - Page header with title and breadcrumb
+  - Category filter tabs (Heritage, Temples, Nature, Markets, Food, etc.)
+  - Search bar
+  - Blog cards grid: featured image, title, category tag, author, read time,
+    short excerpt, read more link
+  - Pagination
+DATA SOURCE: /api/blogs
+
+--------------------------------------------------------------------------------
+BLOG PAGES (80+ individual pages)
+--------------------------------------------------------------------------------
+PURPOSE: Individual travel guide articles for specific places in the city.
+Each blog page has:
+  - Hero image
+  - Title, author, publish date, read time, category tag
+  - Full article content (rich text with headings, paragraphs, images)
+  - Tags
+  - Meta description (for SEO)
+  - Related blogs / suggested reads section
+
+COMPLETE LIST OF BLOG PAGES:
+  blog-ajanta-caves.html           - Ajanta Caves (UNESCO World Heritage)
+  blog-ankai-fort.html             - Ankai Fort
+  blog-antur-fort.html             - Antur Fort
+  blog-aurangabad-caves.html       - Aurangabad Caves (Buddhist rock-cut)
+  blog-aurangabad-central-bus-stand.html - Central Bus Stand guide
+  blog-aurangabad-himroo-factory.html    - Himroo Weaving Factory
+  blog-aurangzeb-tomb.html         - Aurangzeb's Tomb at Khuldabad
+  blog-bani-begum-garden.html      - Bani Begum Garden
+  blog-bhadra-maruti-temple.html   - Bhadra Maruti Temple
+  blog-bibi-ka-maqbara.html        - Bibi Ka Maqbara (Mini Taj Mahal)
+  blog-buddha-vihar-caves-area.html - Buddha Vihar Caves
+  blog-chand-minar.html            - Chand Minar at Daulatabad
+  blog-chhatrapati-shivaji-maharaj-museum.html - Shivaji Museum
+  blog-cidco-exhibition-center.html - CIDCO Exhibition Center
+  blog-cidco-garden.html           - CIDCO Garden
+  blog-connaught-market.html       - Connaught Market (shopping)
+  blog-daulatabad-fort.html        - Daulatabad Fort (medieval fortress)
+  blog-delhi-gate.html             - Delhi Gate (historic gate)
+  blog-dhavalgiri-hill.html        - Dhavalgiri Hill
+  blog-dr-babasaheb-ambedkar-marathwada-university.html - BAMU University
+  blog-eknath-maharaj-temple.html  - Eknath Maharaj Temple
+  blog-ellora-caves.html           - Ellora Caves (UNESCO World Heritage)
+  blog-gautala-autramghat-wildlife-sanctuary.html - Wildlife Sanctuary
+  blog-ghatotkacha-caves.html      - Ghatotkacha Caves
+  blog-goga-baba-hill-viewpoint.html - Goga Baba Hill Viewpoint
+  blog-goga-baba-hill.html         - Goga Baba Hill
+  blog-government-college-of-engineering-aurangabad.html - GECA
+  blog-grishneshwar-jyotirlinga-temple.html - Grishneshwar Jyotirlinga
+  blog-gulmandi-market.html        - Gulmandi Market (local bazaar)
+  blog-harsul-lake.html            - Harsul Lake
+  blog-himayat-bagh.html           - Himayat Bagh (botanical garden)
+  blog-himroo-weaving-center.html  - Himroo Weaving Center
+  blog-jayakwadi-dam.html          - Jayakwadi Dam & Nathsagar Lake
+  blog-kala-darwaza.html           - Kala Darwaza (Black Gate)
+  blog-khuldabad.html              - Khuldabad (Valley of Saints)
+  blog-kranti-chowk.html           - Kranti Chowk (city center)
+  blog-lonar-crater-lake.html      - Lonar Crater Lake (meteor crater)
+  blog-maharashtra-state-museum-aurangabad.html - State Museum
+  blog-makayi-gate.html            - Makayi Gate
+  blog-mgm-university.html         - MGM University
+  blog-mhaismal-hill-station.html  - Mhaismal Hill Station
+  blog-mhaismal-plateau-viewpoint.html - Mhaismal Plateau Viewpoint
+  blog-mhaismal-waterfall-area.html - Mhaismal Waterfall
+  blog-nathsagar-lake.html         - Nathsagar Lake
+  blog-nipani-lake.html            - Nipani Lake
+  blog-nirala-bazaar.html          - Nirala Bazaar (shopping street)
+  blog-paithan-garden-dnyaneshwar-udyan.html - Paithan Garden
+  blog-paithan.html                - Paithan town guide
+  blog-panchakki.html              - Panchakki (water mill)
+  blog-param-vir-chakra-gallery.html - Param Vir Chakra Gallery
+  blog-pitalkhora-caves.html       - Pitalkhora Caves
+  blog-prozone-mall.html           - Prozone Mall (shopping)
+  blog-qila-e-ark.html             - Qila-e-Ark (Aurangabad Fort)
+  blog-rajgad-hill.html            - Rajgad Hill
+  blog-rangeen-darwaza.html        - Rangeen Darwaza (Coloured Gate)
+  blog-roshan-gate.html            - Roshan Gate
+  blog-salim-ali-lake.html         - Salim Ali Lake (bird sanctuary)
+  blog-sant-eknath-samadhi.html    - Sant Eknath Samadhi
+  blog-shani-mandir.html           - Shani Mandir Temple
+  blog-shirdi-sai-baba-temple.html - Shirdi Sai Baba Temple
+  blog-shivaji-maharaj-statue-kranti-chowk.html - Shivaji Statue
+  blog-shuli-bhanjan.html          - Shuli Bhanjan
+  blog-siddharth-garden-and-zoo.html - Siddharth Garden & Zoo
+  blog-siddharth-lake.html         - Siddharth Lake
+  blog-soneri-mahal.html           - Soneri Mahal (Golden Palace)
+  blog-street-food.html            - Street Food Guide
+  blog-sunehri-mahal-museum.html   - Sunehri Mahal Museum
+  blog-tankai-fort.html            - Tankai Fort
+  blog-town-center-cidco.html      - Town Center CIDCO
+  blog-valley-of-saints.html       - Valley of Saints (Khuldabad)
+  blog-verul.html                  - Verul village (near Ellora)
+
+
+--------------------------------------------------------------------------------
+PAGE: about.html (About Page)
+--------------------------------------------------------------------------------
+PURPOSE: Information about the CSNExplore platform.
+SECTIONS:
+  - Hero/banner with title
+  - About the platform (mission, vision, story)
+  - Statistics (number of listings, bookings, users, etc.)
+  - Team section (optional)
+  - Contact CTA
+DATA SOURCE: /api/about-contact?section=about (editable via admin)
+
+--------------------------------------------------------------------------------
+PAGE: contact.html (Contact Page)
+--------------------------------------------------------------------------------
+PURPOSE: Contact information and inquiry form.
+SECTIONS:
+  - Page header
+  - Contact details: phone, WhatsApp, email, address
+  - Contact form: name, email, phone, message, submit button
+  - Map embed (optional)
+DATA SOURCE: /api/about-contact?section=contact (editable via admin)
+
+--------------------------------------------------------------------------------
+PAGE: login.html (Login Page)
+--------------------------------------------------------------------------------
+PURPOSE: User authentication.
+SECTIONS:
+  - Logo / branding
+  - Login form: email, password, remember me checkbox
+  - Submit button
+  - Link to register page
+  - Forgot password link
+  - Error/success messages
+API: POST /api/auth/login
+
+--------------------------------------------------------------------------------
+PAGE: register.html (Registration Page)
+--------------------------------------------------------------------------------
+PURPOSE: New user account creation.
+SECTIONS:
+  - Logo / branding
+  - Registration form: full name, email, phone (optional), password,
+    confirm password
+  - Submit button
+  - Link to login page
+  - Terms & conditions checkbox
+  - Error/success messages
+API: POST /api/auth/register
+
+================================================================================
+  SECTION 2: ADMIN PAGES
+================================================================================
+All admin pages require JWT authentication with admin role.
+Admin login is at admin.html (the admin login gateway).
+
+--------------------------------------------------------------------------------
+PAGE: admin.html (Admin Login)
+--------------------------------------------------------------------------------
+PURPOSE: Secure login gateway for admin panel.
+SECTIONS:
+  - Centered login card
+  - Logo / admin branding
+  - Email and password fields
+  - Login button
+  - Error messages for invalid credentials
+API: POST /api/auth/login (checks for admin role)
+
+--------------------------------------------------------------------------------
+PAGE: admin-dashboard.html (Admin Dashboard)
+--------------------------------------------------------------------------------
+PURPOSE: Overview of the entire platform at a glance.
+SECTIONS:
+  - Top navbar with admin name, logout button
+  - Sidebar navigation (links to all admin pages)
+  - Stats cards row:
+      * Total Revenue
+      * Total Bookings
+      * Total Users
+      * Total Listings (per category breakdown)
+  - Recent Bookings table: name, service, date, status, action
+  - Top Rated Listings section: best listings per category
+  - Quick action buttons (add listing, view bookings, etc.)
+API: GET /api/dashboard
+
+
+--------------------------------------------------------------------------------
+PAGE: admin-booking-calls.html (Pending Booking Requests)
+--------------------------------------------------------------------------------
+PURPOSE: Manage incoming booking inquiries that need attention.
+SECTIONS:
+  - Page header with pending count badge
+  - Filter bar: status dropdown (pending/completed/cancelled), search by
+    name/email/phone
+  - Bookings table columns:
+      * Customer name, email, phone
+      * Service/listing name
+      * Booking date, number of people
+      * Status badge (color-coded)
+      * Notes
+      * Action buttons: Mark Complete, Mark Cancelled, Delete
+  - Empty state when no pending bookings
+API: GET /api/bookings, PUT /api/bookings, DELETE /api/bookings
+
+--------------------------------------------------------------------------------
+PAGE: admin-booking-history.html (Booking History)
+--------------------------------------------------------------------------------
+PURPOSE: View all historical bookings (completed and cancelled).
+SECTIONS:
+  - Page header
+  - Filter bar: status, date range, search
+  - Full bookings table with all fields
+  - Export option
+API: GET /api/bookings?status=completed
+
+--------------------------------------------------------------------------------
+PAGE: admin-add-listing.html (Add New Listing)
+--------------------------------------------------------------------------------
+PURPOSE: Create a new listing in any category.
+SECTIONS:
+  - Category selector tabs (Stays / Cars / Bikes / Restaurants /
+    Attractions / Buses)
+  - Common fields for all categories:
+      * Name
+      * Type/subtype
+      * Location
+      * Description
+      * Rating (initial)
+      * Badge (e.g. "Top Rated", "New")
+      * Main image upload
+      * Gallery images upload (multiple)
+      * Active/Inactive toggle
+  - Category-specific fields:
+      STAYS:
+        * Price per night
+        * Amenities (multi-select: WiFi, AC, Parking, Pool, etc.)
+        * Room types (array: name, price, max guests)
+        * Max guests
+        * Breakfast info
+        * Guest reviews (array: name, rating, comment)
+      CARS:
+        * Price per day
+        * Features (multi-select: AC, GPS, Music, etc.)
+        * Fuel type (Petrol/Diesel/Electric/CNG)
+        * Transmission (Manual/Automatic)
+        * Number of seats
+        * Guest reviews
+      BIKES:
+        * Price per day
+        * Features
+        * Fuel type
+        * Engine CC
+        * Guest reviews
+      RESTAURANTS:
+        * Price per person
+        * Cuisine type
+        * Menu highlights (array)
+        * Opening hours
+        * Guest reviews
+      ATTRACTIONS:
+        * Entry fee
+        * Opening hours
+        * Best time to visit
+        * Guest reviews
+      BUSES:
+        * Operator name
+        * Bus type (AC/Non-AC/Sleeper/Semi-Sleeper)
+        * From location
+        * To location
+        * Departure time
+        * Arrival time
+        * Duration
+        * Price per seat
+        * Seats available
+        * Amenities
+  - Save / Publish button
+API: POST /api/listings/{category}
+
+--------------------------------------------------------------------------------
+PAGE: admin-manage-listings.html (Manage Existing Listings)
+--------------------------------------------------------------------------------
+PURPOSE: View, edit, and delete all listings.
+SECTIONS:
+  - Category tabs (Stays / Cars / Bikes / Restaurants / Attractions / Buses)
+  - Search and filter bar within each tab
+  - Listings table per category:
+      * Thumbnail image
+      * Name, type, location
+      * Price, rating
+      * Active/Inactive status toggle
+      * Edit button (opens edit form — same fields as add listing)
+      * Delete button (soft delete, marks inactive)
+  - Bulk select and bulk delete option
+API: GET/PUT/DELETE /api/listings/{category}
+
+
+--------------------------------------------------------------------------------
+PAGE: admin-listing-reorder.html (Reorder Listings)
+--------------------------------------------------------------------------------
+PURPOSE: Control the display order of listings on public pages.
+SECTIONS:
+  - Category selector tabs
+  - Drag-and-drop list of listings per category
+  - Each item shows: thumbnail, name, current order number
+  - Drag handle to reorder
+  - Save order button
+API: POST /api/listings/{category}/reorder
+
+--------------------------------------------------------------------------------
+PAGE: admin-homepage.html (Homepage Content Editor)
+--------------------------------------------------------------------------------
+PURPOSE: Edit all dynamic content shown on the homepage.
+SECTIONS:
+  - Hero section editor:
+      * Edit headline text
+      * Edit subtext/description
+      * Edit phone number
+      * Edit WhatsApp number
+      * Manage marquee items (add/remove/edit scrolling announcements)
+      * Upload carousel images per category
+  - Section visibility toggles (show/hide each homepage section)
+  - Section title editors (rename section headings)
+  - Featured items editor (which listings appear in each section)
+  - Save changes button
+API: GET/PUT /api/homepage
+
+--------------------------------------------------------------------------------
+PAGE: admin-cards-editor.html (Homepage Cards Editor)
+--------------------------------------------------------------------------------
+PURPOSE: Edit the featured card content on the homepage (transport cards,
+         restaurant circles, etc.)
+SECTIONS:
+  - Card group selector (Trending Transport, Restaurant Circles, etc.)
+  - Card editor for each item:
+      * Title
+      * Description
+      * Subtext
+      * Link URL
+      * Image upload
+  - Add new card / remove card
+  - Save button
+API: GET/PUT /api/homepage
+
+--------------------------------------------------------------------------------
+PAGE: admin-about-editor.html (About Page Editor)
+--------------------------------------------------------------------------------
+PURPOSE: Edit the content of the public About page.
+SECTIONS:
+  - Rich text editor for about content
+  - Statistics editor (add/edit/remove stat items: label + value)
+  - Save button
+API: GET/PUT /api/about-contact (section=about)
+
+--------------------------------------------------------------------------------
+PAGE: admin-contact-editor.html (Contact Page Editor)
+--------------------------------------------------------------------------------
+PURPOSE: Edit the content of the public Contact page.
+SECTIONS:
+  - Contact details editor: phone, WhatsApp, email, address
+  - Business hours editor
+  - Save button
+API: GET/PUT /api/about-contact (section=contact)
+
+--------------------------------------------------------------------------------
+PAGE: admin-about-contact.html (Combined About & Contact Editor)
+--------------------------------------------------------------------------------
+PURPOSE: Unified editor for both About and Contact page content.
+SECTIONS:
+  - Tab switcher: About | Contact
+  - About tab: rich text editor, stats
+  - Contact tab: contact details, hours
+  - Save button for each section
+API: GET/PUT /api/about-contact
+
+--------------------------------------------------------------------------------
+PAGE: admin-blogs-generator.html (Blog Manager)
+--------------------------------------------------------------------------------
+PURPOSE: Create, edit, and delete blog posts.
+SECTIONS:
+  - Blog list panel (left): all blogs with title, status, date, edit/delete
+  - Blog editor panel (right):
+      * Title field
+      * Author field
+      * Category dropdown
+      * Tags input (comma-separated)
+      * Read time (minutes)
+      * Featured image upload
+      * Status toggle (Published / Draft)
+      * Meta description (for SEO)
+      * Rich text editor (Quill.js) for full article content
+  - Create New / Save / Delete buttons
+API: GET/POST/PUT/DELETE /api/blogs
+
+
+--------------------------------------------------------------------------------
+PAGE: admin-images.html (Image Library)
+--------------------------------------------------------------------------------
+PURPOSE: Manage all uploaded images used across the site.
+SECTIONS:
+  - Upload area (drag & drop or click to upload)
+  - Image grid: thumbnail, filename, file size, upload date
+  - Actions per image: copy URL, replace image, delete image
+  - Folder/category filter (optional)
+  - Search by filename
+API: GET/POST/DELETE /api/upload
+
+--------------------------------------------------------------------------------
+PAGE: admin-users.html (User Management)
+--------------------------------------------------------------------------------
+PURPOSE: Manage all registered users and admin accounts.
+SECTIONS:
+  - Users table:
+      * Name, email, phone
+      * Role badge (user / admin / vendor)
+      * Verified status
+      * Registration date
+      * Delete button (with safeguard: cannot delete last admin)
+  - Create New Admin button:
+      * Modal form: name, email, password, role
+  - Search and filter by role
+API: GET/POST/DELETE /api/listings/users (admin-only endpoints)
+
+--------------------------------------------------------------------------------
+PAGE: admin-performance.html (Performance & Cache Management)
+--------------------------------------------------------------------------------
+PURPOSE: Monitor and optimize site performance.
+SECTIONS:
+  - Cache Statistics panel:
+      * Total cached items count
+      * Total cache size
+      * List of cached items with key, size, expiration time
+  - Cache Actions:
+      * Purge Expired Cache button
+      * Clear All Cache button
+  - Optimization Tools:
+      * Minify JS button
+      * Minify CSS button
+      * Image Optimization button
+      * LiteSpeed Cache config button
+      * Run All Optimizations button
+  - Status messages after each action
+API: GET/POST /api/cache
+
+================================================================================
+  SECTION 3: DATABASE TABLES SUMMARY
+================================================================================
+
+TABLE: users
+  - id, email, password_hash, name, phone
+  - role (user / admin / vendor)
+  - is_verified, created_at, updated_at
+
+TABLE: stays
+  - id, name, type, location, description
+  - price_per_night, rating, reviews, badge
+  - image, gallery (JSON array of image URLs)
+  - amenities (JSON), room_type, max_guests
+  - top_location_rating, breakfast_info
+  - rooms (JSON array), guest_reviews (JSON array)
+  - is_active, display_order, created_at, updated_at
+
+TABLE: cars
+  - id, name, type, location, description
+  - price_per_day, rating, reviews, badge
+  - image, gallery (JSON)
+  - features (JSON), fuel_type, transmission, seats
+  - guest_reviews (JSON)
+  - is_active, display_order, created_at, updated_at
+
+TABLE: bikes
+  - id, name, type, location, description
+  - price_per_day, rating, reviews, badge
+  - image, gallery (JSON)
+  - features (JSON), fuel_type, cc
+  - guest_reviews (JSON)
+  - is_active, display_order, created_at, updated_at
+
+TABLE: restaurants
+  - id, name, type, location, description
+  - price_per_person, rating, reviews, badge
+  - image, gallery (JSON)
+  - cuisine, menu_highlights (JSON)
+  - opening_hours, guest_reviews (JSON)
+  - is_active, display_order, created_at, updated_at
+
+TABLE: attractions
+  - id, name, type, location, description
+  - entry_fee, rating, reviews, badge
+  - image, gallery (JSON)
+  - opening_hours, best_time
+  - guest_reviews (JSON)
+  - is_active, display_order, created_at, updated_at
+
+TABLE: buses
+  - id, name, operator, bus_type, location, description
+  - from_location, to_location
+  - departure_time, arrival_time, duration
+  - price, seats_available, rating, reviews, badge
+  - image, gallery (JSON)
+  - amenities (JSON), guest_reviews (JSON)
+  - is_active, display_order, created_at, updated_at
+
+TABLE: bookings
+  - id, full_name, phone, email
+  - booking_date, number_of_people
+  - service_page, listing_id, listing_name
+  - status (pending / completed / cancelled)
+  - notes, created_at, updated_at
+
+TABLE: blogs
+  - id, title, content (rich HTML), author
+  - image, status (published / draft)
+  - category, read_time, tags (JSON array)
+  - meta_description, created_at, updated_at
+
+TABLE: homepage_content
+  - id, section, content (full JSON config), display_order
+  - is_active, created_at, updated_at
+
+TABLE: about_contact
+  - id, section (about / contact), content (JSON)
+  - is_active, created_at, updated_at
+
+TABLE: dashboard_settings
+  - id, settings (JSON), updated_at
+
+
+================================================================================
+  SECTION 4: API ENDPOINTS SUMMARY
+================================================================================
+
+AUTH API (/api/auth/)
+  POST /api/auth/login          - Login, returns JWT token + user object
+  POST /api/auth/register       - Register new user, returns JWT + user
+  GET  /api/auth/verify         - Verify JWT token validity
+
+LISTINGS API (/api/listings/{category})
+  Categories: stays, cars, bikes, restaurants, attractions, buses
+  GET    /api/listings/{cat}          - Get all active listings (public)
+    Query params: location, minPrice, maxPrice, minRating, search, sortBy
+  GET    /api/listings/{cat}/{id}     - Get single listing details
+  POST   /api/listings/{cat}          - Create listing (admin only)
+  PUT    /api/listings/{cat}/{id}     - Update listing (admin only)
+  DELETE /api/listings/{cat}/{id}     - Soft delete listing (admin only)
+  POST   /api/listings/{cat}/reorder  - Reorder listings (admin only)
+
+BOOKINGS API (/api/bookings)
+  GET    /api/bookings                - Get all bookings (admin only)
+    Query params: status, search
+  POST   /api/bookings                - Create booking request (public)
+    Body: full_name, phone, email, booking_date, number_of_people,
+          service_page, listing_id, listing_name, notes
+  PUT    /api/bookings                - Update booking status (admin only)
+    Body: id, status, notes
+  DELETE /api/bookings?id={id}        - Delete booking (admin only)
+
+BLOGS API (/api/blogs)
+  GET    /api/blogs               - Get all published blogs
+  GET    /api/blogs?id={id}       - Get single blog
+  POST   /api/blogs               - Create blog (admin only)
+  PUT    /api/blogs               - Update blog (admin only)
+  DELETE /api/blogs?id={id}       - Delete blog (admin only)
+
+HOMEPAGE API (/api/homepage)
+  GET    /api/homepage            - Get full homepage config
+  PUT    /api/homepage            - Update homepage config (admin only)
+
+ABOUT/CONTACT API (/api/about-contact)
+  GET    /api/about-contact?section={about|contact}  - Get section content
+  PUT    /api/about-contact       - Update section content (admin only)
+
+UPLOAD API (/api/upload)
+  POST   /api/upload              - Upload image (admin only)
+  GET    /api/upload              - List all images (admin only)
+  DELETE /api/upload?path={path}  - Delete image (admin only)
+
+CACHE API (/api/cache)
+  GET    /api/cache?action=stats          - Cache statistics (admin only)
+  POST   /api/cache?action=purge          - Purge expired cache (admin only)
+  POST   /api/cache?action=clear          - Clear all cache (admin only)
+  POST   /api/cache?action=optimize       - Run optimization (admin only)
+
+DASHBOARD API (/api/dashboard)
+  GET    /api/dashboard           - Get stats and recent data (admin only)
+  PUT    /api/dashboard           - Update dashboard settings (admin only)
+
+================================================================================
+  SECTION 5: KEY FEATURES FOR UI REDESIGN REFERENCE
+================================================================================
+
+PUBLIC FEATURES:
+  - Browse 6 service categories with filters (location, price, rating, search)
+  - View detailed listings with image galleries, amenities, reviews
+  - Read 80+ travel blog articles with categories and tags
+  - Submit booking requests (name, email, phone, date, party size, notes)
+  - User registration and login (JWT-based)
+  - Responsive mobile-first design
+  - Dark/light theme toggle
+  - Scrolling marquee announcements bar
+  - WhatsApp and phone contact integration throughout
+  - SEO-optimized pages (meta tags, canonical URLs, sitemap.xml)
+
+ADMIN FEATURES:
+  - Full CRUD for all 6 listing categories
+  - Drag-and-drop listing reordering
+  - Homepage content editor (hero, sections, visibility, carousel)
+  - Blog management with rich text editor (Quill.js)
+  - Booking request management with status tracking and notes
+  - User management (create, delete, role assignment)
+  - Image upload and management library
+  - Cache management and performance optimization tools
+  - Dashboard with analytics (revenue, bookings, users, listings)
+  - About/Contact page editors
+
+TECHNICAL NOTES FOR REDESIGN:
+  - All listing data is fetched dynamically from PHP API (not hardcoded)
+  - Homepage content is fully dynamic (editable via admin)
+  - Authentication uses JWT tokens stored in localStorage
+  - Admin pages check for valid admin JWT on load, redirect to login if missing
+  - Images are served from /images/ directory
+  - Booking form submits to POST /api/bookings (no payment gateway, inquiry only)
+  - Blog content is stored as rich HTML in the database
+  - Cache TTL is 1 hour for listing data
+  - Rate limiting is applied on API endpoints
+
+================================================================================
+  SECTION 6: NAVIGATION STRUCTURE
+================================================================================
+
+PUBLIC NAVBAR:
+  Logo | Stays | Car Rentals | Bike Rentals | Restaurants | Attractions | Buses
+  | Blogs | About | Contact | Login | Register
+
+ADMIN SIDEBAR:
+  Dashboard
+  --- Listings ---
+  Add New Listing
+  Manage Listings
+  Reorder Listings
+  --- Bookings ---
+  Booking Requests (Pending)
+  Booking History
+  --- Content ---
+  Homepage Editor
+  Cards Editor
+  About & Contact
+  Blog Manager
+  --- Media ---
+  Image Library
+  --- Users ---
+  User Management
+  --- System ---
+  Performance & Cache
+  Logout
+
+================================================================================
+  END OF FILE
+================================================================================
