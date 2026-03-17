@@ -256,6 +256,34 @@ switchSection('about');
 loadAbout();
 loadContact();
 loadHomepage();
+
+async function loadMessages() {
+    var list = document.getElementById('messages-list');
+    var data = await api('../php/api/contact_messages.php');
+    if (!data || !data.length) {
+        list.innerHTML = '<div class="text-center py-12 text-slate-400">No messages yet</div>';
+        document.getElementById('msg-count').textContent = '0 messages';
+        return;
+    }
+    document.getElementById('msg-count').textContent = data.length + ' message' + (data.length !== 1 ? 's' : '');
+    list.innerHTML = data.map(function(m) {
+        var d = new Date(m.created_at).toLocaleDateString('en-IN', {day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+        return '<div class="p-5 hover:bg-slate-50 transition-colors">' +
+            '<div class="flex items-start justify-between gap-4 mb-2">' +
+                '<div>' +
+                    '<p class="font-semibold text-sm text-slate-900">' + escHtml(m.first_name + ' ' + (m.last_name||'')) + '</p>' +
+                    '<p class="text-xs text-slate-400">' + escHtml(m.email) + ' · ' + d + '</p>' +
+                '</div>' +
+                '<span class="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full font-semibold shrink-0">' + escHtml(m.interest||'General') + '</span>' +
+            '</div>' +
+            '<p class="text-sm text-slate-600 leading-relaxed">' + escHtml(m.message) + '</p>' +
+        '</div>';
+    }).join('');
+}
+
+function escHtml(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
 </script>
 JS;
 require 'admin-footer.php';
