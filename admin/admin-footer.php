@@ -2,6 +2,40 @@
 </div><!-- /flex-1 -->
 </div><!-- /flex -->
 
+<!-- ── Gallery Picker Modal (shared) ──────────────────────────────────── -->
+<div id="gallery-picker-modal" class="hidden fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[88vh] flex flex-col">
+        <!-- Header -->
+        <div class="flex items-center gap-3 p-5 border-b border-slate-100 shrink-0">
+            <span class="material-symbols-outlined text-primary">photo_library</span>
+            <h3 class="font-bold text-base">Select Image</h3>
+            <div class="ml-auto flex items-center gap-2">
+                <label class="flex items-center gap-1.5 bg-primary text-white px-3 py-1.5 rounded-xl text-xs font-bold hover:bg-orange-600 cursor-pointer transition-all">
+                    <span class="material-symbols-outlined text-sm">upload</span> Upload
+                    <input type="file" id="picker-upload-input" accept="image/jpeg,image/png,image/webp,image/gif" multiple class="hidden"/>
+                </label>
+                <button onclick="closeGalleryPicker()" class="text-slate-400 hover:text-slate-600 ml-1">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+        </div>
+        <!-- Search -->
+        <div class="px-5 py-3 border-b border-slate-100 shrink-0">
+            <input id="picker-search" type="text" placeholder="Filter images by filename..."
+                   class="w-full border border-slate-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"/>
+        </div>
+        <!-- Grid -->
+        <div id="picker-grid" class="flex-1 overflow-y-auto p-5 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+            <div class="col-span-5 text-center py-12 text-slate-400">Loading...</div>
+        </div>
+        <!-- Upload progress -->
+        <div id="picker-upload-progress" class="hidden px-5 py-3 border-t border-slate-100 text-sm text-slate-600 flex items-center gap-3 shrink-0">
+            <div class="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin shrink-0"></div>
+            <span id="picker-upload-status">Uploading...</span>
+        </div>
+    </div>
+</div>
+
 <script>
 // Populate user info
 (function(){
@@ -37,6 +71,16 @@ async function api(url, options = {}) {
     return res.json();
 }
 
+// Toast
+function showAdminToast(msg, type) {
+    var t = document.createElement('div');
+    var bg = type === 'error' ? 'bg-red-600' : 'bg-slate-900';
+    t.className = 'fixed bottom-6 right-6 ' + bg + ' text-white text-sm px-5 py-3 rounded-2xl shadow-xl z-[200]';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(function(){ t.remove(); }, 2800);
+}
+
 // Load pending bookings count
 async function loadPendingCount() {
     try {
@@ -49,6 +93,92 @@ async function loadPendingCount() {
     } catch(e) {}
 }
 loadPendingCount();
+
+// ── Gallery Picker ──────────────────────────────────────────────────────
+var _pickerCallback = null;
+var _pickerImages   = [];
+
+function openGalleryPicker(callback) {
+    _pickerCallback = callback;
+    document.getElementById('gallery-picker-modal').classList.remove('hidden');
+    document.getElementById('picker-search').value = '';
+    loadPickerImages();
+}
+
+function closeGalleryPicker() {
+    document.getElementById('gallery-picker-modal').classList.add('hidden');
+    _pickerCallback = null;
+}
+
+async function loadPickerImages() {
+    var grid = document.getElementById('picker-grid');
+    grid.innerHTML = '<div class="col-span-5 text-center py-12 text-slate-400">Loading...</div>';
+    _pickerImages = await api('../php/api/gallery.php') || [];
+    renderPickerGrid(_pickerImages);
+}
+
+function renderPickerGrid(images) {
+    var grid = document.getElementById('picker-grid');
+    if (!images.length) {
+        grid.innerHTML = '<div class="col-span-5 text-center py-12 text-slate-400"><span class="material-symbols-outlined text-4xl block mb-2">photo_library</span>No images. Upload some first.</div>';
+        return;
+    }
+    grid.innerHTML = images.map(function(img) {
+        return '<div class="relative group cursor-pointer rounded-xl overflow-hidden border-2 border-transparent hover:border-primary transition-all" onclick="selectPickerImage(\'' + img.url.replace(/'/g,"\\'") + '\')">' +
+            '<img src="' + img.url + '" class="w-full aspect-square object-cover" loading="lazy"/>' +
+            '<div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center">' +
+                '<span class="material-symbols-outlined text-white text-3xl">check_circle</span>' +
+            '</div>' +
+        '</div>';
+    }).join('');
+}
+
+function selectPickerImage(url) {
+    if (_pickerCallback) _pickerCallback(url);
+    closeGalleryPicker();
+}
+
+// Picker search filter
+document.getElementById('picker-search').addEventListener('input', function() {
+    var q = this.value.toLowerCase();
+    var filtered = _pickerImages.filter(function(img){ return img.filename.toLowerCase().includes(q); });
+    renderPickerGrid(filtered);
+});
+
+// Picker upload
+document.getElementById('picker-upload-input').addEventListener('change', async function(e) {
+    var files = Array.from(e.target.files);
+    if (!files.length) return;
+    var progress = document.getElementById('picker-upload-progress');
+    var status   = document.getElementById('picker-upload-status');
+    progress.classList.remove('hidden');
+    var done = 0;
+    for (var f of files) {
+        status.textContent = 'Uploading ' + (done+1) + ' of ' + files.length + ': ' + f.name;
+        var fd = new FormData();
+        fd.append('file', f);
+        try {
+            var res = await fetch('../php/api/upload.php', {
+                method: 'POST',
+                headers: { 'Authorization': 'Bearer ' + window._adminToken },
+                body: fd
+            });
+            var data = await res.json();
+            if (data.error) showAdminToast('Error: ' + data.error, 'error');
+        } catch(ex) {
+            showAdminToast('Upload failed', 'error');
+        }
+        done++;
+    }
+    progress.classList.add('hidden');
+    e.target.value = '';
+    loadPickerImages();
+});
+
+// Close picker on backdrop click
+document.getElementById('gallery-picker-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeGalleryPicker();
+});
 </script>
 <?php if (!empty($extra_js)) echo $extra_js; ?>
 </body>

@@ -104,7 +104,13 @@ require 'admin-header.php';
                 </div>
                 <div class="col-span-2">
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Image URL</label>
-                    <input id="f-image" type="url" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"/>
+                    <div class="flex gap-2">
+                        <input id="f-image" type="url" class="flex-1 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"/>
+                        <button type="button" onclick="openGalleryPicker(function(url){ document.getElementById('f-image').value=url; })"
+                                class="flex items-center gap-1 px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition-all whitespace-nowrap">
+                            <span class="material-symbols-outlined text-sm">photo_library</span> Gallery
+                        </button>
+                    </div>
                 </div>
                 <div class="col-span-2">
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Description</label>

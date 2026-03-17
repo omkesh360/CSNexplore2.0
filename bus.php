@@ -5,6 +5,9 @@ $extra_styles = "
     .glassy { background:rgba(255,255,255,0.07); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,0.12); }
     .hide-scrollbar::-webkit-scrollbar{display:none} .hide-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
 ";
+require_once 'php/config.php';
+$db = getDB();
+$routes = $db->fetchAll("SELECT * FROM buses WHERE is_active=1 ORDER BY display_order ASC LIMIT 6");
 require 'header.php';
 
 $category_nav = [
@@ -60,27 +63,21 @@ $category_nav = [
             <div class="w-full mb-8">
                 <h2 class="text-lg font-bold dark:text-white mb-4 text-left">Popular Routes</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <?php
-                    $routes = [
-                        ['from'=>'Sambhajinagar','to'=>'Pune',    'duration'=>'4.5 hrs','price'=>'₹350'],
-                        ['from'=>'Sambhajinagar','to'=>'Mumbai',  'duration'=>'7 hrs',  'price'=>'₹550'],
-                        ['from'=>'Sambhajinagar','to'=>'Nagpur',  'duration'=>'6 hrs',  'price'=>'₹450'],
-                        ['from'=>'Sambhajinagar','to'=>'Nashik',  'duration'=>'3 hrs',  'price'=>'₹250'],
-                    ];
-                    foreach ($routes as $route):
-                    ?>
+                    <?php if (!empty($routes)): foreach ($routes as $route): ?>
                     <div class="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 text-left">
                         <div>
                             <div class="flex items-center gap-2 text-sm font-bold dark:text-white">
-                                <span><?php echo $route['from']; ?></span>
+                                <span><?php echo htmlspecialchars($route['from_location']); ?></span>
                                 <span class="material-symbols-outlined text-primary text-base">arrow_forward</span>
-                                <span><?php echo $route['to']; ?></span>
+                                <span><?php echo htmlspecialchars($route['to_location']); ?></span>
                             </div>
-                            <div class="text-xs text-slate-400 mt-0.5"><?php echo $route['duration']; ?></div>
+                            <div class="text-xs text-slate-400 mt-0.5"><?php echo htmlspecialchars($route['duration']); ?> · <?php echo htmlspecialchars($route['bus_type']); ?></div>
                         </div>
-                        <span class="text-primary font-black text-sm"><?php echo $route['price']; ?></span>
+                        <span class="text-primary font-black text-sm">₹<?php echo number_format($route['price']); ?></span>
                     </div>
-                    <?php endforeach; ?>
+                    <?php endforeach; else: ?>
+                    <div class="col-span-2 text-center text-slate-400 py-4">Contact us for available routes.</div>
+                    <?php endif; ?>
                 </div>
             </div>
 

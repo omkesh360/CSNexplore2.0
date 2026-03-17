@@ -9,6 +9,18 @@ $nav_links = [
     ['href' => 'contact.php', 'label' => 'Contact Us'],
     ['href' => 'blogs.php',   'label' => 'Blogs'],
 ];
+
+$listing_nav = [
+    ['href' => 'listing.php?type=stays',       'icon' => 'bed',                'label' => 'Stays',       'type' => 'stays'],
+    ['href' => 'listing.php?type=cars',        'icon' => 'directions_car',     'label' => 'Car Rentals', 'type' => 'cars'],
+    ['href' => 'listing.php?type=bikes',       'icon' => 'motorcycle',         'label' => 'Bike Rentals','type' => 'bikes'],
+    ['href' => 'listing.php?type=attractions', 'icon' => 'confirmation_number','label' => 'Attractions', 'type' => 'attractions'],
+    ['href' => 'listing.php?type=restaurants', 'icon' => 'restaurant',         'label' => 'Restaurants', 'type' => 'restaurants'],
+    ['href' => 'listing.php?type=buses',       'icon' => 'directions_bus',     'label' => 'Buses',       'type' => 'buses'],
+];
+
+$is_listing_page = ($current_page === 'listing.php');
+$active_listing_type = $listing_type ?? '';
 ?>
 <!DOCTYPE html>
 <html class="light" lang="en">
@@ -75,109 +87,63 @@ $nav_links = [
     </div>
 </div>
 
-<?php
-// Determine if this is the homepage (transparent dark header) or any other page (white header)
-$is_home_page = ($current_page === 'index.php' || $current_page === '');
-$header_class  = $is_home_page ? 'glass-dark border-white/5' : 'bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm';
-$logo_color    = $is_home_page ? 'text-white' : 'text-slate-900';
-$nav_base      = $is_home_page ? 'text-white/70 hover:bg-white/10 hover:text-white' : 'text-slate-600 hover:text-primary hover:bg-primary/10';
-$nav_active    = $is_home_page ? 'text-white bg-white/10' : 'text-primary bg-primary/10';
-$login_color   = $is_home_page ? 'text-white' : 'text-slate-700 hover:bg-slate-100';
-$mob_color     = $is_home_page ? 'text-white' : 'text-slate-700';
-$mob_border    = $is_home_page ? 'border-white/10' : 'border-slate-100';
-$mob_link_base = $is_home_page ? 'text-white/70 hover:bg-white/10 hover:text-white' : 'text-slate-600 hover:bg-slate-50 hover:text-primary';
-?>
-<!-- Header -->
-<header id="site-header" class="sticky top-0 w-full z-50 transition-all duration-300 <?php echo $header_class; ?>">
+<!-- Header – always dark/black with blur -->
+<header id="site-header" class="sticky top-0 w-full z-50 transition-all duration-300 glass-dark border-b border-white/5">
     <nav class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-        <a href="index.php" class="flex items-center gap-2 shrink-0">
-            <img src="images/travelhub.png" alt="CSNExplore" class="h-14 object-contain"
-                 onerror="this.style.display='none'"/>
-            <span id="logo-text" class="flex items-center gap-1.5">
-                <span class="material-symbols-outlined text-primary text-2xl">explore</span>
-                <span id="logo-label" class="font-serif font-black text-lg tracking-tight <?php echo $logo_color; ?>">CSNExplore</span>
-            </span>
+        <a href="index.php" class="flex items-center shrink-0">
+            <img src="images/travelhub.png" alt="CSNExplore" class="h-14 object-contain"/>
         </a>
         <div class="hidden md:flex items-center gap-1">
-            <?php foreach ($nav_links as $link):
-                $is_active = ($link['href'] === $current_page);
-                $link_class = $is_active ? $nav_active : $nav_base;
-            ?>
+            <?php if ($is_listing_page): ?>
+                <?php foreach ($listing_nav as $link): $is_active = ($link['type'] === $active_listing_type); ?>
                 <a href="<?php echo $link['href']; ?>"
-                   class="nav-link <?php echo $is_active ? 'nav-active' : ''; ?> text-sm font-semibold px-4 py-2 rounded-full transition-colors <?php echo $link_class; ?>">
+                   class="flex items-center gap-1.5 text-sm font-semibold px-3 py-2 rounded-full transition-colors <?php echo $is_active ? 'text-white bg-white/15' : 'text-white/60 hover:bg-white/10 hover:text-white'; ?>">
+                    <span class="material-symbols-outlined text-base"><?php echo $link['icon']; ?></span>
                     <?php echo $link['label']; ?>
                 </a>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <?php foreach ($nav_links as $link): $is_active = ($link['href'] === $current_page); ?>
+                <a href="<?php echo $link['href']; ?>"
+                   class="nav-link text-sm font-semibold px-4 py-2 rounded-full transition-colors <?php echo $is_active ? 'text-white bg-white/10' : 'text-white/70 hover:bg-white/10 hover:text-white'; ?>">
+                    <?php echo $link['label']; ?>
+                </a>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
         <div class="flex items-center gap-2">
-            <a href="login.php" id="login-btn" class="text-sm font-semibold px-4 py-1.5 rounded-full transition-all <?php echo $login_color; ?>">Login</a>
+            <a href="login.php" class="text-white text-sm font-semibold px-4 py-1.5 hover:bg-white/10 rounded-full transition-all">Login</a>
             <a href="register.php" class="bg-primary text-white text-sm font-bold px-5 py-1.5 rounded-full hover:bg-orange-600 transition-all shadow-lg shadow-primary/20">Register</a>
             <button id="mob-btn" class="md:hidden p-2 rounded-lg transition-colors ml-1">
-                <span id="mob-icon" class="material-symbols-outlined text-2xl <?php echo $mob_color; ?>">menu</span>
+                <span class="material-symbols-outlined text-2xl text-white">menu</span>
             </button>
         </div>
     </nav>
-    <div id="mob-menu" class="hidden md:hidden border-t <?php echo $mob_border; ?> px-4 py-3 flex flex-col gap-1">
-        <?php foreach ($nav_links as $link):
-            $is_active = ($link['href'] === $current_page);
-            $mob_lc = $is_active ? 'text-primary' : $mob_link_base;
-        ?>
+    <div id="mob-menu" class="hidden md:hidden border-t border-white/10 px-4 py-3 flex flex-col gap-1">
+        <?php if ($is_listing_page): ?>
+            <?php foreach ($listing_nav as $link): $is_active = ($link['type'] === $active_listing_type); ?>
             <a href="<?php echo $link['href']; ?>"
-               class="mob-nav-link text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors <?php echo $mob_lc; ?>">
+               class="flex items-center gap-2 text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors <?php echo $is_active ? 'text-primary bg-white/5' : 'text-white/70 hover:bg-white/10 hover:text-white'; ?>">
+                <span class="material-symbols-outlined text-base"><?php echo $link['icon']; ?></span>
                 <?php echo $link['label']; ?>
             </a>
-        <?php endforeach; ?>
-        <div class="flex gap-2 pt-2 border-t <?php echo $mob_border; ?> mt-1">
-            <a href="login.php" class="flex-1 text-center <?php echo $is_home_page ? 'text-white hover:bg-white/10' : 'text-slate-700 hover:bg-slate-100'; ?> text-sm font-semibold py-2 rounded-xl transition-all">Login</a>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <?php foreach ($nav_links as $link): $is_active = ($link['href'] === $current_page); ?>
+            <a href="<?php echo $link['href']; ?>"
+               class="text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors <?php echo $is_active ? 'text-primary' : 'text-white/70 hover:bg-white/10 hover:text-white'; ?>">
+                <?php echo $link['label']; ?>
+            </a>
+            <?php endforeach; ?>
+        <?php endif; ?>
+        <div class="flex gap-2 pt-2 border-t border-white/10 mt-1">
+            <a href="login.php" class="flex-1 text-center text-white hover:bg-white/10 text-sm font-semibold py-2 rounded-xl transition-all">Login</a>
             <a href="register.php" class="flex-1 text-center bg-primary text-white text-sm font-bold py-2 rounded-xl hover:bg-orange-600 transition-all">Register</a>
         </div>
     </div>
     <script>
-        (function(){
-            var header   = document.getElementById('site-header');
-            var logoLabel= document.getElementById('logo-label');
-            var loginBtn = document.getElementById('login-btn');
-            var mobIcon  = document.getElementById('mob-icon');
-            var navLinks = document.querySelectorAll('.nav-link');
-            var mobLinks = document.querySelectorAll('.mob-nav-link');
-            var isHome   = <?php echo $is_home_page ? 'true' : 'false'; ?>;
-
-            function applyScrolled(scrolled) {
-                if (scrolled) {
-                    header.classList.remove('glass-dark','border-white/5');
-                    header.classList.add('bg-white/95','backdrop-blur-md','border-b','border-slate-200','shadow-sm');
-                    if (logoLabel) { logoLabel.classList.remove('text-white'); logoLabel.classList.add('text-slate-900'); }
-                    if (loginBtn) { loginBtn.classList.remove('text-white'); loginBtn.classList.add('text-slate-700','hover:bg-slate-100'); }
-                    if (mobIcon)  { mobIcon.classList.remove('text-white'); mobIcon.classList.add('text-slate-700'); }
-                    navLinks.forEach(function(a){
-                        a.classList.remove('text-white/70','text-white','hover:bg-white/10','hover:text-white');
-                        a.classList.add('text-slate-600','hover:text-primary','hover:bg-primary/10');
-                        if (a.classList.contains('nav-active')) { a.classList.remove('bg-white/10'); a.classList.add('text-primary','bg-primary/10'); }
-                    });
-                } else {
-                    header.classList.add('glass-dark','border-white/5');
-                    header.classList.remove('bg-white/95','backdrop-blur-md','border-b','border-slate-200','shadow-sm');
-                    if (logoLabel) { logoLabel.classList.add('text-white'); logoLabel.classList.remove('text-slate-900'); }
-                    if (loginBtn) { loginBtn.classList.add('text-white'); loginBtn.classList.remove('text-slate-700','hover:bg-slate-100'); }
-                    if (mobIcon)  { mobIcon.classList.add('text-white'); mobIcon.classList.remove('text-slate-700'); }
-                    navLinks.forEach(function(a){
-                        a.classList.add('text-white/70','hover:bg-white/10','hover:text-white');
-                        a.classList.remove('text-slate-600','hover:text-primary','hover:bg-primary/10','text-primary');
-                        if (a.classList.contains('nav-active')) { a.classList.add('text-white','bg-white/10'); a.classList.remove('bg-primary/10'); }
-                    });
-                }
-            }
-
-            // Only homepage needs scroll-based switching
-            if (isHome) {
-                window.addEventListener('scroll', function(){
-                    applyScrolled(window.scrollY > 60);
-                }, {passive:true});
-            }
-
-            document.getElementById('mob-btn').addEventListener('click',function(){
-                document.getElementById('mob-menu').classList.toggle('hidden');
-            });
-        })();
+        document.getElementById('mob-btn').addEventListener('click', function(){
+            document.getElementById('mob-menu').classList.toggle('hidden');
+        });
     </script>
 </header>

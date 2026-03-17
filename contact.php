@@ -2,7 +2,7 @@
 $page_title   = "Contact Us | CSNExplore – Chhatrapati Sambhajinagar";
 $current_page = "contact.php";
 $extra_styles = "
-    .glass-effect { background:rgba(255,255,255,0.07); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,0.15); }
+    .glass-effect { background:#fff; border:1px solid rgba(0,0,0,0.07); box-shadow:0 2px 16px rgba(0,0,0,0.06); }
 ";
 
 // Handle form submission
@@ -15,8 +15,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $interest= trim($_POST['interest']   ?? '');
     $message = trim($_POST['message']    ?? '');
     if ($first && $email && $message) {
-        // TODO: send email / save to DB
-        $success = true;
+        try {
+            require_once __DIR__ . '/php/config.php';
+            $db = getDB();
+            $db->insert('contact_messages', [
+                'first_name' => htmlspecialchars($first),
+                'last_name'  => htmlspecialchars($last),
+                'email'      => htmlspecialchars($email),
+                'interest'   => htmlspecialchars($interest),
+                'message'    => htmlspecialchars($message),
+            ]);
+            $success = true;
+        } catch (Exception $e) {
+            $error = 'Something went wrong. Please try again.';
+        }
     } else {
         $error = 'Please fill in all required fields.';
     }
@@ -25,13 +37,13 @@ require 'header.php';
 ?>
 
 <!-- Breadcrumb -->
-<div class="w-full bg-slate-100 dark:bg-white/5 border-b border-slate-200 dark:border-white/10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+<div class="w-full bg-slate-100 border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center gap-2 text-sm text-slate-500">
         <a href="index.php" class="hover:text-primary transition-colors flex items-center gap-1">
             <span class="material-symbols-outlined text-base">home</span>Home
         </a>
         <span class="material-symbols-outlined text-base">chevron_right</span>
-        <span class="text-slate-800 dark:text-white font-semibold">Contact Us</span>
+        <span class="text-slate-800 font-semibold">Contact Us</span>
     </div>
 </div>
 
@@ -57,27 +69,27 @@ require 'header.php';
 
         <!-- Info Cards -->
         <div class="space-y-6">
-            <div class="glass-effect p-8 rounded-3xl shadow-xl bg-white dark:bg-white/5">
+            <div class="glass-effect p-8 rounded-3xl shadow-xl bg-white">
                 <div class="flex items-start gap-4">
                     <div class="bg-primary/10 p-3 rounded-2xl shrink-0">
                         <span class="material-symbols-outlined text-primary text-3xl">call</span>
                     </div>
                     <div>
-                        <h3 class="text-lg font-bold mb-1 dark:text-white">Call Us</h3>
-                        <p class="text-slate-500 dark:text-slate-400 text-sm mb-3">Mon–Sat, 9am – 7pm IST</p>
+                        <h3 class="text-lg font-bold mb-1">Call Us</h3>
+                        <p class="text-slate-500 text-sm mb-3">Mon–Sat, 9am – 7pm IST</p>
                         <a class="text-xl font-bold text-primary hover:underline" href="tel:+918600968888">+91 86009 68888</a>
                     </div>
                 </div>
             </div>
 
-            <div class="glass-effect p-8 rounded-3xl shadow-xl bg-white dark:bg-white/5">
+            <div class="glass-effect p-8 rounded-3xl shadow-xl bg-white">
                 <div class="flex items-start gap-4">
                     <div class="bg-green-500/10 p-3 rounded-2xl shrink-0">
                         <span class="material-symbols-outlined text-green-600 text-3xl">chat</span>
                     </div>
                     <div>
-                        <h3 class="text-lg font-bold mb-1 dark:text-white">WhatsApp</h3>
-                        <p class="text-slate-500 dark:text-slate-400 text-sm mb-3">Instant chat with our team</p>
+                        <h3 class="text-lg font-bold mb-1">WhatsApp</h3>
+                        <p class="text-slate-500 text-sm mb-3">Instant chat with our team</p>
                         <a href="https://wa.me/918600968888"
                            class="inline-block bg-green-600 text-white px-6 py-2 rounded-xl font-bold text-sm hover:bg-green-700 transition-colors">
                             Start Chat
@@ -86,14 +98,14 @@ require 'header.php';
                 </div>
             </div>
 
-            <div class="glass-effect p-8 rounded-3xl shadow-xl bg-white dark:bg-white/5">
+            <div class="glass-effect p-8 rounded-3xl shadow-xl bg-white">
                 <div class="flex items-start gap-4">
                     <div class="bg-primary/10 p-3 rounded-2xl shrink-0">
                         <span class="material-symbols-outlined text-primary text-3xl">mail</span>
                     </div>
                     <div>
-                        <h3 class="text-lg font-bold mb-1 dark:text-white">Email Us</h3>
-                        <p class="text-slate-500 dark:text-slate-400 text-sm mb-2">We reply within 2 hours</p>
+                        <h3 class="text-lg font-bold mb-1">Email Us</h3>
+                        <p class="text-slate-500 text-sm mb-2">We reply within 2 hours</p>
                         <a href="mailto:supportcsnexplore@gmail.com" class="text-primary font-bold text-sm hover:underline">
                             supportcsnexplore@gmail.com
                         </a>
@@ -101,14 +113,14 @@ require 'header.php';
                 </div>
             </div>
 
-            <div class="glass-effect p-8 rounded-3xl shadow-xl bg-white dark:bg-white/5">
+            <div class="glass-effect p-8 rounded-3xl shadow-xl bg-white">
                 <div class="flex items-start gap-4">
                     <div class="bg-primary/10 p-3 rounded-2xl shrink-0">
                         <span class="material-symbols-outlined text-primary text-3xl">location_on</span>
                     </div>
                     <div>
-                        <h3 class="text-lg font-bold mb-2 dark:text-white">Our Office</h3>
-                        <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
+                        <h3 class="text-lg font-bold mb-2">Our Office</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed">
                             Behind State Bank Of India,<br/>
                             Plot No. 273 Samarth Nagar,<br/>
                             Central Bus Stand,<br/>
@@ -122,19 +134,19 @@ require 'header.php';
 
         <!-- Contact Form -->
         <div class="lg:col-span-2">
-            <div class="glass-effect p-8 md:p-12 rounded-3xl shadow-2xl bg-white dark:bg-white/5">
+            <div class="glass-effect p-8 md:p-12 rounded-3xl shadow-2xl bg-white">
                 <div class="mb-8">
-                    <h2 class="text-3xl font-serif font-black mb-2 dark:text-white">Send us a Message</h2>
-                    <p class="text-slate-500 dark:text-slate-400">Fill out the form and we'll get back to you within 2 hours.</p>
+                    <h2 class="text-3xl font-serif font-black mb-2">Send us a Message</h2>
+                    <p class="text-slate-500">Fill out the form and we'll get back to you within 2 hours.</p>
                 </div>
 
                 <?php if ($success): ?>
-                <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 text-green-700 dark:text-green-300 px-6 py-4 rounded-2xl mb-6 flex items-center gap-3">
+                <div class="bg-green-50 border border-green-200 text-green-700 px-6 py-4 rounded-2xl mb-6 flex items-center gap-3">
                     <span class="material-symbols-outlined">check_circle</span>
                     Message sent! We'll be in touch shortly.
                 </div>
                 <?php elseif ($error): ?>
-                <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 text-red-700 dark:text-red-300 px-6 py-4 rounded-2xl mb-6 flex items-center gap-3">
+                <div class="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-2xl mb-6 flex items-center gap-3">
                     <span class="material-symbols-outlined">error</span>
                     <?php echo htmlspecialchars($error); ?>
                 </div>
@@ -143,27 +155,27 @@ require 'header.php';
                 <form method="POST" action="contact.php" class="space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-2">
-                            <label class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">First Name *</label>
+                            <label class="text-xs font-bold uppercase tracking-wider text-slate-500">First Name *</label>
                             <input name="first_name" type="text" required placeholder="Rahul"
                                    value="<?php echo htmlspecialchars($_POST['first_name'] ?? ''); ?>"
-                                   class="w-full rounded-2xl px-5 py-4 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder:text-slate-400 dark:text-white text-sm"/>
+                                   class="w-full rounded-2xl px-5 py-4 bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder:text-slate-400 text-sm"/>
                         </div>
                         <div class="space-y-2">
-                            <label class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Last Name</label>
+                            <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Last Name</label>
                             <input name="last_name" type="text" placeholder="Sharma"
                                    value="<?php echo htmlspecialchars($_POST['last_name'] ?? ''); ?>"
-                                   class="w-full rounded-2xl px-5 py-4 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder:text-slate-400 dark:text-white text-sm"/>
+                                   class="w-full rounded-2xl px-5 py-4 bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder:text-slate-400 text-sm"/>
                         </div>
                     </div>
                     <div class="space-y-2">
-                        <label class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Email Address *</label>
+                        <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Email Address *</label>
                         <input name="email" type="email" required placeholder="rahul@example.com"
                                value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>"
-                               class="w-full rounded-2xl px-5 py-4 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder:text-slate-400 dark:text-white text-sm"/>
+                               class="w-full rounded-2xl px-5 py-4 bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder:text-slate-400 text-sm"/>
                     </div>
                     <div class="space-y-2">
-                        <label class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Travel Interest</label>
-                        <select name="interest" class="w-full rounded-2xl px-5 py-4 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 focus:ring-2 focus:ring-primary outline-none transition-all appearance-none cursor-pointer dark:text-white text-sm">
+                        <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Travel Interest</label>
+                        <select name="interest" class="w-full rounded-2xl px-5 py-4 bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition-all appearance-none cursor-pointer text-sm">
                             <option>Heritage Tour (Ellora / Ajanta)</option>
                             <option>Hotel Booking</option>
                             <option>Car Rental</option>
@@ -174,9 +186,9 @@ require 'header.php';
                         </select>
                     </div>
                     <div class="space-y-2">
-                        <label class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Your Message *</label>
+                        <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Your Message *</label>
                         <textarea name="message" rows="5" required placeholder="Tell us how we can help..."
-                                  class="w-full rounded-2xl px-5 py-4 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder:text-slate-400 dark:text-white text-sm resize-none"><?php echo htmlspecialchars($_POST['message'] ?? ''); ?></textarea>
+                                  class="w-full rounded-2xl px-5 py-4 bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder:text-slate-400 text-sm resize-none"><?php echo htmlspecialchars($_POST['message'] ?? ''); ?></textarea>
                     </div>
                     <button type="submit"
                             class="w-full md:w-auto min-w-[200px] bg-primary text-white font-black py-4 px-10 rounded-2xl hover:bg-orange-600 transition-all shadow-xl shadow-primary/30 uppercase tracking-widest flex items-center justify-center gap-2">
@@ -196,9 +208,9 @@ https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3752.0!2d75.3433!3d19.8762
             width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
             referrerpolicy="no-referrer-when-downgrade" title="CSNExplore Office Location">
         </iframe>
-        <div class="absolute bottom-6 left-6 z-20 bg-white dark:bg-[#0a0705] p-4 rounded-2xl shadow-lg border border-slate-100 dark:border-white/10">
-            <p class="font-bold text-slate-900 dark:text-white text-sm">CSNExplore Office</p>
-            <p class="text-xs text-slate-500 dark:text-slate-400">Samarth Nagar, Central Bus Stand</p>
+        <div class="absolute bottom-6 left-6 z-20 bg-white p-4 rounded-2xl shadow-lg border border-slate-100">
+            <p class="font-bold text-slate-900 text-sm">CSNExplore Office</p>
+            <p class="text-xs text-slate-500">Samarth Nagar, Central Bus Stand</p>
         </div>
     </div>
 </section>

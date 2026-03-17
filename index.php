@@ -2,6 +2,19 @@
 // index.php – CSNExplore Home Page
 $page_title = "CSNExplore – Hotels, Bikes, Cars & Attractions in Chhatrapati Sambhajinagar";
 $current_page = "home";
+require_once 'php/config.php';
+$db = getDB();
+
+// Fetch homepage settings
+$hp_settings_row = $db->fetchOne("SELECT content FROM about_contact WHERE section = 'homepage'");
+$hp_settings = $hp_settings_row ? json_decode($hp_settings_row['content'], true) : [];
+
+// Fetch real data from DB
+$hp_attractions  = $db->fetchAll("SELECT * FROM attractions WHERE is_active=1 ORDER BY display_order ASC, rating DESC LIMIT 3");
+$hp_bikes        = $db->fetchAll("SELECT * FROM bikes WHERE is_active=1 ORDER BY display_order ASC, rating DESC LIMIT 4");
+$hp_restaurants  = $db->fetchAll("SELECT * FROM restaurants WHERE is_active=1 ORDER BY display_order ASC, rating DESC LIMIT 8");
+$hp_buses        = $db->fetchAll("SELECT * FROM buses WHERE is_active=1 ORDER BY display_order ASC LIMIT 4");
+$hp_blogs        = $db->fetchAll("SELECT * FROM blogs WHERE status='published' ORDER BY created_at DESC LIMIT 3");
 ?>
 <!DOCTYPE html>
 <html class="light" lang="en">
@@ -116,36 +129,31 @@ $nav_links_home = [
     ['href' => 'blogs.php',   'label' => 'Blogs'],
 ];
 ?>
-<header id="site-header" class="sticky top-0 w-full z-50 transition-all duration-300 glass-dark border-b border-white/5">
+<header id="site-header" class="sticky top-0 w-full z-50 glass-dark border-b border-white/5">
     <nav class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-        <a href="index.php" class="flex items-center gap-2 shrink-0">
-            <img src="images/travelhub.png" alt="CSNExplore" class="h-14 object-contain"
-                 onerror="this.style.display='none'"/>
-            <span id="logo-text" class="flex items-center gap-1.5">
-                <span class="material-symbols-outlined text-primary text-2xl">explore</span>
-                <span id="logo-label" class="font-serif font-black text-lg tracking-tight text-white">CSNExplore</span>
-            </span>
+        <a href="index.php" class="flex items-center shrink-0">
+            <img src="images/travelhub.png" alt="CSNExplore" class="h-14 object-contain"/>
         </a>
         <div class="hidden md:flex items-center gap-1">
             <?php foreach ($nav_links_home as $link): $active = ($link['href'] === 'index.php'); ?>
                 <a href="<?php echo $link['href']; ?>"
-                   class="nav-link <?php echo $active ? 'nav-active text-white bg-white/10' : 'text-white/70 hover:bg-white/10 hover:text-white'; ?> text-sm font-semibold px-4 py-2 rounded-full transition-colors">
+                   class="text-sm font-semibold px-4 py-2 rounded-full transition-colors <?php echo $active ? 'text-white bg-white/10' : 'text-white/70 hover:bg-white/10 hover:text-white'; ?>">
                     <?php echo $link['label']; ?>
                 </a>
             <?php endforeach; ?>
         </div>
         <div class="flex items-center gap-2">
-            <a href="login.php" id="login-btn" class="text-white text-sm font-semibold px-4 py-1.5 hover:bg-white/10 rounded-full transition-all">Login</a>
+            <a href="login.php" class="text-white text-sm font-semibold px-4 py-1.5 hover:bg-white/10 rounded-full transition-all">Login</a>
             <a href="register.php" class="bg-primary text-white text-sm font-bold px-5 py-1.5 rounded-full hover:bg-orange-600 transition-all shadow-lg shadow-primary/20">Register</a>
             <button id="mob-btn" class="md:hidden text-white hover:bg-white/10 p-2 rounded-lg transition-colors ml-1">
-                <span id="mob-icon" class="material-symbols-outlined text-2xl text-white">menu</span>
+                <span class="material-symbols-outlined text-2xl text-white">menu</span>
             </button>
         </div>
     </nav>
     <div id="mob-menu" class="hidden md:hidden border-t border-white/10 px-4 py-3 flex flex-col gap-1">
         <?php foreach ($nav_links_home as $link): $active = ($link['href'] === 'index.php'); ?>
             <a href="<?php echo $link['href']; ?>"
-               class="mob-nav-link <?php echo $active ? 'text-primary' : 'text-white/70 hover:bg-white/10 hover:text-white'; ?> text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors">
+               class="text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors <?php echo $active ? 'text-primary' : 'text-white/70 hover:bg-white/10 hover:text-white'; ?>">
                 <?php echo $link['label']; ?>
             </a>
         <?php endforeach; ?>
@@ -155,50 +163,9 @@ $nav_links_home = [
         </div>
     </div>
     <script>
-    (function(){
-        var header    = document.getElementById('site-header');
-        var logoLabel = document.getElementById('logo-label');
-        var loginBtn  = document.getElementById('login-btn');
-        var mobIcon   = document.getElementById('mob-icon');
-        var navLinks  = document.querySelectorAll('.nav-link');
-        var mobLinks  = document.querySelectorAll('.mob-nav-link');
-
-        function applyScrolled(scrolled) {
-            if (scrolled) {
-                header.classList.remove('glass-dark','border-white/5');
-                header.classList.add('bg-white/95','backdrop-blur-md','border-b','border-slate-200','shadow-sm');
-                if (logoLabel) { logoLabel.classList.remove('text-white'); logoLabel.classList.add('text-slate-900'); }
-                if (loginBtn)  { loginBtn.classList.remove('text-white','hover:bg-white/10'); loginBtn.classList.add('text-slate-700','hover:bg-slate-100'); }
-                if (mobIcon)   { mobIcon.classList.remove('text-white'); mobIcon.classList.add('text-slate-700'); }
-                navLinks.forEach(function(a){
-                    a.classList.remove('text-white/70','text-white','hover:bg-white/10','hover:text-white');
-                    a.classList.add('text-slate-600','hover:text-primary','hover:bg-primary/10');
-                    if (a.classList.contains('nav-active')) { a.classList.remove('bg-white/10'); a.classList.add('text-primary','bg-primary/10'); }
-                });
-                mobLinks.forEach(function(a){ a.classList.remove('hover:bg-white/10'); a.classList.add('hover:bg-slate-100'); });
-            } else {
-                header.classList.add('glass-dark','border-white/5');
-                header.classList.remove('bg-white/95','backdrop-blur-md','border-b','border-slate-200','shadow-sm');
-                if (logoLabel) { logoLabel.classList.add('text-white'); logoLabel.classList.remove('text-slate-900'); }
-                if (loginBtn)  { loginBtn.classList.add('text-white','hover:bg-white/10'); loginBtn.classList.remove('text-slate-700','hover:bg-slate-100'); }
-                if (mobIcon)   { mobIcon.classList.add('text-white'); mobIcon.classList.remove('text-slate-700'); }
-                navLinks.forEach(function(a){
-                    a.classList.add('text-white/70','hover:bg-white/10','hover:text-white');
-                    a.classList.remove('text-slate-600','hover:text-primary','hover:bg-primary/10','text-primary');
-                    if (a.classList.contains('nav-active')) { a.classList.add('text-white','bg-white/10'); a.classList.remove('bg-primary/10'); }
-                });
-                mobLinks.forEach(function(a){ a.classList.add('hover:bg-white/10'); a.classList.remove('hover:bg-slate-100'); });
-            }
-        }
-
-        // Show logo text fallback with correct initial color
-        if (logoLabel) logoLabel.classList.add('text-white');
-
-        window.addEventListener('scroll', function(){ applyScrolled(window.scrollY > 60); }, {passive:true});
         document.getElementById('mob-btn').addEventListener('click', function(){
             document.getElementById('mob-menu').classList.toggle('hidden');
         });
-    })();
     </script>
 </header>
 
@@ -377,7 +344,7 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div class="group relative overflow-hidden rounded-2xl h-64 shadow-lg card-hover transition-all">
-                <img alt="Luxury Car" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlDMSSDq5u4EWTtyLrL2T01rG1QVLx79iWAxTc-Q5v-4DB7Qaf3se4mMQ0OXya60SgJNz-esA3YItuP3cAQgCOUMELZ93GiboDiWUtyGlo3vcROCcNprMWU9HsV96e-umpDcBQWbOJp3OcHtPHXGe0NfG1iYfBR6dtozOW1-x0kzci9SbakuCN5LahXPRRgoI5AgrCPrXLIv8hlg56V8HPrYua2wCw58U5qNgwuVnf4hEy-HOTzh45fEkiS4W70yyelAJTlwjmXCUK"/>
+                <img alt="Luxury Car" loading="lazy" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlDMSSDq5u4EWTtyLrL2T01rG1QVLx79iWAxTc-Q5v-4DB7Qaf3se4mMQ0OXya60SgJNz-esA3YItuP3cAQgCOUMELZ93GiboDiWUtyGlo3vcROCcNprMWU9HsV96e-umpDcBQWbOJp3OcHtPHXGe0NfG1iYfBR6dtozOW1-x0kzci9SbakuCN5LahXPRRgoI5AgrCPrXLIv8hlg56V8HPrYua2wCw58U5qNgwuVnf4hEy-HOTzh45fEkiS4W70yyelAJTlwjmXCUK"/>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-5">
                     <h4 class="text-white text-xl font-serif mb-1">Premium Car Rentals</h4>
@@ -386,7 +353,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             </div>
             <div class="group relative overflow-hidden rounded-2xl h-64 shadow-lg card-hover transition-all">
-                <img alt="Adventure Bike" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFYIfhiyxiKGSvW26EEi6qWok9NLO6cRlbBw0oCLlVCiV9F1e_mtQoiJK-2Dnb5uwU3K6b01miWgbmBQaNlDcPazf_LXbqwv3zx4f_F6Jsl627xYGPA3B5kQg_01L4gEPJseizInfQycEdL6o-IO9u7fAjGuMEnr_iPgYZShZ5e9VLbqTAdlhGFW8Tnss81gBfiFHSmzorGkalt_cF3Hi8ycEbYCGC_a4e9UyOZAQ8J4m9XHF2EcZwdaPo2OpFbnwwGvVRYdxLSxsT"/>
+                <img alt="Adventure Bike" loading="lazy" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFYIfhiyxiKGSvW26EEi6qWok9NLO6cRlbBw0oCLlVCiV9F1e_mtQoiJK-2Dnb5uwU3K6b01miWgbmBQaNlDcPazf_LXbqwv3zx4f_F6Jsl627xYGPA3B5kQg_01L4gEPJseizInfQycEdL6o-IO9u7fAjGuMEnr_iPgYZShZ5e9VLbqTAdlhGFW8Tnss81gBfiFHSmzorGkalt_cF3Hi8ycEbYCGC_a4e9UyOZAQ8J4m9XHF2EcZwdaPo2OpFbnwwGvVRYdxLSxsT"/>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-5">
                     <h4 class="text-white text-xl font-serif mb-1">Bike Rentals</h4>
@@ -399,30 +366,28 @@ document.addEventListener('DOMContentLoaded', function() {
 </section>
 
 <!-- Attractions -->
+<?php if ($hp_settings['show_attractions'] ?? true): ?>
 <section class="py-12 bg-slate-50 dark:bg-slate-900/30">
     <div class="max-w-7xl mx-auto px-4">
         <div class="flex items-end justify-between mb-6">
-            <h2 class="font-serif text-2xl md:text-3xl dark:text-white">Ancient Marvels</h2>
+            <h2 class="font-serif text-2xl md:text-3xl dark:text-white"><?php echo htmlspecialchars($hp_settings['title_attractions'] ?? 'Ancient Marvels'); ?></h2>
             <a href="listing.php?type=attractions" class="text-sm font-bold text-primary hover:underline">See all →</a>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-            <?php
-            $attractions = [
-                ['name' => 'Ellora Caves',     'tag' => 'World Heritage',      'price' => '₹40',  'img' => 'https://lh3.googleusercontent.com/aida-public/AB6AXuDfTDZo8LglfsdX1vCy-PfHltcZor3jl-l4xxrXMYSU-zLgoKXxY-ouUImyR0WZq69V0y63PE1wDL2_EfqYwWhgQOHPVDJVHhyGGB7H8kZNyboNAXVxWDvlFW_Z_QRXuTKMBuuk7a9HgI3Gde3PidzWIcOhtgs4QAHX2DHA2V6QUaFo6mYDZzEhvq1Y7FwjBSsjTNmfwco23Zfvdb8laeVoTMZHDGMoMrH3yPn4aQDHZ9AJE-WXiuWGVG-c0BegSoJwB1zEXVVWIUie'],
-                ['name' => 'Bibi Ka Maqbara', 'tag' => 'Mughal Architecture', 'price' => '₹25',  'img' => 'https://lh3.googleusercontent.com/aida-public/AB6AXuA-D79qVGeL_kN4YxCqUZP2BKG-9x4p5sqXX-bx0TBbP7ZKU1EVKO-Jw5Emw0obv0VOq6md2Qzn1vqWm4o1V32OKXDNCFPuQqV_AcF7hgELzcZsE2TJ4S7h6v6mvvV08rRZxxhTTmP6woVo2zTsTcjrQSpVn_fWlQ_srrJ12DxixFiiNTPdmEfpgtbSvHMNMrYwK4BJubaMlVAZqAQJfCh5W7fpWsJ57_3zu0gTBtG7cIlIZBipNxLt3n2U-UadC2ONwF48y4nrSeOv'],
-                ['name' => 'Daulatabad Fort', 'tag' => 'Hill Fortress',        'price' => '₹35',  'img' => 'https://lh3.googleusercontent.com/aida-public/AB6AXuBeBbY5fkgJvQzAWQFS4Cz5-MZDhZUTz0iY3JkRlba6oWNOkz-hSOeJixYskt3-FgETy9DQdV7xn0GCprWdMr5mEYy8xv2zMcKhxORdoKZAi5uzkmohi7j7_IRO3IlS6TmOUIAay0frtabGIudm5ciMPDm6x25ldTnG7ysnGXFwI3MjqbjGUd5rIa22CePGUhxmSCbLdyHBvHFyu_25Xl_-yuhLmp-IEWBaURvtPjytD56fJe5mQiQQ6guq4eXjFHU2XXhIxZQGwG7x'],
-            ];
-            foreach ($attractions as $a): ?>
+            <?php foreach ($hp_attractions as $a):
+                $tag = htmlspecialchars($a['type'] ?? 'Attraction');
+                $price = '₹' . number_format($a['entry_fee'] ?? 0);
+            ?>
             <div class="group overflow-hidden rounded-2xl bg-white dark:bg-white/5 border border-slate-100 dark:border-white/10 shadow-md card-hover transition-all">
                 <div class="h-44 overflow-hidden">
-                    <img alt="<?php echo htmlspecialchars($a['name']); ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="<?php echo $a['img']; ?>"/>
+                    <img alt="<?php echo htmlspecialchars($a['name']); ?>" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="<?php echo htmlspecialchars($a['image']); ?>"/>
                 </div>
                 <div class="p-4">
-                    <span class="text-primary text-[10px] font-bold uppercase tracking-widest"><?php echo htmlspecialchars($a['tag']); ?></span>
+                    <span class="text-primary text-[10px] font-bold uppercase tracking-widest"><?php echo $tag; ?></span>
                     <h5 class="font-serif text-lg dark:text-white mt-1 mb-3"><?php echo htmlspecialchars($a['name']); ?></h5>
                     <div class="flex items-center justify-between">
-                        <p class="font-black dark:text-white"><?php echo $a['price']; ?> <span class="text-xs text-slate-400 font-normal">entry</span></p>
-                        <a href="attraction-detail.php" class="bg-primary/10 text-primary px-4 py-1.5 rounded-full font-bold text-xs hover:bg-primary hover:text-white transition-all">Details</a>
+                        <p class="font-black dark:text-white"><?php echo $price; ?> <span class="text-xs text-slate-400 font-normal">entry</span></p>
+                        <a href="listing.php?type=attractions" class="bg-primary/10 text-primary px-4 py-1.5 rounded-full font-bold text-xs hover:bg-primary hover:text-white transition-all">Details</a>
                     </div>
                 </div>
             </div>
@@ -430,32 +395,27 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     </div>
 </section>
+<?php endif; ?>
 
 <!-- Bike Rentals -->
+<?php if ($hp_settings['show_bikes'] ?? true): ?>
 <section class="py-12 bg-white dark:bg-background-dark">
     <div class="max-w-7xl mx-auto px-4">
         <div class="flex items-end justify-between mb-6">
-            <h2 class="font-serif text-2xl md:text-3xl dark:text-white">Quick Bike Rentals</h2>
+            <h2 class="font-serif text-2xl md:text-3xl dark:text-white"><?php echo htmlspecialchars($hp_settings['title_bikes'] ?? 'Quick Bike Rentals'); ?></h2>
             <a href="listing.php?type=bikes" class="text-sm font-bold text-primary hover:underline">See all →</a>
         </div>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-5">
-            <?php
-            $bikes = [
-                ['name' => 'Classic 350',  'type' => 'Cruiser',     'price' => '₹1,200', 'img' => 'https://lh3.googleusercontent.com/aida-public/AB6AXuDkXZsGBTMvoDTsJck_lsg-N6BAi2aGgrrEP7vQp6W2M5hn2zn5pPYvIf5c-Eqn49QFJKMe5ZLn1KQXOt4nKYPBjvAg9yz2uoYJo2oggR6xtVHN9TVx1MVHfkZyCmIdFukE9Ykx9pgIqI7tS2om4YOCkcn-RCinOFzWODJ09k_BRymMCKOX9uM2FrSYFjuEr4hPyEdDZNqqilKvzhiokShEJ9yGW-LH4Qip8ZIJNLuvQQ52a3FZMwM9t9kP1URcKvUlpSENZY5t2sXr'],
-                ['name' => 'Activa 6G',   'type' => 'Scooter',     'price' => '₹500',   'img' => 'https://lh3.googleusercontent.com/aida-public/AB6AXuCu-MGYxKulvVTS26zEc3pMr1tIF3vnh4LjUkzasYmTXOEqGRA3_WmBmf4nose7rZh06xem65Y6oJOq3arbdRxwIZYy2FqRf3b6LdWvcJl756rsbe5wrXQ3lV_UnTnipzUwCxSkewwF5B9Job59_wpgDAgGpDOS_bnyh5ARiUiojiAohuQWYmS2tpRjcBL47ff4XEGbkQ02KrKCHfMUYMAwE0IuWsWwPezM01t7pqxbgxai1QlK5Wb-SJ0-4bFUE61E4GjPelvo9aaQ'],
-                ['name' => 'Fascino 125', 'type' => 'Stylish',     'price' => '₹600',   'img' => 'https://lh3.googleusercontent.com/aida-public/AB6AXuDRLFtJU8Ygd7RqMbcb-XvE7muS_dFif6BjHtq72I-kRVSreBVN3gX9oCRTcUj0dqFVux-BeyIM2oNYXX1rOWB_-48AkTGXCgY24cTJR85bpkEfDOmQeJNVuavpPa74l78lc70ZE_tKG8xbe9k_LktI3aUs4gkq2N1TWrTmoK456o0U9aoYBe56uUSsIiu2u5ThjzwLcr-xvUv2cqqZgrYnxAaVsKxAJORPp4I0UAZ-yYgK4ycyC53JmWCDo2TOuYB34c0g8vG77CiN'],
-                ['name' => 'KTM Duke 200','type' => 'Performance',  'price' => '₹1,500', 'img' => 'https://lh3.googleusercontent.com/aida-public/AB6AXuA3Zy6A1dfcSOH6HG-eKb7I8i13O9SjJ3LOk6IXb9VqbVtoI6ieWHQZgWJiX-dd4rBueV-jS7rIZgQ60C4-C6lStYGFYOg6AqLdoIDZ3-9WyEgXS_bDzxZ3hQkjpwIu4AaHmk7Q_quHRPMl3BQW4Y46-rp5cuWnj16baw19UZWAqYeMrLcKsC-O6hHpne4LtPTCHJ-Qby1RjsV7G5Bw_yBaCssRhsrT11cY2eVdXBFUKGir7KfSxkcVduYBhvZ-cqbiBv2LXCvapJzQ'],
-            ];
-            foreach ($bikes as $bike): ?>
+            <?php foreach ($hp_bikes as $bike): ?>
             <div class="group overflow-hidden rounded-2xl bg-white dark:bg-white/5 border border-slate-100 dark:border-white/10 shadow-md card-hover transition-all">
                 <div class="h-44 overflow-hidden bg-slate-50 dark:bg-white/5 flex items-center justify-center">
-                    <img alt="<?php echo htmlspecialchars($bike['name']); ?>" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 p-4" src="<?php echo $bike['img']; ?>"/>
+                    <img alt="<?php echo htmlspecialchars($bike['name']); ?>" loading="lazy" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 p-4" src="<?php echo htmlspecialchars($bike['image']); ?>"/>
                 </div>
                 <div class="p-4">
                     <span class="text-primary text-[10px] font-bold uppercase tracking-widest"><?php echo htmlspecialchars($bike['type']); ?></span>
                     <h5 class="font-serif text-lg dark:text-white mt-1 mb-3"><?php echo htmlspecialchars($bike['name']); ?></h5>
                     <div class="flex items-center justify-between">
-                        <p class="font-black dark:text-white"><?php echo $bike['price']; ?> <span class="text-xs text-slate-400 font-normal">/day</span></p>
+                        <p class="font-black dark:text-white">₹<?php echo number_format($bike['price_per_day']); ?> <span class="text-xs text-slate-400 font-normal">/day</span></p>
                         <a href="listing.php?type=bikes" class="bg-primary/10 text-primary px-4 py-1.5 rounded-full font-bold text-xs hover:bg-primary hover:text-white transition-all">Book</a>
                     </div>
                 </div>
@@ -464,105 +424,99 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     </div>
 </section>
+<?php endif; ?>
 
 <!-- Taste the City -->
+<?php if ($hp_settings['show_restaurants'] ?? true): ?>
 <section class="py-12 bg-slate-50 dark:bg-slate-900/30">
     <div class="max-w-7xl mx-auto px-4">
         <div class="flex items-end justify-between mb-6">
-            <h2 class="font-serif text-2xl md:text-3xl dark:text-white">Taste the City</h2>
+            <h2 class="font-serif text-2xl md:text-3xl dark:text-white"><?php echo htmlspecialchars($hp_settings['title_restaurants'] ?? 'Taste the City'); ?></h2>
             <a href="listing.php?type=restaurants" class="text-sm font-bold text-primary hover:underline">See all →</a>
         </div>
         <div class="flex gap-6 overflow-x-auto hide-scrollbar pb-2">
-            <?php
-            $restaurants = [
-                ['name' => 'Saffron',      'type' => 'Mughlai',    'img' => 'https://lh3.googleusercontent.com/aida-public/AB6AXuB0eK082vF8AY2AVES6WpMWcFfL1c8qDOLHqUyQ2VpMTdoBMxsSr9uZLmpk3wSCnr1EDaZQa-7kfWbK-Y6CCS1qsNdL8iBPU4l9K91wQaBk7ZtjqR3osyFjj9BHZR2G-vKggYi_Hg-ThkXwKEnnLwWrlR5FwSxL7OTE14GfRKGETGMVSBV7AFeH7_UFWCdpQ-eEw96RPQbpWr75x3q8JAgZhOe-9BC46y-PPRJkrf8iOw5qTlLiyNx8evp1YO_pOSfU1rPyFbLpnd9J'],
-                ['name' => 'Naivedya',     'type' => 'Thali',      'img' => 'https://lh3.googleusercontent.com/aida-public/AB6AXuCA3gQlK1ERj5sCRlPrqtwO0nsvREtNkTDgMvX6i0EJ_I5Q_-khwY6jsdu23xFXcImbcoEuzacLUAJWJpyzqIXYgBZH7AVEQxBPTWyHKzjzTdFn9Nausr_YSq6uqasgV3cAz-8h_Mdz9cRtS16-5iGICgwOu0JBddKtqTZ7WKnYMI4cS7Sde7XA1nWr10TAkqmCBVbNVU_NhY4lIaARDNs923GBliYz88gOjod8fDdKtd9aLO-ZikzfixmReOpJhhG_2vMVpa_ZoFgf'],
-                ['name' => 'Great Sagar',  'type' => 'Biryani',    'img' => 'https://lh3.googleusercontent.com/aida-public/AB6AXuBBe4WIxEN97LNP2DYRibnJh8OsUirZ4H8TpTItqHT3-eEV_oiVC2pPWCcdhO9r6EILdnjh1QXVxloCHMw57UBz3aV7zQatmokfs893yTaQY4alaf_vuzYN3cM1jekvaGKC1BFCyyzN8i0iMhLdWdH6km5N3IADbedzuQgKX0dxf8e0bknrrfnbfcvFhrVIZ19g8Nj-6MfJXr3WJQ-vXc7c7FBkt4IgCRQBv4puJLMzxefR_mMq-1hTwqV5pVTxCPmbdgM99ZWdJ76s'],
-                ['name' => 'The Bhoj',     'type' => 'Traditional','img' => 'https://lh3.googleusercontent.com/aida-public/AB6AXuDYDYjPk4zwN5EywWGSXHCxcgYB9tLp7S-kS8cKJayAikEowD_4lcZqMWPmhVhuXTIkHqkpoGfJN441j809ZNPHynRLiib0mCmmwr5G1ED4gnm22VK6_PwSqqcJaHIKNZZXS5SjMtNJEBJJVIBzk0IrOxCXvWpPdWTfFq4Lc3dO5gkylKUbK1xu-b7SlcWG6V70ZFyvcOh4_Sv1SXV3qEaYxYZU1lrkPziH3tIthTMKX_hB-JDwVHlqDSCGFclOuNLu6yRzt5idaPCR'],
-                ['name' => 'Tara Pan',     'type' => 'Street Food', 'img' => 'https://lh3.googleusercontent.com/aida-public/AB6AXuB6u_KQj8LZAKlYnMJftVKgpKiFtNBXhlIRCez9PVw-dtHVbERilFvfZpV53OhRFmSBv_WpuogDHWTbG2yNtV5U7GFpZcsy--LwjWJ7Z7bec9fwHz25yiZtzeehTnxZToydprEKofoE6XmeHTNJpBullF-34xP9fYTmAoRvGFwsLlJTQjRGCDCifCgnvlERai3vv-poQYHo_XKUWzOusN_WVjrpeTgk26tuVqxhNUqW-qZMQ9xyDM-KTBjPhSIz8aV4UYEWUfz3fUTC'],
-            ];
-            foreach ($restaurants as $r): ?>
-            <div class="flex-shrink-0 text-center w-28 group cursor-pointer">
+            <?php foreach ($hp_restaurants as $r): ?>
+            <a href="listing.php?type=restaurants" class="flex-shrink-0 text-center w-28 group cursor-pointer">
                 <div class="w-24 h-24 rounded-full mx-auto mb-3 overflow-hidden border-2 border-white dark:border-white/10 shadow-md group-hover:border-primary transition-all">
-                    <img alt="<?php echo htmlspecialchars($r['name']); ?>" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="<?php echo $r['img']; ?>"/>
+                    <img alt="<?php echo htmlspecialchars($r['name']); ?>" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="<?php echo htmlspecialchars($r['image']); ?>"/>
                 </div>
                 <p class="font-bold text-sm dark:text-white"><?php echo htmlspecialchars($r['name']); ?></p>
-                <p class="text-primary text-[10px] font-bold uppercase"><?php echo htmlspecialchars($r['type']); ?></p>
-            </div>
+                <p class="text-primary text-[10px] font-bold uppercase"><?php echo htmlspecialchars($r['cuisine'] ?? $r['type']); ?></p>
+            </a>
             <?php endforeach; ?>
         </div>
     </div>
 </section>
+<?php endif; ?>
 
 <!-- Travel Your Way (Buses) -->
+<?php if ($hp_settings['show_buses'] ?? true): ?>
 <section class="py-12 bg-white dark:bg-background-dark">
     <div class="max-w-7xl mx-auto px-4">
         <div class="flex items-end justify-between mb-6">
-            <h2 class="font-serif text-2xl md:text-3xl dark:text-white">Travel Your Way</h2>
+            <h2 class="font-serif text-2xl md:text-3xl dark:text-white"><?php echo htmlspecialchars($hp_settings['title_buses'] ?? 'Travel Your Way'); ?></h2>
             <a href="listing.php?type=buses" class="text-sm font-bold text-primary hover:underline">See all →</a>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <?php
-            $buses = [
-                ['operator' => 'Neeta Travels',    'type' => 'AC Sleeper', 'route' => 'Pune → Sambhajinagar',   'price' => '₹850'],
-                ['operator' => 'Prasanna Purple',  'type' => 'Volvo',      'route' => 'Mumbai → Sambhajinagar', 'price' => '₹1,200'],
-            ];
-            foreach ($buses as $bus): ?>
+            <?php foreach ($hp_buses as $bus):
+                $route = htmlspecialchars($bus['from_location']) . ' → ' . htmlspecialchars($bus['to_location']);
+            ?>
             <div class="glass-dark p-5 rounded-2xl flex items-center justify-between gap-4 hover:border-primary/30 transition-all card-hover">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 bg-primary/15 rounded-xl flex items-center justify-center shrink-0">
                         <span class="material-symbols-outlined text-primary text-2xl">directions_bus</span>
                     </div>
                     <div>
-                        <p class="text-white font-bold text-sm"><?php echo htmlspecialchars($bus['operator']); ?> <span class="text-[10px] font-normal text-white/50 bg-white/10 px-2 py-0.5 rounded ml-1"><?php echo htmlspecialchars($bus['type']); ?></span></p>
-                        <p class="text-white/50 text-xs mt-0.5"><?php echo htmlspecialchars($bus['route']); ?></p>
+                        <p class="text-white font-bold text-sm"><?php echo htmlspecialchars($bus['operator']); ?> <span class="text-[10px] font-normal text-white/50 bg-white/10 px-2 py-0.5 rounded ml-1"><?php echo htmlspecialchars($bus['bus_type']); ?></span></p>
+                        <p class="text-white/50 text-xs mt-0.5"><?php echo $route; ?></p>
                     </div>
                 </div>
                 <div class="flex items-center gap-4 shrink-0">
-                    <p class="text-primary font-black text-xl"><?php echo $bus['price']; ?></p>
-                    <a href="listing.php?type=buses" class="bg-primary text-white px-4 py-2 rounded-xl font-bold text-xs hover:bg-orange-600 transition-all">Book</a>
+                    <p class="text-primary font-black text-xl">₹<?php echo number_format($bus['price']); ?></p>
+                    <a href="bus.php" class="bg-primary text-white px-4 py-2 rounded-xl font-bold text-xs hover:bg-orange-600 transition-all">Book</a>
                 </div>
             </div>
             <?php endforeach; ?>
         </div>
     </div>
 </section>
+<?php endif; ?>
 
 <!-- Travel Blogs -->
+<?php if ($hp_settings['show_blogs'] ?? true): ?>
 <section class="py-12 bg-slate-50 dark:bg-slate-900/30">
     <div class="max-w-7xl mx-auto px-4">
         <div class="flex items-end justify-between mb-6">
             <div>
                 <p class="text-primary font-bold text-xs uppercase tracking-widest mb-1">Our Travel Journals</p>
-                <h2 class="font-serif text-2xl md:text-3xl dark:text-white">Travel Insights</h2>
+                <h2 class="font-serif text-2xl md:text-3xl dark:text-white"><?php echo htmlspecialchars($hp_settings['title_blogs'] ?? 'Travel Insights'); ?></h2>
             </div>
             <a href="blogs.php" class="text-sm font-bold text-primary hover:underline">Read more →</a>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-            <?php
-            $blogs = [
-                ['title' => 'The Golden Thread: Weaver Stories', 'tag' => 'Heritage', 'read' => '5', 'img' => 'https://lh3.googleusercontent.com/aida-public/AB6AXuDDXtI36Ak_c1oZP6DBN6XuNcipOp1FZyPw7_5eZFyJqIOdw379DWRBbRRXte6mYOLJ41fORaujKPlbqKCgiAtknxK8WD15z2aap31vq9lcZa10hAxe8FtvE9ofYg-4g8RLQvsJk7-syHR6JOkr3oE5aCovzf5lWImP3Uhcg8xHdZkKXN7DRQA_s2iONPxGfPDcLRTiCA-gTbssnUVTvBcQEKndxQyNQlXmV6aeTeQgXBzimUbkiGVMrCQjYESOqk9VTJ9BqhJy4e8c'],
-                ['title' => "A Meteor's Legacy: Lonar Secrets",  'tag' => 'Nature',   'read' => '8', 'img' => 'https://lh3.googleusercontent.com/aida-public/AB6AXuAIj__CDpESRFwR6xAYYw37kdQvkHTy5seuR-Ma_bH84a9T7P27_gmPUo-lSc8KkW_fVByifLuW45uJ0WCPAiFsghRYhsEBINf579L1sYbpfXOHpquLiVizkSZ8lnurOedj5GPcQjvRgwDEUaJ3XMAwTQgE7mUwvdnWwuN3-k9e1ql1RKo2JzRH20qHLgmzSf8GSAwWseV5C-zbc4DsHmMTCesNCz_A-2pFPuATXfNKGQy8tUwmppIvnKHv42o0CleBEwGq96jju05n'],
-                ['title' => 'The Royal Plate: A Culinary Tour',  'tag' => 'Cuisine',  'read' => '4', 'img' => 'https://lh3.googleusercontent.com/aida-public/AB6AXuCAwOHbzGC4iPe-e8neBtLxAN4yaUk7-QpESKj9cIbPVVUs0qCRpORyT2eUw_77wag6qNYKqXqvAAWZ7dzez2J-K0IRYRo4WPCmWDYDN60oK86sQ2759o4f6AmcwvmgdJ5IsNYYNg5aVlTBFJ9NkpxJR9MKHh1ESOJd8H451r0_gUPcb5Se1d5uZAAik3HgX5D1-nbFI-g1rTPdD5oweX1488TkQoGJu-iQqmux2quuxYsuoEtJ1dhVogUNOxdCDzZgNWASd9C1-8W1'],
-            ];
-            foreach ($blogs as $blog): ?>
-            <div class="group cursor-pointer">
+            <?php if (!empty($hp_blogs)): foreach ($hp_blogs as $blog):
+                $read_time = max(3, intval(strlen(strip_tags($blog['content'] ?? '')) / 1000));
+            ?>
+            <a href="blogs.php" class="group cursor-pointer">
                 <div class="rounded-2xl overflow-hidden aspect-[16/10] mb-3 shadow-md relative">
-                    <img alt="<?php echo htmlspecialchars($blog['title']); ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="<?php echo $blog['img']; ?>"/>
+                    <img alt="<?php echo htmlspecialchars($blog['title']); ?>" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="<?php echo htmlspecialchars($blog['image'] ?? ''); ?>"/>
                     <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                         <span class="bg-white text-black px-4 py-1.5 rounded-full font-bold text-xs">READ POST</span>
                     </div>
                 </div>
                 <div class="flex items-center gap-3 mb-2">
-                    <span class="bg-primary/10 text-primary px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase"><?php echo htmlspecialchars($blog['tag']); ?></span>
-                    <span class="text-slate-400 text-xs flex items-center gap-1"><span class="material-symbols-outlined text-sm">schedule</span><?php echo $blog['read']; ?> min</span>
+                    <span class="bg-primary/10 text-primary px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase"><?php echo htmlspecialchars($blog['category'] ?? 'Travel'); ?></span>
+                    <span class="text-slate-400 text-xs flex items-center gap-1"><span class="material-symbols-outlined text-sm">schedule</span><?php echo $read_time; ?> min</span>
                 </div>
                 <h4 class="font-serif text-lg dark:text-white group-hover:text-primary transition-colors"><?php echo htmlspecialchars($blog['title']); ?></h4>
-            </div>
-            <?php endforeach; ?>
+            </a>
+            <?php endforeach; else: ?>
+            <div class="col-span-3 text-center py-8 text-slate-400">No blog posts yet. Check back soon.</div>
+            <?php endif; ?>
         </div>
     </div>
 </section>
+<?php endif; ?>
 </main>
 
 <!-- Footer -->
@@ -579,7 +533,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <p class="text-white/50 text-sm leading-relaxed mb-5">Your premium gateway to the wonders of Chhatrapati Sambhajinagar, Maharashtra.</p>
                 <div class="flex gap-3">
                     <a href="#" class="w-9 h-9 rounded-full glass flex items-center justify-center hover:bg-primary transition-all"><span class="material-symbols-outlined text-sm">share</span></a>
-                    <a href="mailto:hello@csnexplore.com" class="w-9 h-9 rounded-full glass flex items-center justify-center hover:bg-primary transition-all"><span class="material-symbols-outlined text-sm">mail</span></a>
+                    <a href="mailto:supportcsnexplore@gmail.com" class="w-9 h-9 rounded-full glass flex items-center justify-center hover:bg-primary transition-all"><span class="material-symbols-outlined text-sm">mail</span></a>
                     <a href="https://wa.me/918600968888" class="w-9 h-9 rounded-full glass flex items-center justify-center hover:bg-primary transition-all">
                         <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.417-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.305 1.652zm6.599-3.825c1.63.975 3.41 1.487 5.23 1.488 5.439 0 9.861-4.422 9.863-9.861.001-2.636-1.024-5.115-2.884-6.977-1.862-1.864-4.341-2.887-6.979-2.888-5.439 0-9.861 4.422-9.863 9.862 0 1.842.511 3.641 1.478 5.187l-.995 3.637 3.73-.978zm11.367-7.643c-.31-.155-1.837-.906-2.12-.108-.285.103-.55.515-.674.654-.124.14-.248.155-.558.001-.31-.155-1.31-.483-2.498-1.543-.924-.824-1.548-1.841-1.73-2.15-.181-.31-.019-.477.135-.631.14-.139.31-.36.465-.541.155-.181.206-.31.31-.515.103-.206.052-.386-.026-.541-.077-.155-.674-1.626-.924-2.228-.243-.585-.491-.504-.674-.513-.175-.008-.375-.01-.575-.01s-.525.075-.8.375c-.275.3-1.05 1.026-1.05 2.5s1.075 2.9 1.225 3.1c.15.2 2.11 3.221 5.113 4.513.714.307 1.272.49 1.706.629.718.227 1.37.195 1.886.118.575-.085 1.837-.75 2.096-1.475.258-.725.258-1.346.181-1.475-.077-.129-.283-.206-.593-.361z"/></svg>
                     </a>
@@ -605,9 +559,9 @@ document.addEventListener('DOMContentLoaded', function() {
             <div>
                 <h5 class="font-bold text-sm mb-4">Contact Info</h5>
                 <ul class="flex flex-col gap-3 text-white/50 text-sm">
-                    <li class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-base">location_on</span>Station Road, Sambhajinagar</li>
+                    <li class="flex items-start gap-2"><span class="material-symbols-outlined text-primary text-base shrink-0 mt-0.5">location_on</span>Behind State Bank Of India, Plot No. 273 Samarth Nagar, Central Bus Stand, Chhatrapati Sambhajinagar 431001</li>
                     <li class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-base">call</span>+91 86009 68888</li>
-                    <li class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-base">mail</span>hello@csnexplore.com</li>
+                    <li class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-base">mail</span>supportcsnexplore@gmail.com</li>
                     <li class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-base">schedule</span>Mon–Sat: 9am – 7pm</li>
                 </ul>
             </div>

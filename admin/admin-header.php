@@ -27,6 +27,7 @@ body { font-family: 'Inter', sans-serif; }
 .sidebar-link.active { background: rgba(236,91,19,0.12); color: #ec5b13; }
 .sidebar-link.active .material-symbols-outlined { color: #ec5b13; }
 </style>
+<?php if (!empty($extra_head)) echo $extra_head; ?>
 </head>
 <body class="bg-slate-50 text-slate-900 min-h-screen">
 
@@ -68,6 +69,7 @@ body { font-family: 'Inter', sans-serif; }
             ['href'=>'listings.php',  'icon'=>'list_alt',         'label'=>'Listings',     'key'=>'listings'],
             ['href'=>'bookings.php',  'icon'=>'book_online',      'label'=>'Bookings',     'key'=>'bookings'],
             ['href'=>'blogs.php',     'icon'=>'article',          'label'=>'Blogs',        'key'=>'blogs'],
+            ['href'=>'gallery.php',   'icon'=>'photo_library',    'label'=>'Gallery',      'key'=>'gallery'],
             ['href'=>'users.php',     'icon'=>'group',            'label'=>'Users',        'key'=>'users'],
             ['href'=>'content.php',   'icon'=>'edit_note',        'label'=>'Page Content', 'key'=>'content'],
         ];

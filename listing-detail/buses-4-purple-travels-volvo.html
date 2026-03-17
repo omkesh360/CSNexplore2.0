@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Purple Travels Volvo | CSNExplore</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<script>tailwind.config={theme:{extend:{colors:{"primary":"#ec5b13"},fontFamily:{display:["Inter","sans-serif"],serif:["Playfair Display","serif"]}}}}</script>
+<style>
+.glass-dark{background:rgba(10,7,5,0.7);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(236,91,19,0.1);}
+.material-symbols-outlined{font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;font-family:"Material Symbols Outlined";font-style:normal;display:inline-block;line-height:1;}
+.prose h2{font-size:1.5rem;font-weight:800;margin:2rem 0 0.75rem;}
+.prose h3{font-size:1.2rem;font-weight:700;margin:1.5rem 0 0.5rem;}
+.prose p{margin-bottom:1.1rem;line-height:1.85;}
+.prose ul{list-style:disc;padding-left:1.5rem;margin-bottom:1.1rem;}
+.prose ul li{margin-bottom:0.4rem;line-height:1.7;}
+.prose strong{font-weight:700;}
+.line-clamp-2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+</style>
+</head>
+<body class="bg-white font-display text-slate-900">
+
+<div class="bg-[#ec5b13] text-white py-1.5 overflow-hidden relative z-[60]">
+  <div class="max-w-7xl mx-auto px-4 flex justify-between items-center gap-4 text-[11px] font-semibold uppercase tracking-widest">
+    <div class="flex-1 overflow-hidden">
+      <div class="flex whitespace-nowrap" style="animation:marquee 30s linear infinite">
+        <span class="px-6">★ 20% OFF on first heritage tour booking</span>
+        <span class="px-6">★ Verified guides for Ajanta &amp; Ellora</span>
+        <span class="px-6">★ Free cancellation on bike rentals</span>
+        <span class="px-6">★ 24/7 tourist support available</span>
+        <span class="px-6">★ 20% OFF on first heritage tour booking</span>
+        <span class="px-6">★ Verified guides for Ajanta &amp; Ellora</span>
+        <span class="px-6">★ Free cancellation on bike rentals</span>
+        <span class="px-6">★ 24/7 tourist support available</span>
+      </div>
+    </div>
+    <div class="hidden md:flex items-center gap-4 shrink-0">
+      <a href="tel:+918600968888" class="flex items-center gap-1.5 hover:text-white/80 transition-colors">
+        <span class="material-symbols-outlined text-[14px]">call</span>+91 86009 68888
+      </a>
+    </div>
+  </div>
+</div>
+<header class="sticky top-0 w-full z-50 glass-dark border-b border-white/5">
+  <nav class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+    <a href="../index.php" class="flex items-center shrink-0">
+      <img src="../images/travelhub.png" alt="CSNExplore" class="h-14 object-contain"/>
+    </a>
+    <div class="hidden md:flex items-center gap-1"><a href="../index.php" class="text-sm font-semibold px-4 py-2 rounded-full text-white/70 hover:bg-white/10 hover:text-white transition-colors">Home</a><a href="../about.php" class="text-sm font-semibold px-4 py-2 rounded-full text-white/70 hover:bg-white/10 hover:text-white transition-colors">About Us</a><a href="../contact.php" class="text-sm font-semibold px-4 py-2 rounded-full text-white/70 hover:bg-white/10 hover:text-white transition-colors">Contact Us</a><a href="../blogs.php" class="text-sm font-semibold px-4 py-2 rounded-full text-white/70 hover:bg-white/10 hover:text-white transition-colors">Blogs</a></div>
+    <div class="flex items-center gap-2">
+      <a href="../login.php" class="text-white text-sm font-semibold px-4 py-1.5 hover:bg-white/10 rounded-full transition-all">Login</a>
+      <a href="../register.php" class="bg-[#ec5b13] text-white text-sm font-bold px-5 py-1.5 rounded-full hover:bg-orange-600 transition-all">Register</a>
+      <button id="mob-btn" class="md:hidden p-2 rounded-lg ml-1">
+        <span class="material-symbols-outlined text-2xl text-white">menu</span>
+      </button>
+    </div>
+  </nav>
+  <div id="mob-menu" class="hidden md:hidden border-t border-white/10 px-4 py-3 flex flex-col gap-1">
+    <a href="../index.php" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">Home</a><a href="../about.php" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">About Us</a><a href="../contact.php" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">Contact Us</a><a href="../blogs.php" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">Blogs</a>
+    <div class="flex gap-2 pt-2 border-t border-white/10 mt-1">
+      <a href="../login.php" class="flex-1 text-center text-white text-sm font-semibold py-2 hover:bg-white/10 rounded-xl transition-all">Login</a>
+      <a href="../register.php" class="flex-1 text-center bg-[#ec5b13] text-white text-sm font-bold py-2 rounded-xl hover:bg-orange-600 transition-all">Register</a>
+    </div>
+  </div>
+  <script>document.getElementById("mob-btn").addEventListener("click",function(){document.getElementById("mob-menu").classList.toggle("hidden");});</script>
+</header>
+<!-- Breadcrumb -->
+<div class="w-full bg-slate-100 border-b border-slate-200">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center gap-2 text-sm text-slate-500 flex-wrap">
+    <a href="../index.php" class="hover:text-[#ec5b13] transition-colors flex items-center gap-1"><span class="material-symbols-outlined text-base">home</span>Home</a>
+    <span class="material-symbols-outlined text-base">chevron_right</span>
+    <a href="../listing.php?type=buses" class="hover:text-[#ec5b13] transition-colors">Buses</a>
+    <span class="material-symbols-outlined text-base">chevron_right</span>
+    <span class="text-slate-700 font-semibold">Purple Travels Volvo</span>
+  </div>
+</div>
+<main class="bg-slate-50 min-h-screen py-10">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Left: details -->
+      <div class="lg:col-span-2 space-y-6">
+        <!-- Hero image -->
+        <div class="rounded-2xl overflow-hidden h-72 md:h-96 shadow-lg">
+          <img src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=800&amp;q=80" alt="Purple Travels Volvo" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80'"/>
+        </div>
+        <!-- Title & rating -->
+        <div class="bg-white rounded-2xl p-6 shadow-sm">
+          <div class="flex items-start justify-between gap-4 mb-3">
+            <div>
+              <span class="text-xs font-bold text-[#ec5b13] uppercase tracking-widest mb-1 block">Buses</span>
+              <h1 class="text-2xl md:text-3xl font-serif font-black">Purple Travels Volvo</h1>
+            </div>
+            <div class="flex items-center gap-1 bg-amber-50 px-3 py-1.5 rounded-xl shrink-0">
+              <span class="material-symbols-outlined text-amber-400 text-lg">star</span>
+              <span class="font-bold text-lg">8.7</span>
+              <span class="text-slate-400 text-xs">(88 reviews)</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 text-slate-500 text-sm mb-4">
+            <span class="material-symbols-outlined text-base">location_on</span>
+            <span>Chhatrapati Sambhajinagar → Nashik</span>
+          </div>
+          <div class="flex flex-wrap gap-4 mb-4"><div class="flex items-center gap-2 text-sm text-slate-600"><span class="material-symbols-outlined text-[#ec5b13] text-base">departure_board</span>Departs: 05:30 AM</div><div class="flex items-center gap-2 text-sm text-slate-600"><span class="material-symbols-outlined text-[#ec5b13] text-base">timer</span>Duration: 5h 00m</div></div>
+          
+        </div>
+        
+        <div class="bg-white rounded-2xl p-6 shadow-sm">
+          <h3 class="text-lg font-bold mb-4 flex items-center gap-2"><span class="material-symbols-outlined text-[#ec5b13]">checklist</span>Features &amp; Amenities</h3>
+          <ul class="grid grid-cols-1 sm:grid-cols-2 gap-3"><li class="flex items-center gap-2 text-sm text-slate-600"><span class="material-symbols-outlined text-[#ec5b13] text-base">check_circle</span>AC</li><li class="flex items-center gap-2 text-sm text-slate-600"><span class="material-symbols-outlined text-[#ec5b13] text-base">check_circle</span>Reclining Seats</li><li class="flex items-center gap-2 text-sm text-slate-600"><span class="material-symbols-outlined text-[#ec5b13] text-base">check_circle</span>Entertainment</li></ul>
+        </div>
+        
+      </div>
+      <!-- Right: booking card -->
+      <div class="space-y-4">
+        <div class="bg-white rounded-2xl p-6 shadow-sm sticky top-24">
+          <div class="mb-4">
+            <span class="text-3xl font-black text-[#ec5b13]">₹420</span>
+            
+          </div>
+          <span class="inline-block bg-[#ec5b13] text-white text-xs font-bold px-3 py-1 rounded-full mb-4">Comfortable</span>
+          <form id="booking-form" class="space-y-3">
+            <div>
+              <label class="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">Full Name *</label>
+              <input type="text" id="b-name" required placeholder="Your name" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#ec5b13]/30"/>
+            </div>
+            <div>
+              <label class="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">Phone *</label>
+              <input type="tel" id="b-phone" required placeholder="+91 XXXXX XXXXX" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#ec5b13]/30"/>
+            </div>
+            <div>
+              <label class="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">Date</label>
+              <input type="date" id="b-date" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#ec5b13]/30"/>
+            </div>
+            <div>
+              <label class="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">Guests</label>
+              <input type="number" id="b-guests" min="1" max="20" value="1" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#ec5b13]/30"/>
+            </div>
+            <div id="booking-success" class="hidden bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl text-sm">Booking request sent! We'll contact you shortly.</div>
+            <div id="booking-error" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm"></div>
+            <button type="submit" class="w-full bg-[#ec5b13] text-white font-black py-4 rounded-2xl hover:bg-orange-600 transition-all shadow-lg">Book Now</button>
+          </form>
+          <p class="text-center text-xs text-slate-400 mt-3">Free cancellation · No hidden charges</p>
+        </div>
+        <div class="bg-white rounded-2xl p-5 shadow-sm text-center">
+          <p class="text-sm text-slate-500 mb-3">Need help? Call or WhatsApp us</p>
+          <a href="tel:+918600968888" class="flex items-center justify-center gap-2 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold py-3 px-4 rounded-xl text-sm transition-colors mb-2">
+            <span class="material-symbols-outlined text-base text-[#ec5b13]">call</span>+91 86009 68888
+          </a>
+          <a href="https://wa.me/918600968888" class="flex items-center justify-center gap-2 bg-green-50 hover:bg-green-100 text-green-700 font-bold py-3 px-4 rounded-xl text-sm transition-colors">
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.417-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.305 1.652zm6.599-3.825c1.63.975 3.41 1.487 5.23 1.488 5.439 0 9.861-4.422 9.863-9.861.001-2.636-1.024-5.115-2.884-6.977-1.862-1.864-4.341-2.887-6.979-2.888-5.439 0-9.861 4.422-9.863 9.862 0 1.842.511 3.641 1.478 5.187l-.995 3.637 3.73-.978zm11.367-7.643c-.31-.155-1.837-.906-2.12-.108-.285.103-.55.515-.674.654-.124.14-.248.155-.558.001-.31-.155-1.31-.483-2.498-1.543-.924-.824-1.548-1.841-1.73-2.15-.181-.31-.019-.477.135-.631.14-.139.31-.36.465-.541.155-.181.206-.31.31-.515.103-.206.052-.386-.026-.541-.077-.155-.674-1.626-.924-2.228-.243-.585-.491-.504-.674-.513-.175-.008-.375-.01-.575-.01s-.525.075-.8.375c-.275.3-1.05 1.026-1.05 2.5s1.075 2.9 1.225 3.1c.15.2 2.11 3.221 5.113 4.513.714.307 1.272.49 1.706.629.718.227 1.37.195 1.886.118.575-.085 1.837-.75 2.096-1.475.258-.725.258-1.346.181-1.475-.077-.129-.283-.206-.593-.361z"/></svg>
+            WhatsApp
+          </a>
+        </div>
+        <a href="../listing.php?type=buses" class="flex items-center gap-2 text-[#ec5b13] font-bold text-sm hover:underline">
+          <span class="material-symbols-outlined text-base">arrow_back</span>Back to Buses
+        </a>
+      </div>
+    </div>
+  </div>
+</main>
+<script>
+document.getElementById("booking-form").addEventListener("submit", async function(e) {
+    e.preventDefault();
+    var btn = this.querySelector("button[type=submit]");
+    btn.disabled = true; btn.textContent = "Sending...";
+    var payload = {
+        full_name: document.getElementById("b-name").value,
+        phone: document.getElementById("b-phone").value,
+        booking_date: document.getElementById("b-date").value,
+        number_of_people: parseInt(document.getElementById("b-guests").value) || 1,
+        service_type: "buses",
+        listing_id: 4,
+        listing_name: "Purple Travels Volvo",
+    };
+    try {
+        var res = await fetch("../php/api/bookings.php", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload) });
+        var data = await res.json();
+        if (res.ok) {
+            document.getElementById("booking-success").classList.remove("hidden");
+            this.reset();
+        } else {
+            document.getElementById("booking-error").textContent = data.error || "Something went wrong.";
+            document.getElementById("booking-error").classList.remove("hidden");
+        }
+    } catch(err) {
+        document.getElementById("booking-error").textContent = "Network error. Please try again.";
+        document.getElementById("booking-error").classList.remove("hidden");
+    }
+    btn.disabled = false; btn.textContent = "Book Now";
+});
+</script>
+<footer class="bg-[#0a0705] text-white pt-14 pb-8 mt-16">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
+      <div>
+        <img src="../images/travelhub.png" alt="CSNExplore" class="h-9 object-contain mb-4"/>
+        <p class="text-white/50 text-sm leading-relaxed">Your premium gateway to the wonders of Chhatrapati Sambhajinagar, Maharashtra.</p>
+      </div>
+      <div>
+        <h5 class="font-bold text-sm mb-4">Quick Links</h5>
+        <ul class="flex flex-col gap-2.5 text-white/50 text-sm">
+          <li><a href="../listing.php?type=stays" class="hover:text-[#ec5b13] transition-colors">Hotel Bookings</a></li>
+          <li><a href="../listing.php?type=cars" class="hover:text-[#ec5b13] transition-colors">Car Rentals</a></li>
+          <li><a href="../listing.php?type=bikes" class="hover:text-[#ec5b13] transition-colors">Bike Rentals</a></li>
+          <li><a href="../listing.php?type=attractions" class="hover:text-[#ec5b13] transition-colors">Heritage Sites</a></li>
+          <li><a href="../blogs.php" class="hover:text-[#ec5b13] transition-colors">Travel Guide</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5 class="font-bold text-sm mb-4">Contact Info</h5>
+        <ul class="flex flex-col gap-3 text-white/50 text-sm">
+          <li class="flex items-start gap-2"><span class="material-symbols-outlined text-[#ec5b13] text-base mt-0.5 shrink-0">location_on</span>Behind State Bank Of India, Plot No. 273 Samarth Nagar, Central Bus Stand, Chhatrapati Sambhajinagar, Maharashtra 431001</li>
+          <li class="flex items-center gap-2"><span class="material-symbols-outlined text-[#ec5b13] text-base">call</span><a href="tel:+918600968888" class="hover:text-[#ec5b13]">+91 86009 68888</a></li>
+          <li class="flex items-center gap-2"><span class="material-symbols-outlined text-[#ec5b13] text-base">mail</span><a href="mailto:supportcsnexplore@gmail.com" class="hover:text-[#ec5b13]">supportcsnexplore@gmail.com</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5 class="font-bold text-sm mb-4">Stay Updated</h5>
+        <p class="text-white/50 text-sm mb-4">Get travel tips and exclusive deals in your inbox.</p>
+        <a href="../blogs.php" class="inline-block bg-[#ec5b13] text-white font-bold py-2.5 px-6 rounded-xl text-sm hover:bg-orange-600 transition-colors">Read Blogs</a>
+      </div>
+    </div>
+    <div class="border-t border-white/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-white/30 text-xs">
+      <p>© 2026 CSNExplore. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+</body></html>

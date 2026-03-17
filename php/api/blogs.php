@@ -15,17 +15,36 @@ try {
     $db = getDB();
 
     if ($method === 'GET') {
+        // Check if request is from admin (has valid JWT)
+        $isAdmin = false;
+        try {
+            $authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+            if (preg_match('/Bearer\s+(.+)/i', $authHeader, $m)) {
+                require_once __DIR__ . '/../jwt.php';
+                $payload = verifyJWT($m[1], JWT_SECRET);
+                $isAdmin = ($payload['role'] ?? '') === 'admin';
+            }
+        } catch (Exception $e) {}
+
         if ($id) {
-            $blog = $db->fetchOne("SELECT * FROM blogs WHERE id = ?", [$id]);
+            $sql = $isAdmin ? "SELECT * FROM blogs WHERE id = ?" : "SELECT * FROM blogs WHERE id = ? AND status = 'published'";
+            $blog = $db->fetchOne($sql, [$id]);
             if (!$blog) sendError('Not found', 404);
             $blog['tags'] = json_decode($blog['tags'] ?? '[]', true) ?: [];
             sendJson($blog);
         } else {
-            $status = $_GET['status'] ?? '';
-            $sql    = "SELECT * FROM blogs";
-            $params = [];
-            if ($status) { $sql .= " WHERE status = ?"; $params[] = $status; }
-            $sql .= " ORDER BY created_at DESC";
+            if ($isAdmin) {
+                // Admin: filter by status param if provided
+                $status = $_GET['status'] ?? '';
+                $sql    = "SELECT * FROM blogs";
+                $params = [];
+                if ($status) { $sql .= " WHERE status = ?"; $params[] = $status; }
+                $sql .= " ORDER BY created_at DESC";
+            } else {
+                // Public: only published
+                $sql    = "SELECT * FROM blogs WHERE status = 'published' ORDER BY created_at DESC";
+                $params = [];
+            }
             $blogs = $db->fetchAll($sql, $params);
             foreach ($blogs as &$b) $b['tags'] = json_decode($b['tags'] ?? '[]', true) ?: [];
             sendJson($blogs);
