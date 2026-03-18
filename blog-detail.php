@@ -69,40 +69,40 @@ require 'header.php';
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
         <!-- Meta bar -->
-        <div class="flex flex-wrap items-center gap-5 mb-10 pb-8 border-b border-slate-100 dark:border-white/10">
-            <div class="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-sm">
+        <div class="flex flex-wrap items-center gap-5 mb-10 pb-8 border-b border-slate-100">
+            <div class="flex items-center gap-2 text-slate-500 text-sm">
                 <span class="material-symbols-outlined text-base">person</span>
                 <span class="font-semibold"><?php echo htmlspecialchars($blog['author']); ?></span>
             </div>
-            <div class="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-sm">
+            <div class="flex items-center gap-2 text-slate-500 text-sm">
                 <span class="material-symbols-outlined text-base">calendar_today</span>
                 <span><?php echo date('F d, Y', strtotime($blog['created_at'])); ?></span>
             </div>
             <?php if ($blog['read_time']): ?>
-            <div class="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-sm">
+            <div class="flex items-center gap-2 text-slate-500 text-sm">
                 <span class="material-symbols-outlined text-base">schedule</span>
                 <span><?php echo htmlspecialchars($blog['read_time']); ?></span>
             </div>
             <?php endif; ?>
             <?php if ($blog['meta_description']): ?>
-            <p class="w-full text-slate-500 dark:text-slate-400 text-base italic mt-1">
+            <p class="w-full text-slate-500 text-base italic mt-1">
                 <?php echo htmlspecialchars($blog['meta_description']); ?>
             </p>
             <?php endif; ?>
         </div>
 
         <!-- Article Content -->
-        <article class="prose dark:text-slate-200 text-slate-800 max-w-none text-base leading-relaxed">
+        <article class="prose text-slate-800 max-w-none text-base leading-relaxed">
             <?php echo $blog['content']; // HTML content from DB — intentionally not escaped ?>
         </article>
 
         <!-- Tags -->
         <?php if (!empty($blog['tags'])): ?>
-        <div class="mt-10 pt-8 border-t border-slate-100 dark:border-white/10 flex flex-wrap gap-2 items-center">
+        <div class="mt-10 pt-8 border-t border-slate-100 flex flex-wrap gap-2 items-center">
             <span class="text-xs font-bold text-slate-400 uppercase tracking-widest mr-2">Tags:</span>
             <?php foreach ($blog['tags'] as $tag): ?>
             <a href="blogs.php?search=<?php echo urlencode($tag); ?>"
-               class="px-3 py-1 bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300 rounded-full text-xs font-semibold hover:bg-primary hover:text-white transition-colors">
+               class="px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-xs font-semibold hover:bg-primary hover:text-white transition-colors">
                 <?php echo htmlspecialchars($tag); ?>
             </a>
             <?php endforeach; ?>
@@ -125,7 +125,7 @@ require 'header.php';
                 Facebook
             </a>
             <button onclick="navigator.clipboard.writeText(window.location.href).then(()=>alert('Link copied!'))"
-                    class="flex items-center gap-1.5 px-4 py-2 bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-white rounded-xl text-xs font-bold hover:bg-slate-200 dark:hover:bg-white/20 transition-colors">
+                    class="flex items-center gap-1.5 px-4 py-2 bg-slate-100 text-slate-700 rounded-xl text-xs font-bold hover:bg-slate-200 transition-colors">
                 <span class="material-symbols-outlined text-base">link</span>
                 Copy Link
             </button>
@@ -142,15 +142,15 @@ require 'header.php';
 
     <!-- Related Blogs -->
     <?php if (!empty($related)): ?>
-    <div class="border-t border-slate-100 dark:border-white/10 bg-slate-50 dark:bg-white/5 py-14">
+    <div class="border-t border-slate-100 bg-slate-50 py-14">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h3 class="text-2xl font-serif font-black mb-8 dark:text-white flex items-center gap-3">
+            <h3 class="text-2xl font-serif font-black mb-8 flex items-center gap-3">
                 <span class="w-8 h-1 bg-primary rounded-full inline-block"></span>
                 Related Stories
             </h3>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <?php foreach ($related as $r): ?>
-                <a href="blog-detail.php?id=<?php echo $r['id']; ?>" class="group flex flex-col bg-white dark:bg-white/5 rounded-2xl overflow-hidden border border-slate-100 dark:border-white/10 hover:shadow-lg transition-shadow">
+                <a href="blog-detail.php?id=<?php echo $r['id']; ?>" class="group flex flex-col bg-white rounded-2xl overflow-hidden border border-slate-100 hover:shadow-lg transition-shadow">
                     <div class="aspect-video overflow-hidden">
                         <img src="<?php echo htmlspecialchars($r['image'] ?? ''); ?>"
                              alt="<?php echo htmlspecialchars($r['title']); ?>"
@@ -159,7 +159,7 @@ require 'header.php';
                     </div>
                     <div class="p-4 flex flex-col flex-grow">
                         <span class="text-xs font-bold text-primary uppercase mb-2"><?php echo htmlspecialchars($r['category']); ?></span>
-                        <h4 class="text-sm font-bold dark:text-white line-clamp-2 group-hover:text-primary transition-colors"><?php echo htmlspecialchars($r['title']); ?></h4>
+                        <h4 class="text-sm font-bold line-clamp-2 group-hover:text-primary transition-colors"><?php echo htmlspecialchars($r['title']); ?></h4>
                         <div class="mt-auto pt-3 flex items-center gap-3 text-xs text-slate-400">
                             <span><?php echo date('M d, Y', strtotime($r['created_at'])); ?></span>
                             <?php if ($r['read_time']): ?>

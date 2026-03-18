@@ -46,7 +46,7 @@ require 'header.php';
     </div>
     <!-- Breadcrumb at very top of hero -->
     <div class="absolute top-0 left-0 right-0 z-20 pt-5">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-2 text-sm text-white/60 flex-wrap">
+        <div class="max-w-7xl mx-auto px-6 flex items-center gap-2 text-sm text-white/60 flex-wrap">
             <a href="index.php" class="hover:text-white transition-colors flex items-center gap-1">
                 <span class="material-symbols-outlined text-base">home</span>Home
             </a>
@@ -64,7 +64,7 @@ require 'header.php';
 
 <!-- Contact Content -->
 <section class="py-16 bg-white">
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="max-w-7xl mx-auto px-6">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
         <!-- Info Cards -->

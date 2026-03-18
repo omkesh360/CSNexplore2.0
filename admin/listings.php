@@ -103,14 +103,30 @@ require 'admin-header.php';
                     </select>
                 </div>
                 <div class="col-span-2">
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Image URL</label>
-                    <div class="flex gap-2">
-                        <input id="f-image" type="url" class="flex-1 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"/>
-                        <button type="button" onclick="openGalleryPicker(function(url){ document.getElementById('f-image').value=url; })"
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Main Image</label>
+                    <div class="flex gap-2 items-start">
+                        <div class="flex-1">
+                            <input id="f-image" type="text" placeholder="images/uploads/filename.jpg"
+                                   class="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+                                   oninput="updateMainPreview(this.value)"/>
+                        </div>
+                        <button type="button" onclick="openGalleryPicker(function(url){ document.getElementById('f-image').value=url; updateMainPreview(url); })"
                                 class="flex items-center gap-1 px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition-all whitespace-nowrap">
-                            <span class="material-symbols-outlined text-sm">photo_library</span> Gallery
+                            <span class="material-symbols-outlined text-sm">photo_library</span> Pick
                         </button>
                     </div>
+                    <div id="main-img-preview" class="mt-2 hidden">
+                        <img id="main-img-preview-img" src="" class="h-24 rounded-xl object-cover border border-slate-200"/>
+                    </div>
+                </div>
+                <div class="col-span-2">
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Gallery Images <span class="text-slate-400 font-normal">(up to 6)</span></label>
+                    <div id="gallery-thumbs" class="flex flex-wrap gap-2 mb-2"></div>
+                    <button type="button" onclick="openGalleryPicker(addGalleryImage)"
+                            class="flex items-center gap-1.5 px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition-all">
+                        <span class="material-symbols-outlined text-sm">add_photo_alternate</span> Add Gallery Image
+                    </button>
+                    <input type="hidden" id="f-gallery"/>
                 </div>
                 <div class="col-span-2">
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Description</label>
@@ -218,6 +234,9 @@ function openAddModal() {
     document.getElementById('modal-title').textContent = 'Add ' + currentCat.charAt(0).toUpperCase() + currentCat.slice(1);
     document.getElementById('listing-form').reset();
     document.getElementById('edit-id').value = '';
+    document.getElementById('f-gallery').value = '';
+    document.getElementById('gallery-thumbs').innerHTML = '';
+    document.getElementById('main-img-preview').classList.add('hidden');
     buildExtraFields(currentCat);
     document.getElementById('form-error').classList.add('hidden');
     document.getElementById('listing-modal').classList.remove('hidden');
@@ -238,6 +257,11 @@ async function openEditModal(id) {
     document.getElementById('f-description').value = item.description || '';
     document.getElementById('f-rating').value = item.rating || '';
     document.getElementById('f-active').value = item.is_active ?? 1;
+    updateMainPreview(item.image || '');
+    // Gallery
+    var gallery = Array.isArray(item.gallery) ? item.gallery : (item.gallery ? JSON.parse(item.gallery) : []);
+    document.getElementById('f-gallery').value = JSON.stringify(gallery);
+    renderGalleryThumbs(gallery);
     var priceKey = {stays:'price_per_night',cars:'price_per_day',bikes:'price_per_day',restaurants:'price_per_person',attractions:'entry_fee',buses:'price'};
     document.getElementById('f-price').value = item[priceKey[currentCat]] || '';
     // Extra fields
@@ -257,6 +281,47 @@ function closeModal() {
     document.getElementById('listing-modal').classList.add('hidden');
 }
 
+function updateMainPreview(url) {
+    var prev = document.getElementById('main-img-preview');
+    var img  = document.getElementById('main-img-preview-img');
+    if (url) { img.src = url; prev.classList.remove('hidden'); }
+    else { prev.classList.add('hidden'); }
+}
+
+function getGalleryList() {
+    var val = document.getElementById('f-gallery').value;
+    try { return JSON.parse(val) || []; } catch(e) { return []; }
+}
+
+function renderGalleryThumbs(list) {
+    var container = document.getElementById('gallery-thumbs');
+    if (!list.length) { container.innerHTML = '<p class="text-xs text-slate-400 py-1">No gallery images yet</p>'; return; }
+    container.innerHTML = list.map(function(url, i) {
+        return '<div class="relative group">' +
+            '<img src="' + escHtml(url) + '" class="w-16 h-16 rounded-xl object-cover border border-slate-200"/>' +
+            '<button type="button" onclick="removeGalleryImage(' + i + ')" ' +
+                'class="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white rounded-full text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">' +
+                '<span class="material-symbols-outlined text-xs" style="font-size:12px">close</span>' +
+            '</button>' +
+        '</div>';
+    }).join('');
+}
+
+function addGalleryImage(url) {
+    var list = getGalleryList();
+    if (list.length >= 6) { showAdminToast('Max 6 gallery images', 'error'); return; }
+    if (!list.includes(url)) list.push(url);
+    document.getElementById('f-gallery').value = JSON.stringify(list);
+    renderGalleryThumbs(list);
+}
+
+function removeGalleryImage(index) {
+    var list = getGalleryList();
+    list.splice(index, 1);
+    document.getElementById('f-gallery').value = JSON.stringify(list);
+    renderGalleryThumbs(list);
+}
+
 document.getElementById('listing-form').addEventListener('submit', async function(e) {
     e.preventDefault();
     var btn = document.getElementById('save-btn');
@@ -268,6 +333,7 @@ document.getElementById('listing-form').addEventListener('submit', async functio
         location: document.getElementById('f-location').value,
         badge: document.getElementById('f-badge').value,
         image: document.getElementById('f-image').value,
+        gallery: getGalleryList(),
         description: document.getElementById('f-description').value,
         rating: parseFloat(document.getElementById('f-rating').value) || 0,
         is_active: parseInt(document.getElementById('f-active').value),

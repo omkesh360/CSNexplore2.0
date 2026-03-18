@@ -1,6 +1,6 @@
 <?php // footer.php – shared footer for all CSNExplore pages ?>
 <footer class="bg-[#0a0705] text-white pt-14 pb-8">
-    <div class="max-w-7xl mx-auto px-4">
+    <div class="max-w-7xl mx-auto px-6">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
             <!-- Brand -->
             <div>
@@ -22,14 +22,20 @@
             <!-- Quick Links -->
             <div>
                 <h5 class="font-bold text-sm mb-4">Quick Links</h5>
-                <ul class="flex flex-col gap-2.5 text-white/50 text-sm">
-                    <li><a href="listing.php?type=stays"       class="hover:text-primary transition-colors">Hotel Bookings</a></li>
-                    <li><a href="listing.php?type=cars"        class="hover:text-primary transition-colors">Car Rentals</a></li>
-                    <li><a href="listing.php?type=bikes"       class="hover:text-primary transition-colors">Bike Rentals</a></li>
-                    <li><a href="listing.php?type=attractions" class="hover:text-primary transition-colors">Heritage Sites</a></li>
-                    <li><a href="listing.php?type=buses"       class="hover:text-primary transition-colors">Bus Tickets</a></li>
-                    <li><a href="blogs.php"                    class="hover:text-primary transition-colors">Travel Guide</a></li>
-                </ul>
+                <div class="grid grid-cols-2 gap-x-4 gap-y-2.5 text-white/50 text-sm">
+                    <a href="listing.php?type=stays"       class="hover:text-primary transition-colors">Hotel Bookings</a>
+                    <a href="listing.php?type=cars"        class="hover:text-primary transition-colors">Car Rentals</a>
+                    <a href="listing.php?type=bikes"       class="hover:text-primary transition-colors">Bike Rentals</a>
+                    <a href="listing.php?type=attractions" class="hover:text-primary transition-colors">Heritage Sites</a>
+                    <a href="listing.php?type=restaurants" class="hover:text-primary transition-colors">Restaurants</a>
+                    <a href="listing.php?type=buses"       class="hover:text-primary transition-colors">Bus Tickets</a>
+                    <a href="blogs.php"                    class="hover:text-primary transition-colors">Travel Guide</a>
+                    <a href="about.php"                    class="hover:text-primary transition-colors">About Us</a>
+                    <a href="contact.php"                  class="hover:text-primary transition-colors">Contact Us</a>
+                    <a href="privacy.php"                  class="hover:text-primary transition-colors">Privacy Policy</a>
+                    <a href="terms.php"                    class="hover:text-primary transition-colors">Terms of Service</a>
+                    <a href="my-booking.php"               class="hover:text-primary transition-colors">Track Booking</a>
+                </div>
             </div>
             <!-- Contact Info -->
             <div>

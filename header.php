@@ -67,7 +67,7 @@ $active_listing_type = $listing_type ?? '';
 
 <!-- Marquee Bar -->
 <div class="bg-primary text-white py-1.5 overflow-hidden relative z-[60]">
-    <div class="max-w-7xl mx-auto px-4 flex justify-between items-center gap-4 text-[11px] font-semibold uppercase tracking-widest">
+    <div class="max-w-7xl mx-auto px-6 flex justify-between items-center gap-4 text-[11px] font-semibold uppercase tracking-widest">
         <div class="flex-1 overflow-hidden">
             <div class="flex whitespace-nowrap" style="animation:marquee 30s linear infinite">
                 <style>@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}</style>
@@ -81,23 +81,15 @@ $active_listing_type = $listing_type ?? '';
                 <span class="px-6">★ 24/7 tourist support available</span>
             </div>
         </div>
-        <div class="hidden md:flex items-center gap-4 shrink-0">
-            <a href="tel:+918600968888" class="flex items-center gap-1.5 hover:text-white/80 transition-colors">
-                <span class="material-symbols-outlined text-[14px]">call</span>+91 86009 68888
-            </a>
-            <a href="https://wa.me/918600968888" class="flex items-center gap-1.5 bg-white/15 px-3 py-0.5 rounded-full hover:bg-white/25 transition-all">
-                <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.417-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.305 1.652zm6.599-3.825c1.63.975 3.41 1.487 5.23 1.488 5.439 0 9.861-4.422 9.863-9.861.001-2.636-1.024-5.115-2.884-6.977-1.862-1.864-4.341-2.887-6.979-2.888-5.439 0-9.861 4.422-9.863 9.862 0 1.842.511 3.641 1.478 5.187l-.995 3.637 3.73-.978zm11.367-7.643c-.31-.155-1.837-.906-2.12-.108-.285.103-.55.515-.674.654-.124.14-.248.155-.558.001-.31-.155-1.31-.483-2.498-1.543-.924-.824-1.548-1.841-1.73-2.15-.181-.31-.019-.477.135-.631.14-.139.31-.36.465-.541.155-.181.206-.31.31-.515.103-.206.052-.386-.026-.541-.077-.155-.674-1.626-.924-2.228-.243-.585-.491-.504-.674-.513-.175-.008-.375-.01-.575-.01s-.525.075-.8.375c-.275.3-1.05 1.026-1.05 2.5s1.075 2.9 1.225 3.1c.15.2 2.11 3.221 5.113 4.513.714.307 1.272.49 1.706.629.718.227 1.37.195 1.886.118.575-.085 1.837-.75 2.096-1.475.258-.725.258-1.346.181-1.475-.077-.129-.283-.206-.593-.361z"/></svg>
-                WhatsApp
-            </a>
-        </div>
+
     </div>
 </div>
 
 <!-- Header – always dark/black with blur -->
 <header id="site-header" class="sticky top-0 w-full z-50 transition-all duration-300 glass-dark border-b border-white/5">
-    <nav class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+    <nav class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <a href="index.php" class="flex items-center shrink-0">
-            <img src="images/travelhub.png" alt="CSNExplore" class="h-14 object-contain"/>
+            <img src="images/travelhub.png" alt="CSNExplore" class="h-9 object-contain"/>
         </a>
         <div class="hidden md:flex items-center gap-1">
             <?php if ($is_listing_page): ?>

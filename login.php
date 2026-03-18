@@ -83,8 +83,7 @@ $extra_styles = "
                 </div>
             </div>
 
-            <form id="login-form" method="POST" action="auth-login.php" class="space-y-5">
-                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(bin2hex(random_bytes(16))); ?>"/>
+            <form id="login-form" class="space-y-5">
 
                 <div class="space-y-1">
                     <label for="email" class="text-sm font-bold text-slate-800 ml-1">Email address</label>
@@ -122,9 +121,10 @@ $extra_styles = "
                     <a href="#" class="text-sm font-bold text-primary hover:text-orange-600 transition-colors">Forgot password?</a>
                 </div>
 
-                <button type="submit"
-                        class="w-full flex justify-center py-3.5 px-4 rounded-xl shadow-lg text-sm font-bold text-white bg-primary hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all active:scale-[0.98] hover:shadow-primary/30">
-                    Sign in to CSNExplore
+                <button type="submit" id="login-btn"
+                        class="w-full flex justify-center items-center gap-2 py-3.5 px-4 rounded-xl shadow-lg text-sm font-bold text-white bg-primary hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all active:scale-[0.98] hover:shadow-primary/30">
+                    <span id="login-btn-text">Sign in to CSNExplore</span>
+                    <span id="login-spinner" class="hidden material-symbols-outlined animate-spin text-[18px]">progress_activity</span>
                 </button>
             </form>
         </div>
@@ -150,6 +150,57 @@ $extra_styles = "
         } else {
             pwd.type = 'password';
             icon.textContent = 'visibility';
+        }
+    });
+
+    // Login via fetch
+    document.getElementById('login-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const errBox  = document.getElementById('login-error');
+        const errText = document.getElementById('login-error-text');
+        const btn     = document.getElementById('login-btn');
+        const btnText = document.getElementById('login-btn-text');
+        const spinner = document.getElementById('login-spinner');
+
+        errBox.classList.add('hidden');
+        btn.disabled = true;
+        btnText.textContent = 'Signing in…';
+        spinner.classList.remove('hidden');
+
+        const email    = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+
+        try {
+            const res  = await fetch('php/api/auth.php?action=login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            const data = await res.json();
+
+            if (!res.ok) {
+                errText.textContent = data.error || 'Login failed. Please try again.';
+                errBox.classList.remove('hidden');
+                return;
+            }
+
+            localStorage.setItem('csn_token', data.token);
+            localStorage.setItem('csn_user',  JSON.stringify(data.user));
+
+            // Redirect: admin → admin dashboard, others → intended page or home
+            const redirect = new URLSearchParams(window.location.search).get('redirect') || '';
+            if (data.user.role === 'admin') {
+                window.location.href = 'admin/dashboard.php';
+            } else {
+                window.location.href = redirect || 'index.php';
+            }
+        } catch (err) {
+            errText.textContent = 'Network error. Please check your connection.';
+            errBox.classList.remove('hidden');
+        } finally {
+            btn.disabled = false;
+            btnText.textContent = 'Sign in to CSNExplore';
+            spinner.classList.add('hidden');
         }
     });
 </script>

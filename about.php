@@ -17,7 +17,7 @@ require 'header.php';
     </div>
     <!-- Breadcrumb at very top of hero -->
     <div class="absolute top-0 left-0 right-0 z-20 pt-5">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-2 text-sm text-white/60 flex-wrap">
+        <div class="max-w-7xl mx-auto px-6 flex items-center gap-2 text-sm text-white/60 flex-wrap">
             <a href="index.php" class="hover:text-white transition-colors flex items-center gap-1">
                 <span class="material-symbols-outlined text-base">home</span>Home
             </a>
@@ -37,15 +37,15 @@ require 'header.php';
 </section>
 
 <!-- Our Story -->
-<section class="py-20 bg-white dark:bg-[#0a0705]">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-16 items-center">
+<section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
         <div class="space-y-6">
-            <h3 class="text-3xl md:text-4xl font-serif font-bold dark:text-white">Our Story</h3>
+            <h3 class="text-3xl md:text-4xl font-serif font-bold text-slate-900">Our Story</h3>
             <div class="w-20 h-1.5 bg-primary rounded-full"></div>
-            <p class="text-slate-600 dark:text-slate-300 text-lg leading-relaxed">
+            <p class="text-slate-600 text-lg leading-relaxed">
                 We began our journey with a simple goal: to showcase the architectural marvels of Ellora and Ajanta to the world. What started as a small local passion project has grown into the premier travel portal of the region.
             </p>
-            <p class="text-slate-600 dark:text-slate-300 text-lg leading-relaxed">
+            <p class="text-slate-600 text-lg leading-relaxed">
                 Our deep-rooted connection to this historic land drives us to provide authentic and immersive experiences. We don't just book tours; we curate memories that last a lifetime, connecting travelers with the spiritual and cultural pulse of Chhatrapati Sambhajinagar.
             </p>
         </div>
@@ -67,15 +67,15 @@ require 'header.php';
 </section>
 
 <!-- Mission & Vision -->
-<section class="py-20 bg-primary/5 dark:bg-white/5">
-    <div class="max-w-7xl mx-auto px-4">
+<section class="py-20 bg-primary/5">
+    <div class="max-w-7xl mx-auto px-6">
         <div class="grid md:grid-cols-2 gap-8">
             <div class="glass-panel p-10 rounded-3xl shadow-xl hover:-translate-y-1 transition-all">
                 <div class="w-16 h-16 bg-primary/20 rounded-2xl flex items-center justify-center mb-6">
                     <span class="material-symbols-outlined text-primary text-4xl">rocket_launch</span>
                 </div>
-                <h4 class="text-2xl font-bold mb-4 dark:text-white">Our Mission</h4>
-                <p class="text-slate-600 dark:text-slate-300 leading-relaxed text-lg">
+                <h4 class="text-2xl font-bold mb-4 text-slate-900">Our Mission</h4>
+                <p class="text-slate-600 leading-relaxed text-lg">
                     To deliver world-class tourism services that honor the sanctity and history of our heritage sites, ensuring every guest experiences the true hospitality of Maharashtra through personalized care and expert guidance.
                 </p>
             </div>
@@ -83,8 +83,8 @@ require 'header.php';
                 <div class="w-16 h-16 bg-primary/20 rounded-2xl flex items-center justify-center mb-6">
                     <span class="material-symbols-outlined text-primary text-4xl">visibility</span>
                 </div>
-                <h4 class="text-2xl font-bold mb-4 dark:text-white">Our Vision</h4>
-                <p class="text-slate-600 dark:text-slate-300 leading-relaxed text-lg">
+                <h4 class="text-2xl font-bold mb-4 text-slate-900">Our Vision</h4>
+                <p class="text-slate-600 leading-relaxed text-lg">
                     To become the global gateway to Chhatrapati Sambhajinagar's wonders, setting the benchmark for sustainable and culturally-rich travel while empowering local communities and preserving our historic legacy.
                 </p>
             </div>
@@ -93,11 +93,11 @@ require 'header.php';
 </section>
 
 <!-- Why Choose Us -->
-<section class="py-24 bg-white dark:bg-[#0a0705]">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<section class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
         <div class="text-center mb-16">
-            <h3 class="text-4xl font-serif font-bold mb-4 dark:text-white">Why Choose Us</h3>
-            <p class="text-slate-500 dark:text-slate-400 max-w-2xl mx-auto text-lg">We pride ourselves on excellence, local expertise, and a traveler-first approach.</p>
+            <h3 class="text-4xl font-serif font-bold mb-4 text-slate-900">Why Choose Us</h3>
+            <p class="text-slate-500 max-w-2xl mx-auto text-lg">We pride ourselves on excellence, local expertise, and a traveler-first approach.</p>
         </div>
         <div class="grid md:grid-cols-4 gap-6">
             <?php
@@ -108,10 +108,10 @@ require 'header.php';
                 ['icon' => 'payments',       'title' => 'Transparent Pricing',  'desc' => 'No hidden costs. Fair value for premium experiences.'],
             ];
             foreach ($features as $f): ?>
-            <div class="p-8 rounded-2xl bg-white dark:bg-white/5 shadow-sm border border-slate-100 dark:border-white/10 text-center">
+            <div class="p-8 rounded-2xl bg-white shadow-sm border border-slate-100 text-center">
                 <span class="material-symbols-outlined text-5xl text-primary mb-4 block"><?php echo $f['icon']; ?></span>
-                <h5 class="font-bold text-lg mb-2 dark:text-white"><?php echo $f['title']; ?></h5>
-                <p class="text-sm text-slate-500 dark:text-slate-400"><?php echo $f['desc']; ?></p>
+                <h5 class="font-bold text-lg mb-2 text-slate-900"><?php echo $f['title']; ?></h5>
+                <p class="text-sm text-slate-500"><?php echo $f['desc']; ?></p>
             </div>
             <?php endforeach; ?>
         </div>
@@ -119,9 +119,9 @@ require 'header.php';
 </section>
 
 <!-- Our Team -->
-<section class="py-24 bg-slate-50 dark:bg-white/5">
-    <div class="max-w-7xl mx-auto px-4 text-center">
-        <h3 class="text-4xl font-serif font-bold mb-16 dark:text-white">Meet Our Team</h3>
+<section class="py-24 bg-slate-50">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+        <h3 class="text-4xl font-serif font-bold mb-16 text-slate-900">Meet Our Team</h3>
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-12">
             <?php
             $team = [
@@ -147,8 +147,8 @@ require 'header.php';
 </section>
 
 <!-- CTA -->
-<section class="py-20 bg-white dark:bg-[#0a0705]">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
         <div class="rounded-[3rem] bg-primary p-12 md:p-20 text-center relative overflow-hidden">
         <div class="absolute inset-0 opacity-10">
             <img alt="Heritage Pattern" class="w-full h-full object-cover"

@@ -7,14 +7,97 @@ $db = getDB();
 
 // Fetch homepage settings
 $hp_settings_row = $db->fetchOne("SELECT content FROM about_contact WHERE section = 'homepage'");
-$hp_settings = $hp_settings_row ? json_decode($hp_settings_row['content'], true) : [];
+$hp_settings = [];
+if ($hp_settings_row && !empty($hp_settings_row['content'])) {
+    $decoded = json_decode($hp_settings_row['content'], true);
+    if (is_array($decoded)) $hp_settings = $decoded;
+}
+// Defaults
+$hp_defaults = [
+    'title_attractions' => 'Ancient Marvels',
+    'title_bikes'       => 'Quick Bike Rentals',
+    'title_restaurants' => 'Taste the City',
+    'title_buses'       => 'Travel Your Way',
+    'title_blogs'       => 'Travel Insights',
+    'show_attractions'  => true,
+    'show_bikes'        => true,
+    'show_restaurants'  => true,
+    'show_buses'        => true,
+    'show_blogs'        => true,
+    'hero_subtext'      => 'Stays, cars, bikes, restaurants, attractions and buses — all in one place.',
+    'city_intro'        => '',
+    'stat1_label'       => '500+ Hotels',
+    'stat2_label'       => '50+ Attractions',
+    'stat3_label'       => '200+ Restaurants',
+    'stat4_label'       => '10K+ Happy Travelers',
+    'count_attractions' => 4,
+    'count_bikes'       => 4,
+    'count_restaurants' => 6,
+    'count_buses'       => 2,
+    'count_blogs'       => 3,
+    'layout_attractions'=> '4-col',
+    'layout_bikes'      => '4-col',
+    'layout_restaurants'=> '3-col',
+    'layout_buses'      => '2-col',
+    'layout_blogs'      => '3-col',
+    'section_order'     => ['attractions','bikes','restaurants','buses','blogs'],
+    'picks_attractions' => [],
+    'picks_bikes'       => [],
+    'picks_restaurants' => [],
+    'picks_buses'       => [],
+    'picks_blogs'       => [],
+];
+foreach ($hp_defaults as $k => $v) {
+    if (!isset($hp_settings[$k]) || $hp_settings[$k] === '') {
+        $hp_settings[$k] = $v;
+    }
+}
+// Ensure section_order is always a valid array
+if (!is_array($hp_settings['section_order']) || count($hp_settings['section_order']) < 5) {
+    $hp_settings['section_order'] = ['attractions','bikes','restaurants','buses','blogs'];
+}
 
-// Fetch real data from DB
-$hp_attractions  = $db->fetchAll("SELECT * FROM attractions WHERE is_active=1 ORDER BY display_order ASC, rating DESC LIMIT 3");
-$hp_bikes        = $db->fetchAll("SELECT * FROM bikes WHERE is_active=1 ORDER BY display_order ASC, rating DESC LIMIT 4");
-$hp_restaurants  = $db->fetchAll("SELECT * FROM restaurants WHERE is_active=1 ORDER BY display_order ASC, rating DESC LIMIT 8");
-$hp_buses        = $db->fetchAll("SELECT * FROM buses WHERE is_active=1 ORDER BY display_order ASC LIMIT 4");
-$hp_blogs        = $db->fetchAll("SELECT * FROM blogs WHERE status='published' ORDER BY created_at DESC LIMIT 3");
+// Helper: layout string → Tailwind grid/flex class
+function hp_grid_class($layout) {
+    $map = [
+        '3-col' => 'grid grid-cols-1 md:grid-cols-3 gap-5',
+        '4-col' => 'grid grid-cols-2 md:grid-cols-4 gap-5',
+        '2-col' => 'grid grid-cols-1 md:grid-cols-2 gap-4',
+        'list'  => 'flex flex-col gap-3',
+        'scroll'=> 'flex gap-5 overflow-x-auto hide-scrollbar pb-3',
+    ];
+    return $map[$layout] ?? $map['3-col'];
+}
+// Card wrapper class for scroll layout
+function hp_card_wrap($layout) {
+    return $layout === 'scroll' ? 'flex-shrink-0 w-64' : '';
+}
+
+// Fetch real data from DB — use picks if set, otherwise use saved counts
+function hp_fetch_picks($db, $table, $picks, $where_active, $fallback_sql) {
+    if (!empty($picks) && is_array($picks)) {
+        $ids = implode(',', array_map('intval', $picks));
+        $rows = $db->fetchAll("SELECT * FROM {$table} WHERE id IN ({$ids}) AND {$where_active}");
+        // Preserve pick order
+        $indexed = [];
+        foreach ($rows as $r) $indexed[$r['id']] = $r;
+        $ordered = [];
+        foreach ($picks as $pid) { if (isset($indexed[$pid])) $ordered[] = $indexed[$pid]; }
+        return $ordered;
+    }
+    return $db->fetchAll($fallback_sql);
+}
+
+$hp_attractions = hp_fetch_picks($db, 'attractions', $hp_settings['picks_attractions'], 'is_active=1',
+    "SELECT * FROM attractions WHERE is_active=1 ORDER BY display_order ASC, rating DESC LIMIT " . (int)$hp_settings['count_attractions']);
+$hp_bikes = hp_fetch_picks($db, 'bikes', $hp_settings['picks_bikes'], 'is_active=1',
+    "SELECT * FROM bikes WHERE is_active=1 ORDER BY display_order ASC, rating DESC LIMIT " . (int)$hp_settings['count_bikes']);
+$hp_restaurants = hp_fetch_picks($db, 'restaurants', $hp_settings['picks_restaurants'], 'is_active=1',
+    "SELECT * FROM restaurants WHERE is_active=1 ORDER BY display_order ASC, rating DESC LIMIT " . (int)$hp_settings['count_restaurants']);
+$hp_buses = hp_fetch_picks($db, 'buses', $hp_settings['picks_buses'], 'is_active=1',
+    "SELECT * FROM buses WHERE is_active=1 ORDER BY display_order ASC LIMIT " . (int)$hp_settings['count_buses']);
+$hp_blogs = hp_fetch_picks($db, 'blogs', $hp_settings['picks_blogs'], "status='published'",
+    "SELECT * FROM blogs WHERE status='published' ORDER BY created_at DESC LIMIT " . (int)$hp_settings['count_blogs']);
 ?>
 <!DOCTYPE html>
 <html class="light" lang="en">
@@ -76,10 +159,23 @@ $hp_blogs        = $db->fetchAll("SELECT * FROM blogs WHERE status='published' O
         .date-field .material-symbols-outlined { color:rgba(255,255,255,0.4); font-size:20px; flex-shrink:0; }
         .date-field input { background:transparent; border:none; outline:none; color:#fff; font-size:15px; font-weight:500; width:100%; cursor:pointer; min-width:0; box-shadow:none; -webkit-appearance:none; }
         .date-field input::placeholder { color:rgba(255,255,255,0.4); }
-        .search-row { display:flex; gap:10px; align-items:center; flex-wrap:nowrap; width:100%; }
+        .search-row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; width:100%; }
         .search-btn { background:#ec5b13; color:#fff; font-weight:800; font-size:15px; padding:0 28px; border-radius:12px; border:none; cursor:pointer; display:flex; align-items:center; gap:6px; transition:background .2s; white-space:nowrap; flex-shrink:0; height:54px; }
         .search-btn:hover { background:#d44e0e; }
         .search-btn .material-symbols-outlined { font-size:18px; }
+        /* Mobile responsive search */
+        @media(max-width:768px){
+          .search-box { padding:14px; }
+          .search-row { flex-wrap:wrap; gap:8px; }
+          .search-field { flex:1 1 100%; height:46px; }
+          .date-field { flex:1 1 calc(50% - 4px); height:46px; min-width:0; }
+          .search-btn { width:100%; justify-content:center; height:46px; font-size:14px; padding:0 16px; }
+          .tab-btn { padding:6px 10px; font-size:12px; }
+          .tab-btn .material-symbols-outlined { font-size:15px; }
+        }
+        @media(max-width:400px){
+          .date-field { flex:1 1 100%; }
+        }
         .search-panel { display:none; }
         .search-panel.active { display:flex; flex-direction:column; gap:8px; }
         .flatpickr-calendar { background:#1c1410 !important; border:1px solid rgba(236,91,19,0.3) !important; border-radius:16px !important; box-shadow:0 20px 60px rgba(0,0,0,0.6) !important; }
@@ -97,32 +193,30 @@ $hp_blogs        = $db->fetchAll("SELECT * FROM blogs WHERE status='published' O
 
 <!-- Marquee Bar -->
 <div class="bg-primary text-white py-1.5 overflow-hidden relative z-[60]">
-    <div class="max-w-7xl mx-auto px-4 flex justify-between items-center gap-4 text-[11px] font-semibold uppercase tracking-widest">
+    <div class="max-w-7xl mx-auto px-6 flex justify-between items-center gap-4 text-[11px] font-semibold uppercase tracking-widest">
         <div class="flex-1 overflow-hidden">
             <div class="flex whitespace-nowrap marquee">
                 <?php
-                $marquee_items = [
+                $default_marquee = [
                     "★ 20% OFF on first heritage tour booking",
                     "★ Verified guides for Ajanta &amp; Ellora",
                     "★ Free cancellation on bike rentals",
                     "★ 24/7 tourist support available",
                 ];
+                if (!empty($hp_settings['marquee'])) {
+                    $marquee_items = array_filter(array_map('trim', explode("\n", $hp_settings['marquee'])));
+                    if (empty($marquee_items)) $marquee_items = $default_marquee;
+                } else {
+                    $marquee_items = $default_marquee;
+                }
                 // Duplicate for seamless loop
                 $all_items = array_merge($marquee_items, $marquee_items);
                 foreach ($all_items as $item): ?>
-                    <span class="px-6"><?php echo $item; ?></span>
+                    <span class="px-6"><?php echo htmlspecialchars($item); ?></span>
                 <?php endforeach; ?>
             </div>
         </div>
-        <div class="hidden md:flex items-center gap-4 shrink-0">
-            <a href="tel:+918600968888" class="flex items-center gap-1.5 hover:text-white/80 transition-colors">
-                <span class="material-symbols-outlined text-[14px]">call</span>+91 86009 68888
-            </a>
-            <a href="https://wa.me/918600968888" class="flex items-center gap-1.5 bg-white/15 px-3 py-0.5 rounded-full hover:bg-white/25 transition-all">
-                <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.417-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.305 1.652zm6.599-3.825c1.63.975 3.41 1.487 5.23 1.488 5.439 0 9.861-4.422 9.863-9.861.001-2.636-1.024-5.115-2.884-6.977-1.862-1.864-4.341-2.887-6.979-2.888-5.439 0-9.861 4.422-9.863 9.862 0 1.842.511 3.641 1.478 5.187l-.995 3.637 3.73-.978zm11.367-7.643c-.31-.155-1.837-.906-2.12-.108-.285.103-.55.515-.674.654-.124.14-.248.155-.558.001-.31-.155-1.31-.483-2.498-1.543-.924-.824-1.548-1.841-1.73-2.15-.181-.31-.019-.477.135-.631.14-.139.31-.36.465-.541.155-.181.206-.31.31-.515.103-.206.052-.386-.026-.541-.077-.155-.674-1.626-.924-2.228-.243-.585-.491-.504-.674-.513-.175-.008-.375-.01-.575-.01s-.525.075-.8.375c-.275.3-1.05 1.026-1.05 2.5s1.075 2.9 1.225 3.1c.15.2 2.11 3.221 5.113 4.513.714.307 1.272.49 1.706.629.718.227 1.37.195 1.886.118.575-.085 1.837-.75 2.096-1.475.258-.725.258-1.346.181-1.475-.077-.129-.283-.206-.593-.361z"/></svg>
-                WhatsApp
-            </a>
-        </div>
+        
     </div>
 </div>
 
@@ -136,9 +230,9 @@ $nav_links_home = [
 ];
 ?>
 <header id="site-header" class="sticky top-0 w-full z-50 glass-dark border-b border-white/5">
-    <nav class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+    <nav class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <a href="index.php" class="flex items-center shrink-0">
-            <img src="images/travelhub.png" alt="CSNExplore" class="h-14 object-contain"/>
+            <img src="images/travelhub.png" alt="CSNExplore" class="h-9 object-contain"/>
         </a>
         <div class="hidden md:flex items-center gap-1">
             <?php foreach ($nav_links_home as $link): $active = ($link['href'] === 'index.php'); ?>
@@ -200,22 +294,22 @@ $nav_links_home = [
 
 <main>
 <!-- Hero -->
-<section class="relative min-h-[80vh] flex flex-col items-center justify-center overflow-hidden">
+<section class="relative min-h-[100svh] md:min-h-[80vh] flex flex-col items-center justify-center overflow-hidden">
     <div class="absolute inset-0 z-0">
         <div class="absolute inset-0 bg-gradient-to-b from-black/75 via-black/50 to-[#0a0705] z-10"></div>
         <div id="hero-bg" class="w-full h-full bg-cover bg-center transition-all duration-1000"
              style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuDfTDZo8LglfsdX1vCy-PfHltcZor3jl-l4xxrXMYSU-zLgoKXxY-ouUImyR0WZq69V0y63PE1wDL2_EfqYwWhgQOHPVDJVHhyGGB7H8kZNyboNAXVxWDvlFW_Z_QRXuTKMBuuk7a9HgI3Gde3PidzWIcOhtgs4QAHX2DHA2V6QUaFo6mYDZzEhvq1Y7FwjBSsjTNmfwco23Zfvdb8laeVoTMZHDGMoMrH3yPn4aQDHZ9AJE-WXiuWGVG-c0BegSoJwB1zEXVVWIUie')">
         </div>
     </div>
-    <div class="relative z-20 text-center px-4 w-full max-w-5xl mx-auto">
+    <div class="relative z-20 text-center px-4 w-full max-w-5xl mx-auto pt-8 pb-6">
         <p id="hero-label" class="text-primary font-bold text-xs uppercase tracking-widest mb-3">Chhatrapati Sambhajinagar</p>
-        <h1 class="font-serif text-4xl md:text-6xl text-white mb-4 leading-tight font-black">
+        <h1 class="font-serif text-3xl sm:text-4xl md:text-6xl text-white mb-4 leading-tight font-black">
             <span id="hero-pre">Explore </span><span class="text-primary" id="hero-highlight">Your City</span><span id="hero-post"> Your Way</span>
         </h1>
-        <p id="hero-desc" class="text-white/70 text-base md:text-lg mb-10 max-w-2xl mx-auto">Stays, cars, bikes, restaurants, attractions and buses — all in one place.</p>
+        <p id="hero-desc" class="text-white/70 text-sm md:text-lg mb-6 md:mb-10 max-w-2xl mx-auto px-2"><?php echo htmlspecialchars($hp_settings['hero_subtext']); ?></p>
 
         <!-- Search Box -->
-        <div class="search-box max-w-4xl mx-auto">
+        <div class="search-box max-w-4xl mx-auto w-full">
             <div class="flex flex-wrap gap-1.5 mb-4 pb-3 border-b border-white/10 justify-center">
                 <?php
                 $tabs = [
@@ -358,13 +452,45 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
+<!-- Stats Bar -->
+<div class="bg-primary text-white py-6">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            <?php
+            $stats = [
+                ['icon' => 'hotel',                    'label' => $hp_settings['stat1_label']],
+                ['icon' => 'confirmation_number',      'label' => $hp_settings['stat2_label']],
+                ['icon' => 'restaurant',               'label' => $hp_settings['stat3_label']],
+                ['icon' => 'sentiment_very_satisfied', 'label' => $hp_settings['stat4_label']],
+            ];
+            foreach ($stats as $stat): ?>
+            <div class="flex flex-col items-center gap-1">
+                <span class="material-symbols-outlined text-white/70 text-2xl"><?php echo $stat['icon']; ?></span>
+                <p class="font-black text-lg leading-tight"><?php echo htmlspecialchars($stat['label']); ?></p>
+            </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</div>
+
+<?php if (!empty($hp_settings['city_intro'])): ?>
+<!-- City Intro -->
+<div class="bg-white py-10">
+    <div class="max-w-7xl mx-auto px-6">
+        <p class="text-slate-600 text-base md:text-lg leading-relaxed text-center max-w-3xl mx-auto">
+            <?php echo nl2br(htmlspecialchars($hp_settings['city_intro'])); ?>
+        </p>
+    </div>
+</div>
+<?php endif; ?>
+
 <!-- Ride & Explore -->
-<section class="py-12 bg-white dark:bg-background-dark">
-    <div class="max-w-7xl mx-auto px-4">
+<section class="py-12 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
         <div class="flex items-end justify-between mb-6">
             <div>
                 <p class="text-primary font-bold text-xs uppercase tracking-widest mb-1">Seamless Travel</p>
-                <h2 class="font-serif text-2xl md:text-3xl dark:text-white">Ride &amp; Explore</h2>
+                <h2 class="font-serif text-2xl md:text-3xl text-slate-900">Ride &amp; Explore</h2>
             </div>
             <div class="flex gap-3 text-sm font-bold text-primary">
                 <a href="listing.php?type=cars" class="hover:underline">Cars →</a>
@@ -394,230 +520,188 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 </section>
 
-<!-- Attractions -->
-<?php if ($hp_settings['show_attractions'] ?? true): ?>
-<section class="py-12 bg-slate-50 dark:bg-slate-900/30">
-    <div class="max-w-7xl mx-auto px-4">
-        <div class="flex items-end justify-between mb-6">
-            <h2 class="font-serif text-2xl md:text-3xl dark:text-white"><?php echo htmlspecialchars($hp_settings['title_attractions'] ?? 'Ancient Marvels'); ?></h2>
-            <a href="listing.php?type=attractions" class="text-sm font-bold text-primary hover:underline">See all →</a>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-            <?php foreach ($hp_attractions as $a):
-                $tag = htmlspecialchars($a['type'] ?? 'Attraction');
-                $price = '₹' . number_format($a['entry_fee'] ?? 0);
-            ?>
-            <div class="group overflow-hidden rounded-2xl bg-white dark:bg-white/5 border border-slate-100 dark:border-white/10 shadow-md card-hover transition-all">
-                <div class="h-44 overflow-hidden">
-                    <img alt="<?php echo htmlspecialchars($a['name']); ?>" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="<?php echo htmlspecialchars($a['image']); ?>"/>
-                </div>
-                <div class="p-4">
-                    <span class="text-primary text-[10px] font-bold uppercase tracking-widest"><?php echo $tag; ?></span>
-                    <h5 class="font-serif text-lg dark:text-white mt-1 mb-3"><?php echo htmlspecialchars($a['name']); ?></h5>
-                    <div class="flex items-center justify-between">
-                        <p class="font-black dark:text-white"><?php echo $price; ?> <span class="text-xs text-slate-400 font-normal">entry</span></p>
-                        <a href="listing.php?type=attractions" class="bg-primary/10 text-primary px-4 py-1.5 rounded-full font-bold text-xs hover:bg-primary hover:text-white transition-all">Details</a>
-                    </div>
-                </div>
-            </div>
-            <?php endforeach; ?>
-        </div>
-    </div>
-</section>
-<?php endif; ?>
+<?php
+// Base counts — if more items than this are shown, switch to horizontal scroll
+$_sec_base_counts = [
+    'attractions' => 4,
+    'bikes'       => 4,
+    'restaurants' => 6,
+    'buses'       => 2,
+    'blogs'       => 3,
+];
 
-<!-- Bike Rentals -->
-<?php if ($hp_settings['show_bikes'] ?? true): ?>
-<section class="py-12 bg-white dark:bg-background-dark">
-    <div class="max-w-7xl mx-auto px-4">
+// ── Render sections in saved order ───────────────────────────────────────────
+$_sec_bg_toggle = false;
+foreach ($hp_settings['section_order'] as $_sec_key):
+    if (empty($hp_settings['show_' . $_sec_key])) continue;
+    $_layout = $hp_settings['layout_' . $_sec_key];
+    // If more items than base count → force horizontal scroll
+    $_sec_items_map = ['attractions'=>$hp_attractions,'bikes'=>$hp_bikes,'restaurants'=>$hp_restaurants,'buses'=>$hp_buses,'blogs'=>$hp_blogs];
+    $_sec_item_count = count($_sec_items_map[$_sec_key] ?? []);
+    $_base = $_sec_base_counts[$_sec_key] ?? 4;
+    if ($_sec_item_count > $_base) {
+        $_layout = 'scroll';
+    }
+    $_grid   = hp_grid_class($_layout);
+    $_bg     = $_sec_bg_toggle ? 'bg-white' : 'bg-slate-50';
+    $_sec_bg_toggle = !$_sec_bg_toggle;
+?>
+<section class="py-12 <?php echo $_bg; ?>">
+    <div class="max-w-7xl mx-auto px-6">
         <div class="flex items-end justify-between mb-6">
-            <h2 class="font-serif text-2xl md:text-3xl dark:text-white"><?php echo htmlspecialchars($hp_settings['title_bikes'] ?? 'Quick Bike Rentals'); ?></h2>
-            <a href="listing.php?type=bikes" class="text-sm font-bold text-primary hover:underline">See all →</a>
-        </div>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-5">
-            <?php foreach ($hp_bikes as $bike): ?>
-            <div class="group overflow-hidden rounded-2xl bg-white dark:bg-white/5 border border-slate-100 dark:border-white/10 shadow-md card-hover transition-all">
-                <div class="h-44 overflow-hidden bg-slate-50 dark:bg-white/5 flex items-center justify-center">
-                    <img alt="<?php echo htmlspecialchars($bike['name']); ?>" loading="lazy" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 p-4" src="<?php echo htmlspecialchars($bike['image']); ?>"/>
-                </div>
-                <div class="p-4">
-                    <span class="text-primary text-[10px] font-bold uppercase tracking-widest"><?php echo htmlspecialchars($bike['type']); ?></span>
-                    <h5 class="font-serif text-lg dark:text-white mt-1 mb-3"><?php echo htmlspecialchars($bike['name']); ?></h5>
-                    <div class="flex items-center justify-between">
-                        <p class="font-black dark:text-white">₹<?php echo number_format($bike['price_per_day']); ?> <span class="text-xs text-slate-400 font-normal">/day</span></p>
-                        <a href="listing.php?type=bikes" class="bg-primary/10 text-primary px-4 py-1.5 rounded-full font-bold text-xs hover:bg-primary hover:text-white transition-all">Book</a>
-                    </div>
-                </div>
-            </div>
-            <?php endforeach; ?>
-        </div>
-    </div>
-</section>
-<?php endif; ?>
-
-<!-- Taste the City -->
-<?php if ($hp_settings['show_restaurants'] ?? true): ?>
-<section class="py-12 bg-slate-50 dark:bg-slate-900/30">
-    <div class="max-w-7xl mx-auto px-4">
-        <div class="flex items-end justify-between mb-6">
-            <h2 class="font-serif text-2xl md:text-3xl dark:text-white"><?php echo htmlspecialchars($hp_settings['title_restaurants'] ?? 'Taste the City'); ?></h2>
-            <a href="listing.php?type=restaurants" class="text-sm font-bold text-primary hover:underline">See all →</a>
-        </div>
-        <div class="flex gap-6 overflow-x-auto hide-scrollbar pb-2">
-            <?php foreach ($hp_restaurants as $r): ?>
-            <a href="listing.php?type=restaurants" class="flex-shrink-0 text-center w-28 group cursor-pointer">
-                <div class="w-24 h-24 rounded-full mx-auto mb-3 overflow-hidden border-2 border-white dark:border-white/10 shadow-md group-hover:border-primary transition-all">
-                    <img alt="<?php echo htmlspecialchars($r['name']); ?>" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="<?php echo htmlspecialchars($r['image']); ?>"/>
-                </div>
-                <p class="font-bold text-sm dark:text-white"><?php echo htmlspecialchars($r['name']); ?></p>
-                <p class="text-primary text-[10px] font-bold uppercase"><?php echo htmlspecialchars($r['cuisine'] ?? $r['type']); ?></p>
-            </a>
-            <?php endforeach; ?>
-        </div>
-    </div>
-</section>
-<?php endif; ?>
-
-<!-- Travel Your Way (Buses) -->
-<?php if ($hp_settings['show_buses'] ?? true): ?>
-<section class="py-12 bg-white dark:bg-background-dark">
-    <div class="max-w-7xl mx-auto px-4">
-        <div class="flex items-end justify-between mb-6">
-            <h2 class="font-serif text-2xl md:text-3xl dark:text-white"><?php echo htmlspecialchars($hp_settings['title_buses'] ?? 'Travel Your Way'); ?></h2>
-            <a href="listing.php?type=buses" class="text-sm font-bold text-primary hover:underline">See all →</a>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <?php foreach ($hp_buses as $bus):
-                $route = htmlspecialchars($bus['from_location']) . ' → ' . htmlspecialchars($bus['to_location']);
-            ?>
-            <div class="glass-dark p-5 rounded-2xl flex items-center justify-between gap-4 hover:border-primary/30 transition-all card-hover">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-primary/15 rounded-xl flex items-center justify-center shrink-0">
-                        <span class="material-symbols-outlined text-primary text-2xl">directions_bus</span>
-                    </div>
-                    <div>
-                        <p class="text-white font-bold text-sm"><?php echo htmlspecialchars($bus['operator']); ?> <span class="text-[10px] font-normal text-white/50 bg-white/10 px-2 py-0.5 rounded ml-1"><?php echo htmlspecialchars($bus['bus_type']); ?></span></p>
-                        <p class="text-white/50 text-xs mt-0.5"><?php echo $route; ?></p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-4 shrink-0">
-                    <p class="text-primary font-black text-xl">₹<?php echo number_format($bus['price']); ?></p>
-                    <a href="bus.php" class="bg-primary text-white px-4 py-2 rounded-xl font-bold text-xs hover:bg-orange-600 transition-all">Book</a>
-                </div>
-            </div>
-            <?php endforeach; ?>
-        </div>
-    </div>
-</section>
-<?php endif; ?>
-
-<!-- Travel Blogs -->
-<?php if ($hp_settings['show_blogs'] ?? true): ?>
-<section class="py-12 bg-slate-50 dark:bg-slate-900/30">
-    <div class="max-w-7xl mx-auto px-4">
-        <div class="flex items-end justify-between mb-6">
+            <?php if ($_sec_key === 'blogs'): ?>
             <div>
                 <p class="text-primary font-bold text-xs uppercase tracking-widest mb-1">Our Travel Journals</p>
-                <h2 class="font-serif text-2xl md:text-3xl dark:text-white"><?php echo htmlspecialchars($hp_settings['title_blogs'] ?? 'Travel Insights'); ?></h2>
+                <h2 class="font-serif text-2xl md:text-3xl text-slate-900"><?php echo htmlspecialchars($hp_settings['title_blogs']); ?></h2>
             </div>
-            <a href="blogs.php" class="text-sm font-bold text-primary hover:underline">Read more →</a>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-            <?php if (!empty($hp_blogs)): foreach ($hp_blogs as $blog):
-                $read_time = max(3, intval(strlen(strip_tags($blog['content'] ?? '')) / 1000));
-                $t = strtolower(trim($blog['title']));
-                $t = preg_replace('/[^a-z0-9\s-]/', '', $t);
-                $t = preg_replace('/[\s-]+/', '-', $t);
-                $blog_slug = 'blogs/' . $blog['id'] . '-' . substr(trim($t, '-'), 0, 60) . '.html';
-            ?>
-            <a href="<?php echo $blog_slug; ?>" class="group cursor-pointer">
-                <div class="rounded-2xl overflow-hidden aspect-[16/10] mb-3 shadow-md relative">
-                    <img alt="<?php echo htmlspecialchars($blog['title']); ?>" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="<?php echo htmlspecialchars($blog['image'] ?? ''); ?>"/>
-                    <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <span class="bg-white text-black px-4 py-1.5 rounded-full font-bold text-xs">READ POST</span>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3 mb-2">
-                    <span class="bg-primary/10 text-primary px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase"><?php echo htmlspecialchars($blog['category'] ?? 'Travel'); ?></span>
-                    <span class="text-slate-400 text-xs flex items-center gap-1"><span class="material-symbols-outlined text-sm">schedule</span><?php echo $read_time; ?> min</span>
-                </div>
-                <h4 class="font-serif text-lg dark:text-white group-hover:text-primary transition-colors"><?php echo htmlspecialchars($blog['title']); ?></h4>
-            </a>
-            <?php endforeach; else: ?>
-            <div class="col-span-3 text-center py-8 text-slate-400">No blog posts yet. Check back soon.</div>
+            <a href="blogs.php" class="text-sm font-bold text-primary hover:underline">Read more &rarr;</a>
+            <?php else: ?>
+            <h2 class="font-serif text-2xl md:text-3xl text-slate-900"><?php echo htmlspecialchars($hp_settings['title_' . $_sec_key]); ?></h2>
+            <a href="listing.php?type=<?php echo $_sec_key; ?>" class="text-sm font-bold text-primary hover:underline">See all &rarr;</a>
             <?php endif; ?>
+        </div>
+        <?php
+        // ── Visible-cards-per-section config ─────────────────────────────────
+        $_vis = ['attractions'=>4,'bikes'=>4,'restaurants'=>6,'buses'=>2,'blogs'=>3];
+        $_vis_count = $_vis[$_sec_key] ?? 4;
+        $_card_w = 'calc(' . (100 / $_vis_count) . '% - ' . (20 * ($_vis_count - 1) / $_vis_count) . 'px)';
+
+        if ($_sec_key === 'attractions'):
+            $render_fn = function($a) {
+                $slug = 'listing-detail/attractions-'.$a['id'].'-'.substr(trim(preg_replace('/[\s-]+/','-',preg_replace('/[^a-z0-9\s-]/', '', strtolower($a['name']))),'-'),0,60).'.html';
+                $img=htmlspecialchars($a['image']); $name=htmlspecialchars($a['name']);
+                $tag=htmlspecialchars($a['type']??'Attraction');
+                $price=$a['entry_fee']>0 ? '&#8377;'.number_format($a['entry_fee']) : 'Free';
+                return '<a href="'.$slug.'" class="group overflow-hidden rounded-2xl bg-white border border-slate-100 shadow-md card-hover transition-all flex-shrink-0" style="width:VAR_W">'
+                    .'<div class="h-44 overflow-hidden"><img alt="'.$name.'" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="'.$img.'"/></div>'
+                    .'<div class="p-4"><span class="text-primary text-[10px] font-bold uppercase tracking-widest">'.$tag.'</span>'
+                    .'<h5 class="font-serif text-lg text-slate-900 mt-1 mb-3">'.$name.'</h5>'
+                    .'<div class="flex items-center justify-between">'
+                    .'<p class="font-black text-slate-900">'.$price.' <span class="text-xs text-slate-400 font-normal">entry</span></p>'
+                    .'<span class="bg-primary/10 text-primary px-4 py-1.5 rounded-full font-bold text-xs group-hover:bg-primary group-hover:text-white transition-all">Book Now</span>'
+                    .'</div></div></a>';
+            };
+            $items = $hp_attractions;
+        elseif ($_sec_key === 'bikes'):
+            $render_fn = function($b) {
+                $slug = 'listing-detail/bikes-'.$b['id'].'-'.substr(trim(preg_replace('/[\s-]+/','-',preg_replace('/[^a-z0-9\s-]/', '', strtolower($b['name']))),'-'),0,60).'.html';
+                $img=htmlspecialchars($b['image']); $name=htmlspecialchars($b['name']);
+                $type=htmlspecialchars($b['type']); $price=number_format($b['price_per_day']);
+                return '<a href="'.$slug.'" class="group overflow-hidden rounded-2xl bg-white border border-slate-100 shadow-md card-hover transition-all flex-shrink-0" style="width:VAR_W">'
+                    .'<div class="h-44 overflow-hidden"><img alt="'.$name.'" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="'.$img.'"/></div>'
+                    .'<div class="p-4"><span class="text-primary text-[10px] font-bold uppercase tracking-widest">'.$type.'</span>'
+                    .'<h5 class="font-serif text-lg text-slate-900 mt-1 mb-3">'.$name.'</h5>'
+                    .'<div class="flex items-center justify-between">'
+                    .'<p class="font-black text-slate-900">&#8377;'.$price.' <span class="text-xs text-slate-400 font-normal">/day</span></p>'
+                    .'<span class="bg-primary/10 text-primary px-4 py-1.5 rounded-full font-bold text-xs group-hover:bg-primary group-hover:text-white transition-all">Book Now</span>'
+                    .'</div></div></a>';
+            };
+            $items = $hp_bikes;
+        elseif ($_sec_key === 'restaurants'):
+            $render_fn = function($r) {
+                $slug = 'listing-detail/restaurants-'.$r['id'].'-'.substr(trim(preg_replace('/[\s-]+/','-',preg_replace('/[^a-z0-9\s-]/', '', strtolower($r['name']))),'-'),0,60).'.html';
+                $img=htmlspecialchars($r['image']); $name=htmlspecialchars($r['name']);
+                $cuisine=htmlspecialchars($r['cuisine']??$r['type']); $price=number_format($r['price_per_person']??0);
+                return '<a href="'.$slug.'" class="group overflow-hidden rounded-2xl bg-white border border-slate-100 shadow-md card-hover transition-all flex-shrink-0" style="width:VAR_W">'
+                    .'<div class="h-44 overflow-hidden"><img alt="'.$name.'" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="'.$img.'"/></div>'
+                    .'<div class="p-4"><span class="text-primary text-[10px] font-bold uppercase tracking-widest">'.$cuisine.'</span>'
+                    .'<h5 class="font-serif text-lg text-slate-900 mt-1 mb-3">'.$name.'</h5>'
+                    .'<div class="flex items-center justify-between">'
+                    .'<p class="font-black text-slate-900">&#8377;'.$price.' <span class="text-xs text-slate-400 font-normal">for two</span></p>'
+                    .'<span class="bg-primary/10 text-primary px-4 py-1.5 rounded-full font-bold text-xs group-hover:bg-primary group-hover:text-white transition-all">Book Now</span>'
+                    .'</div></div></a>';
+            };
+            $items = $hp_restaurants;
+        elseif ($_sec_key === 'buses'):
+            $render_fn = function($bus) {
+                $op=htmlspecialchars($bus['operator']); $bt=htmlspecialchars($bus['bus_type']);
+                $route=htmlspecialchars($bus['from_location']).' → '.htmlspecialchars($bus['to_location']);
+                $price=number_format($bus['price']);
+                return '<div class="glass-dark p-5 rounded-2xl flex items-center justify-between gap-4 card-hover flex-shrink-0" style="width:VAR_W">'
+                    .'<div class="flex items-center gap-4 min-w-0">'
+                    .'<div class="w-12 h-12 bg-primary/15 rounded-xl flex items-center justify-center shrink-0">'
+                    .'<span class="material-symbols-outlined text-primary text-2xl">directions_bus</span></div>'
+                    .'<div class="min-w-0"><p class="text-white font-bold text-sm truncate">'.$op.' <span class="text-[10px] font-normal text-white/50 bg-white/10 px-2 py-0.5 rounded ml-1">'.$bt.'</span></p>'
+                    .'<p class="text-white/50 text-xs mt-0.5 truncate">'.$route.'</p></div></div>'
+                    .'<div class="flex items-center gap-3 shrink-0">'
+                    .'<p class="text-primary font-black text-lg">&#8377;'.$price.'</p>'
+                    .'<a href="bus.php" class="bg-primary text-white px-4 py-2 rounded-xl font-bold text-xs hover:bg-orange-600 transition-all">Book</a>'
+                    .'</div></div>';
+            };
+            $items = $hp_buses;
+        else:
+            $render_fn = function($blog) {
+                $rt=max(3,intval(strlen(strip_tags($blog['content']??''))/1000));
+                $t=strtolower(trim($blog['title']));
+                $t=preg_replace('/[^a-z0-9\s-]/','',$t);
+                $t=preg_replace('/[\s-]+/','-',$t);
+                $slug='blogs/'.$blog['id'].'-'.substr(trim($t,'-'),0,60).'.html';
+                $img=htmlspecialchars($blog['image']??''); $title=htmlspecialchars($blog['title']);
+                $cat=htmlspecialchars($blog['category']??'Travel');
+                return '<a href="'.$slug.'" class="group cursor-pointer flex-shrink-0" style="width:VAR_W">'
+                    .'<div class="rounded-2xl overflow-hidden aspect-[16/10] mb-3 shadow-md relative">'
+                    .'<img alt="'.$title.'" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="'.$img.'"/>'
+                    .'<div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">'
+                    .'<span class="bg-white text-black px-4 py-1.5 rounded-full font-bold text-xs">READ POST</span></div></div>'
+                    .'<div class="flex items-center gap-3 mb-2">'
+                    .'<span class="bg-primary/10 text-primary px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase">'.$cat.'</span>'
+                    .'<span class="text-slate-400 text-xs flex items-center gap-1"><span class="material-symbols-outlined text-sm">schedule</span>'.$rt.' min</span>'
+                    .'</div><h4 class="font-serif text-lg text-slate-900 group-hover:text-primary transition-colors">'.$title.'</h4></a>';
+            };
+            $items = $hp_blogs;
+        endif;
+        ?>
+        <div class="relative overflow-hidden" id="carousel-wrap-<?php echo $_sec_key; ?>">
+            <div id="carousel-track-<?php echo $_sec_key; ?>" class="flex gap-5" style="will-change:transform;">
+                <?php
+                if (!empty($items)) {
+                    // Render 3× for seamless infinite loop
+                    for ($__r = 0; $__r < 3; $__r++) {
+                        foreach ($items as $__item) {
+                            echo str_replace('VAR_W', $_card_w, $render_fn($__item));
+                        }
+                    }
+                } else {
+                    echo '<p class="text-slate-400 py-8">No items yet.</p>';
+                }
+                ?>
+            </div>
         </div>
     </div>
 </section>
-<?php endif; ?>
+<?php endforeach; ?>
 </main>
 
-<!-- Footer -->
-<footer class="bg-background-dark text-white pt-14 pb-8">
-    <div class="max-w-7xl mx-auto px-4">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
-            <div>
-                <img src="images/travelhub.png" alt="CSNExplore" class="h-9 object-contain mb-4"
-                     onerror="this.style.display='none'; document.getElementById('footer-logo-text').style.display='flex'"/>
-                <span id="footer-logo-text" style="display:none" class="items-center gap-1.5 mb-4">
-                    <span class="material-symbols-outlined text-primary text-2xl">explore</span>
-                    <span class="font-serif font-black text-white text-lg tracking-tight">CSNExplore</span>
-                </span>
-                <p class="text-white/50 text-sm leading-relaxed mb-5">Your premium gateway to the wonders of Chhatrapati Sambhajinagar, Maharashtra.</p>
-                <div class="flex gap-3">
-                    <a href="#" class="w-9 h-9 rounded-full glass flex items-center justify-center hover:bg-primary transition-all"><span class="material-symbols-outlined text-sm">share</span></a>
-                    <a href="mailto:supportcsnexplore@gmail.com" class="w-9 h-9 rounded-full glass flex items-center justify-center hover:bg-primary transition-all"><span class="material-symbols-outlined text-sm">mail</span></a>
-                    <a href="https://wa.me/918600968888" class="w-9 h-9 rounded-full glass flex items-center justify-center hover:bg-primary transition-all">
-                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.417-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.305 1.652zm6.599-3.825c1.63.975 3.41 1.487 5.23 1.488 5.439 0 9.861-4.422 9.863-9.861.001-2.636-1.024-5.115-2.884-6.977-1.862-1.864-4.341-2.887-6.979-2.888-5.439 0-9.861 4.422-9.863 9.862 0 1.842.511 3.641 1.478 5.187l-.995 3.637 3.73-.978zm11.367-7.643c-.31-.155-1.837-.906-2.12-.108-.285.103-.55.515-.674.654-.124.14-.248.155-.558.001-.31-.155-1.31-.483-2.498-1.543-.924-.824-1.548-1.841-1.73-2.15-.181-.31-.019-.477.135-.631.14-.139.31-.36.465-.541.155-.181.206-.31.31-.515.103-.206.052-.386-.026-.541-.077-.155-.674-1.626-.924-2.228-.243-.585-.491-.504-.674-.513-.175-.008-.375-.01-.575-.01s-.525.075-.8.375c-.275.3-1.05 1.026-1.05 2.5s1.075 2.9 1.225 3.1c.15.2 2.11 3.221 5.113 4.513.714.307 1.272.49 1.706.629.718.227 1.37.195 1.886.118.575-.085 1.837-.75 2.096-1.475.258-.725.258-1.346.181-1.475-.077-.129-.283-.206-.593-.361z"/></svg>
-                    </a>
-                </div>
-            </div>
-            <div>
-                <h5 class="font-bold text-sm mb-4">Quick Links</h5>
-                <ul class="flex flex-col gap-2.5 text-white/50 text-sm">
-                    <?php
-                    $footer_links = [
-                        ['href' => 'listing.php?type=stays',       'label' => 'Hotel Bookings'],
-                        ['href' => 'listing.php?type=cars',        'label' => 'Car Rentals'],
-                        ['href' => 'listing.php?type=bikes',       'label' => 'Bike Rentals'],
-                        ['href' => 'listing.php?type=attractions', 'label' => 'Heritage Sites'],
-                        ['href' => 'listing.php?type=buses',       'label' => 'Bus Tickets'],
-                        ['href' => 'blogs.php',        'label' => 'Travel Guide'],
-                    ];
-                    foreach ($footer_links as $fl): ?>
-                    <li><a href="<?php echo $fl['href']; ?>" class="hover:text-primary transition-colors"><?php echo $fl['label']; ?></a></li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
-            <div>
-                <h5 class="font-bold text-sm mb-4">Contact Info</h5>
-                <ul class="flex flex-col gap-3 text-white/50 text-sm">
-                    <li class="flex items-start gap-2"><span class="material-symbols-outlined text-primary text-base shrink-0 mt-0.5">location_on</span>Behind State Bank Of India, Plot No. 273 Samarth Nagar, Central Bus Stand, Chhatrapati Sambhajinagar 431001</li>
-                    <li class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-base">call</span>+91 86009 68888</li>
-                    <li class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-base">mail</span>supportcsnexplore@gmail.com</li>
-                    <li class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-base">schedule</span>Mon–Sat: 9am – 7pm</li>
-                </ul>
-            </div>
-            <div>
-                <h5 class="font-bold text-sm mb-4">Stay Updated</h5>
-                <p class="text-white/50 text-sm mb-4">Get travel tips and exclusive deals in your inbox.</p>
-                <form method="POST" action="subscribe.php" class="flex flex-col gap-2">
-                    <input type="email" name="email" placeholder="Your email address" required
-                           class="bg-white/5 border border-white/10 text-white placeholder:text-white/30 px-3 py-2.5 rounded-xl text-sm focus:outline-none focus:border-primary transition-colors"/>
-                    <button type="submit" class="bg-primary text-white font-bold py-2.5 rounded-xl text-sm hover:bg-orange-600 transition-colors">Subscribe</button>
-                </form>
-            </div>
-        </div>
-        <div class="border-t border-white/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-white/30 text-xs">
-            <p>© <?php echo date('Y'); ?> CSNExplore. All rights reserved.</p>
-            <div class="flex gap-5">
-                <a href="privacy.php" class="hover:text-primary transition-colors">Privacy Policy</a>
-                <a href="terms.php" class="hover:text-primary transition-colors">Terms of Service</a>
-                <a href="sitemap.xml" class="hover:text-primary transition-colors">Sitemap</a>
-            </div>
-        </div>
-    </div>
-</footer>
+<?php require 'footer.php'; ?>
+
+<!-- Infinite carousel auto-scroll for all sections -->
+<script>
+(function(){
+    ['attractions','bikes','restaurants','buses','blogs'].forEach(function(key) {
+        var wrap  = document.getElementById('carousel-wrap-' + key);
+        var track = document.getElementById('carousel-track-' + key);
+        if (!wrap || !track) return;
+        var paused = false, pos = 0, speed = 0.7;
+        requestAnimationFrame(function(){
+            var oneSetWidth = track.scrollWidth / 3;
+            if (oneSetWidth <= 0) return;
+            function step() {
+                if (!paused) {
+                    pos += speed;
+                    if (pos >= oneSetWidth) pos -= oneSetWidth;
+                    track.style.transform = 'translateX(-' + pos + 'px)';
+                }
+                requestAnimationFrame(step);
+            }
+            wrap.addEventListener('mouseenter', function(){ paused = true; });
+            wrap.addEventListener('mouseleave', function(){ paused = false; });
+            wrap.addEventListener('touchstart', function(){ paused = true; }, {passive:true});
+            wrap.addEventListener('touchend', function(){ setTimeout(function(){ paused = false; }, 2000); }, {passive:true});
+            requestAnimationFrame(step);
+        });
+    });
+})();
+</script>
 
 <!-- Go to Top Button -->
 <button id="go-top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})"

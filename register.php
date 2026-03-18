@@ -54,8 +54,7 @@ $page_title = "Create Account | CSNExplore";
                 </div>
             </div>
 
-            <form id="registration-form" method="POST" action="auth-register.php" class="space-y-4">
-                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(bin2hex(random_bytes(16))); ?>"/>
+            <form id="registration-form" class="space-y-4">
 
                 <div class="grid grid-cols-2 gap-4">
                     <div class="space-y-1">
@@ -121,9 +120,10 @@ $page_title = "Create Account | CSNExplore";
                 </div>
 
                 <div class="pt-2">
-                    <button type="submit"
-                            class="w-full flex justify-center py-3.5 px-4 rounded-xl shadow-lg text-sm font-bold text-white bg-primary hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all active:scale-[0.98] hover:shadow-primary/30">
-                        Create Account
+                    <button type="submit" id="reg-btn"
+                            class="w-full flex justify-center items-center gap-2 py-3.5 px-4 rounded-xl shadow-lg text-sm font-bold text-white bg-primary hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all active:scale-[0.98] hover:shadow-primary/30">
+                        <span id="reg-btn-text">Create Account</span>
+                        <span id="reg-spinner" class="hidden material-symbols-outlined animate-spin text-[18px]">progress_activity</span>
                     </button>
                 </div>
             </form>
@@ -161,14 +161,65 @@ $page_title = "Create Account | CSNExplore";
 
 <script>
     document.getElementById('toggle-password').addEventListener('click', function() {
-        const pwd = document.getElementById('password');
+        const pwd  = document.getElementById('password');
         const icon = this.querySelector('.material-symbols-outlined');
-        if (pwd.type === 'password') {
-            pwd.type = 'text';
-            icon.textContent = 'visibility_off';
-        } else {
-            pwd.type = 'password';
-            icon.textContent = 'visibility';
+        pwd.type   = pwd.type === 'password' ? 'text' : 'password';
+        icon.textContent = pwd.type === 'password' ? 'visibility' : 'visibility_off';
+    });
+
+    document.getElementById('registration-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const errBox  = document.getElementById('reg-error');
+        const errText = document.getElementById('reg-error-text');
+        const btn     = document.getElementById('reg-btn');
+        const btnText = document.getElementById('reg-btn-text');
+        const spinner = document.getElementById('reg-spinner');
+
+        errBox.classList.add('hidden');
+        btn.disabled = true;
+        btnText.textContent = 'Creating account…';
+        spinner.classList.remove('hidden');
+
+        const firstName = document.getElementById('first-name').value.trim();
+        const lastName  = document.getElementById('last-name').value.trim();
+        const email     = document.getElementById('email').value.trim();
+        const phone     = document.getElementById('phone').value.trim();
+        const password  = document.getElementById('password').value;
+        const terms     = document.getElementById('terms').checked;
+
+        if (!terms) {
+            errText.textContent = 'You must agree to the Terms of Service and Privacy Policy.';
+            errBox.classList.remove('hidden');
+            btn.disabled = false;
+            btnText.textContent = 'Create Account';
+            spinner.classList.add('hidden');
+            return;
+        }
+
+        try {
+            const res  = await fetch('php/api/auth.php?action=register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: `${firstName} ${lastName}`.trim(), email, phone, password })
+            });
+            const data = await res.json();
+
+            if (!res.ok) {
+                errText.textContent = data.error || 'Registration failed. Please try again.';
+                errBox.classList.remove('hidden');
+                return;
+            }
+
+            localStorage.setItem('csn_token', data.token);
+            localStorage.setItem('csn_user',  JSON.stringify(data.user));
+            window.location.href = 'index.php';
+        } catch (err) {
+            errText.textContent = 'Network error. Please check your connection.';
+            errBox.classList.remove('hidden');
+        } finally {
+            btn.disabled = false;
+            btnText.textContent = 'Create Account';
+            spinner.classList.add('hidden');
         }
     });
 </script>

@@ -17,10 +17,9 @@ $pc = $priceCol[$type];
 
 $where  = ['is_active = 1'];
 $params = [];
-if ($search) { $where[] = 'name LIKE ?'; $params[] = '%'.$search.'%'; }
 if ($filterType) { $where[] = 'type = ?'; $params[] = $filterType; }
 
-$sql = "SELECT * FROM $type WHERE " . implode(' AND ', $where) . " ORDER BY display_order ASC, id ASC";
+$sql = "SELECT * FROM $type WHERE " . implode(' AND ', $where) . " ORDER BY RANDOM()";
 $items = $db->fetchAll($sql, $params);
 
 // Decode JSON fields
@@ -167,7 +166,7 @@ $category_nav = [
     <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-[#0a0705]"></div>
     <!-- Breadcrumb at very top -->
     <div class="absolute top-0 left-0 right-0 pt-5">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-2 text-sm text-white/60 flex-wrap">
+        <div class="max-w-7xl mx-auto px-6 flex items-center gap-2 text-sm text-white/60 flex-wrap">
             <a href="index.php" class="hover:text-white transition-colors flex items-center gap-1">
                 <span class="material-symbols-outlined text-base">home</span>Home
             </a>
@@ -177,7 +176,7 @@ $category_nav = [
     </div>
     <!-- Title at bottom -->
     <div class="absolute bottom-0 left-0 right-0 pb-6">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto px-6">
             <h1 class="text-white text-2xl md:text-4xl font-serif font-black flex items-center gap-3">
                 <span class="material-symbols-outlined text-primary text-3xl"><?php echo htmlspecialchars($c['icon']); ?></span>
                 <?php echo htmlspecialchars($c['hero_h1']); ?>
@@ -188,11 +187,19 @@ $category_nav = [
 </div>
 
 <main class="min-h-screen" style="background:#f8f6f6">
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="max-w-7xl mx-auto px-6 py-8">
   <div class="flex flex-col lg:flex-row gap-8">
 
+    <!-- Mobile filter toggle -->
+    <div class="lg:hidden mb-2">
+      <button id="mob-filter-btn" onclick="document.getElementById('sidebar-filters').classList.toggle('hidden')"
+              class="flex items-center gap-2 bg-white border border-slate-200 text-slate-700 font-bold px-4 py-2.5 rounded-xl text-sm shadow-sm w-full justify-center">
+        <span class="material-symbols-outlined text-base text-primary">tune</span>Filters &amp; Sort
+      </button>
+    </div>
+
     <!-- Sidebar -->
-    <aside class="w-full lg:w-72 shrink-0 space-y-6">
+    <aside id="sidebar-filters" class="hidden lg:block w-full lg:w-72 shrink-0 space-y-6">
       <div class="glassy p-6 rounded-2xl shadow-sm">
         <div class="flex items-center justify-between mb-5">
           <h3 class="text-lg font-bold">Filters</h3>
@@ -276,7 +283,7 @@ $category_nav = [
       <div class="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4">
         <div>
           <h1 class="text-3xl font-extrabold tracking-tight"><?php echo htmlspecialchars($c['heading']); ?></h1>
-          <p class="text-slate-500"><?php echo count($items); ?> result<?php echo count($items) !== 1 ? 's' : ''; ?> found<?php echo $search ? ' for "'.htmlspecialchars($search).'"' : ''; ?></p>
+          <p class="text-slate-500"><?php echo count($items); ?> result<?php echo count($items) !== 1 ? 's' : ''; ?> found</p>
         </div>
         <form method="GET" action="listing.php" class="flex items-center gap-2">
           <input type="hidden" name="type" value="<?php echo htmlspecialchars($type); ?>"/>

@@ -4,28 +4,31 @@
 
 <!-- ── Gallery Picker Modal (shared) ──────────────────────────────────── -->
 <div id="gallery-picker-modal" class="hidden fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[88vh] flex flex-col">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl flex flex-col" style="max-height:85vh">
         <!-- Header -->
-        <div class="flex items-center gap-3 p-5 border-b border-slate-100 shrink-0">
+        <div class="flex items-center gap-3 px-5 py-4 border-b border-slate-100 shrink-0">
             <span class="material-symbols-outlined text-primary">photo_library</span>
             <h3 class="font-bold text-base">Select Image</h3>
             <div class="ml-auto flex items-center gap-2">
                 <label class="flex items-center gap-1.5 bg-primary text-white px-3 py-1.5 rounded-xl text-xs font-bold hover:bg-orange-600 cursor-pointer transition-all">
-                    <span class="material-symbols-outlined text-sm">upload</span> Upload
+                    <span class="material-symbols-outlined text-sm">upload</span> Upload New
                     <input type="file" id="picker-upload-input" accept="image/jpeg,image/png,image/webp,image/gif" multiple class="hidden"/>
                 </label>
-                <button onclick="closeGalleryPicker()" class="text-slate-400 hover:text-slate-600 ml-1">
-                    <span class="material-symbols-outlined">close</span>
+                <button onclick="closeGalleryPicker()" class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-all">
+                    <span class="material-symbols-outlined text-xl">close</span>
                 </button>
             </div>
         </div>
         <!-- Search -->
         <div class="px-5 py-3 border-b border-slate-100 shrink-0">
-            <input id="picker-search" type="text" placeholder="Filter images by filename..."
-                   class="w-full border border-slate-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"/>
+            <div class="relative">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-base">search</span>
+                <input id="picker-search" type="text" placeholder="Filter by filename..."
+                       class="w-full border border-slate-200 rounded-xl pl-9 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"/>
+            </div>
         </div>
         <!-- Grid -->
-        <div id="picker-grid" class="flex-1 overflow-y-auto p-5 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+        <div id="picker-grid" class="flex-1 overflow-y-auto p-4 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
             <div class="col-span-5 text-center py-12 text-slate-400">Loading...</div>
         </div>
         <!-- Upload progress -->
@@ -112,7 +115,7 @@ function closeGalleryPicker() {
 
 async function loadPickerImages() {
     var grid = document.getElementById('picker-grid');
-    grid.innerHTML = '<div class="col-span-5 text-center py-12 text-slate-400">Loading...</div>';
+    grid.innerHTML = '<div class="col-span-5 text-center py-12 text-slate-400"><div class="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>Loading...</div>';
     _pickerImages = await api('../php/api/gallery.php') || [];
     renderPickerGrid(_pickerImages);
 }
@@ -120,21 +123,28 @@ async function loadPickerImages() {
 function renderPickerGrid(images) {
     var grid = document.getElementById('picker-grid');
     if (!images.length) {
-        grid.innerHTML = '<div class="col-span-5 text-center py-12 text-slate-400"><span class="material-symbols-outlined text-4xl block mb-2">photo_library</span>No images. Upload some first.</div>';
+        grid.innerHTML = '<div class="col-span-5 text-center py-12 text-slate-400"><span class="material-symbols-outlined text-4xl block mb-2">photo_library</span>No images yet. Upload some first.</div>';
         return;
     }
     grid.innerHTML = images.map(function(img) {
-        return '<div class="relative group cursor-pointer rounded-xl overflow-hidden border-2 border-transparent hover:border-primary transition-all" onclick="selectPickerImage(\'' + img.url.replace(/'/g,"\\'") + '\')">' +
-            '<img src="' + img.url + '" class="w-full aspect-square object-cover" loading="lazy"/>' +
-            '<div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center">' +
-                '<span class="material-symbols-outlined text-white text-3xl">check_circle</span>' +
+        // Use relative path so DB stores consistent relative URLs
+        var relPath = 'images/uploads/' + img.filename;
+        var safeUrl = img.url.replace(/'/g, "\\'");
+        var safePath = relPath.replace(/'/g, "\\'");
+        return '<div class="relative group cursor-pointer rounded-xl overflow-hidden border-2 border-transparent hover:border-primary transition-all bg-slate-50" onclick="selectPickerImage(\'' + safePath + '\')">' +
+            '<img src="' + safeUrl + '" class="w-full aspect-square object-cover" loading="lazy" onerror="this.parentElement.style.display=\'none\'"/>' +
+            '<div class="absolute inset-0 bg-primary/30 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center">' +
+                '<span class="material-symbols-outlined text-white text-3xl drop-shadow">check_circle</span>' +
+            '</div>' +
+            '<div class="absolute bottom-0 left-0 right-0 bg-black/60 px-1.5 py-1 opacity-0 group-hover:opacity-100 transition-all">' +
+                '<p class="text-white text-[9px] truncate">' + img.filename + '</p>' +
             '</div>' +
         '</div>';
     }).join('');
 }
 
-function selectPickerImage(url) {
-    if (_pickerCallback) _pickerCallback(url);
+function selectPickerImage(path) {
+    if (_pickerCallback) _pickerCallback(path);
     closeGalleryPicker();
 }
 

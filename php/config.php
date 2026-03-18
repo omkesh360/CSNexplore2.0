@@ -3,6 +3,9 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
+$_logDir = __DIR__ . '/../logs';
+if (!is_dir($_logDir)) @mkdir($_logDir, 0755, true);
+ini_set('error_log', $_logDir . '/php_errors.log');
 
 define('JWT_SECRET', getenv('JWT_SECRET') ?: 'csnexplore_secure_jwt_2025_!@#$%');
 define('ADMIN_EMAIL', 'travelhubadmin@gmail.com');

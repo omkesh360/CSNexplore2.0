@@ -63,7 +63,7 @@ require 'header.php';
     </div>
     <!-- Breadcrumb at very top of hero -->
     <div class="absolute top-0 left-0 right-0 z-20 pt-5">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-2 text-sm text-white/60 flex-wrap">
+        <div class="max-w-7xl mx-auto px-6 flex items-center gap-2 text-sm text-white/60 flex-wrap">
             <a href="index.php" class="hover:text-white transition-colors flex items-center gap-1">
                 <span class="material-symbols-outlined text-base">home</span>Home
             </a>
@@ -87,7 +87,7 @@ require 'header.php';
 <?php if ($featured): ?>
 <!-- Featured Article strip below hero -->
 <div class="bg-[#0a0705] py-8">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto px-6">
         <a href="<?php echo blogSlug($featured); ?>" class="group flex flex-col md:flex-row gap-6 items-center bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl p-5 transition-all">
             <div class="w-full md:w-64 h-40 rounded-xl overflow-hidden shrink-0">
                 <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
@@ -123,7 +123,7 @@ if ($featured) {
 }
 $total_grid_blogs = count($all_blogs_for_filter);
 ?>
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+<div class="max-w-7xl mx-auto px-6 py-12">
 
     <!-- Filters -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">

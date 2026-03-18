@@ -19,8 +19,8 @@ $category_nav = [
     ['href' => 'bus.php',                      'icon' => 'directions_bus',     'label' => 'Buses'],
 ];
 ?>
-<nav class="bg-white dark:bg-[#0a0705] border-b border-slate-100 dark:border-white/10 sticky top-16 z-40">
-    <div class="max-w-7xl mx-auto px-4 overflow-x-auto hide-scrollbar">
+<nav class="bg-white border-b border-slate-100 sticky top-16 z-40">
+    <div class="max-w-7xl mx-auto px-6 overflow-x-auto hide-scrollbar">
         <div class="flex items-center gap-1 h-12">
             <?php foreach ($category_nav as $cat):
                 $active = ($cat['href'] === 'bus.php');
@@ -29,7 +29,7 @@ $category_nav = [
                class="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all
                       <?php echo $active
                           ? 'bg-primary text-white shadow shadow-primary/30'
-                          : 'text-slate-500 dark:text-slate-400 hover:text-primary hover:bg-primary/10'; ?>">
+                          : 'text-slate-500 hover:text-primary hover:bg-primary/10'; ?>">
                 <span class="material-symbols-outlined text-[15px]"><?php echo $cat['icon']; ?></span>
                 <?php echo $cat['label']; ?>
             </a>
@@ -38,22 +38,22 @@ $category_nav = [
     </div>
 </nav>
 
-<main class="bg-white dark:bg-[#0a0705] min-h-screen flex items-center justify-center py-16">
+<main class="bg-white min-h-screen flex items-center justify-center py-16">
     <div class="max-w-2xl w-full mx-auto px-4">
-        <div class="bg-white dark:bg-white/5 rounded-3xl shadow-xl border border-slate-100 dark:border-white/10 p-8 md:p-12 flex flex-col items-center text-center">
+        <div class="bg-white rounded-3xl shadow-xl border border-slate-100 p-8 md:p-12 flex flex-col items-center text-center">
 
             <!-- Bus Icon Animation -->
             <div class="w-32 h-32 rounded-full bg-primary/10 flex items-center justify-center mb-6">
                 <span class="material-symbols-outlined text-primary" style="font-size:72px;">directions_bus</span>
             </div>
 
-            <h1 class="text-3xl md:text-4xl font-serif font-black text-primary dark:text-primary mb-4">Bus Booking — On Request</h1>
-            <p class="text-slate-500 dark:text-slate-400 text-lg mb-4 max-w-lg">
-                This service is available <strong class="text-slate-700 dark:text-slate-200">on request only</strong>. Contact us directly to book intercity bus travel across Maharashtra and beyond.
+            <h1 class="text-3xl md:text-4xl font-serif font-black text-primary mb-4">Bus Booking — On Request</h1>
+            <p class="text-slate-500 text-lg mb-4 max-w-lg">
+                This service is available <strong class="text-slate-700">on request only</strong>. Contact us directly to book intercity bus travel across Maharashtra and beyond.
             </p>
 
-            <div class="bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 rounded-2xl px-6 py-4 mb-8 max-w-lg text-left w-full">
-                <p class="text-amber-800 dark:text-amber-300 text-sm font-medium flex items-start gap-2">
+            <div class="bg-amber-50 border border-amber-200 rounded-2xl px-6 py-4 mb-8 max-w-lg text-left w-full">
+                <p class="text-amber-800 text-sm font-medium flex items-start gap-2">
                     <span class="material-symbols-outlined text-[18px] mt-0.5 shrink-0">info</span>
                     <span>Bus bookings are processed manually. Call or WhatsApp us with your travel details and we'll arrange the best available option for you.</span>
                 </p>
@@ -61,12 +61,12 @@ $category_nav = [
 
             <!-- Popular Routes -->
             <div class="w-full mb-8">
-                <h2 class="text-lg font-bold dark:text-white mb-4 text-left">Popular Routes</h2>
+                <h2 class="text-lg font-bold mb-4 text-left">Popular Routes</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <?php if (!empty($routes)): foreach ($routes as $route): ?>
-                    <div class="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 text-left">
+                    <div class="flex items-center justify-between p-4 rounded-xl bg-slate-50 border border-slate-100 text-left">
                         <div>
-                            <div class="flex items-center gap-2 text-sm font-bold dark:text-white">
+                            <div class="flex items-center gap-2 text-sm font-bold">
                                 <span><?php echo htmlspecialchars($route['from_location']); ?></span>
                                 <span class="material-symbols-outlined text-primary text-base">arrow_forward</span>
                                 <span><?php echo htmlspecialchars($route['to_location']); ?></span>
@@ -97,10 +97,10 @@ $category_nav = [
             </div>
 
             <div class="flex gap-4">
-                <a href="index.php" class="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 hover:text-primary text-sm font-bold transition-colors">
+                <a href="index.php" class="flex items-center gap-1.5 text-slate-500 hover:text-primary text-sm font-bold transition-colors">
                     <span class="material-symbols-outlined text-base">home</span> Back to Home
                 </a>
-                <a href="listing.php?type=stays" class="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 hover:text-primary text-sm font-bold transition-colors">
+                <a href="listing.php?type=stays" class="flex items-center gap-1.5 text-slate-500 hover:text-primary text-sm font-bold transition-colors">
                     <span class="material-symbols-outlined text-base">bed</span> Explore Stays
                 </a>
             </div>

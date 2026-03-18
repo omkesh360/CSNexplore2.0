@@ -1,0 +1,115 @@
+Options -Indexes
+ServerSignature Off
+
+# ── PHP Settings ─────────────────────────────────────────────────────────────
+<IfModule mod_php.c>
+    php_flag  display_errors     Off
+    php_flag  log_errors         On
+    php_value error_log          logs/php_errors.log
+    php_value upload_max_filesize 10M
+    php_value post_max_size       12M
+    php_value max_execution_time  60
+    php_value memory_limit        256M
+</IfModule>
+
+# ── Security Headers ──────────────────────────────────────────────────────────
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options    "nosniff"
+    Header always set X-Frame-Options           "SAMEORIGIN"
+    Header always set X-XSS-Protection          "1; mode=block"
+    Header always set Referrer-Policy           "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy        "geolocation=(), microphone=(), camera=()"
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains" env=HTTPS
+    # Remove server info
+    Header unset Server
+    Header unset X-Powered-By
+</IfModule>
+
+# ── Block sensitive files ─────────────────────────────────────────────────────
+<FilesMatch "\.(db|sqlite|sql|log|json|lock|env|git|md|txt)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order deny,allow
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Allow robots.txt and sitemap.xml
+<Files "robots.txt">
+    <IfModule mod_authz_core.c>
+        Require all granted
+    </IfModule>
+</Files>
+<Files "sitemap.xml">
+    <IfModule mod_authz_core.c>
+        Require all granted
+    </IfModule>
+</Files>
+
+# Block direct access to php/ directory
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^php/(?!api/).*$ - [F,L]
+</IfModule>
+
+# ── Gzip Compression ──────────────────────────────────────────────────────────
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css
+    AddOutputFilterByType DEFLATE text/javascript application/javascript application/x-javascript
+    AddOutputFilterByType DEFLATE application/json application/xml application/xhtml+xml
+    AddOutputFilterByType DEFLATE image/svg+xml font/ttf font/otf font/woff font/woff2
+</IfModule>
+
+# ── Browser Caching ───────────────────────────────────────────────────────────
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpg         "access plus 1 year"
+    ExpiresByType image/jpeg        "access plus 1 year"
+    ExpiresByType image/png         "access plus 1 year"
+    ExpiresByType image/gif         "access plus 1 year"
+    ExpiresByType image/webp        "access plus 1 year"
+    ExpiresByType image/svg+xml     "access plus 1 year"
+    ExpiresByType image/x-icon      "access plus 1 year"
+    ExpiresByType font/woff         "access plus 1 year"
+    ExpiresByType font/woff2        "access plus 1 year"
+    ExpiresByType text/css          "access plus 1 month"
+    ExpiresByType text/javascript   "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType text/html         "access plus 1 hour"
+    ExpiresByType application/json  "access plus 0 seconds"
+</IfModule>
+
+# ── URL Rewriting ─────────────────────────────────────────────────────────────
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # Force HTTPS (uncomment on live server with SSL)
+    # RewriteCond %{HTTPS} off
+    # RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    # Remove trailing slash (except root)
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)/$ /$1 [L,R=301]
+
+    # Serve existing files/dirs directly
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Clean URLs: /blog/slug → blog-detail.php?slug=slug
+    RewriteRule ^blog/([a-zA-Z0-9_-]+)/?$ blog-detail.php?slug=$1 [L,QSA]
+
+    # Clean URLs: /listing/type → listing.php?type=type
+    RewriteRule ^listing/([a-zA-Z0-9_-]+)/?$ listing.php?type=$1 [L,QSA]
+
+    # Dynamic sitemap
+    RewriteRule ^sitemap\.xml$ php/api/generate_sitemap.php [L]
+</IfModule>
+
+# ── Custom Error Pages ────────────────────────────────────────────────────────
+ErrorDocument 404 /index.php
+ErrorDocument 403 /index.php
+ErrorDocument 500 /index.php
