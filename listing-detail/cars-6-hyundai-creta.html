@@ -67,7 +67,7 @@ body.page-ready{{animation:pageFadeIn 0.2s ease forwards;}}
 </header>
 <main class="bg-slate-50 min-h-screen">
   <div class="relative h-64 md:h-80 overflow-hidden">
-    <img src="../images/uploads/honda-city.jpg" alt="Hyundai Creta" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=1600&q=80'"/>
+    <img src="../images/uploads/mahindra-scorpio.jpg" alt="Hyundai Creta" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=1600&q=80'"/>
     <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-[#0a0705]"></div>
     <div class="absolute top-0 left-0 right-0 pt-5">
       <div class="max-w-6xl mx-auto px-4 flex items-center gap-2 text-sm text-white/60 flex-wrap">
@@ -94,10 +94,10 @@ body.page-ready{{animation:pageFadeIn 0.2s ease forwards;}}
   <h3 class="text-lg font-bold mb-4 flex items-center gap-2"><span class="material-symbols-outlined text-[#ec5b13]">photo_library</span>Photos</h3>
   <div class="relative" id="img-slider">
     <div id="slider-track">
-<div class="slider-slide block" data-index="0"><img src="../images/uploads/honda-city.jpg" alt="Photo 1" class="w-full h-72 md:h-96 object-cover rounded-2xl" onerror="this.closest('.slider-slide').style.display='none'"/></div>
-<div class="slider-slide hidden" data-index="1"><img src="../images/uploads/mahindra-scorpio.jpg" alt="Photo 2" class="w-full h-72 md:h-96 object-cover rounded-2xl" onerror="this.closest('.slider-slide').style.display='none'"/></div>
-<div class="slider-slide hidden" data-index="2"><img src="../images/uploads/suzuki-swift.jpg" alt="Photo 3" class="w-full h-72 md:h-96 object-cover rounded-2xl" onerror="this.closest('.slider-slide').style.display='none'"/></div>
-<div class="slider-slide hidden" data-index="3"><img src="../images/uploads/toyota-fortuner.jpg" alt="Photo 4" class="w-full h-72 md:h-96 object-cover rounded-2xl" onerror="this.closest('.slider-slide').style.display='none'"/></div>
+<div class="slider-slide block" data-index="0"><img src="../images/uploads/mahindra-scorpio.jpg" alt="Photo 1" class="w-full h-72 md:h-[420px] object-cover rounded-2xl" onerror="this.closest('.slider-slide').style.display='none'"/></div>
+<div class="slider-slide hidden" data-index="1"><img src="../images/uploads/honda-city.jpg" alt="Photo 2" class="w-full h-72 md:h-[420px] object-cover rounded-2xl" onerror="this.closest('.slider-slide').style.display='none'"/></div>
+<div class="slider-slide hidden" data-index="2"><img src="../images/uploads/suzuki-swift.jpg" alt="Photo 3" class="w-full h-72 md:h-[420px] object-cover rounded-2xl" onerror="this.closest('.slider-slide').style.display='none'"/></div>
+<div class="slider-slide hidden" data-index="3"><img src="../images/uploads/toyota-fortuner.jpg" alt="Photo 4" class="w-full h-72 md:h-[420px] object-cover rounded-2xl" onerror="this.closest('.slider-slide').style.display='none'"/></div>
     </div>
     <!-- Prev / Next -->
     <button id="slider-prev" onclick="sliderMove(-1)" class="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 hover:bg-black/70 text-white flex items-center justify-center transition-all z-10">
@@ -117,7 +117,7 @@ body.page-ready{{animation:pageFadeIn 0.2s ease forwards;}}
 </div>
 <script>
 (function(){
-  var imgs=["../images/uploads/honda-city.jpg", "../images/uploads/mahindra-scorpio.jpg", "../images/uploads/suzuki-swift.jpg", "../images/uploads/toyota-fortuner.jpg"];
+  var imgs=["../images/uploads/mahindra-scorpio.jpg", "../images/uploads/honda-city.jpg", "../images/uploads/suzuki-swift.jpg", "../images/uploads/toyota-fortuner.jpg"];
   var cur=0;
   var slides=document.querySelectorAll('.slider-slide');
   var dots=document.querySelectorAll('.slider-dot');

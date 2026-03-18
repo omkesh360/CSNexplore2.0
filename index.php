@@ -453,20 +453,22 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <!-- Stats Bar -->
-<div class="bg-primary text-white py-6">
+<div class="bg-[#0a0705] border-t border-white/5 py-8">
     <div class="max-w-7xl mx-auto px-6">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             <?php
             $stats = [
-                ['icon' => 'hotel',                    'label' => $hp_settings['stat1_label']],
-                ['icon' => 'confirmation_number',      'label' => $hp_settings['stat2_label']],
-                ['icon' => 'restaurant',               'label' => $hp_settings['stat3_label']],
-                ['icon' => 'sentiment_very_satisfied', 'label' => $hp_settings['stat4_label']],
+                ['icon' => 'hotel',                    'label' => $hp_settings['stat1_label'], 'color' => 'text-primary'],
+                ['icon' => 'confirmation_number',      'label' => $hp_settings['stat2_label'], 'color' => 'text-amber-400'],
+                ['icon' => 'restaurant',               'label' => $hp_settings['stat3_label'], 'color' => 'text-green-400'],
+                ['icon' => 'sentiment_very_satisfied', 'label' => $hp_settings['stat4_label'], 'color' => 'text-blue-400'],
             ];
             foreach ($stats as $stat): ?>
-            <div class="flex flex-col items-center gap-1">
-                <span class="material-symbols-outlined text-white/70 text-2xl"><?php echo $stat['icon']; ?></span>
-                <p class="font-black text-lg leading-tight"><?php echo htmlspecialchars($stat['label']); ?></p>
+            <div class="flex flex-col items-center gap-2 group">
+                <div class="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
+                    <span class="material-symbols-outlined <?php echo $stat['color']; ?> text-2xl"><?php echo $stat['icon']; ?></span>
+                </div>
+                <p class="font-black text-white text-lg leading-tight"><?php echo htmlspecialchars($stat['label']); ?></p>
             </div>
             <?php endforeach; ?>
         </div>
@@ -489,7 +491,7 @@ document.addEventListener('DOMContentLoaded', function() {
     <div class="max-w-7xl mx-auto px-6">
         <div class="flex items-end justify-between mb-6">
             <div>
-                <p class="text-primary font-bold text-xs uppercase tracking-widest mb-1">Seamless Travel</p>
+                <p class="text-primary font-bold text-xs uppercase tracking-widest mb-1">Self-Drive & Chauffeur</p>
                 <h2 class="font-serif text-2xl md:text-3xl text-slate-900">Ride &amp; Explore</h2>
             </div>
             <div class="flex gap-3 text-sm font-bold text-primary">
@@ -498,21 +500,23 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div class="group relative overflow-hidden rounded-2xl h-64 shadow-lg card-hover transition-all">
+            <div class="group relative overflow-hidden rounded-2xl h-64 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
                 <img alt="Luxury Car" loading="lazy" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlDMSSDq5u4EWTtyLrL2T01rG1QVLx79iWAxTc-Q5v-4DB7Qaf3se4mMQ0OXya60SgJNz-esA3YItuP3cAQgCOUMELZ93GiboDiWUtyGlo3vcROCcNprMWU9HsV96e-umpDcBQWbOJp3OcHtPHXGe0NfG1iYfBR6dtozOW1-x0kzci9SbakuCN5LahXPRRgoI5AgrCPrXLIv8hlg56V8HPrYua2wCw58U5qNgwuVnf4hEy-HOTzh45fEkiS4W70yyelAJTlwjmXCUK"/>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-5">
+                    <span class="text-primary text-[10px] font-bold uppercase tracking-widest mb-1 block">Self-Drive & Chauffeur</span>
                     <h4 class="text-white text-xl font-serif mb-1">Premium Car Rentals</h4>
-                    <p class="text-white/70 text-xs mb-3">Luxury sedans with professional chauffeurs.</p>
+                    <p class="text-white/70 text-xs mb-3">Luxury sedans, SUVs & hatchbacks at your service.</p>
                     <a href="listing.php?type=cars" class="inline-block bg-white text-black px-5 py-2 rounded-full font-bold text-xs hover:bg-primary hover:text-white transition-all">Explore Cars</a>
                 </div>
             </div>
-            <div class="group relative overflow-hidden rounded-2xl h-64 shadow-lg card-hover transition-all">
+            <div class="group relative overflow-hidden rounded-2xl h-64 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
                 <img alt="Adventure Bike" loading="lazy" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFYIfhiyxiKGSvW26EEi6qWok9NLO6cRlbBw0oCLlVCiV9F1e_mtQoiJK-2Dnb5uwU3K6b01miWgbmBQaNlDcPazf_LXbqwv3zx4f_F6Jsl627xYGPA3B5kQg_01L4gEPJseizInfQycEdL6o-IO9u7fAjGuMEnr_iPgYZShZ5e9VLbqTAdlhGFW8Tnss81gBfiFHSmzorGkalt_cF3Hi8ycEbYCGC_a4e9UyOZAQ8J4m9XHF2EcZwdaPo2OpFbnwwGvVRYdxLSxsT"/>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-5">
+                    <span class="text-primary text-[10px] font-bold uppercase tracking-widest mb-1 block">Scooters to Royal Enfields</span>
                     <h4 class="text-white text-xl font-serif mb-1">Bike Rentals</h4>
-                    <p class="text-white/70 text-xs mb-3">Scooters to Royal Enfields for every road.</p>
+                    <p class="text-white/70 text-xs mb-3">Ride the city your way — any road, any time.</p>
                     <a href="listing.php?type=bikes" class="inline-block bg-white text-black px-5 py-2 rounded-full font-bold text-xs hover:bg-primary hover:text-white transition-all">Explore Bikes</a>
                 </div>
             </div>
@@ -556,7 +560,13 @@ foreach ($hp_settings['section_order'] as $_sec_key):
             </div>
             <a href="blogs.php" class="text-sm font-bold text-primary hover:underline">Read more &rarr;</a>
             <?php else: ?>
-            <h2 class="font-serif text-2xl md:text-3xl text-slate-900"><?php echo htmlspecialchars($hp_settings['title_' . $_sec_key]); ?></h2>
+            <div>
+                <p class="text-primary font-bold text-xs uppercase tracking-widest mb-1"><?php
+                    $sec_subtitles = ['attractions'=>'Heritage & Culture','bikes'=>'Two-Wheeler Rentals','restaurants'=>'Food & Dining','buses'=>'Intercity Travel'];
+                    echo $sec_subtitles[$_sec_key] ?? 'Explore';
+                ?></p>
+                <h2 class="font-serif text-2xl md:text-3xl text-slate-900"><?php echo htmlspecialchars($hp_settings['title_' . $_sec_key]); ?></h2>
+            </div>
             <a href="listing.php?type=<?php echo $_sec_key; ?>" class="text-sm font-bold text-primary hover:underline">See all &rarr;</a>
             <?php endif; ?>
         </div>
@@ -572,13 +582,15 @@ foreach ($hp_settings['section_order'] as $_sec_key):
                 $img=htmlspecialchars($a['image']); $name=htmlspecialchars($a['name']);
                 $tag=htmlspecialchars($a['type']??'Attraction');
                 $price=$a['entry_fee']>0 ? '&#8377;'.number_format($a['entry_fee']) : 'Free';
-                return '<a href="'.$slug.'" class="group overflow-hidden rounded-2xl bg-white border border-slate-100 shadow-md card-hover transition-all flex-shrink-0" style="width:VAR_W">'
-                    .'<div class="h-44 overflow-hidden"><img alt="'.$name.'" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="'.$img.'"/></div>'
+                $rating=number_format((float)($a['rating']??0),1);
+                return '<a href="'.$slug.'" class="group overflow-hidden rounded-2xl bg-white border border-slate-100 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex-shrink-0" style="width:VAR_W">'
+                    .'<div class="h-44 overflow-hidden relative"><img alt="'.$name.'" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="'.$img.'"/>'
+                    .'<div class="absolute top-2.5 right-2.5 flex items-center gap-1 bg-black/60 backdrop-blur-sm text-white text-xs font-bold px-2 py-0.5 rounded-full"><span style="font-family:Material Symbols Outlined;font-size:12px;color:#fbbf24">star</span>'.$rating.'</div></div>'
                     .'<div class="p-4"><span class="text-primary text-[10px] font-bold uppercase tracking-widest">'.$tag.'</span>'
-                    .'<h5 class="font-serif text-lg text-slate-900 mt-1 mb-3">'.$name.'</h5>'
+                    .'<h5 class="font-serif text-base text-slate-900 mt-1 mb-3 line-clamp-1">'.$name.'</h5>'
                     .'<div class="flex items-center justify-between">'
-                    .'<p class="font-black text-slate-900">'.$price.' <span class="text-xs text-slate-400 font-normal">entry</span></p>'
-                    .'<span class="bg-primary/10 text-primary px-4 py-1.5 rounded-full font-bold text-xs group-hover:bg-primary group-hover:text-white transition-all">Book Now</span>'
+                    .'<p class="font-black text-slate-900 text-sm">'.$price.' <span class="text-xs text-slate-400 font-normal">entry</span></p>'
+                    .'<span class="bg-primary text-white px-3 py-1.5 rounded-full font-bold text-xs group-hover:bg-orange-600 transition-all">Book Now</span>'
                     .'</div></div></a>';
             };
             $items = $hp_attractions;
@@ -587,13 +599,15 @@ foreach ($hp_settings['section_order'] as $_sec_key):
                 $slug = 'listing-detail/bikes-'.$b['id'].'-'.substr(trim(preg_replace('/[\s-]+/','-',preg_replace('/[^a-z0-9\s-]/', '', strtolower($b['name']))),'-'),0,60).'.html';
                 $img=htmlspecialchars($b['image']); $name=htmlspecialchars($b['name']);
                 $type=htmlspecialchars($b['type']); $price=number_format($b['price_per_day']);
-                return '<a href="'.$slug.'" class="group overflow-hidden rounded-2xl bg-white border border-slate-100 shadow-md card-hover transition-all flex-shrink-0" style="width:VAR_W">'
-                    .'<div class="h-44 overflow-hidden"><img alt="'.$name.'" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="'.$img.'"/></div>'
+                $rating=number_format((float)($b['rating']??0),1);
+                return '<a href="'.$slug.'" class="group overflow-hidden rounded-2xl bg-white border border-slate-100 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex-shrink-0" style="width:VAR_W">'
+                    .'<div class="h-44 overflow-hidden relative"><img alt="'.$name.'" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="'.$img.'"/>'
+                    .'<div class="absolute top-2.5 right-2.5 flex items-center gap-1 bg-black/60 backdrop-blur-sm text-white text-xs font-bold px-2 py-0.5 rounded-full"><span style="font-family:Material Symbols Outlined;font-size:12px;color:#fbbf24">star</span>'.$rating.'</div></div>'
                     .'<div class="p-4"><span class="text-primary text-[10px] font-bold uppercase tracking-widest">'.$type.'</span>'
-                    .'<h5 class="font-serif text-lg text-slate-900 mt-1 mb-3">'.$name.'</h5>'
+                    .'<h5 class="font-serif text-base text-slate-900 mt-1 mb-3 line-clamp-1">'.$name.'</h5>'
                     .'<div class="flex items-center justify-between">'
-                    .'<p class="font-black text-slate-900">&#8377;'.$price.' <span class="text-xs text-slate-400 font-normal">/day</span></p>'
-                    .'<span class="bg-primary/10 text-primary px-4 py-1.5 rounded-full font-bold text-xs group-hover:bg-primary group-hover:text-white transition-all">Book Now</span>'
+                    .'<p class="font-black text-slate-900 text-sm">&#8377;'.$price.' <span class="text-xs text-slate-400 font-normal">/day</span></p>'
+                    .'<span class="bg-primary text-white px-3 py-1.5 rounded-full font-bold text-xs group-hover:bg-orange-600 transition-all">Book Now</span>'
                     .'</div></div></a>';
             };
             $items = $hp_bikes;
@@ -602,13 +616,15 @@ foreach ($hp_settings['section_order'] as $_sec_key):
                 $slug = 'listing-detail/restaurants-'.$r['id'].'-'.substr(trim(preg_replace('/[\s-]+/','-',preg_replace('/[^a-z0-9\s-]/', '', strtolower($r['name']))),'-'),0,60).'.html';
                 $img=htmlspecialchars($r['image']); $name=htmlspecialchars($r['name']);
                 $cuisine=htmlspecialchars($r['cuisine']??$r['type']); $price=number_format($r['price_per_person']??0);
-                return '<a href="'.$slug.'" class="group overflow-hidden rounded-2xl bg-white border border-slate-100 shadow-md card-hover transition-all flex-shrink-0" style="width:VAR_W">'
-                    .'<div class="h-44 overflow-hidden"><img alt="'.$name.'" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="'.$img.'"/></div>'
+                $rating=number_format((float)($r['rating']??0),1);
+                return '<a href="'.$slug.'" class="group overflow-hidden rounded-2xl bg-white border border-slate-100 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex-shrink-0" style="width:VAR_W">'
+                    .'<div class="h-44 overflow-hidden relative"><img alt="'.$name.'" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="'.$img.'"/>'
+                    .'<div class="absolute top-2.5 right-2.5 flex items-center gap-1 bg-black/60 backdrop-blur-sm text-white text-xs font-bold px-2 py-0.5 rounded-full"><span style="font-family:Material Symbols Outlined;font-size:12px;color:#fbbf24">star</span>'.$rating.'</div></div>'
                     .'<div class="p-4"><span class="text-primary text-[10px] font-bold uppercase tracking-widest">'.$cuisine.'</span>'
-                    .'<h5 class="font-serif text-lg text-slate-900 mt-1 mb-3">'.$name.'</h5>'
+                    .'<h5 class="font-serif text-base text-slate-900 mt-1 mb-3 line-clamp-1">'.$name.'</h5>'
                     .'<div class="flex items-center justify-between">'
-                    .'<p class="font-black text-slate-900">&#8377;'.$price.' <span class="text-xs text-slate-400 font-normal">for two</span></p>'
-                    .'<span class="bg-primary/10 text-primary px-4 py-1.5 rounded-full font-bold text-xs group-hover:bg-primary group-hover:text-white transition-all">Book Now</span>'
+                    .'<p class="font-black text-slate-900 text-sm">&#8377;'.$price.' <span class="text-xs text-slate-400 font-normal">for two</span></p>'
+                    .'<span class="bg-primary text-white px-3 py-1.5 rounded-full font-bold text-xs group-hover:bg-orange-600 transition-all">Book Now</span>'
                     .'</div></div></a>';
             };
             $items = $hp_restaurants;
@@ -638,15 +654,15 @@ foreach ($hp_settings['section_order'] as $_sec_key):
                 $slug='blogs/'.$blog['id'].'-'.substr(trim($t,'-'),0,60).'.html';
                 $img=htmlspecialchars($blog['image']??''); $title=htmlspecialchars($blog['title']);
                 $cat=htmlspecialchars($blog['category']??'Travel');
-                return '<a href="'.$slug.'" class="group cursor-pointer flex-shrink-0" style="width:VAR_W">'
+                return '<a href="'.$slug.'" class="group cursor-pointer flex-shrink-0 hover:-translate-y-1 transition-all duration-300" style="width:VAR_W">'
                     .'<div class="rounded-2xl overflow-hidden aspect-[16/10] mb-3 shadow-md relative">'
-                    .'<img alt="'.$title.'" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="'.$img.'"/>'
-                    .'<div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">'
+                    .'<img alt="'.$title.'" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="'.$img.'"/>'
+                    .'<div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-4">'
                     .'<span class="bg-white text-black px-4 py-1.5 rounded-full font-bold text-xs">READ POST</span></div></div>'
                     .'<div class="flex items-center gap-3 mb-2">'
                     .'<span class="bg-primary/10 text-primary px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase">'.$cat.'</span>'
                     .'<span class="text-slate-400 text-xs flex items-center gap-1"><span class="material-symbols-outlined text-sm">schedule</span>'.$rt.' min</span>'
-                    .'</div><h4 class="font-serif text-lg text-slate-900 group-hover:text-primary transition-colors">'.$title.'</h4></a>';
+                    .'</div><h4 class="font-serif text-base text-slate-900 group-hover:text-primary transition-colors line-clamp-2">'.$title.'</h4></a>';
             };
             $items = $hp_blogs;
         endif;

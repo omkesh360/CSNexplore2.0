@@ -18,6 +18,7 @@ $pc = $priceCol[$type];
 $where  = ['is_active = 1'];
 $params = [];
 if ($filterType) { $where[] = 'type = ?'; $params[] = $filterType; }
+if ($search) { $where[] = 'name LIKE ?'; $params[] = '%' . $search . '%'; }
 
 $sql = "SELECT * FROM $type WHERE " . implode(' AND ', $where) . " ORDER BY RANDOM()";
 $items = $db->fetchAll($sql, $params);
@@ -160,7 +161,7 @@ $category_nav = [
 
 <!-- Hero Banner with breadcrumb at top -->
 <div class="relative h-52 md:h-72 overflow-hidden">
-    <img src="https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=1600&q=80"
+    <img src="<?php echo htmlspecialchars($c['hero_bg']); ?>"
          alt="<?php echo htmlspecialchars($c['label']); ?>"
          class="w-full h-full object-cover"/>
     <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-[#0a0705]"></div>
@@ -320,53 +321,54 @@ $category_nav = [
             $badge_color  = !empty($item['badge']) ? $badge_colors[crc32($item['badge']) % count($badge_colors)] : '';
             $hidden_class = $i >= 9 ? ' listing-hidden' : '';
         ?>
-        <div class="group glassy rounded-2xl overflow-hidden flex flex-col hover:shadow-xl transition-all duration-300 hover:-translate-y-1<?php echo $hidden_class; ?>"
+        <div class="group glassy rounded-2xl overflow-hidden flex flex-col hover:shadow-2xl transition-all duration-300 hover:-translate-y-1.5<?php echo $hidden_class; ?>"
              data-type="<?php echo htmlspecialchars($item_type); ?>"
              data-price="<?php echo (int)$price_val; ?>"
              data-rating="<?php echo number_format((float)($item['rating'] ?? 0), 1); ?>">
-          <div class="relative h-56 overflow-hidden">
-            <img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          <div class="relative h-52 overflow-hidden">
+            <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                  src="<?php echo htmlspecialchars($item['image'] ?? ''); ?>"
                  alt="<?php echo htmlspecialchars($item['name'] ?? $item['operator'] ?? ''); ?>"
                  loading="lazy"
                  onerror="this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80'"/>
-            <button class="absolute top-4 right-4 size-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/40 transition-colors">
-              <span class="material-symbols-outlined">favorite</span>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <button class="absolute top-3 right-3 size-9 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/40 transition-colors">
+              <span class="material-symbols-outlined text-sm">favorite</span>
             </button>
+            <div class="absolute top-3 left-3 flex items-center gap-1 bg-black/50 backdrop-blur-sm text-white text-xs font-bold px-2.5 py-1 rounded-full">
+              <span class="material-symbols-outlined text-amber-400 text-sm">star</span>
+              <?php echo number_format((float)($item['rating'] ?? 0), 1); ?>
+            </div>
             <?php if (!empty($item['badge'])): ?>
-            <div class="absolute bottom-4 left-4">
-              <span class="px-3 py-1 <?php echo $badge_color; ?> text-white text-xs font-bold rounded-full">
+            <div class="absolute bottom-3 left-3">
+              <span class="px-3 py-1 <?php echo $badge_color; ?> text-white text-xs font-bold rounded-full shadow-lg">
                 <?php echo htmlspecialchars($item['badge']); ?>
               </span>
             </div>
             <?php endif; ?>
           </div>
           <div class="p-5 flex flex-col flex-1">
-            <div class="flex justify-between items-start mb-1">
-              <h3 class="text-base font-bold leading-tight group-hover:text-primary transition-colors">
+            <div class="mb-1">
+              <?php if ($sub2): ?>
+              <p class="text-xs text-primary font-bold uppercase tracking-wide mb-1"><?php echo $sub2; ?></p>
+              <?php endif; ?>
+              <h3 class="text-base font-bold leading-tight group-hover:text-primary transition-colors line-clamp-2">
                 <?php echo htmlspecialchars($item['name'] ?? $item['operator'] ?? ''); ?>
               </h3>
-              <div class="flex items-center gap-1 text-sm font-bold shrink-0 ml-2">
-                <span class="material-symbols-outlined text-amber-400 text-lg">star</span>
-                <span><?php echo number_format((float)($item['rating'] ?? 0), 1); ?></span>
-              </div>
             </div>
-            <?php if ($sub2): ?>
-            <p class="text-xs text-primary font-semibold mb-1"><?php echo $sub2; ?></p>
-            <?php endif; ?>
-            <div class="flex items-center gap-1 text-slate-500 text-sm mb-4">
-              <span class="material-symbols-outlined text-sm">location_on</span>
+            <div class="flex items-center gap-1 text-slate-400 text-xs mt-1.5 mb-4">
+              <span class="material-symbols-outlined text-sm text-primary/70">location_on</span>
               <span class="line-clamp-1"><?php echo $subtitle; ?></span>
             </div>
             <div class="mt-auto flex items-center justify-between border-t border-slate-100 pt-4">
               <div>
-                <span class="text-2xl font-black text-primary"><?php echo $price_fmt; ?></span>
+                <span class="text-xl font-black text-primary"><?php echo $price_fmt; ?></span>
                 <?php if ($c['unit'] && $price_val > 0): ?>
                 <span class="text-xs text-slate-400 font-medium"><?php echo htmlspecialchars($c['unit']); ?></span>
                 <?php endif; ?>
               </div>
               <a href="<?php echo listingSlug($type, $item); ?>"
-                 class="px-4 py-2 bg-primary/10 text-primary hover:bg-primary hover:text-white rounded-xl text-sm font-bold transition-all">
+                 class="px-4 py-2 bg-primary text-white hover:bg-orange-600 rounded-xl text-sm font-bold transition-all shadow-sm shadow-primary/20">
                 <?php echo htmlspecialchars($c['cta']); ?>
               </a>
             </div>
