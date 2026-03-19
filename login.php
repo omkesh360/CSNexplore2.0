@@ -36,7 +36,8 @@ $extra_styles = "
         try {
             var parts = token.split('.');
             if (parts.length === 3) {
-                var p = JSON.parse(atob(parts[1].replace(/-/g,'+').replace(/_/g,'/')));
+                var b64 = parts[1].replace(/-/g,'+').replace(/_/g,'/'); while(b64.length%4) b64+='=';
+                var p = JSON.parse(atob(b64));
                 if (!p.exp || p.exp > Math.floor(Date.now()/1000)) {
                     var redirect = new URLSearchParams(window.location.search).get('redirect') || '';
                     window.location.replace(redirect || 'index.php');
@@ -206,12 +207,20 @@ $extra_styles = "
             localStorage.setItem('csn_token', data.token);
             localStorage.setItem('csn_user',  JSON.stringify(data.user));
 
-            // Redirect: admin → admin dashboard, others → intended page or home
-            const redirect = new URLSearchParams(window.location.search).get('redirect') || '';
+            // If admin, also set admin keys so the admin panel auth guard works
             if (data.user.role === 'admin') {
+                localStorage.setItem('csn_admin_token', data.token);
+                localStorage.setItem('csn_admin_user',  JSON.stringify(data.user));
+            }
+
+            // Redirect: honour ?redirect= for everyone, fall back to home (or admin dashboard)
+            const redirect = new URLSearchParams(window.location.search).get('redirect') || '';
+            if (redirect) {
+                window.location.href = redirect;
+            } else if (data.user.role === 'admin') {
                 window.location.href = 'admin/dashboard.php';
             } else {
-                window.location.href = redirect || 'index.php';
+                window.location.href = 'index.php';
             }
         } catch (err) {
             errText.textContent = 'Network error. Please check your connection.';

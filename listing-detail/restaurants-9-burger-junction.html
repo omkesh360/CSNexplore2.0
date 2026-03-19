@@ -43,8 +43,14 @@ body.page-ready{{animation:pageFadeIn 0.2s ease forwards;}}
       <a href="../blogs.php" class="text-sm font-semibold px-4 py-2 rounded-full text-white/70 hover:bg-white/10 hover:text-white transition-colors">Blogs</a>
     </div>
     <div class="flex items-center gap-2">
-      <a href="../login.php" class="text-white text-sm font-semibold px-4 py-1.5 hover:bg-white/10 rounded-full transition-all">Login</a>
-      <a href="../register.php" class="bg-[#ec5b13] text-white text-sm font-bold px-5 py-1.5 rounded-full hover:bg-orange-600 transition-all shadow-lg shadow-[#ec5b13]/20">Register</a>
+      <div id="header-guest" class="flex items-center gap-2">
+        <a href="../login.php" class="text-white text-sm font-semibold px-4 py-1.5 hover:bg-white/10 rounded-full transition-all">Login</a>
+        <a href="../register.php" class="bg-[#ec5b13] text-white text-sm font-bold px-5 py-1.5 rounded-full hover:bg-orange-600 transition-all shadow-lg shadow-[#ec5b13]/20">Register</a>
+      </div>
+      <div id="header-user" class="hidden items-center gap-2">
+        <a href="../my-booking.php" class="text-white/70 text-sm font-semibold px-3 py-1.5 hover:bg-white/10 rounded-full transition-all flex items-center gap-1"><span class="material-symbols-outlined text-base">book_online</span><span id="header-username" class="hidden sm:inline">My Bookings</span></a>
+        <button onclick="(function(){localStorage.removeItem('csn_token');localStorage.removeItem('csn_user');window.location.reload();})()" class="text-white/70 text-sm font-semibold px-3 py-1.5 hover:bg-white/10 rounded-full transition-all flex items-center gap-1"><span class="material-symbols-outlined text-base">logout</span></button>
+      </div>
       <button id="mob-btn" class="md:hidden p-2 rounded-lg ml-1"><span class="material-symbols-outlined text-2xl text-white">menu</span></button>
     </div>
   </nav>
@@ -53,16 +59,36 @@ body.page-ready{{animation:pageFadeIn 0.2s ease forwards;}}
     <a href="../about.php" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">About Us</a>
     <a href="../contact.php" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">Contact Us</a>
     <a href="../blogs.php" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">Blogs</a>
-    <div class="flex gap-2 pt-2 border-t border-white/10 mt-1">
+    <div id="mob-guest" class="flex gap-2 pt-2 border-t border-white/10 mt-1">
       <a href="../login.php" class="flex-1 text-center text-white text-sm font-semibold py-2 hover:bg-white/10 rounded-xl transition-all">Login</a>
       <a href="../register.php" class="flex-1 text-center bg-[#ec5b13] text-white text-sm font-bold py-2 rounded-xl hover:bg-orange-600 transition-all">Register</a>
     </div>
+    <div id="mob-user" class="hidden gap-2 pt-2 border-t border-white/10 mt-1">
+      <a href="../my-booking.php" class="flex-1 text-center text-white text-sm font-semibold py-2 hover:bg-white/10 rounded-xl transition-all">My Bookings</a>
+      <button onclick="(function(){localStorage.removeItem('csn_token');localStorage.removeItem('csn_user');window.location.reload();})()" class="flex-1 text-center bg-red-500/20 text-red-300 text-sm font-bold py-2 rounded-xl hover:bg-red-500/30 transition-all">Logout</button>
+    </div>
   </div>
   <script>
-  document.getElementById("mob-btn").addEventListener("click",function(){{document.getElementById("mob-menu").classList.toggle("hidden");}});
-  function addPageReady(){{document.body.classList.add("page-ready");}}
-  if(document.readyState==="loading"){{document.addEventListener("DOMContentLoaded",addPageReady);}}else{{addPageReady();}}
-  document.addEventListener("click",function(e){{var a=e.target.closest("a");if(!a)return;var href=a.getAttribute("href");if(!href||href.startsWith("#")||href.startsWith("mailto:")||href.startsWith("tel:")||href.startsWith("javascript")||a.target==="_blank")return;e.preventDefault();document.body.style.transition="opacity 0.18s ease";document.body.style.opacity="0";setTimeout(function(){{window.location.href=href;}},190);}});
+  document.getElementById("mob-btn").addEventListener("click",function(){document.getElementById("mob-menu").classList.toggle("hidden");});
+  function addPageReady(){document.body.classList.add("page-ready");}
+  if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",addPageReady);}else{addPageReady();}
+  document.addEventListener("click",function(e){var a=e.target.closest("a");if(!a)return;var href=a.getAttribute("href");if(!href||href.startsWith("#")||href.startsWith("mailto:")||href.startsWith("tel:")||href.startsWith("javascript")||a.target==="_blank")return;e.preventDefault();document.body.style.transition="opacity 0.18s ease";document.body.style.opacity="0";setTimeout(function(){window.location.href=href;},190);});
+  // Auth-aware header
+  (function(){
+    var token=localStorage.getItem('csn_token')||localStorage.getItem('csn_admin_token');
+    var user=null;
+    try{user=JSON.parse(localStorage.getItem('csn_user')||localStorage.getItem('csn_admin_user')||'null');}catch(e){}
+    if(token&&user){
+      var g=document.getElementById('header-guest');var u=document.getElementById('header-user');
+      var mg=document.getElementById('mob-guest');var mu=document.getElementById('mob-user');
+      var un=document.getElementById('header-username');
+      if(g)g.classList.add('hidden');
+      if(u){u.classList.remove('hidden');u.classList.add('flex');}
+      if(mg)mg.classList.add('hidden');
+      if(mu){mu.classList.remove('hidden');mu.classList.add('flex');}
+      if(un&&user&&user.name)un.textContent=user.name.split(' ')[0];
+    }
+  })();
   </script>
 </header>
 <main class="bg-slate-50 min-h-screen">
@@ -208,7 +234,7 @@ body.page-ready{{animation:pageFadeIn 0.2s ease forwards;}}
     </a>
   </div>
     <!-- Guest state: shown when not logged in -->
-  <div id="booking-guest-state">
+  <div id="booking-guest-state" style="display:none">
     <div class="text-center py-4 mb-4 bg-slate-50 rounded-2xl border border-slate-100">
       <span class="material-symbols-outlined text-4xl text-slate-300 block mb-2">lock</span>
       <p class="text-sm font-semibold text-slate-700 mb-1">Login or Register to Book</p>
@@ -225,7 +251,7 @@ body.page-ready{{animation:pageFadeIn 0.2s ease forwards;}}
     <button onclick="(function(){var u=window.location.href;document.getElementById('guest-login-btn').href='../login.php?redirect='+encodeURIComponent(u);document.getElementById('guest-register-btn').href='../register.php?redirect='+encodeURIComponent(u);document.getElementById('login-required-modal').style.display='flex';})()" class="w-full bg-[#ec5b13] text-white font-bold py-3 rounded-xl hover:bg-orange-600 transition-all text-sm">Book Now</button>
   </div>
 
-<form id="booking-form" class="space-y-3" style="display:none">
+<form id="booking-form" class="space-y-3">
     <input type="hidden" id="modal-listing-id" value="9"/>
     <input type="hidden" id="modal-service-type" value="restaurants"/>
     <div>
@@ -324,41 +350,43 @@ body.page-ready{{animation:pageFadeIn 0.2s ease forwards;}}
     <span class="material-symbols-outlined" style="font-size:22px;line-height:1;pointer-events:none;">arrow_upward</span>
 </button>
 <script>
-(function(){{var btn=document.getElementById("go-top-btn");function u(){{if(window.scrollY>200){{btn.style.opacity="1";btn.style.visibility="visible";btn.style.transform="translateY(0)";}}else{{btn.style.opacity="0";btn.style.visibility="hidden";btn.style.transform="translateY(12px)";}}}}u();window.addEventListener("scroll",u,{{passive:true}});}})();
+(function(){{var btn=document.getElementById("go-top-btn");function u(){{if(window.scrollY>200){{btn.style.opacity="1";btn.style.visibility="visible";btn.style.transform="translateY(0)";}}else{btn.style.opacity="0";btn.style.visibility="hidden";btn.style.transform="translateY(12px)";}}}}u();window.addEventListener("scroll",u,{{passive:true}});}})();
 </script>
 <script>
+// Auth: sync admin token to public token if needed
 (function(){
-  // Pre-fill form from logged-in user
-  var user = JSON.parse(localStorage.getItem('csn_user') || 'null');
-  if (user) {
-    var n = document.getElementById('b-name');
-    var p = document.getElementById('b-phone');
-    if (n && !n.value && user.name) n.value = user.name;
-    if (p && !p.value && user.phone) p.value = user.phone;
-  }
-  // Show/hide booking form based on login state
-  var token = localStorage.getItem('csn_token');
-  var user = JSON.parse(localStorage.getItem('csn_user') || 'null');
-  var guestState = document.getElementById('booking-guest-state');
-  var form = document.getElementById('booking-form');
-  if (token && user) {
-    if (guestState) guestState.style.display = 'none';
-    if (form) form.style.display = '';
-    if (user.name) { var n = document.getElementById('b-name'); if (n && !n.value) n.value = user.name; }
-    if (user.phone) { var p = document.getElementById('b-phone'); if (p && !p.value) p.value = user.phone; }
-  } else {
-    var cur = encodeURIComponent(window.location.href);
-    var lb = document.getElementById('guest-login-btn');
-    var rb = document.getElementById('guest-register-btn');
-    if (lb) lb.href = '../login.php?redirect=' + cur;
-    if (rb) rb.href = '../register.php?redirect=' + cur;
+  if(!localStorage.getItem('csn_token')&&localStorage.getItem('csn_admin_token')){
+    localStorage.setItem('csn_token',localStorage.getItem('csn_admin_token'));
+    try{localStorage.setItem('csn_user',localStorage.getItem('csn_admin_user')||'');}catch(e){}
   }
 })();
-document.getElementById("booking-form").addEventListener("submit",async function(e){{
+// Show guest state only when NOT logged in
+(function(){
+  var token=localStorage.getItem('csn_token');
+  var user=null;
+  try{user=JSON.parse(localStorage.getItem('csn_user')||'null');}catch(e){}
+  var loggedIn=!!(token&&user);
+  if(!loggedIn){
+    var gs=document.getElementById('booking-guest-state');
+    var bf=document.getElementById('booking-form');
+    if(gs)gs.style.display='block';
+    if(bf)bf.style.display='none';
+    var cur=encodeURIComponent(window.location.href);
+    var lb=document.getElementById('guest-login-btn');
+    var rb=document.getElementById('guest-register-btn');
+    if(lb)lb.href='../login.php?redirect='+cur;
+    if(rb)rb.href='../register.php?redirect='+cur;
+  }else{
+    var n=document.getElementById('b-name');var ph=document.getElementById('b-phone');
+    if(n&&!n.value&&user.name)n.value=user.name;
+    if(ph&&!ph.value&&user.phone)ph.value=user.phone;
+  }
+})();
+document.getElementById("booking-form").addEventListener("submit",async function(e){
   // Auth check first
   var token = localStorage.getItem('csn_token');
   var u = JSON.parse(localStorage.getItem('csn_user') || 'null');
-  if (!token || !u) {{
+  if (!token || !u) {
     e.preventDefault();
     var currentUrl = window.location.href;
     document.getElementById('lr-login-btn').href = '../login.php?redirect=' + encodeURIComponent(currentUrl);
@@ -366,11 +394,11 @@ document.getElementById("booking-form").addEventListener("submit",async function
     var m = document.getElementById('login-required-modal');
     m.style.display = 'flex';
     return;
-  }}
+  }
   e.preventDefault();
   var btn=this.querySelector("button[type=submit]");
   btn.disabled=true;btn.textContent="Sending...";
-  var payload={{
+  var payload={
     full_name:document.getElementById("b-name").value,
     phone:document.getElementById("b-phone").value,
     booking_date:document.getElementById("b-date").value,
@@ -378,15 +406,15 @@ document.getElementById("booking-form").addEventListener("submit",async function
     service_type:document.getElementById("modal-service-type").value,
     listing_id:parseInt(document.getElementById("modal-listing-id").value),
     listing_name:document.title.split(' | ')[0],
-  }};
-  try{{
-    var res=await fetch("../php/api/bookings.php",{{method:"POST",headers:{{"Content-Type":"application/json"}},body:JSON.stringify(payload)}});
+  };
+  try{
+    var res=await fetch("../php/api/bookings.php",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
     var data=await res.json();
-    if(res.ok){{document.getElementById("booking-success").classList.remove("hidden");this.reset();}}
-    else{{document.getElementById("booking-error").textContent=data.error||"Something went wrong.";document.getElementById("booking-error").classList.remove("hidden");}}
-  }}catch(err){{document.getElementById("booking-error").textContent="Network error. Please try again.";document.getElementById("booking-error").classList.remove("hidden");}}
+    if(res.ok){document.getElementById("booking-success").classList.remove("hidden");this.reset();}
+    else{document.getElementById("booking-error").textContent=data.error||"Something went wrong.";document.getElementById("booking-error").classList.remove("hidden");}
+  }catch(err){document.getElementById("booking-error").textContent="Network error. Please try again.";document.getElementById("booking-error").classList.remove("hidden");}
   btn.disabled=false;btn.textContent="Book Now";
-}});
+});
 </script>
 
 <!-- Login Required Modal -->

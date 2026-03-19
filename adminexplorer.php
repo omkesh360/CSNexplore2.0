@@ -132,6 +132,9 @@ document.getElementById('login-form').addEventListener('submit', async function(
 
         localStorage.setItem('csn_admin_token', data.token);
         localStorage.setItem('csn_admin_user',  JSON.stringify(data.user));
+        // Also set public-site keys so the header shows logged-in state
+        localStorage.setItem('csn_token', data.token);
+        localStorage.setItem('csn_user',  JSON.stringify(data.user));
         window.location.href = 'admin/dashboard.php';
 
     } catch(ex) {

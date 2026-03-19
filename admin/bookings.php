@@ -89,7 +89,7 @@ async function loadBookings() {
     if (currentStatus !== 'all') url += 'status=' + currentStatus + '&';
     if (search) url += 'search=' + encodeURIComponent(search);
     var tbody = document.getElementById('bookings-tbody');
-    tbody.innerHTML = '<tr><td colspan="8" class="text-center py-12 text-slate-400">Loading...</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="9" class="text-center py-12 text-slate-400">Loading...</td></tr>';
     var items = await api(url);
     if (!items || !items.length) {
         tbody.innerHTML = '<tr><td colspan="9" class="text-center py-12 text-slate-400">No bookings found</td></tr>';
