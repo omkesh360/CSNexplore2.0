@@ -282,7 +282,6 @@ def build_gallery_html(imgs):
     return html
 
 def build_booking_form(item, cat):
-    price_label = item['price'] + item['unit']
     return f'''<div class="bg-white rounded-2xl p-6 shadow-sm sticky top-24">
   <div class="flex items-center justify-between mb-4">
     <div>
@@ -303,7 +302,27 @@ def build_booking_form(item, cat):
       WhatsApp
     </a>
   </div>
-  <form id="booking-form" class="space-y-3">
+
+  <!-- Guest state: shown when not logged in -->
+  <div id="booking-guest-state">
+    <div class="text-center py-4 mb-4 bg-slate-50 rounded-2xl border border-slate-100">
+      <span class="material-symbols-outlined text-4xl text-slate-300 block mb-2">lock</span>
+      <p class="text-sm font-semibold text-slate-700 mb-1">Login or Register to Book</p>
+      <p class="text-xs text-slate-400 mb-4">Create a free account to complete your booking</p>
+      <div class="flex gap-2 px-2">
+        <a id="guest-login-btn" href="../login.php" class="flex-1 bg-[#ec5b13] text-white font-bold py-2.5 rounded-xl text-sm hover:bg-orange-600 transition-all text-center">Login</a>
+        <a id="guest-register-btn" href="../register.php" class="flex-1 border-2 border-[#ec5b13] text-[#ec5b13] font-bold py-2.5 rounded-xl text-sm hover:bg-[#ec5b13]/5 transition-all text-center">Register</a>
+      </div>
+    </div>
+    <div class="flex items-start gap-2 bg-amber-50 border border-amber-100 rounded-xl px-3 py-2.5 mb-3">
+      <span class="material-symbols-outlined text-amber-500 text-base mt-0.5 shrink-0">schedule</span>
+      <p class="text-xs text-amber-700 font-medium">We process your booking request within <span class="font-bold">4 hours</span> of submission.</p>
+    </div>
+    <button onclick="(function(){{var u=window.location.href;document.getElementById('guest-login-btn').href='../login.php?redirect='+encodeURIComponent(u);document.getElementById('guest-register-btn').href='../register.php?redirect='+encodeURIComponent(u);document.getElementById('login-required-modal').style.display='flex';}})()" class="w-full bg-[#ec5b13] text-white font-bold py-3 rounded-xl hover:bg-orange-600 transition-all text-sm">Book Now</button>
+  </div>
+
+  <!-- Logged-in state: shown when authenticated -->
+  <form id="booking-form" class="space-y-3" style="display:none">
     <input type="hidden" id="modal-listing-id" value="{item['id']}"/>
     <input type="hidden" id="modal-service-type" value="{cat}"/>
     <div>
@@ -323,6 +342,10 @@ def build_booking_form(item, cat):
         <label class="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">Guests</label>
         <input type="number" id="b-guests" min="1" max="20" value="1" class="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#ec5b13]/30"/>
       </div>
+    </div>
+    <div class="flex items-start gap-2 bg-amber-50 border border-amber-100 rounded-xl px-3 py-2.5">
+      <span class="material-symbols-outlined text-amber-500 text-base mt-0.5 shrink-0">schedule</span>
+      <p class="text-xs text-amber-700 font-medium">We process your booking request within <span class="font-bold">4 hours</span> of submission.</p>
     </div>
     <div id="booking-success" class="hidden bg-green-50 border border-green-200 text-green-700 rounded-xl p-3 text-sm font-semibold">Booking request sent! We'll contact you shortly.</div>
     <div id="booking-error" class="hidden bg-red-50 border border-red-200 text-red-700 rounded-xl p-3 text-sm"></div>
@@ -455,8 +478,35 @@ FOOTER = '''<footer class="bg-[#0a0705] text-white pt-14 pb-8 mt-16">
 (function(){{var btn=document.getElementById("go-top-btn");function u(){{if(window.scrollY>200){{btn.style.opacity="1";btn.style.visibility="visible";btn.style.transform="translateY(0)";}}else{{btn.style.opacity="0";btn.style.visibility="hidden";btn.style.transform="translateY(12px)";}}}}u();window.addEventListener("scroll",u,{{passive:true}});}})();
 </script>
 <script>
+(function(){{
+  var token=localStorage.getItem('csn_token');
+  var user=JSON.parse(localStorage.getItem('csn_user')||'null');
+  var guestState=document.getElementById('booking-guest-state');
+  var form=document.getElementById('booking-form');
+  if(token&&user){{
+    if(guestState)guestState.style.display='none';
+    if(form)form.style.display='';
+    if(user.name){{var n=document.getElementById('b-name');if(n&&!n.value)n.value=user.name;}}
+    if(user.phone){{var p=document.getElementById('b-phone');if(p&&!p.value)p.value=user.phone;}}
+  }}else{{
+    var cur=encodeURIComponent(window.location.href);
+    var lb=document.getElementById('guest-login-btn');
+    var rb=document.getElementById('guest-register-btn');
+    if(lb)lb.href='../login.php?redirect='+cur;
+    if(rb)rb.href='../register.php?redirect='+cur;
+  }}
+}})();
 document.getElementById("booking-form").addEventListener("submit",async function(e){{
   e.preventDefault();
+  var token=localStorage.getItem('csn_token');
+  var u=JSON.parse(localStorage.getItem('csn_user')||'null');
+  if(!token||!u){{
+    var currentUrl=window.location.href;
+    document.getElementById('lr-login-btn').href='../login.php?redirect='+encodeURIComponent(currentUrl);
+    document.getElementById('lr-register-btn').href='../register.php?redirect='+encodeURIComponent(currentUrl);
+    document.getElementById('login-required-modal').style.display='flex';
+    return;
+  }}
   var btn=this.querySelector("button[type=submit]");
   btn.disabled=true;btn.textContent="Sending...";
   var payload={{
@@ -477,6 +527,19 @@ document.getElementById("booking-form").addEventListener("submit",async function
   btn.disabled=false;btn.textContent="Book Now";
 }});
 </script>
+<!-- Login Required Modal -->
+<div id="login-required-modal" style="display:none;position:fixed;inset:0;z-index:9000;align-items:center;justify-content:center;padding:1rem;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);">
+  <div style="background:#fff;border-radius:1.5rem;box-shadow:0 25px 50px rgba(0,0,0,0.25);width:100%;max-width:360px;padding:2rem;text-align:center;position:relative;">
+    <button onclick="document.getElementById('login-required-modal').style.display='none'" style="position:absolute;top:1rem;right:1rem;background:none;border:none;cursor:pointer;color:#94a3b8;font-size:1.25rem;">&#10005;</button>
+    <span class="material-symbols-outlined" style="font-size:3rem;color:#ec5b13;display:block;margin-bottom:0.75rem;">lock</span>
+    <h3 style="font-size:1.25rem;font-weight:900;margin-bottom:0.5rem;">Login Required</h3>
+    <p style="color:#64748b;font-size:0.875rem;margin-bottom:1.5rem;">Please login or create an account to make a booking.</p>
+    <div style="display:flex;gap:0.75rem;">
+      <a id="lr-login-btn" href="../login.php" style="flex:1;background:#ec5b13;color:#fff;font-weight:700;padding:0.75rem;border-radius:0.75rem;text-decoration:none;font-size:0.875rem;display:block;">Login</a>
+      <a id="lr-register-btn" href="../register.php" style="flex:1;border:2px solid #ec5b13;color:#ec5b13;font-weight:700;padding:0.75rem;border-radius:0.75rem;text-decoration:none;font-size:0.875rem;display:block;">Register</a>
+    </div>
+  </div>
+</div>
 </body></html>'''
 
 

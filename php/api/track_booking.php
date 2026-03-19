@@ -14,7 +14,7 @@ try {
     $db = getDB();
     // Match by phone — try exact first, then stripped
     $rows = $db->fetchAll(
-        "SELECT id, full_name, phone, booking_date, number_of_people, service_type, listing_name, status, created_at
+        "SELECT id, full_name, phone, email, booking_date, number_of_people, service_type, listing_id, listing_name, status, notes, created_at
          FROM bookings
          WHERE REPLACE(REPLACE(phone,' ',''),'-','') = ?
          ORDER BY created_at DESC

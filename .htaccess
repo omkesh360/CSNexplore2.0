@@ -86,6 +86,9 @@ ServerSignature Off
     RewriteEngine On
     RewriteBase /
 
+    # Pass Authorization header to PHP (required for JWT auth)
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
     # Force HTTPS (uncomment on live server with SSL)
     # RewriteCond %{HTTPS} off
     # RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]

@@ -64,10 +64,13 @@ async function trackBooking() {
         ? 'bg-green-100 text-green-700'
         : 'bg-red-100 text-red-700';
       var icon = b.status === 'pending' ? 'schedule' : b.status === 'completed' ? 'check_circle' : 'cancel';
+      var catLabels = {stays:'Hotel Stay', cars:'Car Rental', bikes:'Bike Rental', restaurants:'Restaurant', attractions:'Attraction', buses:'Bus'};
+      var catLabel = catLabels[b.service_type] || b.service_type || '—';
+      var listingDisplay = b.listing_name || b.service_type || '—';
       return '<div class="bg-white rounded-2xl shadow-sm p-5 border border-slate-100">'
         + '<div class="flex items-start justify-between mb-3">'
         + '<div>'
-        + '<p class="font-bold text-slate-900">' + escHtml(b.listing_name || b.service_type) + '</p>'
+        + '<p class="font-bold text-slate-900">' + escHtml(listingDisplay) + '</p>'
         + '<p class="text-xs text-slate-400 mt-0.5">Booking #' + b.id + ' · ' + escHtml(b.created_at.split(' ')[0]) + '</p>'
         + '</div>'
         + '<span class="flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold ' + sc + '">'
@@ -77,10 +80,13 @@ async function trackBooking() {
         + '<div class="grid grid-cols-2 gap-3 text-sm">'
         + '<div><p class="text-xs text-slate-400">Name</p><p class="font-semibold">' + escHtml(b.full_name) + '</p></div>'
         + '<div><p class="text-xs text-slate-400">Phone</p><p class="font-semibold">' + escHtml(b.phone) + '</p></div>'
+        + (b.email ? '<div><p class="text-xs text-slate-400">Email</p><p class="font-semibold">' + escHtml(b.email) + '</p></div>' : '')
+        + '<div><p class="text-xs text-slate-400">Category</p><p class="font-semibold">' + escHtml(catLabel) + '</p></div>'
         + (b.booking_date ? '<div><p class="text-xs text-slate-400">Date</p><p class="font-semibold">' + escHtml(b.booking_date) + '</p></div>' : '')
         + '<div><p class="text-xs text-slate-400">People</p><p class="font-semibold">' + b.number_of_people + '</p></div>'
-        + '<div><p class="text-xs text-slate-400">Service</p><p class="font-semibold capitalize">' + escHtml(b.service_type) + '</p></div>'
+        + (b.listing_id ? '<div><p class="text-xs text-slate-400">Listing ID</p><p class="font-semibold">#' + b.listing_id + '</p></div>' : '')
         + '</div>'
+        + (b.notes ? '<div class="mt-3 p-3 bg-slate-50 rounded-xl text-xs text-slate-600"><span class="font-semibold">Notes:</span> ' + escHtml(b.notes) + '</div>' : '')
         + '</div>';
     }).join('');
   } catch(e) {

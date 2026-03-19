@@ -25,6 +25,13 @@ function verifyJWT($jwt, $secret) {
 function getAuthToken() {
     $headers = getallheaders();
     $auth = $headers['Authorization'] ?? $headers['authorization'] ?? '';
+    // Fallback for Apache mod_rewrite env passthrough
+    if (!$auth && !empty($_SERVER['HTTP_AUTHORIZATION'])) {
+        $auth = $_SERVER['HTTP_AUTHORIZATION'];
+    }
+    if (!$auth && !empty($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
+        $auth = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
+    }
     return str_replace('Bearer ', '', $auth) ?: null;
 }
 

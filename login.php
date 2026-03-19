@@ -27,6 +27,25 @@ $extra_styles = "
     </style>
 </head>
 <body class="bg-white font-display text-slate-900 antialiased min-h-screen overflow-hidden">
+<script>
+// If already logged in, redirect away immediately
+(function(){
+    var token = localStorage.getItem('csn_token');
+    var user  = JSON.parse(localStorage.getItem('csn_user') || 'null');
+    if (token && user) {
+        try {
+            var parts = token.split('.');
+            if (parts.length === 3) {
+                var p = JSON.parse(atob(parts[1].replace(/-/g,'+').replace(/_/g,'/')));
+                if (!p.exp || p.exp > Math.floor(Date.now()/1000)) {
+                    var redirect = new URLSearchParams(window.location.search).get('redirect') || '';
+                    window.location.replace(redirect || 'index.php');
+                }
+            }
+        } catch(e) {}
+    }
+})();
+</script>
 <div class="flex min-h-screen">
 
     <!-- Left: Image & Branding -->

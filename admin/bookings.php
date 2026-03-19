@@ -28,7 +28,8 @@ require 'admin-header.php';
                     <th class="text-left py-3 px-4 text-xs font-semibold text-slate-500">#</th>
                     <th class="text-left py-3 px-4 text-xs font-semibold text-slate-500">Customer</th>
                     <th class="text-left py-3 px-4 text-xs font-semibold text-slate-500">Phone</th>
-                    <th class="text-left py-3 px-4 text-xs font-semibold text-slate-500">Service</th>
+                    <th class="text-left py-3 px-4 text-xs font-semibold text-slate-500">Listing / Service</th>
+                    <th class="text-left py-3 px-4 text-xs font-semibold text-slate-500">Category</th>
                     <th class="text-left py-3 px-4 text-xs font-semibold text-slate-500">Date</th>
                     <th class="text-left py-3 px-4 text-xs font-semibold text-slate-500">People</th>
                     <th class="text-left py-3 px-4 text-xs font-semibold text-slate-500">Status</th>
@@ -36,7 +37,7 @@ require 'admin-header.php';
                 </tr>
             </thead>
             <tbody id="bookings-tbody">
-                <tr><td colspan="8" class="text-center py-12 text-slate-400">Loading...</td></tr>
+                <tr><td colspan="9" class="text-center py-12 text-slate-400">Loading...</td></tr>
             </tbody>
         </table>
     </div>
@@ -91,16 +92,21 @@ async function loadBookings() {
     tbody.innerHTML = '<tr><td colspan="8" class="text-center py-12 text-slate-400">Loading...</td></tr>';
     var items = await api(url);
     if (!items || !items.length) {
-        tbody.innerHTML = '<tr><td colspan="8" class="text-center py-12 text-slate-400">No bookings found</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="9" class="text-center py-12 text-slate-400">No bookings found</td></tr>';
         return;
     }
+    // Cache all loaded bookings for fast modal access
+    items.forEach(function(b){ bookingsCache[b.id] = b; });
     tbody.innerHTML = items.map(function(b) {
         var sc = b.status === 'pending' ? 'bg-orange-100 text-orange-700' : b.status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700';
+        var catLabels = {stays:'Stay', cars:'Car', bikes:'Bike', restaurants:'Restaurant', attractions:'Attraction', buses:'Bus'};
+        var catLabel = catLabels[b.service_type] || b.service_type || '—';
         return '<tr class="border-b border-slate-50 hover:bg-slate-50 cursor-pointer" onclick="openModal(' + b.id + ')">' +
             '<td class="py-2.5 px-4 text-slate-400 text-xs">#' + b.id + '</td>' +
             '<td class="py-2.5 px-4 font-medium">' + escHtml(b.full_name) + '</td>' +
             '<td class="py-2.5 px-4"><a href="tel:' + escHtml(b.phone) + '" onclick="event.stopPropagation()" class="text-primary hover:underline">' + escHtml(b.phone) + '</a></td>' +
-            '<td class="py-2.5 px-4 text-slate-500">' + escHtml(b.service_type || b.listing_name || '—') + '</td>' +
+            '<td class="py-2.5 px-4 text-slate-500 max-w-[140px] truncate">' + escHtml(b.listing_name || b.service_type || '—') + '</td>' +
+            '<td class="py-2.5 px-4"><span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">' + escHtml(catLabel) + '</span></td>' +
             '<td class="py-2.5 px-4 text-slate-500">' + escHtml(b.booking_date || '—') + '</td>' +
             '<td class="py-2.5 px-4 text-slate-500">' + (b.number_of_people || 1) + '</td>' +
             '<td class="py-2.5 px-4"><span class="px-2 py-0.5 rounded-full text-xs font-bold ' + sc + '">' + escHtml(b.status) + '</span></td>' +
@@ -114,21 +120,36 @@ async function loadBookings() {
 var bookingsCache = {};
 async function openModal(id) {
     currentBookingId = id;
-    var url = '../php/api/bookings.php?';
-    var all = await api(url);
-    var b = (all || []).find(function(x){ return x.id == id; });
+    // Use cached data if available, otherwise fetch single booking
+    var b = bookingsCache[id];
+    if (!b) {
+        var all = await api('../php/api/bookings.php');
+        (all || []).forEach(function(x){ bookingsCache[x.id] = x; });
+        b = bookingsCache[id];
+    }
     if (!b) return;
-    bookingsCache[id] = b;
     var sc = b.status === 'pending' ? 'bg-orange-100 text-orange-700' : b.status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700';
+
+    // Build category label from service_type
+    var catLabels = {stays:'Hotel Stay', cars:'Car Rental', bikes:'Bike Rental', restaurants:'Restaurant', attractions:'Attraction', buses:'Bus'};
+    var catLabel = catLabels[b.service_type] || b.service_type || '—';
+
     document.getElementById('modal-body').innerHTML =
         '<div class="grid grid-cols-2 gap-3 text-sm">' +
-        row('Customer', b.full_name) + row('Phone', '<a href="tel:' + escHtml(b.phone) + '" class="text-primary">' + escHtml(b.phone) + '</a>') +
-        row('Email', b.email || '—') + row('Service', b.service_type || b.listing_name || '—') +
-        row('Booking Date', b.booking_date || '—') + row('People', b.number_of_people || 1) +
+        row('Booking #', '#' + b.id) +
         row('Status', '<span class="px-2 py-0.5 rounded-full text-xs font-bold ' + sc + '">' + escHtml(b.status) + '</span>') +
-        row('Created', b.created_at || '—') +
+        row('Customer Name', b.full_name) +
+        row('Phone', '<a href="tel:' + escHtml(b.phone) + '" class="text-primary hover:underline">' + escHtml(b.phone) + '</a>') +
+        row('Email', b.email || '—') +
+        row('Category', catLabel) +
+        row('Listing / Service', b.listing_name || b.service_type || '—') +
+        row('Listing ID', b.listing_id ? '#' + b.listing_id : '—') +
+        row('Booking Date', b.booking_date || '—') +
+        row('No. of People', b.number_of_people || 1) +
+        row('Booked On', b.created_at || '—') +
+        row('Last Updated', b.updated_at || '—') +
         '</div>' +
-        (b.notes ? '<div class="mt-3 p-3 bg-slate-50 rounded-xl text-sm text-slate-600"><strong>Notes:</strong> ' + escHtml(b.notes) + '</div>' : '');
+        (b.notes ? '<div class="mt-3 p-3 bg-slate-50 rounded-xl text-sm text-slate-600"><span class="font-semibold">Notes:</span> ' + escHtml(b.notes) + '</div>' : '');
     document.getElementById('booking-modal').classList.remove('hidden');
 }
 

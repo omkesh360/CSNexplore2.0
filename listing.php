@@ -296,7 +296,7 @@ $category_nav = [
       </div>
 
       <!-- Cards grid -->
-      <div id="listings-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+      <div id="listings-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <?php if (empty($items)): ?>
         <div class="col-span-3 text-center py-16 text-slate-400">
             <span class="material-symbols-outlined text-5xl mb-3 block">search_off</span>
@@ -390,7 +390,7 @@ $category_nav = [
       <?php endif; ?>
       <style>.listing-hidden{display:none!important;}</style>
       <script>
-      var _shown = 9, _batch = 9;
+      var _shown = 9, _batch = 3;
       function loadMoreListings() {
         var cards = document.querySelectorAll('#listings-grid .listing-hidden');
         var toShow = Array.from(cards).slice(0, _batch);
@@ -564,8 +564,38 @@ function resetFilters() {
     </form>
   </div>
 </div>
+
+<!-- Login Required Modal -->
+<div id="login-required-modal" class="fixed inset-0 z-[300] hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+  <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm p-8 text-center relative">
+    <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+    <span class="material-symbols-outlined text-5xl text-primary mb-3 block">lock</span>
+    <h3 class="text-xl font-serif font-black mb-2">Login Required</h3>
+    <p class="text-slate-500 text-sm mb-6">Please login or create an account to make a booking.</p>
+    <div class="flex gap-3">
+      <a id="login-redirect-btn" href="login.php" class="flex-1 bg-primary text-white font-bold py-3 rounded-xl text-sm hover:bg-orange-600 transition-all">Login</a>
+      <a id="register-redirect-btn" href="register.php" class="flex-1 border-2 border-primary text-primary font-bold py-3 rounded-xl text-sm hover:bg-primary/5 transition-all">Register</a>
+    </div>
+  </div>
+</div>
+
 <script>
 function openBooking(id, name, type) {
+    // Check if user is logged in
+    var token = localStorage.getItem('csn_token');
+    var user  = JSON.parse(localStorage.getItem('csn_user') || 'null');
+    if (!token || !user) {
+        // Store intended action and show login modal
+        var currentUrl = window.location.href;
+        document.getElementById('login-redirect-btn').href = 'login.php?redirect=' + encodeURIComponent(currentUrl);
+        document.getElementById('register-redirect-btn').href = 'register.php?redirect=' + encodeURIComponent(currentUrl);
+        var lm = document.getElementById('login-required-modal');
+        lm.classList.remove('hidden');
+        lm.classList.add('flex');
+        return;
+    }
     document.getElementById('modal-listing-id').value = id;
     document.getElementById('modal-listing-name').textContent = name;
     document.getElementById('modal-service-type').value = type;
@@ -574,12 +604,21 @@ function openBooking(id, name, type) {
     document.getElementById('booking-form').reset();
     document.getElementById('modal-listing-id').value = id;
     document.getElementById('modal-service-type').value = type;
+    // Pre-fill from user profile
+    if (user.name) document.getElementById('b-name').value = user.name;
+    if (user.phone) document.getElementById('b-phone').value = user.phone;
+    if (user.email) document.getElementById('b-email').value = user.email;
     var m = document.getElementById('booking-modal');
     m.classList.remove('hidden');
     m.classList.add('flex');
 }
 function closeBooking() {
     var m = document.getElementById('booking-modal');
+    m.classList.add('hidden');
+    m.classList.remove('flex');
+}
+function closeLoginModal() {
+    var m = document.getElementById('login-required-modal');
     m.classList.add('hidden');
     m.classList.remove('flex');
 }
@@ -620,5 +659,8 @@ document.getElementById('booking-form').addEventListener('submit', async functio
 });
 document.getElementById('booking-modal').addEventListener('click', function(e) {
     if (e.target === this) closeBooking();
+});
+document.getElementById('login-required-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeLoginModal();
 });
 </script>
