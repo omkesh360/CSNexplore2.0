@@ -22,7 +22,7 @@ $page_title = "Create Account | CSNExplore";
         .animate-slow-zoom { animation: slow-zoom 20s linear infinite alternate; }
     </style>
 </head>
-<body class="bg-white font-display text-slate-900 antialiased min-h-screen overflow-hidden">
+<body class="bg-white font-display text-slate-900 antialiased min-h-screen">
 <script>
 // If already logged in, redirect away immediately
 (function(){
@@ -45,18 +45,25 @@ $page_title = "Create Account | CSNExplore";
 <div class="flex min-h-screen">
 
     <!-- Left: Register Form -->
-    <div class="w-full lg:w-1/2 flex flex-col justify-center items-center px-6 md:px-12 py-12 bg-slate-50 relative overflow-y-auto">
+    <div class="w-full lg:w-1/2 flex flex-col items-center px-6 md:px-12 pt-6 pb-12 lg:py-12 bg-slate-50 relative overflow-y-auto min-h-screen lg:min-h-0">
 
-        <!-- Mobile Logo -->
-        <div class="lg:hidden absolute top-8 left-8">
-            <a href="index.php" class="flex items-center gap-2">
-                <img src="images/travelhub.png" alt="CSNExplore" class="h-8"
-                     onerror="this.style.display='none'"/>
-                <span class="font-serif font-black text-primary text-lg">CSNExplore</span>
-            </a>
+        <!-- Mobile Header (visible only on mobile/tablet) -->
+        <div class="lg:hidden w-full mb-8">
+            <header class="w-full rounded-full bg-black/90 backdrop-blur-xl border border-white/10 shadow-2xl shadow-black/40 px-4 flex items-center justify-between" style="height:52px">
+                <a href="index.php">
+                    <img src="images/travelhub.png" alt="CSNExplore" class="h-8 object-contain"/>
+                </a>
+                <div class="flex items-center gap-2">
+                    <a href="index.php" class="flex items-center gap-1 text-white/70 hover:text-white text-xs font-semibold px-3 py-1.5 rounded-full hover:bg-white/10 transition-all">
+                        <span class="material-symbols-outlined text-[16px]">home</span>
+                        Home
+                    </a>
+                    <a href="login.php" class="bg-primary text-white text-xs font-bold px-4 py-1.5 rounded-full hover:bg-orange-600 transition-all">Sign In</a>
+                </div>
+            </header>
         </div>
 
-        <div class="w-full max-w-md space-y-8">
+        <div class="w-full max-w-md space-y-8 lg:my-auto">
             <div class="text-center lg:text-left">
                 <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight md:text-4xl">Start your journey</h2>
                 <p class="mt-3 text-slate-500 font-medium">
@@ -232,7 +239,16 @@ $page_title = "Create Account | CSNExplore";
             localStorage.setItem('csn_token', data.token);
             localStorage.setItem('csn_user',  JSON.stringify(data.user));
             const redirect = new URLSearchParams(window.location.search).get('redirect') || '';
-            window.location.href = redirect || 'index.php';
+            if (redirect) {
+                window.location.href = redirect;
+            } else {
+                const ref = document.referrer;
+                if (ref && !ref.includes('login.php') && !ref.includes('register.php')) {
+                    window.location.href = ref;
+                } else {
+                    window.location.href = 'index.php';
+                }
+            }
         } catch (err) {
             errText.textContent = 'Network error. Please check your connection.';
             errBox.classList.remove('hidden');

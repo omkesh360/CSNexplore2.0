@@ -168,6 +168,13 @@ var extraFieldsDef = {
     buses:       [['f-operator','Operator','text'],['f-from_location','From','text'],['f-to_location','To','text'],['f-departure_time','Departure','text'],['f-arrival_time','Arrival','text'],['f-duration','Duration','text']],
 };
 
+function imgSrc(path) {
+    if (!path) return '';
+    // If already absolute or has ../ prefix, use as-is
+    if (path.startsWith('http') || path.startsWith('../') || path.startsWith('/')) return path;
+    return '../' + path;
+}
+
 function escHtml(s) {
     return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
@@ -197,7 +204,7 @@ async function loadListings() {
     tbody.innerHTML = items.map(function(item) {
         var statusBg = item.is_active ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-500';
         var statusTxt = item.is_active ? 'Active' : 'Hidden';
-        var img = item.image ? '<img src="' + escHtml(item.image) + '" class="w-10 h-10 rounded-lg object-cover"/>' : '<div class="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center"><span class="material-symbols-outlined text-slate-400 text-base">image</span></div>';
+        var img = item.image ? '<img src="' + escHtml(imgSrc(item.image)) + '" class="w-10 h-10 rounded-lg object-cover"/>' : '<div class="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center"><span class="material-symbols-outlined text-slate-400 text-base">image</span></div>';
         return '<tr class="border-b border-slate-50 hover:bg-slate-50">' +
             '<td class="py-2.5 px-4">' + img + '</td>' +
             '<td class="py-2.5 px-4 font-medium max-w-[160px] truncate">' + escHtml(item.name) + '</td>' +
@@ -284,7 +291,7 @@ function closeModal() {
 function updateMainPreview(url) {
     var prev = document.getElementById('main-img-preview');
     var img  = document.getElementById('main-img-preview-img');
-    if (url) { img.src = url; prev.classList.remove('hidden'); }
+    if (url) { img.src = imgSrc(url); prev.classList.remove('hidden'); }
     else { prev.classList.add('hidden'); }
 }
 
@@ -298,7 +305,7 @@ function renderGalleryThumbs(list) {
     if (!list.length) { container.innerHTML = '<p class="text-xs text-slate-400 py-1">No gallery images yet</p>'; return; }
     container.innerHTML = list.map(function(url, i) {
         return '<div class="relative group">' +
-            '<img src="' + escHtml(url) + '" class="w-16 h-16 rounded-xl object-cover border border-slate-200"/>' +
+            '<img src="' + escHtml(imgSrc(url)) + '" class="w-16 h-16 rounded-xl object-cover border border-slate-200"/>' +
             '<button type="button" onclick="removeGalleryImage(' + i + ')" ' +
                 'class="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white rounded-full text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">' +
                 '<span class="material-symbols-outlined text-xs" style="font-size:12px">close</span>' +

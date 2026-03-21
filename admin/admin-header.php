@@ -26,6 +26,7 @@ body { font-family: 'Inter', sans-serif; }
 .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; }
 .sidebar-link.active { background: rgba(236,91,19,0.12); color: #ec5b13; }
 .sidebar-link.active .material-symbols-outlined { color: #ec5b13; }
+@keyframes spin { to { transform: rotate(360deg); } }
 </style>
 <?php if (!empty($extra_head)) echo $extra_head; ?>
 </head>
@@ -67,7 +68,7 @@ body { font-family: 'Inter', sans-serif; }
         $nav = [
             ['href'=>'dashboard.php', 'icon'=>'dashboard',       'label'=>'Dashboard',    'key'=>'dashboard'],
             ['href'=>'listings.php',  'icon'=>'list_alt',         'label'=>'Listings',     'key'=>'listings'],
-            ['href'=>'bookings.php',  'icon'=>'book_online',      'label'=>'Bookings',     'key'=>'bookings'],
+            ['href'=>'bookings.php',  'icon'=>'book_online',      'label'=>'Bookings',     'key'=>'bookings',  'badge'=>true],
             ['href'=>'blogs.php',     'icon'=>'article',          'label'=>'Blogs',        'key'=>'blogs'],
             ['href'=>'gallery.php',   'icon'=>'photo_library',    'label'=>'Gallery',      'key'=>'gallery'],
             ['href'=>'users.php',     'icon'=>'group',            'label'=>'Users',        'key'=>'users'],
@@ -80,6 +81,9 @@ body { font-family: 'Inter', sans-serif; }
            class="sidebar-link <?php echo $active; ?> flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all">
             <span class="material-symbols-outlined text-xl text-slate-400"><?php echo $n['icon']; ?></span>
             <?php echo $n['label']; ?>
+            <?php if (!empty($n['badge'])): ?>
+            <span id="sidebar-pending-badge" class="hidden ml-auto bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center leading-tight"></span>
+            <?php endif; ?>
         </a>
         <?php endforeach; ?>
     </nav>

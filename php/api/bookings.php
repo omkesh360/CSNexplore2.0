@@ -49,6 +49,8 @@ try {
             'phone'            => $phone,
             'email'            => $email,
             'booking_date'     => sanitize($data['booking_date'] ?? ''),
+            'checkin_date'     => sanitize($data['checkin_date'] ?? ''),
+            'checkout_date'    => sanitize($data['checkout_date'] ?? ''),
             'number_of_people' => max(1, (int)($data['number_of_people'] ?? 1)),
             'service_type'     => sanitize($data['service_type'] ?? ''),
             'listing_id'       => (int)($data['listing_id'] ?? 0) ?: null,

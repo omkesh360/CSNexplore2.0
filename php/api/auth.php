@@ -79,6 +79,22 @@ try {
         sendJson(['valid' => true, 'user' => $payload]);
     }
 
+    // POST /api/auth.php?action=change_password  (admin only)
+    elseif ($method === 'POST' && $path === 'change_password') {
+        requireAdmin();
+        $input   = getJsonInput();
+        $userId  = (int)($input['user_id'] ?? 0);
+        $newPass = $input['new_password'] ?? '';
+
+        if (!$userId || strlen($newPass) < 6) sendError('user_id and new_password (min 6 chars) required', 400);
+
+        $exists = $db->fetchOne("SELECT id FROM users WHERE id = ?", [$userId]);
+        if (!$exists) sendError('User not found', 404);
+
+        $db->update('users', ['password_hash' => password_hash($newPass, PASSWORD_DEFAULT)], 'id = :id', [':id' => $userId]);
+        sendJson(['success' => true]);
+    }
+
     else {
         sendError('Not found', 404);
     }

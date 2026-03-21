@@ -59,6 +59,45 @@ $active_listing_type = $listing_type ?? '';
         body.page-ready { animation: pageFadeIn 0.2s ease forwards; }
         @keyframes pageFadeIn { from { opacity:0; } to { opacity:1; } }
         .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; font-family:'Material Symbols Outlined'; font-style:normal; display:inline-block; line-height:1; }
+
+        /* ── Global Motion System ── */
+        [data-reveal] {
+            opacity: 0;
+            transform: translateY(32px);
+            transition: opacity 0.65s cubic-bezier(.22,1,.36,1), transform 0.65s cubic-bezier(.22,1,.36,1);
+        }
+        [data-reveal="left"]  { transform: translateX(-40px); }
+        [data-reveal="right"] { transform: translateX(40px); }
+        [data-reveal="scale"] { transform: scale(0.92) translateY(20px); }
+        [data-reveal].revealed {
+            opacity: 1 !important;
+            transform: none !important;
+        }
+        [data-delay="1"] { transition-delay: 0.08s; }
+        [data-delay="2"] { transition-delay: 0.16s; }
+        [data-delay="3"] { transition-delay: 0.24s; }
+        [data-delay="4"] { transition-delay: 0.32s; }
+        [data-delay="5"] { transition-delay: 0.40s; }
+        [data-delay="6"] { transition-delay: 0.48s; }
+
+        /* Card hover glow */
+        .card-glow { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .card-glow:hover { transform: translateY(-6px) scale(1.01); box-shadow: 0 20px 50px rgba(236,91,19,0.18), 0 4px 16px rgba(0,0,0,0.12); }
+
+        /* Shimmer on images */
+        .img-shimmer { position:relative; overflow:hidden; }
+        .img-shimmer::after { content:''; position:absolute; inset:0; background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,0.08) 50%,transparent 60%); transform:translateX(-100%); transition:transform 0.6s ease; }
+        .img-shimmer:hover::after { transform:translateX(100%); }
+
+        /* Pulse ring on CTA buttons */
+        .btn-pulse { position:relative; }
+        .btn-pulse::before { content:''; position:absolute; inset:-3px; border-radius:inherit; border:2px solid rgba(236,91,19,0.5); opacity:0; animation:btnRing 2s ease infinite; }
+        @keyframes btnRing { 0%,100%{opacity:0;transform:scale(1)} 50%{opacity:1;transform:scale(1.04)} }
+
+        /* Floating orbs background */
+        .orb { position:absolute; border-radius:50%; filter:blur(60px); pointer-events:none; animation:orbFloat 8s ease-in-out infinite; }
+        @keyframes orbFloat { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-20px) scale(1.05)} }
+
         <?php if (!empty($extra_styles)) echo $extra_styles; ?>
     </style>
     <?php if (!empty($extra_head)) echo $extra_head; ?>
@@ -85,61 +124,75 @@ $active_listing_type = $listing_type ?? '';
     </div>
 </div>
 
-<!-- Header – always dark/black with blur -->
-<header id="site-header" class="sticky top-0 w-full z-50 transition-all duration-300 glass-dark border-b border-white/5">
-    <nav class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-        <a href="index.php" class="flex items-center shrink-0">
-            <img src="images/travelhub.png" alt="CSNExplore" class="h-9 object-contain"/>
-        </a>
-        <div class="hidden md:flex items-center gap-1">
-            <?php if ($is_listing_page): ?>
-                <?php foreach ($listing_nav as $link): $is_active = ($link['type'] === $active_listing_type); ?>
-                <a href="<?php echo $link['href']; ?>"
-                   class="flex items-center gap-1.5 text-sm font-semibold px-3 py-2 rounded-full transition-colors <?php echo $is_active ? 'text-white bg-white/15' : 'text-white/60 hover:bg-white/10 hover:text-white'; ?>">
-                    <span class="material-symbols-outlined text-base"><?php echo $link['icon']; ?></span>
-                    <?php echo $link['label']; ?>
-                </a>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <?php foreach ($nav_links as $link): $is_active = ($link['href'] === $current_page); ?>
-                <a href="<?php echo $link['href']; ?>"
-                   class="nav-link text-sm font-semibold px-4 py-2 rounded-full transition-colors <?php echo $is_active ? 'text-white bg-white/10' : 'text-white/70 hover:bg-white/10 hover:text-white'; ?>">
-                    <?php echo $link['label']; ?>
-                </a>
-                <?php endforeach; ?>
-            <?php endif; ?>
-        </div>
-        <div class="flex items-center gap-2" id="header-auth-area">
-            <!-- Auth buttons — swapped by JS based on localStorage -->
-            <a href="login.php" id="hdr-login-btn" class="text-white text-sm font-semibold px-4 py-1.5 hover:bg-white/10 rounded-full transition-all">Login</a>
-            <a href="register.php" id="hdr-register-btn" class="bg-primary text-white text-sm font-bold px-5 py-1.5 rounded-full hover:bg-orange-600 transition-all shadow-lg shadow-primary/20">Register</a>
-            <!-- User menu (hidden by default, shown when logged in) -->
-            <div id="hdr-user-menu" class="hidden relative">
-                <button id="hdr-user-btn" class="flex items-center gap-2 text-white text-sm font-semibold px-3 py-1.5 hover:bg-white/10 rounded-full transition-all">
-                    <span class="material-symbols-outlined text-base text-primary">account_circle</span>
-                    <span id="hdr-user-name" class="max-w-[100px] truncate"></span>
-                    <span class="material-symbols-outlined text-sm">expand_more</span>
-                </button>
-                <div id="hdr-dropdown" class="hidden absolute right-0 top-full mt-2 w-48 bg-white rounded-2xl shadow-xl border border-slate-100 py-1 z-[200]">
-                    <a href="my-booking.php" class="flex items-center gap-2 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary transition-colors">
-                        <span class="material-symbols-outlined text-base">book_online</span>My Bookings
+<!-- Morphing Header: full-width at top → pill on scroll -->
+<div id="hdr-wrap" class="sticky top-0 z-50 pointer-events-none transition-all duration-300" style="padding:0">
+    <header id="site-header" class="w-full pointer-events-auto transition-all duration-300" style="background:#000000;border-radius:0;border-bottom:1px solid rgba(255,255,255,0.08);box-shadow:none;border-left:none;border-right:none;border-top:none;backdrop-filter:none;-webkit-backdrop-filter:none;">
+        <nav class="px-4 sm:px-6 flex items-center justify-between" style="height:56px">
+            <!-- Logo -->
+            <a href="index.php" class="flex items-center shrink-0">
+                <img src="images/travelhub.png" alt="CSNExplore" class="h-8 sm:h-9 object-contain"/>
+            </a>
+
+            <!-- Desktop / Tablet nav links (hidden on mobile) -->
+            <div class="hidden md:flex items-center gap-0.5">
+                <?php if ($is_listing_page): ?>
+                    <?php foreach ($listing_nav as $link): $is_active = ($link['type'] === $active_listing_type); ?>
+                    <a href="<?php echo $link['href']; ?>"
+                       class="flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-full transition-colors <?php echo $is_active ? 'text-white bg-white/15' : 'text-white/60 hover:bg-white/10 hover:text-white'; ?>">
+                        <span class="material-symbols-outlined text-base"><?php echo $link['icon']; ?></span>
+                        <?php echo $link['label']; ?>
                     </a>
-                    <hr class="my-1 border-slate-100"/>
-                    <button id="hdr-logout-btn" class="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition-colors">
-                        <span class="material-symbols-outlined text-base">logout</span>Logout
-                    </button>
-                </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <?php foreach ($nav_links as $link): $is_active = ($link['href'] === $current_page); ?>
+                    <a href="<?php echo $link['href']; ?>"
+                       class="text-sm font-semibold px-4 py-1.5 rounded-full transition-colors <?php echo $is_active ? 'text-white bg-white/15' : 'text-white/60 hover:bg-white/10 hover:text-white'; ?>">
+                        <?php echo $link['label']; ?>
+                    </a>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </div>
-            <button id="mob-btn" class="md:hidden p-2 rounded-lg transition-colors ml-1">
-                <span class="material-symbols-outlined text-2xl text-white">menu</span>
-            </button>
-        </div>
-    </nav>
-    <div id="mob-menu" class="hidden md:hidden border-t border-white/10 px-4 py-3 flex flex-col gap-1">
+
+            <!-- Right: auth + hamburger -->
+            <div class="flex items-center gap-1.5">
+                <!-- Call & WhatsApp -->
+                <a href="tel:+918600968888" id="call-btn" class="hidden sm:flex items-center gap-1 text-white/70 hover:text-white text-xs font-semibold px-2 py-1.5 rounded-full hover:bg-white/10 transition-all" title="Call Us">
+                    <span class="material-symbols-outlined text-base">call</span>
+                    <span class="call-text">+91 86009 68888</span>
+                </a>
+                <a href="https://wa.me/918600968888" id="whatsapp-btn" target="_blank" rel="noopener" class="hidden sm:flex items-center gap-1 text-[#25D366] hover:text-white text-xs font-semibold px-2 py-1.5 rounded-full hover:bg-white/10 transition-all" title="WhatsApp Us">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    <span class="whatsapp-text">WhatsApp</span>
+                </a>
+                <!-- Logged-out buttons -->
+                <a href="login.php?redirect=<?php echo urlencode($_SERVER['REQUEST_URI'] ?? ''); ?>" id="hdr-login-btn" class="text-white/80 hover:text-white text-xs sm:text-sm font-semibold px-3 sm:px-4 py-1.5 rounded-full hover:bg-white/10 transition-all">Login</a>
+                <!-- Logged-in user menu -->
+                <div id="hdr-user-menu" class="hidden relative">
+                    <button id="hdr-user-btn" class="flex items-center gap-1.5 text-white text-xs sm:text-sm font-semibold px-3 py-1.5 hover:bg-white/10 rounded-full transition-all">
+                        <span class="material-symbols-outlined text-base text-primary">account_circle</span>
+                        <span id="hdr-user-name" class="max-w-[70px] sm:max-w-[100px] truncate"></span>
+                        <span class="material-symbols-outlined text-sm">expand_more</span>
+                    </button>
+                    <div id="hdr-dropdown" class="hidden absolute right-0 top-full mt-2 w-44 bg-[#1a1208] border border-white/10 rounded-2xl shadow-2xl py-1.5 z-[200]">
+                        <button id="hdr-logout-btn" class="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-400 hover:bg-white/5 hover:text-red-300 transition-colors rounded-xl mx-0">
+                            <span class="material-symbols-outlined text-base">logout</span>Logout
+                        </button>
+                    </div>
+                </div>
+                <!-- Hamburger (mobile only) -->
+                <button id="mob-btn" class="md:hidden p-1.5 rounded-full hover:bg-white/10 transition-colors">
+                    <span class="material-symbols-outlined text-xl text-white">menu</span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Mobile dropdown nav -->
+    <div id="mob-menu" class="hidden md:hidden mt-2 mx-3 rounded-2xl bg-black border border-white/10 shadow-2xl px-2 py-2 flex flex-col gap-0.5 pointer-events-auto">
         <?php if ($is_listing_page): ?>
             <?php foreach ($listing_nav as $link): $is_active = ($link['type'] === $active_listing_type); ?>
             <a href="<?php echo $link['href']; ?>"
-               class="flex items-center gap-2 text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors <?php echo $is_active ? 'text-primary bg-white/5' : 'text-white/70 hover:bg-white/10 hover:text-white'; ?>">
+               class="flex items-center gap-2 text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors <?php echo $is_active ? 'text-primary bg-white/10' : 'text-white/70 hover:bg-white/10 hover:text-white'; ?>">
                 <span class="material-symbols-outlined text-base"><?php echo $link['icon']; ?></span>
                 <?php echo $link['label']; ?>
             </a>
@@ -147,96 +200,123 @@ $active_listing_type = $listing_type ?? '';
         <?php else: ?>
             <?php foreach ($nav_links as $link): $is_active = ($link['href'] === $current_page); ?>
             <a href="<?php echo $link['href']; ?>"
-               class="text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors <?php echo $is_active ? 'text-primary' : 'text-white/70 hover:bg-white/10 hover:text-white'; ?>">
+               class="text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors <?php echo $is_active ? 'text-primary bg-white/10' : 'text-white/70 hover:bg-white/10 hover:text-white'; ?>">
                 <?php echo $link['label']; ?>
             </a>
             <?php endforeach; ?>
         <?php endif; ?>
-        <div class="flex gap-2 pt-2 border-t border-white/10 mt-1" id="mob-auth-area">
-            <a href="login.php" id="mob-login-btn" class="flex-1 text-center text-white hover:bg-white/10 text-sm font-semibold py-2 rounded-xl transition-all">Login</a>
-            <a href="register.php" id="mob-register-btn" class="flex-1 text-center bg-primary text-white text-sm font-bold py-2 rounded-xl hover:bg-orange-600 transition-all">Register</a>
-            <button id="mob-logout-btn" class="hidden flex-1 text-center bg-red-500 text-white text-sm font-bold py-2 rounded-xl hover:bg-red-600 transition-all">Logout</button>
-        </div>
     </div>
+</div>
     <script>
+        // Morph header: flat full-width at top → floating pill on scroll
+        (function(){
+            var wrap = document.getElementById('hdr-wrap');
+            var hdr  = document.getElementById('site-header');
+            var callBtn = document.getElementById('call-btn');
+            var whatsappBtn = document.getElementById('whatsapp-btn');
+            var callText = callBtn ? callBtn.querySelector('.call-text') : null;
+            var whatsappText = whatsappBtn ? whatsappBtn.querySelector('.whatsapp-text') : null;
+            
+            function onScroll(){
+                if(window.scrollY > 10){
+                    wrap.style.padding = '12px 20px 4px';
+                    hdr.style.borderRadius = '9999px';
+                    hdr.style.background   = 'rgba(0,0,0,0.75)';
+                    hdr.style.backdropFilter = 'blur(20px)';
+                    hdr.style.webkitBackdropFilter = 'blur(20px)';
+                    hdr.style.border = '1px solid rgba(255,255,255,0.12)';
+                    hdr.style.boxShadow = '0 8px 32px rgba(0,0,0,0.6)';
+                    
+                    // Hide text, show icon only
+                    if(callText) callText.style.display = 'none';
+                    if(whatsappText) whatsappText.style.display = 'none';
+                    if(callBtn) {
+                        callBtn.classList.remove('gap-1', 'px-2');
+                        callBtn.classList.add('w-9', 'h-9', 'justify-center');
+                    }
+                    if(whatsappBtn) {
+                        whatsappBtn.classList.remove('gap-1', 'px-2');
+                        whatsappBtn.classList.add('w-9', 'h-9', 'justify-center');
+                    }
+                } else {
+                    wrap.style.padding = '0';
+                    hdr.style.borderRadius = '0';
+                    hdr.style.background   = '#000000';
+                    hdr.style.backdropFilter = 'none';
+                    hdr.style.webkitBackdropFilter = 'none';
+                    hdr.style.border = 'none';
+                    hdr.style.borderBottom = '1px solid rgba(255,255,255,0.08)';
+                    hdr.style.boxShadow = 'none';
+                    
+                    // Show text
+                    if(callText) callText.style.display = 'inline';
+                    if(whatsappText) whatsappText.style.display = 'inline';
+                    if(callBtn) {
+                        callBtn.classList.add('gap-1', 'px-2');
+                        callBtn.classList.remove('w-9', 'h-9', 'justify-center');
+                    }
+                    if(whatsappBtn) {
+                        whatsappBtn.classList.add('gap-1', 'px-2');
+                        whatsappBtn.classList.remove('w-9', 'h-9', 'justify-center');
+                    }
+                }
+            }
+            window.addEventListener('scroll', onScroll, {passive:true});
+            onScroll();
+        })();
+
         document.getElementById('mob-btn').addEventListener('click', function(){
             document.getElementById('mob-menu').classList.toggle('hidden');
         });
-        (function(){
-            var h = document.getElementById('site-header');
-            function updateHeader() {
-                if (window.scrollY === 0) { h.classList.add('header-solid'); }
-                else { h.classList.remove('header-solid'); }
-            }
-            updateHeader();
-            window.addEventListener('scroll', updateHeader, {passive:true});
-        })();
 
-        // ── Auth state ──────────────────────────────────────────────────────
         (function(){
             var token = localStorage.getItem('csn_token');
             var user  = JSON.parse(localStorage.getItem('csn_user') || 'null');
 
-            // Basic JWT expiry check (decode payload, check exp)
+            function clearAll() {
+                localStorage.removeItem('csn_token');
+                localStorage.removeItem('csn_user');
+                localStorage.removeItem('csn_admin_token');
+                localStorage.removeItem('csn_admin_user');
+                token = null; user = null;
+            }
+
             if (token) {
                 try {
                     var parts = token.split('.');
                     if (parts.length === 3) {
                         var payload = JSON.parse(atob(parts[1].replace(/-/g,'+').replace(/_/g,'/')));
-                        if (payload.exp && payload.exp < Math.floor(Date.now()/1000)) {
-                            localStorage.removeItem('csn_token');
-                            localStorage.removeItem('csn_user');
-                            token = null; user = null;
-                        }
-                    }
-                } catch(e) {
-                    localStorage.removeItem('csn_token');
-                    localStorage.removeItem('csn_user');
-                    token = null; user = null;
-                }
+                        if (payload.exp && payload.exp < Math.floor(Date.now()/1000)) { clearAll(); }
+                    } else { clearAll(); }
+                } catch(e) { clearAll(); }
             }
 
             if (token && user) {
-                // Desktop: hide login/register, show user menu
-                document.getElementById('hdr-login-btn').style.display    = 'none';
-                document.getElementById('hdr-register-btn').style.display = 'none';
-                var um = document.getElementById('hdr-user-menu');
-                um.classList.remove('hidden');
-                document.getElementById('hdr-user-name').textContent = user.name ? user.name.split(' ')[0] : 'Account';
-
-                // Mobile: hide login/register, show logout
-                document.getElementById('mob-login-btn').style.display    = 'none';
-                document.getElementById('mob-register-btn').style.display = 'none';
-                document.getElementById('mob-logout-btn').classList.remove('hidden');
+                var pl = document.getElementById('hdr-login-btn');
+                var pu = document.getElementById('hdr-user-menu');
+                var pn = document.getElementById('hdr-user-name');
+                if (pl) pl.style.display = 'none';
+                if (pu) pu.classList.remove('hidden');
+                if (pn) pn.textContent = user.name ? user.name.split(' ')[0] : 'Account';
             }
 
-            // Desktop dropdown toggle
-            var userBtn = document.getElementById('hdr-user-btn');
+            var userBtn  = document.getElementById('hdr-user-btn');
             var dropdown = document.getElementById('hdr-dropdown');
             if (userBtn) {
-                userBtn.addEventListener('click', function(e){
-                    e.stopPropagation();
-                    dropdown.classList.toggle('hidden');
-                });
-                document.addEventListener('click', function(){ dropdown.classList.add('hidden'); });
+                userBtn.addEventListener('click', function(e){ e.stopPropagation(); dropdown.classList.toggle('hidden'); });
+                document.addEventListener('click', function(){ if(dropdown) dropdown.classList.add('hidden'); });
             }
 
-            // Logout handlers
             function doLogout() {
-                localStorage.removeItem('csn_token');
-                localStorage.removeItem('csn_user');
+                clearAll();
                 window.location.href = 'index.php';
             }
-            var logoutBtn = document.getElementById('hdr-logout-btn');
-            if (logoutBtn) logoutBtn.addEventListener('click', doLogout);
-            var mobLogout = document.getElementById('mob-logout-btn');
-            if (mobLogout) mobLogout.addEventListener('click', doLogout);
+            var lb = document.getElementById('hdr-logout-btn');
+            if (lb) lb.addEventListener('click', doLogout);
         })();
 
-        // Fade in on load
         function addPageReady(){document.body.classList.add('page-ready');}
         if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',addPageReady);}else{addPageReady();}
-        // Fade out on navigation
         document.addEventListener('click', function(e) {
             var a = e.target.closest('a');
             if (!a) return;
@@ -248,4 +328,18 @@ $active_listing_type = $listing_type ?? '';
             setTimeout(function(){ window.location.href = href; }, 190);
         });
     </script>
-</header>
+<script>
+// ── Global Scroll Reveal ──────────────────────────────────────────────────
+(function(){
+    if (!window.IntersectionObserver) return;
+    var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+            if(e.isIntersecting){ e.target.classList.add('revealed'); io.unobserve(e.target); }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+    function observe(){
+        document.querySelectorAll('[data-reveal]').forEach(function(el){ io.observe(el); });
+    }
+    if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', observe); } else { observe(); }
+})();
+</script>

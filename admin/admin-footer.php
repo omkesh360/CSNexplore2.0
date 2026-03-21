@@ -4,11 +4,12 @@
 
 <!-- ── Gallery Picker Modal (shared) ──────────────────────────────────── -->
 <div id="gallery-picker-modal" class="hidden fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl flex flex-col" style="max-height:85vh">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl flex flex-col" style="height:min(90vh,700px)">
         <!-- Header -->
         <div class="flex items-center gap-3 px-5 py-4 border-b border-slate-100 shrink-0">
             <span class="material-symbols-outlined text-primary">photo_library</span>
             <h3 class="font-bold text-base">Select Image</h3>
+            <span id="picker-count" class="text-xs text-slate-400 font-medium"></span>
             <div class="ml-auto flex items-center gap-2">
                 <label class="flex items-center gap-1.5 bg-primary text-white px-3 py-1.5 rounded-xl text-xs font-bold hover:bg-orange-600 cursor-pointer transition-all">
                     <span class="material-symbols-outlined text-sm">upload</span> Upload New
@@ -27,9 +28,9 @@
                        class="w-full border border-slate-200 rounded-xl pl-9 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"/>
             </div>
         </div>
-        <!-- Grid -->
-        <div id="picker-grid" class="flex-1 overflow-y-auto p-4 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
-            <div class="col-span-5 text-center py-12 text-slate-400">Loading...</div>
+        <!-- Grid — fixed height, always scrollable -->
+        <div id="picker-grid" class="overflow-y-auto p-4" style="flex:1 1 0;min-height:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;align-content:start;">
+            <div style="grid-column:1/-1;text-align:center;padding:3rem 0;color:#94a3b8;">Loading...</div>
         </div>
         <!-- Upload progress -->
         <div id="picker-upload-progress" class="hidden px-5 py-3 border-t border-slate-100 text-sm text-slate-600 flex items-center gap-3 shrink-0">
@@ -63,6 +64,8 @@ document.getElementById('sidebar-close')?.addEventListener('click', function(){
 function adminLogout() {
     localStorage.removeItem('csn_admin_token');
     localStorage.removeItem('csn_admin_user');
+    localStorage.removeItem('csn_token');
+    localStorage.removeItem('csn_user');
     window.location.href = '../adminexplorer.php';
 }
 
@@ -89,9 +92,14 @@ async function loadPendingCount() {
     try {
         var data = await api('../php/api/bookings.php?status=pending');
         if (data && Array.isArray(data) && data.length > 0) {
-            document.getElementById('pending-count').textContent = data.length;
+            var count = data.length;
+            // Top-bar badge
+            document.getElementById('pending-count').textContent = count;
             document.getElementById('pending-badge').classList.remove('hidden');
             document.getElementById('pending-badge').classList.add('flex');
+            // Sidebar badge
+            var sb = document.getElementById('sidebar-pending-badge');
+            if (sb) { sb.textContent = count; sb.classList.remove('hidden'); }
         }
     } catch(e) {}
 }
@@ -115,29 +123,30 @@ function closeGalleryPicker() {
 
 async function loadPickerImages() {
     var grid = document.getElementById('picker-grid');
-    grid.innerHTML = '<div class="col-span-5 text-center py-12 text-slate-400"><div class="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>Loading...</div>';
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem 0;color:#94a3b8;"><div style="width:24px;height:24px;border:2px solid #ec5b13;border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 8px;"></div>Loading...</div>';
     _pickerImages = await api('../php/api/gallery.php') || [];
     renderPickerGrid(_pickerImages);
 }
 
 function renderPickerGrid(images) {
     var grid = document.getElementById('picker-grid');
+    var countEl = document.getElementById('picker-count');
+    if (countEl) countEl.textContent = images.length ? images.length + ' image' + (images.length !== 1 ? 's' : '') : '';
     if (!images.length) {
-        grid.innerHTML = '<div class="col-span-5 text-center py-12 text-slate-400"><span class="material-symbols-outlined text-4xl block mb-2">photo_library</span>No images yet. Upload some first.</div>';
+        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem 0;color:#94a3b8;"><span class="material-symbols-outlined" style="font-size:2.5rem;display:block;margin-bottom:0.5rem;">photo_library</span>No images yet. Upload some first.</div>';
         return;
     }
     grid.innerHTML = images.map(function(img) {
-        // Use relative path so DB stores consistent relative URLs
         var relPath = 'images/uploads/' + img.filename;
-        var safeUrl = img.url.replace(/'/g, "\\'");
-        var safePath = relPath.replace(/'/g, "\\'");
-        return '<div class="relative group cursor-pointer rounded-xl overflow-hidden border-2 border-transparent hover:border-primary transition-all bg-slate-50" onclick="selectPickerImage(\'' + safePath + '\')">' +
-            '<img src="' + safeUrl + '" class="w-full aspect-square object-cover" loading="lazy" onerror="this.parentElement.style.display=\'none\'"/>' +
-            '<div class="absolute inset-0 bg-primary/30 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center">' +
-                '<span class="material-symbols-outlined text-white text-3xl drop-shadow">check_circle</span>' +
+        var displaySrc = '../images/uploads/' + img.filename;
+        var safeRel = relPath.replace(/'/g, "\\'");
+        var safeName = img.filename.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        return '<div onclick="selectPickerImage(\'' + safeRel + '\')" style="cursor:pointer;border-radius:12px;overflow:hidden;border:2px solid #e2e8f0;background:#f8fafc;transition:border-color .15s,transform .15s;" onmouseover="this.style.borderColor=\'#ec5b13\';this.style.transform=\'scale(1.03)\'" onmouseout="this.style.borderColor=\'#e2e8f0\';this.style.transform=\'\'">' +
+            '<div style="width:100%;aspect-ratio:1/1;overflow:hidden;background:#f1f5f9;">' +
+                '<img src="' + displaySrc + '" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" onerror="this.parentElement.innerHTML=\'<div style=\\\"display:flex;align-items:center;justify-content:center;height:100%;color:#cbd5e1;\\\"><span class=\\\"material-symbols-outlined\\\" style=\\\"font-size:2rem;\\\">broken_image</span></div>\'"/>' +
             '</div>' +
-            '<div class="absolute bottom-0 left-0 right-0 bg-black/60 px-1.5 py-1 opacity-0 group-hover:opacity-100 transition-all">' +
-                '<p class="text-white text-[9px] truncate">' + img.filename + '</p>' +
+            '<div style="padding:5px 8px;background:#fff;border-top:1px solid #f1f5f9;">' +
+                '<p style="font-size:10px;color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:0;" title="' + safeName + '">' + safeName + '</p>' +
             '</div>' +
         '</div>';
     }).join('');

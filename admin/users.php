@@ -31,6 +31,36 @@ require 'admin-header.php';
 </div>
 </div>
 
+<!-- Change Password Modal -->
+<div id="pw-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm">
+        <div class="flex items-center justify-between p-6 border-b border-slate-100">
+            <h3 class="text-base font-bold">Change Password</h3>
+            <button onclick="closePwModal()" class="text-slate-400 hover:text-slate-600">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="p-6 space-y-4">
+            <p id="pw-modal-name" class="font-semibold text-slate-900"></p>
+            <div id="pw-error" class="hidden bg-red-50 border border-red-200 text-red-700 text-sm px-3 py-2 rounded-xl"></div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">New Password</label>
+                <input id="pw-new" type="password" placeholder="Min 6 characters"
+                       class="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"/>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Confirm Password</label>
+                <input id="pw-confirm" type="password" placeholder="Repeat password"
+                       class="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"/>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="closePwModal()" class="flex-1 border border-slate-200 text-slate-600 py-2.5 rounded-xl text-sm font-semibold hover:bg-slate-50">Cancel</button>
+                <button onclick="savePassword()" class="flex-1 bg-primary text-white py-2.5 rounded-xl text-sm font-bold hover:bg-orange-600">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Edit Role Modal -->
 <div id="user-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm">
@@ -87,6 +117,7 @@ async function loadUsers() {
             '<td class="py-2.5 px-4">' +
                 '<div class="flex gap-1">' +
                 '<button onclick="openEditRole(' + u.id + ',\'' + escHtml(u.name) + '\',\'' + escHtml(u.role) + '\')" class="p-1.5 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all"><span class="material-symbols-outlined text-base">manage_accounts</span></button>' +
+                '<button onclick="openChangePw(' + u.id + ',\'' + escHtml(u.name) + '\')" class="p-1.5 text-slate-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-all" title="Change Password"><span class="material-symbols-outlined text-base">key</span></button>' +
                 '<button onclick="deleteUser(' + u.id + ')" class="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"><span class="material-symbols-outlined text-base">delete</span></button>' +
                 '</div>' +
             '</td>' +
@@ -102,6 +133,33 @@ function openEditRole(id, name, role) {
 }
 
 function closeModal() { document.getElementById('user-modal').classList.add('hidden'); }
+
+function openChangePw(id, name) {
+    editingUserId = id;
+    document.getElementById('pw-modal-name').textContent = name;
+    document.getElementById('pw-new').value = '';
+    document.getElementById('pw-confirm').value = '';
+    document.getElementById('pw-error').classList.add('hidden');
+    document.getElementById('pw-modal').classList.remove('hidden');
+}
+
+function closePwModal() { document.getElementById('pw-modal').classList.add('hidden'); }
+
+async function savePassword() {
+    var newPw  = document.getElementById('pw-new').value;
+    var confPw = document.getElementById('pw-confirm').value;
+    var errEl  = document.getElementById('pw-error');
+    errEl.classList.add('hidden');
+
+    if (newPw.length < 6) { errEl.textContent = 'Password must be at least 6 characters.'; errEl.classList.remove('hidden'); return; }
+    if (newPw !== confPw) { errEl.textContent = 'Passwords do not match.'; errEl.classList.remove('hidden'); return; }
+
+    var res = await api('../php/api/auth.php?action=change_password', {
+        method: 'POST', body: JSON.stringify({ user_id: editingUserId, new_password: newPw })
+    });
+    if (res && res.error) { errEl.textContent = res.error; errEl.classList.remove('hidden'); return; }
+    closePwModal();
+}
 
 async function saveRole() {
     if (!editingUserId) return;

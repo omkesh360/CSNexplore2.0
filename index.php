@@ -143,6 +143,32 @@ $hp_blogs = hp_fetch_picks($db, 'blogs', $hp_settings['picks_blogs'], "status='p
         .hide-scrollbar { -ms-overflow-style:none; scrollbar-width:none; }
         .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; font-family:'Material Symbols Outlined'; font-style:normal; display:inline-block; line-height:1; }
         .card-hover:hover { box-shadow:0 0 30px rgba(236,91,19,0.15); }
+        /* Carousel card widths — mobile: 80vw (shows ~1.1 cards), desktop: percentage */
+        :root {
+            --card-w-attractions: 80vw;
+            --card-w-bikes:       80vw;
+            --card-w-restaurants: 80vw;
+            --card-w-buses:       80vw;
+            --card-w-blogs:       80vw;
+        }
+        @media (min-width: 640px) {
+            :root {
+                --card-w-attractions: calc(50% - 14px);
+                --card-w-bikes:       calc(50% - 14px);
+                --card-w-restaurants: calc(50% - 14px);
+                --card-w-buses:       calc(50% - 14px);
+                --card-w-blogs:       calc(50% - 14px);
+            }
+        }
+        @media (min-width: 1024px) {
+            :root {
+                --card-w-attractions: calc(25% - 15px);
+                --card-w-bikes:       calc(25% - 15px);
+                --card-w-restaurants: calc(20% - 16px);
+                --card-w-buses:       calc(50% - 10px);
+                --card-w-blogs:       calc(33.333% - 14px);
+            }
+        }
         #hero-label, #hero-pre, #hero-highlight, #hero-post, #hero-desc { transition: opacity 0.25s ease; }
         .search-box { background:rgba(255,255,255,0.08); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,0.15); border-radius:16px; padding:20px 22px; }
         .tab-btn { display:flex; align-items:center; gap:6px; padding:8px 16px; border-radius:50px; font-size:13px; font-weight:700; color:rgba(255,255,255,0.55); cursor:pointer; transition:all .2s; border:none; background:transparent; white-space:nowrap; }
@@ -187,6 +213,26 @@ $hp_blogs = hp_fetch_picks($db, 'blogs', $hp_settings['picks_blogs'], "status='p
         .flatpickr-day { color:#fff !important; }
         .flatpickr-day.flatpickr-disabled { color:rgba(255,255,255,0.2) !important; }
         .flatpickr-prev-month svg, .flatpickr-next-month svg { fill:#fff !important; }
+
+        /* ── Index-specific motion enhancements ── */
+        /* Hero parallax */
+        #hero-bg { will-change: transform; }
+        /* Floating particles */
+        .particle { position:absolute; border-radius:50%; pointer-events:none; animation:particleDrift linear infinite; }
+        @keyframes particleDrift {
+            0%   { transform:translateY(0) translateX(0) scale(1); opacity:0; }
+            10%  { opacity:1; }
+            90%  { opacity:0.6; }
+            100% { transform:translateY(-120vh) translateX(30px) scale(0.5); opacity:0; }
+        }
+        /* Stats counter */
+        .stat-num { display:inline-block; }
+        /* Section divider wave */
+        .wave-divider { line-height:0; overflow:hidden; }
+        /* Gradient text */
+        .gradient-text { background:linear-gradient(135deg,#ec5b13,#ff8c42); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        /* Glow badge */
+        .glow-badge { box-shadow:0 0 20px rgba(236,91,19,0.4); }
     </style>
 </head>
 <body class="bg-white dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
@@ -229,97 +275,118 @@ $nav_links_home = [
     ['href' => 'blogs.php',   'label' => 'Blogs'],
 ];
 ?>
-<header id="site-header" class="sticky top-0 w-full z-50 glass-dark border-b border-white/5">
-    <nav class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-        <a href="index.php" class="flex items-center shrink-0">
-            <img src="images/travelhub.png" alt="CSNExplore" class="h-9 object-contain"/>
-        </a>
-        <div class="hidden md:flex items-center gap-1">
-            <?php foreach ($nav_links_home as $link): $active = ($link['href'] === 'index.php'); ?>
-                <a href="<?php echo $link['href']; ?>"
-                   class="text-sm font-semibold px-4 py-2 rounded-full transition-colors <?php echo $active ? 'text-white bg-white/10' : 'text-white/70 hover:bg-white/10 hover:text-white'; ?>">
-                    <?php echo $link['label']; ?>
-                </a>
-            <?php endforeach; ?>
-        </div>
-        <div class="flex items-center gap-2">
-            <a href="login.php" id="hdr-login-btn" class="text-white text-sm font-semibold px-4 py-1.5 hover:bg-white/10 rounded-full transition-all">Login</a>
-            <a href="register.php" id="hdr-register-btn" class="bg-primary text-white text-sm font-bold px-5 py-1.5 rounded-full hover:bg-orange-600 transition-all shadow-lg shadow-primary/20">Register</a>
-            <!-- User menu (hidden by default, shown when logged in) -->
-            <div id="hdr-user-menu" class="hidden relative">
-                <button id="hdr-user-btn" class="flex items-center gap-2 text-white text-sm font-semibold px-3 py-1.5 hover:bg-white/10 rounded-full transition-all">
-                    <span class="material-symbols-outlined text-base text-primary">account_circle</span>
-                    <span id="hdr-user-name" class="max-w-[100px] truncate"></span>
-                    <span class="material-symbols-outlined text-sm">expand_more</span>
-                </button>
-                <div id="hdr-dropdown" class="hidden absolute right-0 top-full mt-2 w-48 bg-white rounded-2xl shadow-xl border border-slate-100 py-1 z-[200]">
-                    <a href="my-booking.php" class="flex items-center gap-2 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary transition-colors">
-                        <span class="material-symbols-outlined text-base">book_online</span>My Bookings
+<!-- Morphing Header: full-width at top → pill on scroll -->
+<div id="hdr-wrap" class="sticky top-0 z-50 pointer-events-none transition-all duration-300" style="padding:0">
+    <header id="site-header" class="w-full pointer-events-auto transition-all duration-300" style="background:#000000;border-radius:0;border-bottom:1px solid rgba(255,255,255,0.08);box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none;">
+        <nav class="px-4 sm:px-6 flex items-center justify-between" style="height:56px">
+            <a href="index.php" class="flex items-center shrink-0">
+                <img src="images/travelhub.png" alt="CSNExplore" class="h-8 sm:h-9 object-contain"/>
+            </a>
+            <div class="hidden md:flex items-center gap-0.5">
+                <?php foreach ($nav_links_home as $link): $active = ($link['href'] === 'index.php'); ?>
+                    <a href="<?php echo $link['href']; ?>"
+                       class="text-sm font-semibold px-4 py-1.5 rounded-full transition-colors <?php echo $active ? 'text-white bg-white/15' : 'text-white/60 hover:bg-white/10 hover:text-white'; ?>">
+                        <?php echo $link['label']; ?>
                     </a>
-                    <hr class="my-1 border-slate-100"/>
-                    <button id="hdr-logout-btn" class="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition-colors">
-                        <span class="material-symbols-outlined text-base">logout</span>Logout
-                    </button>
-                </div>
+                <?php endforeach; ?>
             </div>
-            <button id="mob-btn" class="md:hidden text-white hover:bg-white/10 p-2 rounded-lg transition-colors ml-1">
-                <span class="material-symbols-outlined text-2xl text-white">menu</span>
-            </button>
-        </div>
-    </nav>
-    <div id="mob-menu" class="hidden md:hidden border-t border-white/10 px-4 py-3 flex flex-col gap-1">
+            <div class="flex items-center gap-1.5">
+                <!-- Call & WhatsApp -->
+                <a href="tel:+918600968888" id="call-btn" class="hidden sm:flex items-center gap-1 text-white/70 hover:text-white text-xs font-semibold px-2 py-1.5 rounded-full hover:bg-white/10 transition-all" title="Call Us">
+                    <span class="material-symbols-outlined text-base">call</span>
+                    <span class="call-text">+91 86009 68888</span>
+                </a>
+                <a href="https://wa.me/918600968888" id="whatsapp-btn" target="_blank" rel="noopener" class="hidden sm:flex items-center gap-1 text-[#25D366] hover:text-white text-xs font-semibold px-2 py-1.5 rounded-full hover:bg-white/10 transition-all" title="WhatsApp Us">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    <span class="whatsapp-text">WhatsApp</span>
+                </a>
+                <a href="login.php" id="hdr-login-btn" class="text-white/80 hover:text-white text-xs sm:text-sm font-semibold px-3 sm:px-4 py-1.5 rounded-full hover:bg-white/10 transition-all">Login</a>
+                <div id="hdr-user-menu" class="hidden relative">
+                    <button id="hdr-user-btn" class="flex items-center gap-1.5 text-white text-xs sm:text-sm font-semibold px-3 py-1.5 hover:bg-white/10 rounded-full transition-all">
+                        <span class="material-symbols-outlined text-base text-primary">account_circle</span>
+                        <span id="hdr-user-name" class="max-w-[70px] sm:max-w-[100px] truncate"></span>
+                        <span class="material-symbols-outlined text-sm">expand_more</span>
+                    </button>
+                    <div id="hdr-dropdown" class="hidden absolute right-0 top-full mt-2 w-44 bg-[#1a1208] border border-white/10 rounded-2xl shadow-2xl py-1.5 z-[200]">
+                        <button id="hdr-logout-btn" class="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-400 hover:bg-white/5 hover:text-red-300 transition-colors rounded-xl">
+                            <span class="material-symbols-outlined text-base">logout</span>Logout
+                        </button>
+                    </div>
+                </div>
+                <button id="mob-btn" class="md:hidden p-1.5 rounded-full hover:bg-white/10 transition-colors">
+                    <span class="material-symbols-outlined text-xl text-white">menu</span>
+                </button>
+            </div>
+        </nav>
+    </header>
+    <div id="mob-menu" class="hidden md:hidden mt-2 mx-3 rounded-2xl bg-black border border-white/10 shadow-2xl px-2 py-2 flex flex-col gap-0.5 pointer-events-auto">
         <?php foreach ($nav_links_home as $link): $active = ($link['href'] === 'index.php'); ?>
             <a href="<?php echo $link['href']; ?>"
-               class="text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors <?php echo $active ? 'text-primary' : 'text-white/70 hover:bg-white/10 hover:text-white'; ?>">
+               class="text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors <?php echo $active ? 'text-primary bg-white/10' : 'text-white/70 hover:bg-white/10 hover:text-white'; ?>">
                 <?php echo $link['label']; ?>
             </a>
         <?php endforeach; ?>
-        <div class="flex gap-2 pt-2 border-t border-white/10 mt-1">
-            <a href="login.php" id="mob-login-btn" class="flex-1 text-center text-white text-sm font-semibold py-2 hover:bg-white/10 rounded-xl transition-all">Login</a>
-            <a href="register.php" id="mob-register-btn" class="flex-1 text-center bg-primary text-white text-sm font-bold py-2 rounded-xl hover:bg-orange-600 transition-all">Register</a>
-            <button id="mob-logout-btn" class="hidden flex-1 text-center bg-red-500 text-white text-sm font-bold py-2 rounded-xl hover:bg-red-600 transition-all">Logout</button>
-        </div>
     </div>
+</div>
     <script>
+        // Morph header: flat full-width at top → floating pill on scroll
+        (function(){
+            var wrap = document.getElementById('hdr-wrap');
+            var hdr  = document.getElementById('site-header');
+            function onScroll(){
+                if(window.scrollY > 10){
+                    wrap.style.padding = '12px 20px 4px';
+                    hdr.style.borderRadius = '9999px';
+                    hdr.style.background   = 'rgba(0,0,0,0.75)';
+                    hdr.style.backdropFilter = 'blur(20px)';
+                    hdr.style.webkitBackdropFilter = 'blur(20px)';
+                    hdr.style.border = '1px solid rgba(255,255,255,0.12)';
+                    hdr.style.boxShadow = '0 8px 32px rgba(0,0,0,0.6)';
+                } else {
+                    wrap.style.padding = '0';
+                    hdr.style.borderRadius = '0';
+                    hdr.style.background   = '#000000';
+                    hdr.style.backdropFilter = 'none';
+                    hdr.style.webkitBackdropFilter = 'none';
+                    hdr.style.border = 'none';
+                    hdr.style.borderBottom = '1px solid rgba(255,255,255,0.08)';
+                    hdr.style.boxShadow = 'none';
+                }
+            }
+            window.addEventListener('scroll', onScroll, {passive:true});
+            onScroll();
+        })();
+
         document.getElementById('mob-btn').addEventListener('click', function(){
             document.getElementById('mob-menu').classList.toggle('hidden');
         });
-        (function(){
-            var h = document.getElementById('site-header');
-            function updateHeader() {
-                if (window.scrollY === 0) { h.classList.add('header-solid'); }
-                else { h.classList.remove('header-solid'); }
-            }
-            updateHeader();
-            window.addEventListener('scroll', updateHeader, {passive:true});
-        })();
-
         // ── Auth state ──────────────────────────────────────────────────────
         (function(){
             var token = localStorage.getItem('csn_token');
             var user  = JSON.parse(localStorage.getItem('csn_user') || 'null');
-            // Check JWT expiry
+
+            function clearAll() {
+                localStorage.removeItem('csn_token'); localStorage.removeItem('csn_user');
+                localStorage.removeItem('csn_admin_token'); localStorage.removeItem('csn_admin_user');
+                token = null; user = null;
+            }
+
             if (token) {
                 try {
                     var parts = token.split('.');
                     if (parts.length === 3) {
                         var p = JSON.parse(atob(parts[1].replace(/-/g,'+').replace(/_/g,'/')));
-                        if (p.exp && p.exp < Math.floor(Date.now()/1000)) {
-                            localStorage.removeItem('csn_token'); localStorage.removeItem('csn_user');
-                            token = null; user = null;
-                        }
-                    }
-                } catch(e) { localStorage.removeItem('csn_token'); localStorage.removeItem('csn_user'); token = null; user = null; }
+                        if (p.exp && p.exp < Math.floor(Date.now()/1000)) { clearAll(); }
+                    } else { clearAll(); }
+                } catch(e) { clearAll(); }
             }
             if (token && user) {
-                document.getElementById('hdr-login-btn').style.display    = 'none';
-                document.getElementById('hdr-register-btn').style.display = 'none';
-                var um = document.getElementById('hdr-user-menu');
-                um.classList.remove('hidden');
-                document.getElementById('hdr-user-name').textContent = user.name ? user.name.split(' ')[0] : 'Account';
-                document.getElementById('mob-login-btn').style.display    = 'none';
-                document.getElementById('mob-register-btn').style.display = 'none';
-                document.getElementById('mob-logout-btn').classList.remove('hidden');
+                var pl = document.getElementById('hdr-login-btn');
+                var pu = document.getElementById('hdr-user-menu');
+                var pn = document.getElementById('hdr-user-name');
+                if (pl) pl.style.display = 'none';
+                if (pu) pu.classList.remove('hidden');
+                if (pn) pn.textContent = user.name ? user.name.split(' ')[0] : 'Account';
             }
             var userBtn  = document.getElementById('hdr-user-btn');
             var dropdown = document.getElementById('hdr-dropdown');
@@ -328,13 +395,11 @@ $nav_links_home = [
                 document.addEventListener('click', function(){ dropdown.classList.add('hidden'); });
             }
             function doLogout() {
-                localStorage.removeItem('csn_token'); localStorage.removeItem('csn_user');
+                clearAll();
                 window.location.href = 'index.php';
             }
             var lb = document.getElementById('hdr-logout-btn');
-            var mb = document.getElementById('mob-logout-btn');
             if (lb) lb.addEventListener('click', doLogout);
-            if (mb) mb.addEventListener('click', doLogout);
         })();
 
         // Fade in on load
@@ -362,7 +427,11 @@ $nav_links_home = [
         <div id="hero-bg" class="w-full h-full bg-cover bg-center transition-all duration-1000"
              style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuDfTDZo8LglfsdX1vCy-PfHltcZor3jl-l4xxrXMYSU-zLgoKXxY-ouUImyR0WZq69V0y63PE1wDL2_EfqYwWhgQOHPVDJVHhyGGB7H8kZNyboNAXVxWDvlFW_Z_QRXuTKMBuuk7a9HgI3Gde3PidzWIcOhtgs4QAHX2DHA2V6QUaFo6mYDZzEhvq1Y7FwjBSsjTNmfwco23Zfvdb8laeVoTMZHDGMoMrH3yPn4aQDHZ9AJE-WXiuWGVG-c0BegSoJwB1zEXVVWIUie')">
         </div>
-    </div>
+        <!-- Floating orbs -->
+        <div class="orb w-96 h-96 bg-primary/20 top-1/4 -left-24 z-[5]" style="animation-delay:0s"></div>
+        <div class="orb w-64 h-64 bg-orange-400/10 bottom-1/3 right-10 z-[5]" style="animation-delay:3s"></div>
+        <!-- Particles container -->
+        <div id="particles" class="absolute inset-0 z-[6] overflow-hidden"></div>    </div>
     <div class="relative z-20 text-center px-4 w-full max-w-5xl mx-auto pt-8 pb-6">
         <p id="hero-label" class="text-primary font-bold text-xs uppercase tracking-widest mb-3">Chhatrapati Sambhajinagar</p>
         <h1 class="font-serif text-3xl sm:text-4xl md:text-6xl text-white mb-4 leading-tight font-black">
@@ -474,33 +543,15 @@ function switchTab(tab, fromAuto) {
 var heroTabs = ['stays','cars','bikes','attractions','dine','buses'], heroIndex = 0;
 function autoRotate() { heroIndex = (heroIndex + 1) % heroTabs.length; switchTab(heroTabs[heroIndex], true); }
 var heroTimer = setInterval(autoRotate, 5000);
+// Pause auto-rotate when user is typing in any search input
+var _searchFocused = false;
+document.addEventListener('focusin', function(e){ if(e.target && (e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')){ _searchFocused=true; clearInterval(heroTimer); } });
+document.addEventListener('focusout', function(e){ if(e.target && (e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')){ _searchFocused=false; heroTimer=setInterval(autoRotate,5000); } });
 var searchUrls = { stays:'listing.php?type=stays', cars:'listing.php?type=cars', bikes:'listing.php?type=bikes', attractions:'listing.php?type=attractions', dine:'listing.php?type=restaurants', buses:'listing.php?type=buses' };
 function doSearch(tab) {
-    var params = new URLSearchParams();
-    if (tab==='stays') {
-        var loc=document.getElementById('stays-location').value, ci=document.getElementById('stays-checkin').value, co=document.getElementById('stays-checkout').value;
-        if(loc) params.set('search',loc); if(ci) params.set('checkin',ci); if(co) params.set('checkout',co);
-    } else if (tab==='cars') {
-        var pu=document.getElementById('cars-pickup').value, dr=document.getElementById('cars-drop').value, dt=document.getElementById('cars-date').value;
-        if(dr) params.set('search',dr); if(dt) params.set('date',dt);
-    } else if (tab==='bikes') {
-        var loc=document.getElementById('bikes-location').value, dt=document.getElementById('bikes-date').value, rt=document.getElementById('bikes-return').value;
-        if(loc) params.set('search',loc); if(dt) params.set('date',dt); if(rt) params.set('return',rt);
-    } else if (tab==='attractions') {
-        var loc=document.getElementById('attractions-location').value, dt=document.getElementById('attractions-date').value;
-        if(loc) params.set('search',loc); if(dt) params.set('date',dt);
-    } else if (tab==='dine') {
-        var loc=document.getElementById('dine-location').value, dt=document.getElementById('dine-date').value;
-        if(loc) params.set('search',loc); if(dt) params.set('date',dt);
-    } else if (tab==='buses') {
-        var fr=document.getElementById('buses-from').value, to=document.getElementById('buses-to').value, dt=document.getElementById('buses-date').value;
-        if(to) params.set('search',to); if(dt) params.set('date',dt);
-    }
-    var qs = params.toString();
-    window.location.href = searchUrls[tab] + (qs ? '&' + qs : '');
+    window.location.href = searchUrls[tab];
 }
-document.addEventListener('DOMContentLoaded', function() {
-    var today = new Date(), tomorrow = new Date(today);
+document.addEventListener('DOMContentLoaded', function() {    var today = new Date(), tomorrow = new Date(today);
     tomorrow.setDate(today.getDate()+1);
     var opts = { dateFormat:'d M Y', minDate:'today', disableMobile:false };
     var fpCI = flatpickr('#stays-checkin', Object.assign({},opts,{ defaultDate:today, onChange:function(s){ if(s[0]){ var n=new Date(s[0]); n.setDate(n.getDate()+1); fpCO.set('minDate',n); if(!fpCO.selectedDates[0]||fpCO.selectedDates[0]<=s[0]) fpCO.setDate(n); } } }));
@@ -525,9 +576,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 ['icon' => 'restaurant',               'label' => $hp_settings['stat3_label'], 'color' => 'text-green-400'],
                 ['icon' => 'sentiment_very_satisfied', 'label' => $hp_settings['stat4_label'], 'color' => 'text-blue-400'],
             ];
-            foreach ($stats as $stat): ?>
-            <div class="flex flex-col items-center gap-2 group">
-                <div class="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
+            foreach ($stats as $i => $stat): ?>
+            <div class="flex flex-col items-center gap-2 group" data-reveal data-delay="<?php echo $i+1; ?>">
+                <div class="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors group-hover:scale-110 transition-transform duration-300">
                     <span class="material-symbols-outlined <?php echo $stat['color']; ?> text-2xl"><?php echo $stat['icon']; ?></span>
                 </div>
                 <p class="font-black text-white text-lg leading-tight"><?php echo htmlspecialchars($stat['label']); ?></p>
@@ -551,7 +602,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- Ride & Explore -->
 <section class="py-12 bg-white">
     <div class="max-w-7xl mx-auto px-6">
-        <div class="flex items-end justify-between mb-6">
+        <div class="flex items-end justify-between mb-6" data-reveal>
             <div>
                 <p class="text-primary font-bold text-xs uppercase tracking-widest mb-1">Self-Drive & Chauffeur</p>
                 <h2 class="font-serif text-2xl md:text-3xl text-slate-900">Ride &amp; Explore</h2>
@@ -562,24 +613,24 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div class="group relative overflow-hidden rounded-2xl h-64 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
-                <img alt="Luxury Car" loading="lazy" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlDMSSDq5u4EWTtyLrL2T01rG1QVLx79iWAxTc-Q5v-4DB7Qaf3se4mMQ0OXya60SgJNz-esA3YItuP3cAQgCOUMELZ93GiboDiWUtyGlo3vcROCcNprMWU9HsV96e-umpDcBQWbOJp3OcHtPHXGe0NfG1iYfBR6dtozOW1-x0kzci9SbakuCN5LahXPRRgoI5AgrCPrXLIv8hlg56V8HPrYua2wCw58U5qNgwuVnf4hEy-HOTzh45fEkiS4W70yyelAJTlwjmXCUK"/>
+            <div data-reveal data-reveal="left" class="group relative overflow-hidden rounded-2xl h-64 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 img-shimmer">
+                <img alt="Luxury Car" loading="lazy" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlDMSSDq5u4EWTtyLrL2T01rG1QVLx79iWAxTc-Q5v-4DB7Qaf3se4mMQ0OXya60SgJNz-esA3YItuP3cAQgCOUMELZ93GiboDiWUtyGlo3vcROCcNprMWU9HsV96e-umpDcBQWbOJp3OcHtPHXGe0NfG1iYfBR6dtozOW1-x0kzci9SbakuCN5LahXPRRgoI5AgrCPrXLIv8hlg56V8HPrYua2wCw58U5qNgwuVnf4hEy-HOTzh45fEkiS4W70yyelAJTlwjmXCUK"/>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-5">
                     <span class="text-primary text-[10px] font-bold uppercase tracking-widest mb-1 block">Self-Drive & Chauffeur</span>
                     <h4 class="text-white text-xl font-serif mb-1">Premium Car Rentals</h4>
                     <p class="text-white/70 text-xs mb-3">Luxury sedans, SUVs & hatchbacks at your service.</p>
-                    <a href="listing.php?type=cars" class="inline-block bg-white text-black px-5 py-2 rounded-full font-bold text-xs hover:bg-primary hover:text-white transition-all">Explore Cars</a>
+                    <a href="listing.php?type=cars" class="inline-block bg-white text-black px-5 py-2 rounded-full font-bold text-xs hover:bg-primary hover:text-white transition-all btn-pulse">Explore Cars</a>
                 </div>
             </div>
-            <div class="group relative overflow-hidden rounded-2xl h-64 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
-                <img alt="Adventure Bike" loading="lazy" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFYIfhiyxiKGSvW26EEi6qWok9NLO6cRlbBw0oCLlVCiV9F1e_mtQoiJK-2Dnb5uwU3K6b01miWgbmBQaNlDcPazf_LXbqwv3zx4f_F6Jsl627xYGPA3B5kQg_01L4gEPJseizInfQycEdL6o-IO9u7fAjGuMEnr_iPgYZShZ5e9VLbqTAdlhGFW8Tnss81gBfiFHSmzorGkalt_cF3Hi8ycEbYCGC_a4e9UyOZAQ8J4m9XHF2EcZwdaPo2OpFbnwwGvVRYdxLSxsT"/>
+            <div data-reveal data-reveal="right" class="group relative overflow-hidden rounded-2xl h-64 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 img-shimmer">
+                <img alt="Adventure Bike" loading="lazy" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFYIfhiyxiKGSvW26EEi6qWok9NLO6cRlbBw0oCLlVCiV9F1e_mtQoiJK-2Dnb5uwU3K6b01miWgbmBQaNlDcPazf_LXbqwv3zx4f_F6Jsl627xYGPA3B5kQg_01L4gEPJseizInfQycEdL6o-IO9u7fAjGuMEnr_iPgYZShZ5e9VLbqTAdlhGFW8Tnss81gBfiFHSmzorGkalt_cF3Hi8ycEbYCGC_a4e9UyOZAQ8J4m9XHF2EcZwdaPo2OpFbnwwGvVRYdxLSxsT"/>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-5">
                     <span class="text-primary text-[10px] font-bold uppercase tracking-widest mb-1 block">Scooters to Royal Enfields</span>
                     <h4 class="text-white text-xl font-serif mb-1">Bike Rentals</h4>
                     <p class="text-white/70 text-xs mb-3">Ride the city your way — any road, any time.</p>
-                    <a href="listing.php?type=bikes" class="inline-block bg-white text-black px-5 py-2 rounded-full font-bold text-xs hover:bg-primary hover:text-white transition-all">Explore Bikes</a>
+                    <a href="listing.php?type=bikes" class="inline-block bg-white text-black px-5 py-2 rounded-full font-bold text-xs hover:bg-primary hover:text-white transition-all btn-pulse">Explore Bikes</a>
                 </div>
             </div>
         </div>
@@ -614,7 +665,7 @@ foreach ($hp_settings['section_order'] as $_sec_key):
 ?>
 <section class="py-12 <?php echo $_bg; ?>">
     <div class="max-w-7xl mx-auto px-6">
-        <div class="flex items-end justify-between mb-6">
+        <div class="flex items-end justify-between mb-6" data-reveal>
             <?php if ($_sec_key === 'blogs'): ?>
             <div>
                 <p class="text-primary font-bold text-xs uppercase tracking-widest mb-1">Our Travel Journals</p>
@@ -636,7 +687,8 @@ foreach ($hp_settings['section_order'] as $_sec_key):
         // ── Visible-cards-per-section config ─────────────────────────────────
         $_vis = ['attractions'=>4,'bikes'=>4,'restaurants'=>6,'buses'=>2,'blogs'=>3];
         $_vis_count = $_vis[$_sec_key] ?? 4;
-        $_card_w = 'calc(' . (100 / $_vis_count) . '% - ' . (20 * ($_vis_count - 1) / $_vis_count) . 'px)';
+        // Mobile: fixed 80vw so ~1.1 cards visible. Desktop: percentage of container.
+        $_card_w = 'var(--card-w-' . $_sec_key . ')';
 
         if ($_sec_key === 'attractions'):
             $render_fn = function($a) {
@@ -652,7 +704,7 @@ foreach ($hp_settings['section_order'] as $_sec_key):
                     .'<h5 class="font-serif text-base text-slate-900 mt-1 mb-3 line-clamp-1">'.$name.'</h5>'
                     .'<div class="flex items-center justify-between">'
                     .'<p class="font-black text-slate-900 text-sm">'.$price.' <span class="text-xs text-slate-400 font-normal">entry</span></p>'
-                    .'<span class="bg-primary text-white px-3 py-1.5 rounded-full font-bold text-xs group-hover:bg-orange-600 transition-all">Book Now</span>'
+                    .'<span class="bg-primary text-white px-3 py-1.5 rounded-full font-bold text-xs group-hover:bg-orange-600 transition-all">Check Availability</span>'
                     .'</div></div></a>';
             };
             $items = $hp_attractions;
@@ -669,7 +721,7 @@ foreach ($hp_settings['section_order'] as $_sec_key):
                     .'<h5 class="font-serif text-base text-slate-900 mt-1 mb-3 line-clamp-1">'.$name.'</h5>'
                     .'<div class="flex items-center justify-between">'
                     .'<p class="font-black text-slate-900 text-sm">&#8377;'.$price.' <span class="text-xs text-slate-400 font-normal">/day</span></p>'
-                    .'<span class="bg-primary text-white px-3 py-1.5 rounded-full font-bold text-xs group-hover:bg-orange-600 transition-all">Book Now</span>'
+                    .'<span class="bg-primary text-white px-3 py-1.5 rounded-full font-bold text-xs group-hover:bg-orange-600 transition-all">Check Availability</span>'
                     .'</div></div></a>';
             };
             $items = $hp_bikes;
@@ -686,7 +738,7 @@ foreach ($hp_settings['section_order'] as $_sec_key):
                     .'<h5 class="font-serif text-base text-slate-900 mt-1 mb-3 line-clamp-1">'.$name.'</h5>'
                     .'<div class="flex items-center justify-between">'
                     .'<p class="font-black text-slate-900 text-sm">&#8377;'.$price.' <span class="text-xs text-slate-400 font-normal">for two</span></p>'
-                    .'<span class="bg-primary text-white px-3 py-1.5 rounded-full font-bold text-xs group-hover:bg-orange-600 transition-all">Book Now</span>'
+                    .'<span class="bg-primary text-white px-3 py-1.5 rounded-full font-bold text-xs group-hover:bg-orange-600 transition-all">Check Availability</span>'
                     .'</div></div></a>';
             };
             $items = $hp_restaurants;
@@ -760,21 +812,61 @@ foreach ($hp_settings['section_order'] as $_sec_key):
         var track = document.getElementById('carousel-track-' + key);
         if (!wrap || !track) return;
         var paused = false, pos = 0, speed = 0.7;
+        var oneSetWidth = 0;
+        var isDragging = false, dragStartX = 0, dragStartPos = 0;
+
+        function calcWidth() {
+            oneSetWidth = track.scrollWidth / 3;
+        }
+
         requestAnimationFrame(function(){
-            var oneSetWidth = track.scrollWidth / 3;
+            calcWidth();
             if (oneSetWidth <= 0) return;
+            window.addEventListener('resize', function(){ calcWidth(); if (pos >= oneSetWidth) pos = pos % oneSetWidth; });
+
             function step() {
-                if (!paused) {
+                if (!paused && !isDragging) {
                     pos += speed;
                     if (pos >= oneSetWidth) pos -= oneSetWidth;
                     track.style.transform = 'translateX(-' + pos + 'px)';
                 }
                 requestAnimationFrame(step);
             }
-            wrap.addEventListener('mouseenter', function(){ paused = true; });
-            wrap.addEventListener('mouseleave', function(){ paused = false; });
-            wrap.addEventListener('touchstart', function(){ paused = true; }, {passive:true});
-            wrap.addEventListener('touchend', function(){ setTimeout(function(){ paused = false; }, 2000); }, {passive:true});
+
+            // Mouse drag — use document for move/up so it works outside the clipped wrap
+            wrap.addEventListener('mousedown', function(e){
+                isDragging = true; paused = true;
+                dragStartX = e.clientX; dragStartPos = pos;
+                wrap.style.cursor = 'grabbing';
+                e.preventDefault();
+            });
+            document.addEventListener('mousemove', function(e){
+                if (!isDragging) return;
+                var dx = dragStartX - e.clientX;
+                pos = dragStartPos + dx;
+                if (pos < 0) pos += oneSetWidth;
+                if (pos >= oneSetWidth) pos -= oneSetWidth;
+                track.style.transform = 'translateX(-' + pos + 'px)';
+            });
+            document.addEventListener('mouseup', function(){
+                if (!isDragging) return;
+                isDragging = false;
+                wrap.style.cursor = '';
+                setTimeout(function(){ paused = false; }, 300);
+            });
+
+            // Touch drag
+            var touchStartX = 0, touchStartPos = 0;
+            wrap.addEventListener('touchstart', function(e){ paused=true; touchStartX=e.touches[0].clientX; touchStartPos=pos; }, {passive:true});
+            wrap.addEventListener('touchmove', function(e){
+                var dx = touchStartX - e.touches[0].clientX;
+                pos = touchStartPos + dx;
+                if (pos < 0) pos += oneSetWidth;
+                if (pos >= oneSetWidth) pos -= oneSetWidth;
+                track.style.transform = 'translateX(-' + pos + 'px)';
+            }, {passive:true});
+            wrap.addEventListener('touchend', function(){ setTimeout(function(){ paused=false; }, 1500); }, {passive:true});
+
             requestAnimationFrame(step);
         });
     });
