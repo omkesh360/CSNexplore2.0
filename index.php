@@ -239,15 +239,15 @@ $hp_blogs = hp_fetch_picks($db, 'blogs', $hp_settings['picks_blogs'], "status='p
 
 <!-- Promo Bar - Always visible at top -->
 <div class="bg-primary text-white py-1.5 overflow-hidden relative z-[70]">
-    <div class="max-w-7xl mx-auto px-6 flex justify-between items-center gap-4 text-[11px] font-semibold uppercase tracking-widest">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center gap-4 text-[11px] font-semibold uppercase tracking-widest">
         <div class="flex-1 overflow-hidden">
-            <div class="flex whitespace-nowrap marquee">
+            <div class="flex whitespace-nowrap" style="animation:marquee 30s linear infinite">
                 <?php
                 $default_marquee = [
-                    "★ 20% OFF on first heritage tour booking",
                     "★ Verified guides for Ajanta &amp; Ellora",
                     "★ Free cancellation on bike rentals",
                     "★ 24/7 tourist support available",
+                    "★ 20% OFF on first heritage tour booking",
                 ];
                 if (!empty($hp_settings['marquee'])) {
                     $marquee_items = array_filter(array_map('trim', explode("\n", $hp_settings['marquee'])));
@@ -262,7 +262,6 @@ $hp_blogs = hp_fetch_picks($db, 'blogs', $hp_settings['picks_blogs'], "status='p
                 <?php endforeach; ?>
             </div>
         </div>
-        
     </div>
 </div>
 
@@ -333,6 +332,10 @@ $nav_links_home = [
         (function(){
             var wrap = document.getElementById('hdr-wrap');
             var hdr  = document.getElementById('site-header');
+            var callBtn = document.getElementById('call-btn');
+            var whatsappBtn = document.getElementById('whatsapp-btn');
+            var callText = callBtn ? callBtn.querySelector('.call-text') : null;
+            var whatsappText = whatsappBtn ? whatsappBtn.querySelector('.whatsapp-text') : null;
             
             function onScroll(){
                 if(window.scrollY > 10){
@@ -343,6 +346,17 @@ $nav_links_home = [
                     hdr.style.webkitBackdropFilter = 'blur(20px)';
                     hdr.style.border = '1px solid rgba(255,255,255,0.12)';
                     hdr.style.boxShadow = '0 8px 32px rgba(0,0,0,0.6)';
+                    
+                    if(callText) callText.style.display = 'none';
+                    if(whatsappText) whatsappText.style.display = 'none';
+                    if(callBtn) {
+                        callBtn.classList.remove('gap-1', 'px-2');
+                        callBtn.classList.add('w-9', 'h-9', 'justify-center');
+                    }
+                    if(whatsappBtn) {
+                        whatsappBtn.classList.remove('gap-1', 'px-2');
+                        whatsappBtn.classList.add('w-9', 'h-9', 'justify-center');
+                    }
                 } else {
                     wrap.style.padding = '0';
                     hdr.style.borderRadius = '0';
@@ -352,6 +366,17 @@ $nav_links_home = [
                     hdr.style.border = 'none';
                     hdr.style.borderBottom = '1px solid rgba(255,255,255,0.08)';
                     hdr.style.boxShadow = 'none';
+                    
+                    if(callText) callText.style.display = 'inline';
+                    if(whatsappText) whatsappText.style.display = 'inline';
+                    if(callBtn) {
+                        callBtn.classList.add('gap-1', 'px-2');
+                        callBtn.classList.remove('w-9', 'h-9', 'justify-center');
+                    }
+                    if(whatsappBtn) {
+                        whatsappBtn.classList.add('gap-1', 'px-2');
+                        whatsappBtn.classList.remove('w-9', 'h-9', 'justify-center');
+                    }
                 }
             }
             window.addEventListener('scroll', onScroll, {passive:true});

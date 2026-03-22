@@ -128,9 +128,8 @@ function sharedHeader($base) {
     }
     return '
 <div class="bg-[#ec5b13] text-white py-1.5 overflow-hidden relative z-[70]">
-  <div class="max-w-7xl mx-auto px-4 text-[11px] font-semibold uppercase tracking-widest overflow-hidden">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 text-[11px] font-semibold uppercase tracking-widest overflow-hidden">
     <div class="flex whitespace-nowrap" style="animation:marquee 30s linear infinite">
-      <span class="px-6">★ 20% OFF on first heritage tour booking</span>
       <span class="px-6">★ Verified guides for Ajanta &amp; Ellora</span>
       <span class="px-6">★ Free cancellation on bike rentals</span>
       <span class="px-6">★ 24/7 tourist support available</span>
@@ -138,6 +137,7 @@ function sharedHeader($base) {
       <span class="px-6">★ Verified guides for Ajanta &amp; Ellora</span>
       <span class="px-6">★ Free cancellation on bike rentals</span>
       <span class="px-6">★ 24/7 tourist support available</span>
+      <span class="px-6">★ 20% OFF on first heritage tour booking</span>
     </div>
   </div>
 </div>

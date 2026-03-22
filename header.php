@@ -156,11 +156,10 @@ $active_listing_type = $listing_type ?? '';
 
 <!-- Promo Bar - Always visible at top -->
 <div class="bg-primary text-white py-1.5 overflow-hidden relative z-[70]">
-    <div class="max-w-7xl mx-auto px-6 flex justify-between items-center gap-4 text-[11px] font-semibold uppercase tracking-widest">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center gap-4 text-[11px] font-semibold uppercase tracking-widest">
         <div class="flex-1 overflow-hidden">
             <div class="flex whitespace-nowrap" style="animation:marquee 30s linear infinite">
                 <style>@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}</style>
-                <span class="px-6">★ 20% OFF on first heritage tour booking</span>
                 <span class="px-6">★ Verified guides for Ajanta &amp; Ellora</span>
                 <span class="px-6">★ Free cancellation on bike rentals</span>
                 <span class="px-6">★ 24/7 tourist support available</span>
@@ -168,6 +167,7 @@ $active_listing_type = $listing_type ?? '';
                 <span class="px-6">★ Verified guides for Ajanta &amp; Ellora</span>
                 <span class="px-6">★ Free cancellation on bike rentals</span>
                 <span class="px-6">★ 24/7 tourist support available</span>
+                <span class="px-6">★ 20% OFF on first heritage tour booking</span>
             </div>
         </div>
     </div>
@@ -175,8 +175,8 @@ $active_listing_type = $listing_type ?? '';
 
 <!-- Sticky Header that transforms to pill -->
 <div id="hdr-wrap" class="sticky top-0 z-[60] pointer-events-none transition-all duration-300" style="padding:0">
-    <header id="site-header" class="w-full pointer-events-auto transition-all duration-300" style="background:#000000;border-radius:0;border-bottom:1px solid rgba(255,255,255,0.08);box-shadow:none;border-left:none;border-right:none;border-top:none;backdrop-filter:none;-webkit-backdrop-filter:none;">
-        <nav class="flex items-center justify-between">
+    <header id="site-header" class="w-full pointer-events-auto transition-all duration-300" style="background:#000000;border-radius:0;border-bottom:1px solid rgba(255,255,255,0.08);box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none;">
+        <nav class="px-4 sm:px-6 flex items-center justify-between" style="height:56px">
             <!-- Logo -->
             <a href="index.php" class="flex items-center shrink-0">
                 <img src="images/travelhub.png" alt="CSNExplore" class="h-8 sm:h-9 object-contain" loading="lazy"/>
