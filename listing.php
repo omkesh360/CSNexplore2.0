@@ -197,7 +197,7 @@ $category_nav = [
   <div class="flex flex-col lg:flex-row gap-8">
 
     <!-- Mobile filter toggle -->
-    <div class="lg:hidden sticky top-[72px] z-40 mb-4">
+    <div class="lg:hidden relative top-[72px] z-40 mb-4">
       <button id="mob-filter-btn" onclick="document.getElementById('sidebar-filters').classList.toggle('hidden'); this.classList.toggle('bg-primary'); this.classList.toggle('text-white')"
               class="flex items-center gap-2 bg-white/90 backdrop-blur-md border border-slate-200 text-slate-700 font-bold px-4 py-3 rounded-2xl text-sm shadow-lg w-full justify-center transition-all active:scale-95">
         <span class="material-symbols-outlined text-base">tune</span>Filters &amp; Sort

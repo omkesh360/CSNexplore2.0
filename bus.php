@@ -19,7 +19,7 @@ $category_nav = [
     ['href' => 'bus.php',                      'icon' => 'directions_bus',     'label' => 'Buses'],
 ];
 ?>
-<nav class="bg-white border-b border-slate-100 sticky top-16 z-40">
+<nav class="bg-white border-b border-slate-100 relative top-16 z-40">
     <div class="max-w-7xl mx-auto px-6 overflow-x-auto hide-scrollbar">
         <div class="flex items-center gap-1 h-12">
             <?php foreach ($category_nav as $cat):

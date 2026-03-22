@@ -154,8 +154,8 @@ $active_listing_type = $listing_type ?? '';
 </head>
 <body class="bg-white dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
 
-<!-- Marquee Bar -->
-<div class="bg-primary text-white py-1.5 overflow-hidden relative z-[60]">
+<!-- Promo Bar - Always visible at top -->
+<div class="bg-primary text-white py-1.5 overflow-hidden relative z-[70]">
     <div class="max-w-7xl mx-auto px-6 flex justify-between items-center gap-4 text-[11px] font-semibold uppercase tracking-widest">
         <div class="flex-1 overflow-hidden">
             <div class="flex whitespace-nowrap" style="animation:marquee 30s linear infinite">
@@ -170,12 +170,11 @@ $active_listing_type = $listing_type ?? '';
                 <span class="px-6">★ 24/7 tourist support available</span>
             </div>
         </div>
-
     </div>
 </div>
 
-<!-- Morphing Header: full-width at top → pill on scroll -->
-<div id="hdr-wrap" class="relative top-0 z-50 pointer-events-none transition-all duration-300" style="padding:0">
+<!-- Sticky Header that transforms to pill -->
+<div id="hdr-wrap" class="sticky top-0 z-[60] pointer-events-none transition-all duration-300" style="padding:0">
     <header id="site-header" class="w-full pointer-events-auto transition-all duration-300" style="background:#000000;border-radius:0;border-bottom:1px solid rgba(255,255,255,0.08);box-shadow:none;border-left:none;border-right:none;border-top:none;backdrop-filter:none;-webkit-backdrop-filter:none;">
         <nav class="flex items-center justify-between">
             <!-- Logo -->
@@ -280,7 +279,6 @@ $active_listing_type = $listing_type ?? '';
                     hdr.style.border = '1px solid rgba(255,255,255,0.12)';
                     hdr.style.boxShadow = '0 8px 32px rgba(0,0,0,0.6)';
                     
-                    // Hide text, show icon only
                     if(callText) callText.style.display = 'none';
                     if(whatsappText) whatsappText.style.display = 'none';
                     if(callBtn) {
@@ -301,7 +299,6 @@ $active_listing_type = $listing_type ?? '';
                     hdr.style.borderBottom = '1px solid rgba(255,255,255,0.08)';
                     hdr.style.boxShadow = 'none';
                     
-                    // Show text
                     if(callText) callText.style.display = 'inline';
                     if(whatsappText) whatsappText.style.display = 'inline';
                     if(callBtn) {

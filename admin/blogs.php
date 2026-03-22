@@ -38,7 +38,7 @@ require 'admin-header.php';
 <!-- Blog Modal -->
 <div id="blog-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[92vh] overflow-y-auto">
-        <div class="flex items-center justify-between p-5 border-b border-slate-100 sticky top-0 bg-white z-10 rounded-t-2xl">
+        <div class="flex items-center justify-between p-5 border-b border-slate-100 relative top-0 bg-white z-10 rounded-t-2xl">
             <h3 id="blog-modal-title" class="text-base font-bold">New Blog Post</h3>
             <button onclick="closeBlogModal()" class="text-slate-400 hover:text-slate-600">
                 <span class="material-symbols-outlined">close</span>

@@ -237,8 +237,8 @@ $hp_blogs = hp_fetch_picks($db, 'blogs', $hp_settings['picks_blogs'], "status='p
 </head>
 <body class="bg-white dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
 
-<!-- Marquee Bar -->
-<div class="bg-primary text-white py-1.5 overflow-hidden relative z-[60]">
+<!-- Promo Bar - Always visible at top -->
+<div class="bg-primary text-white py-1.5 overflow-hidden relative z-[70]">
     <div class="max-w-7xl mx-auto px-6 flex justify-between items-center gap-4 text-[11px] font-semibold uppercase tracking-widest">
         <div class="flex-1 overflow-hidden">
             <div class="flex whitespace-nowrap marquee">
@@ -275,8 +275,8 @@ $nav_links_home = [
     ['href' => 'blogs.php',   'label' => 'Blogs'],
 ];
 ?>
-<!-- Morphing Header: full-width at top → pill on scroll -->
-<div id="hdr-wrap" class="relative top-0 z-50 pointer-events-none transition-all duration-300" style="padding:0">
+<!-- Sticky Header that transforms to pill -->
+<div id="hdr-wrap" class="sticky top-0 z-[60] pointer-events-none transition-all duration-300" style="padding:0">
     <header id="site-header" class="w-full pointer-events-auto transition-all duration-300" style="background:#000000;border-radius:0;border-bottom:1px solid rgba(255,255,255,0.08);box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none;">
         <nav class="px-4 sm:px-6 flex items-center justify-between" style="height:56px">
             <a href="index.php" class="flex items-center shrink-0">
@@ -333,6 +333,7 @@ $nav_links_home = [
         (function(){
             var wrap = document.getElementById('hdr-wrap');
             var hdr  = document.getElementById('site-header');
+            
             function onScroll(){
                 if(window.scrollY > 10){
                     wrap.style.padding = '12px 20px 4px';

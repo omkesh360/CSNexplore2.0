@@ -127,7 +127,7 @@ function sharedHeader($base) {
         $moblinks .= '<a href="'.$base.$n['href'].'" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">'.$n['label'].'</a>';
     }
     return '
-<div class="bg-[#ec5b13] text-white py-1.5 overflow-hidden relative z-[60]">
+<div class="bg-[#ec5b13] text-white py-1.5 overflow-hidden relative z-[70]">
   <div class="max-w-7xl mx-auto px-4 text-[11px] font-semibold uppercase tracking-widest overflow-hidden">
     <div class="flex whitespace-nowrap" style="animation:marquee 30s linear infinite">
       <span class="px-6">★ 20% OFF on first heritage tour booking</span>
@@ -141,7 +141,7 @@ function sharedHeader($base) {
     </div>
   </div>
 </div>
-<div id="hdr-wrap" class="relative top-0 z-50 pointer-events-none transition-all duration-300" style="padding:0">
+<div id="hdr-wrap" class="sticky top-0 z-[60] pointer-events-none transition-all duration-300" style="padding:0">
   <header id="site-header" class="w-full pointer-events-auto transition-all duration-300" style="background:#000000;border-radius:0;border-bottom:1px solid rgba(255,255,255,0.08);box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none;">
     <nav class="px-4 sm:px-6 flex items-center justify-between" style="height:56px">
       <a href="'.$base.'index.php" class="flex items-center shrink-0">
@@ -641,7 +641,7 @@ foreach ($types as $type) {
       </div>
       <!-- Right: booking card -->
       <div class="space-y-4">
-        <div class="bg-white rounded-2xl p-6 shadow-sm sticky top-24">
+        <div class="bg-white rounded-2xl p-6 shadow-sm relative top-24">
           <!-- Need help? -->
           <div class="flex flex-col gap-2 mb-4 pb-4 border-b border-slate-100">
             <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Need help?</p>
