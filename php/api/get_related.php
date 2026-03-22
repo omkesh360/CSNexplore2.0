@@ -18,19 +18,42 @@ try {
         throw new Exception('Invalid type');
     }
     
-    // Build query
-    $sql = "SELECT id, name, image_url, rating, price 
+    // Build query - handle different column names per table
+    $nameColumn = 'name';
+    $priceColumn = 'price';
+    $imageColumn = 'image';
+    
+    // Map actual column names for each table
+    if ($type === 'cars') {
+        $priceColumn = 'price_per_day';
+    } elseif ($type === 'bikes') {
+        $priceColumn = 'price_per_day';
+    } elseif ($type === 'stays') {
+        $priceColumn = 'price_per_night';
+    } elseif ($type === 'buses') {
+        $nameColumn = 'operator';
+        $priceColumn = 'price';
+    } elseif ($type === 'attractions') {
+        $priceColumn = 'entry_fee';
+    } elseif ($type === 'restaurants') {
+        $priceColumn = 'price_per_person';
+    }
+    
+    $sql = "SELECT id, {$nameColumn} as name, {$imageColumn} as image_url, rating, {$priceColumn} as price
             FROM {$type} 
-            WHERE is_active = 1 AND id != :exclude 
+            WHERE is_active = 1 AND id != ? 
             ORDER BY rating DESC, display_order ASC 
-            LIMIT :limit";
+            LIMIT {$limit}";
     
-    $stmt = $db->prepare($sql);
-    $stmt->bindValue(':exclude', $exclude, PDO::PARAM_INT);
-    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
-    $stmt->execute();
+    $listings = $db->fetchAll($sql, [$exclude]);
     
-    $listings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // Fix image paths for frontend rendering
+    foreach ($listings as &$listing) {
+        if (!empty($listing['image_url']) && strpos($listing['image_url'], 'http') !== 0 && strpos($listing['image_url'], '../') !== 0 && strpos($listing['image_url'], '/') !== 0) {
+            $listing['image_url'] = '../' . $listing['image_url'];
+        }
+    }
+    unset($listing);
     
     echo json_encode([
         'success' => true,

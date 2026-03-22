@@ -26,3 +26,249 @@ Stack trace:
 Stack trace:
 #0 {main}
   thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 28
+[21-Mar-2026 17:47:04 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:28
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 28
+[21-Mar-2026 18:01:38 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:28
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 28
+[21-Mar-2026 20:12:57 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:28
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 28
+[21-Mar-2026 20:13:08 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:28
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 28
+[21-Mar-2026 20:13:13 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:28
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 28
+[21-Mar-2026 20:13:23 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:28
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 28
+[21-Mar-2026 20:14:32 UTC] PHP Deprecated:  Function curl_close() is deprecated since 8.5, as it has no effect since PHP 8.0 in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/services/MailerLiteClient.php on line 124
+[21-Mar-2026 20:14:32 UTC] PHP Deprecated:  Function curl_close() is deprecated since 8.5, as it has no effect since PHP 8.0 in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/services/MailerLiteClient.php on line 124
+[21-Mar-2026 20:14:52 UTC] PHP Deprecated:  Function curl_close() is deprecated since 8.5, as it has no effect since PHP 8.0 in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/services/MailerLiteClient.php on line 125
+[21-Mar-2026 20:14:52 UTC] PHP Deprecated:  Function curl_close() is deprecated since 8.5, as it has no effect since PHP 8.0 in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/services/MailerLiteClient.php on line 125
+[21-Mar-2026 20:33:04 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:28
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 28
+[21-Mar-2026 20:39:09 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:28
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 28
+[21-Mar-2026 20:39:26 UTC] Booking #14 email status: {"user_sent":true,"admin_sent":true,"errors":[]}
+[21-Mar-2026 20:43:43 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:28
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 28
+[21-Mar-2026 20:44:00 UTC] Booking #14 status update email sent: completed
+[21-Mar-2026 20:44:43 UTC] Booking #14 status update email sent: cancelled
+[21-Mar-2026 20:47:07 UTC] Booking #12 status update email sent: cancelled
+[21-Mar-2026 20:47:10 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:28
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 28
+[21-Mar-2026 20:47:25 UTC] Booking #15 email status: {"user_sent":true,"admin_sent":true,"errors":[]}
+[21-Mar-2026 20:50:55 UTC] Booking #12 status update email sent: completed
+[21-Mar-2026 20:53:06 UTC] Booking #6 status update email sent: completed
+[21-Mar-2026 20:55:30 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:52
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 52
+[21-Mar-2026 20:55:33 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:52
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 52
+[21-Mar-2026 20:55:33 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:52
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 52
+[21-Mar-2026 20:55:34 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:52
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 52
+[21-Mar-2026 20:55:34 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:52
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 52
+[21-Mar-2026 20:55:35 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:52
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 52
+[21-Mar-2026 20:55:35 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:52
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 52
+[21-Mar-2026 20:55:35 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:52
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 52
+[21-Mar-2026 20:55:36 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:52
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 52
+[21-Mar-2026 20:55:36 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:52
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 52
+[21-Mar-2026 20:55:37 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:52
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 52
+[21-Mar-2026 20:55:37 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:52
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 52
+[21-Mar-2026 20:55:37 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:52
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 52
+[21-Mar-2026 20:55:37 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:52
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 52
+[21-Mar-2026 20:55:37 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:52
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 52
+[21-Mar-2026 20:55:37 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:52
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 52
+[21-Mar-2026 20:55:37 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:52
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 52
+[21-Mar-2026 20:55:38 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:52
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 52
+[21-Mar-2026 20:55:38 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:52
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 52
+[21-Mar-2026 20:55:38 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:52
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 52
+[21-Mar-2026 20:55:38 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:52
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 52
+[21-Mar-2026 20:55:38 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:52
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 52
+[21-Mar-2026 20:55:38 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:52
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 52
+[21-Mar-2026 20:55:38 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:52
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 52
+[21-Mar-2026 20:55:38 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:52
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 52
+[21-Mar-2026 20:55:39 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:52
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 52
+[21-Mar-2026 20:55:39 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:52
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 52
+[21-Mar-2026 20:55:39 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:52
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 52
+[21-Mar-2026 20:55:39 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:52
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 52
+[21-Mar-2026 20:55:39 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:52
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 52
+[21-Mar-2026 20:55:39 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:52
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 52
+[21-Mar-2026 20:55:39 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:52
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 52
+[21-Mar-2026 20:55:40 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:52
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 52
+[21-Mar-2026 20:56:24 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:48
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 48
+[21-Mar-2026 20:56:30 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:48
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 48
+[21-Mar-2026 20:57:03 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:48
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 48
+[21-Mar-2026 21:01:06 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:48
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 48
+[21-Mar-2026 21:01:07 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:48
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 48
+[21-Mar-2026 21:01:16 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:48
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 48
+[21-Mar-2026 21:01:47 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:48
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 48
+[21-Mar-2026 21:06:42 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in Command line code:5
+Stack trace:
+#0 {main}
+  thrown in Command line code on line 5
+[21-Mar-2026 21:07:53 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::prepare() in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php:48
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/api/get_related.php on line 48
+[22-Mar-2026 11:08:47 UTC] Booking #18 email status: {"user_sent":true,"admin_sent":true,"errors":[]}
+[22-Mar-2026 11:08:47 UTC] PHP Deprecated:  Function curl_close() is deprecated since 8.5, as it has no effect since PHP 8.0 in Command line code on line 23
+[22-Mar-2026 11:09:24 UTC] Booking #18 status update email sent: cancelled
+[22-Mar-2026 11:09:24 UTC] PHP Deprecated:  Function curl_close() is deprecated since 8.5, as it has no effect since PHP 8.0 in Command line code on line 24
+[22-Mar-2026 11:13:54 UTC] Booking #19 email status: {"user_sent":true,"admin_sent":true,"errors":[]}
+[22-Mar-2026 11:18:07 UTC] PHP Warning:  failed loading cafile stream: `/usr/local/etc/openssl@3/cert.pem' in Command line code on line 22
+[22-Mar-2026 11:18:07 UTC] PHP Warning:  file_get_contents(): Failed to enable crypto in Command line code on line 22
+[22-Mar-2026 11:18:07 UTC] PHP Warning:  file_get_contents(https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80): Failed to open stream: operation failed in Command line code on line 22
+[22-Mar-2026 11:18:07 UTC] PHP Warning:  failed loading cafile stream: `/usr/local/etc/openssl@3/cert.pem' in Command line code on line 22
+[22-Mar-2026 11:18:07 UTC] PHP Warning:  file_get_contents(): Failed to enable crypto in Command line code on line 22
+[22-Mar-2026 11:18:07 UTC] PHP Warning:  file_get_contents(https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=800&q=80): Failed to open stream: operation failed in Command line code on line 22
+[22-Mar-2026 11:18:07 UTC] PHP Warning:  failed loading cafile stream: `/usr/local/etc/openssl@3/cert.pem' in Command line code on line 22
+[22-Mar-2026 11:18:07 UTC] PHP Warning:  file_get_contents(): Failed to enable crypto in Command line code on line 22
+[22-Mar-2026 11:18:07 UTC] PHP Warning:  file_get_contents(https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=800&q=80): Failed to open stream: operation failed in Command line code on line 22
+[22-Mar-2026 11:18:07 UTC] PHP Warning:  failed loading cafile stream: `/usr/local/etc/openssl@3/cert.pem' in Command line code on line 22
+[22-Mar-2026 11:18:07 UTC] PHP Warning:  file_get_contents(): Failed to enable crypto in Command line code on line 22
+[22-Mar-2026 11:18:07 UTC] PHP Warning:  file_get_contents(https://images.unsplash.com/photo-1560185007-c5ca9d2c014d?w=800&q=80): Failed to open stream: operation failed in Command line code on line 22
+[22-Mar-2026 11:18:07 UTC] PHP Warning:  failed loading cafile stream: `/usr/local/etc/openssl@3/cert.pem' in Command line code on line 22
+[22-Mar-2026 11:18:07 UTC] PHP Warning:  file_get_contents(): Failed to enable crypto in Command line code on line 22
+[22-Mar-2026 11:18:07 UTC] PHP Warning:  file_get_contents(https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800&q=80): Failed to open stream: operation failed in Command line code on line 22
+[22-Mar-2026 11:18:07 UTC] PHP Warning:  failed loading cafile stream: `/usr/local/etc/openssl@3/cert.pem' in Command line code on line 22
+[22-Mar-2026 11:18:07 UTC] PHP Warning:  file_get_contents(): Failed to enable crypto in Command line code on line 22
+[22-Mar-2026 11:18:07 UTC] PHP Warning:  file_get_contents(https://images.unsplash.com/photo-1606402179428-a57976d71fa4?w=800&q=80): Failed to open stream: operation failed in Command line code on line 22
+[22-Mar-2026 12:14:03 UTC] PHP Fatal error:  Uncaught Error: Class "PerformanceOptimizer\PerformanceOptimizer" not found in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/performance-optimizer/test-initialization.php:24
+Stack trace:
+#0 {main}
+  thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/performance-optimizer/test-initialization.php on line 24

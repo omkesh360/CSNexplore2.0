@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Header Responsive Test</title>
+    <link href="mobile-responsive.css" rel="stylesheet"/>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        
+        /* Mobile-first header height optimization */
+        #site-header {
+            height: 56px; /* Mobile height */
+            background: #000;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        
+        #site-header nav {
+            height: 56px; /* Mobile nav height */
+            padding-left: var(--space-4);
+            padding-right: var(--space-4);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        /* Desktop header height */
+        @media (min-width: 768px) {
+            #site-header {
+                height: 64px; /* Desktop height */
+            }
+            
+            #site-header nav {
+                height: 64px; /* Desktop nav height */
+                padding-left: var(--space-6);
+                padding-right: var(--space-6);
+            }
+        }
+        
+        .test-content {
+            padding: 20px;
+            height: 2000px;
+        }
+        
+        .viewport-info {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <header id="site-header">
+        <nav>
+            <div>Logo</div>
+            <div>Navigation</div>
+        </nav>
+    </header>
+    
+    <div class="test-content">
+        <h1>Header Responsive Height Test</h1>
+        <p><strong>Test Instructions:</strong></p>
+        <ul>
+            <li>On mobile (< 768px): Header should be 56px tall with 16px (1rem) horizontal padding</li>
+            <li>On desktop (≥ 768px): Header should be 64px tall with 24px (1.5rem) horizontal padding</li>
+            <li>Header should remain sticky when scrolling</li>
+            <li>No layout shift should occur</li>
+        </ul>
+        
+        <h2>Viewport Measurements</h2>
+        <p>Open browser DevTools and resize the window to test different viewport sizes:</p>
+        <ul>
+            <li>320px - Small mobile</li>
+            <li>375px - iPhone SE</li>
+            <li>768px - Tablet (breakpoint)</li>
+            <li>1024px - Desktop</li>
+        </ul>
+        
+        <p>Scroll down to verify sticky positioning works correctly...</p>
+    </div>
+    
+    <div class="viewport-info">
+        <div>Viewport: <span id="viewport-width"></span>px</div>
+        <div>Header Height: <span id="header-height"></span>px</div>
+        <div>Nav Padding: <span id="nav-padding"></span></div>
+    </div>
+    
+    <script>
+        function updateInfo() {
+            const header = document.getElementById('site-header');
+            const nav = header.querySelector('nav');
+            const viewportWidth = window.innerWidth;
+            const headerHeight = header.offsetHeight;
+            const navPadding = window.getComputedStyle(nav).paddingLeft;
+            
+            document.getElementById('viewport-width').textContent = viewportWidth;
+            document.getElementById('header-height').textContent = headerHeight;
+            document.getElementById('nav-padding').textContent = navPadding;
+        }
+        
+        updateInfo();
+        window.addEventListener('resize', updateInfo);
+    </script>
+</body>
+</html>

@@ -26,11 +26,12 @@ $active_listing_type = $listing_type ?? '';
 <html class="light" lang="en">
 <head>
     <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title><?php echo htmlspecialchars($page_title); ?></title>
     <script src="https://cdn.tailwindcss.com?plugins=container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+    <link href="mobile-responsive.css" rel="stylesheet"/>
     <script>
         tailwind.config = {
             darkMode: "class",
@@ -53,11 +54,35 @@ $active_listing_type = $listing_type ?? '';
         .glass { background:rgba(255,255,255,0.07); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border:1px solid rgba(255,255,255,0.12); }
         .glass-dark { background:rgba(10,7,5,0.7); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid rgba(236,91,19,0.1); }
         .header-solid { background:#000000 !important; backdrop-filter:none !important; -webkit-backdrop-filter:none !important; }
+        
+        /* Mobile-first header height optimization */
+        #site-header {
+            height: 56px; /* Mobile height */
+        }
+        
+        #site-header nav {
+            height: 56px; /* Mobile nav height */
+            padding-left: var(--space-4);
+            padding-right: var(--space-4);
+        }
+        
+        /* Desktop header height */
+        @media (min-width: 768px) {
+            #site-header {
+                height: 64px; /* Desktop height */
+            }
+            
+            #site-header nav {
+                height: 64px; /* Desktop nav height */
+                padding-left: var(--space-6);
+                padding-right: var(--space-6);
+            }
+        }
         /* Page transition */
         html { background:#fff; }
         body { opacity:0; will-change:opacity; backface-visibility:hidden; -webkit-backface-visibility:hidden; }
-        body.page-ready { animation: pageFadeIn 0.2s ease forwards; }
-        @keyframes pageFadeIn { from { opacity:0; } to { opacity:1; } }
+        body.page-ready { animation: pageFadeIn 0.15s ease-out forwards; }
+        @keyframes pageFadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
         .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; font-family:'Material Symbols Outlined'; font-style:normal; display:inline-block; line-height:1; }
 
         /* ── Global Motion System ── */
@@ -127,10 +152,10 @@ $active_listing_type = $listing_type ?? '';
 <!-- Morphing Header: full-width at top → pill on scroll -->
 <div id="hdr-wrap" class="sticky top-0 z-50 pointer-events-none transition-all duration-300" style="padding:0">
     <header id="site-header" class="w-full pointer-events-auto transition-all duration-300" style="background:#000000;border-radius:0;border-bottom:1px solid rgba(255,255,255,0.08);box-shadow:none;border-left:none;border-right:none;border-top:none;backdrop-filter:none;-webkit-backdrop-filter:none;">
-        <nav class="px-4 sm:px-6 flex items-center justify-between" style="height:56px">
+        <nav class="flex items-center justify-between">
             <!-- Logo -->
             <a href="index.php" class="flex items-center shrink-0">
-                <img src="images/travelhub.png" alt="CSNExplore" class="h-8 sm:h-9 object-contain"/>
+                <img src="images/travelhub.png" alt="CSNExplore" class="h-8 sm:h-9 object-contain" loading="lazy"/>
             </a>
 
             <!-- Desktop / Tablet nav links (hidden on mobile) -->
@@ -188,23 +213,26 @@ $active_listing_type = $listing_type ?? '';
     </header>
 
     <!-- Mobile dropdown nav -->
-    <div id="mob-menu" class="hidden md:hidden mt-2 mx-3 rounded-2xl bg-black border border-white/10 shadow-2xl px-2 py-2 flex flex-col gap-0.5 pointer-events-auto">
+    <div id="mob-menu" class="hidden md:hidden fixed inset-x-0 top-[64px] mx-4 rounded-3xl bg-[#0a0705]/95 backdrop-blur-2xl border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] px-3 py-4 flex flex-col gap-1.5 pointer-events-auto z-[100] animate-in fade-in slide-in-from-top-4 duration-300">
         <?php if ($is_listing_page): ?>
             <?php foreach ($listing_nav as $link): $is_active = ($link['type'] === $active_listing_type); ?>
             <a href="<?php echo $link['href']; ?>"
-               class="flex items-center gap-2 text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors <?php echo $is_active ? 'text-primary bg-white/10' : 'text-white/70 hover:bg-white/10 hover:text-white'; ?>">
-                <span class="material-symbols-outlined text-base"><?php echo $link['icon']; ?></span>
+               class="flex items-center gap-3 text-sm font-bold px-5 py-3.5 rounded-2xl transition-all <?php echo $is_active ? 'text-primary bg-white/10' : 'text-white/70 hover:bg-white/5 active:scale-[0.98]'; ?>">
+                <span class="material-symbols-outlined text-lg"><?php echo $link['icon']; ?></span>
                 <?php echo $link['label']; ?>
             </a>
             <?php endforeach; ?>
         <?php else: ?>
             <?php foreach ($nav_links as $link): $is_active = ($link['href'] === $current_page); ?>
             <a href="<?php echo $link['href']; ?>"
-               class="text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors <?php echo $is_active ? 'text-primary bg-white/10' : 'text-white/70 hover:bg-white/10 hover:text-white'; ?>">
+               class="text-sm font-bold px-5 py-4 rounded-2xl transition-all <?php echo $is_active ? 'text-primary bg-white/10' : 'text-white/70 hover:bg-white/5 active:scale-[0.98]'; ?>">
                 <?php echo $link['label']; ?>
             </a>
             <?php endforeach; ?>
         <?php endif; ?>
+        <div class="h-px bg-white/10 my-1 mx-4"></div>
+        <a href="tel:+918600968888" class="flex items-center gap-3 text-white/80 px-5 py-3.5 text-sm font-bold"><span class="material-symbols-outlined text-lg text-primary">call</span>Call Us</a>
+        <a href="https://wa.me/918600968888" class="flex items-center gap-3 text-whatsapp px-5 py-3.5 text-sm font-bold"><span class="material-symbols-outlined text-lg">chat</span>WhatsApp</a>
     </div>
 </div>
     <script>
@@ -321,11 +349,11 @@ $active_listing_type = $listing_type ?? '';
             var a = e.target.closest('a');
             if (!a) return;
             var href = a.getAttribute('href');
-            if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('javascript') || a.target === '_blank') return;
+            if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('javascript') || href.startsWith('whatsapp:') || href.startsWith('https://wa.me') || a.target === '_blank') return;
             e.preventDefault();
-            document.body.style.transition = 'opacity 0.18s ease';
+            document.body.style.transition = 'opacity 0.12s ease-out';
             document.body.style.opacity = '0';
-            setTimeout(function(){ window.location.href = href; }, 190);
+            setTimeout(function(){ window.location.href = href; }, 130);
         });
     </script>
 <script>

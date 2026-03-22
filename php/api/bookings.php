@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../jwt.php';
+require_once __DIR__ . '/../services/EmailService.php';
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
@@ -39,7 +40,13 @@ try {
         $data = getJsonInput();
         $name  = sanitize($data['full_name'] ?? '');
         $phone = sanitize($data['phone'] ?? '');
-        $email = strtolower(trim($data['email'] ?? ''));
+        // Extract email from payload, or fallback to JWT token
+        $tokenPayload = null;
+        $token = getAuthToken();
+        if ($token) {
+            $tokenPayload = verifyJWT($token, JWT_SECRET);
+        }
+        $email = strtolower(trim($data['email'] ?? ($tokenPayload['email'] ?? '')));
 
         if (!$name || !$phone) sendError('Name and phone are required', 400);
         if ($email && !filter_var($email, FILTER_VALIDATE_EMAIL)) sendError('Invalid email', 400);
@@ -59,6 +66,13 @@ try {
             'status'           => 'pending',
         ]);
 
+        try {
+            $emailResult = EmailService::sendBookingEmails($newId);
+            error_log("Booking #{$newId} email status: " . json_encode($emailResult));
+        } catch (Exception $e) {
+            error_log("Booking #{$newId} email service error: " . $e->getMessage());
+        }
+
         sendJson(['success' => true, 'id' => $newId], 201);
     }
 
@@ -67,6 +81,13 @@ try {
         requireAdmin();
         $data   = getJsonInput();
         $update = [];
+        $oldStatus = null;
+
+        // Get current status before update
+        $currentBooking = $db->fetchOne("SELECT status FROM bookings WHERE id = ?", [$id]);
+        if ($currentBooking) {
+            $oldStatus = $currentBooking['status'];
+        }
 
         if (isset($data['status']) && in_array($data['status'], ['pending','completed','cancelled'])) {
             $update['status'] = $data['status'];
@@ -75,6 +96,19 @@ try {
         $update['updated_at'] = date('Y-m-d H:i:s');
 
         $db->update('bookings', $update, 'id = :id', [':id' => $id]);
+        
+        // Send status update email if status changed to completed or cancelled
+        if (isset($update['status']) && $oldStatus !== $update['status']) {
+            if ($update['status'] === 'completed' || $update['status'] === 'cancelled') {
+                try {
+                    EmailService::sendStatusUpdateEmail($id, $update['status']);
+                    error_log("Booking #{$id} status update email sent: {$update['status']}");
+                } catch (Exception $e) {
+                    error_log("Booking #{$id} status update email error: " . $e->getMessage());
+                }
+            }
+        }
+        
         sendJson(['success' => true]);
     }
 

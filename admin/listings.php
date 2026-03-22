@@ -302,13 +302,18 @@ function getGalleryList() {
 
 function renderGalleryThumbs(list) {
     var container = document.getElementById('gallery-thumbs');
-    if (!list.length) { container.innerHTML = '<p class="text-xs text-slate-400 py-1">No gallery images yet</p>'; return; }
+    if (!list.length) { 
+        container.innerHTML = '<div class="w-full py-8 border-2 border-dashed border-slate-100 rounded-2xl flex flex-col items-center justify-center gap-2 text-slate-400">' +
+            '<span class="material-symbols-outlined text-3xl">photo_library</span>' +
+            '<p class="text-xs font-semibold uppercase tracking-wider">No gallery images</p></div>'; 
+        return; 
+    }
     container.innerHTML = list.map(function(url, i) {
-        return '<div class="relative group">' +
-            '<img src="' + escHtml(imgSrc(url)) + '" class="w-16 h-16 rounded-xl object-cover border border-slate-200"/>' +
+        return '<div class="relative group w-24 h-24 sm:w-28 sm:h-28">' +
+            '<img src="' + escHtml(imgSrc(url)) + '" class="w-full h-full rounded-2xl object-cover border-2 border-slate-100 shadow-sm transition-all duration-300 group-hover:scale-[1.03] group-hover:border-primary/50 group-hover:shadow-md"/>' +
             '<button type="button" onclick="removeGalleryImage(' + i + ')" ' +
-                'class="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white rounded-full text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">' +
-                '<span class="material-symbols-outlined text-xs" style="font-size:12px">close</span>' +
+                'class="absolute -top-2 -right-2 w-7 h-7 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all shadow-lg hover:bg-red-600 hover:scale-110">' +
+                '<span class="material-symbols-outlined text-[16px]">close</span>' +
             '</button>' +
         '</div>';
     }).join('');
