@@ -131,6 +131,7 @@ body { font-family: 'Inter', sans-serif; }
 // API helper - moved to header to ensure availability before inline scripts
 async function api(url, options = {}) {
     try {
+        console.log('[API] Calling:', url, options);
         options.headers = options.headers || {};
         options.headers['Content-Type'] = 'application/json';
         
@@ -140,28 +141,37 @@ async function api(url, options = {}) {
         }
         
         var res = await fetch(url, options);
+        console.log('[API] Response status:', res.status, res.statusText);
         
         if (res.status === 401 || res.status === 403) { 
+            console.error('[API] Unauthorized, logging out');
             adminLogout(); 
             return null; 
         }
         
         // Check if response is JSON
         var contentType = res.headers.get('content-type');
+        console.log('[API] Content-Type:', contentType);
+        
         if (contentType && contentType.includes('application/json')) {
-            return res.json();
+            var data = await res.json();
+            console.log('[API] Response data:', data);
+            return data;
         } else {
-            console.error('Invalid response type:', contentType);
+            var text = await res.text();
+            console.error('[API] Invalid response type:', contentType);
+            console.error('[API] Response text:', text.substring(0, 500));
             return null;
         }
     } catch (error) {
-        console.error('API error:', error);
+        console.error('[API] Exception:', error);
         return null;
     }
 }
 
 // Toast - moved to header to ensure availability before inline scripts
 function showAdminToast(msg, type) {
+    console.log('[Toast]', type || 'info', ':', msg);
     var t = document.createElement('div');
     var bg = type === 'error' ? 'bg-red-600' : 'bg-slate-900';
     t.className = 'fixed bottom-6 right-6 ' + bg + ' text-white text-sm px-5 py-3 rounded-2xl shadow-xl z-[200]';

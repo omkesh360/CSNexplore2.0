@@ -31,7 +31,7 @@ require 'admin-header.php';
             <span class="material-symbols-outlined text-primary text-2xl">storage</span>
         </div>
         <p id="stat-cache-size" class="text-4xl font-black text-slate-900 mb-1">—MB</p>
-        <p class="text-sm text-slate-500">/ 500MB max</p>
+        <p class="text-sm text-slate-500">/ 2000MB max</p>
     </div>
 
     <div class="bg-white rounded-2xl border border-slate-100 p-6">
@@ -59,6 +59,9 @@ require 'admin-header.php';
         </button>
         <button onclick="preloadCache()" class="flex items-center gap-2 px-4 py-3 bg-green-50 text-green-600 hover:bg-green-100 rounded-xl font-medium text-sm transition-all">
             <span class="material-symbols-outlined">cloud_upload</span> Preload Cache
+        </button>
+        <button onclick="generateTestData()" class="flex items-center gap-2 px-4 py-3 bg-purple-50 text-purple-600 hover:bg-purple-100 rounded-xl font-medium text-sm transition-all">
+            <span class="material-symbols-outlined">science</span> Generate Test Data
         </button>
     </div>
     <div id="action-loading" class="hidden mt-4 flex items-center gap-2 text-sm text-slate-600">
@@ -148,7 +151,7 @@ require 'admin-header.php';
         </div>
         <div>
             <label class="block text-sm font-medium text-slate-700 mb-2">Max Cache Size (MB)</label>
-            <input type="number" id="config-cache-size" min="100" max="5000" value="500" class="w-full px-4 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"/>
+            <input type="number" id="config-cache-size" min="100" max="10000" value="2000" class="w-full px-4 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"/>
         </div>
         <div>
             <label class="block text-sm font-medium text-slate-700 mb-2">Query Cache TTL (seconds)</label>
@@ -289,7 +292,7 @@ function escHtml(s) {
 async function purgeAllCache() {
     if (!confirm('Are you sure you want to purge ALL cache? This will clear page cache, query cache, and image cache.')) return;
     showLoading('Purging all cache...');
-    var result = await api('php/api/performance.php', { method: 'POST', body: JSON.stringify({ action: 'purge_all' }) });
+    var result = await api('../php/api/performance.php', { method: 'POST', body: JSON.stringify({ action: 'purge_all' }) });
     hideLoading();
     if (result && result.success) {
         showAdminToast('All cache purged successfully!', 'success');
@@ -303,7 +306,7 @@ async function purgeAllCache() {
 async function purgePageCache() {
     if (!confirm('Clear all page cache?')) return;
     showLoading('Clearing page cache...');
-    var result = await api('php/api/performance.php', { method: 'POST', body: JSON.stringify({ action: 'purge_page_cache' }) });
+    var result = await api('../php/api/performance.php', { method: 'POST', body: JSON.stringify({ action: 'purge_page_cache' }) });
     hideLoading();
     if (result && result.success) {
         showAdminToast('Page cache cleared!', 'success');
@@ -317,7 +320,7 @@ async function purgePageCache() {
 async function purgeQueryCache() {
     if (!confirm('Clear all query cache?')) return;
     showLoading('Clearing query cache...');
-    var result = await api('php/api/performance.php', { method: 'POST', body: JSON.stringify({ action: 'purge_query_cache' }) });
+    var result = await api('../php/api/performance.php', { method: 'POST', body: JSON.stringify({ action: 'purge_query_cache' }) });
     hideLoading();
     if (result && result.success) {
         showAdminToast('Query cache cleared!', 'success');
@@ -331,7 +334,7 @@ async function purgeQueryCache() {
 async function preloadCache() {
     if (!confirm('Preload cache for popular pages?')) return;
     showLoading('Preloading cache...');
-    var result = await api('php/api/performance.php', { method: 'POST', body: JSON.stringify({ action: 'preload_cache' }) });
+    var result = await api('../php/api/performance.php', { method: 'POST', body: JSON.stringify({ action: 'preload_cache' }) });
     hideLoading();
     if (result && result.success) {
         showAdminToast('Cache preloaded successfully!', 'success');
@@ -341,9 +344,28 @@ async function preloadCache() {
     }
 }
 
+// Generate test data
+async function generateTestData() {
+    if (!confirm('Generate test cache and performance data?')) return;
+    showLoading('Generating test data...');
+    try {
+        var result = await api('../php/api/test-cache.php');
+        hideLoading();
+        if (result && result.success) {
+            showAdminToast('Test data generated successfully!', 'success');
+            loadPerformanceData();
+        } else {
+            showAdminToast('Error: ' + (result?.error || 'Unknown error'), 'error');
+        }
+    } catch (error) {
+        hideLoading();
+        showAdminToast('Error: ' + error.message, 'error');
+    }
+}
+
 // Toggle feature
 async function toggleFeature(feature, enabled) {
-    var result = await api('php/api/performance.php', { 
+    var result = await api('../php/api/performance.php', { 
         method: 'POST', 
         body: JSON.stringify({ action: 'toggle_feature', feature: feature, enabled: enabled }) 
     });
@@ -366,7 +388,7 @@ async function saveFeatureSettings() {
     
     var promises = [];
     for (var feature in features) {
-        promises.push(api('php/api/performance.php', { 
+        promises.push(api('../php/api/performance.php', { 
             method: 'POST', 
             body: JSON.stringify({ action: 'toggle_feature', feature: feature, enabled: features[feature] }) 
         }));
@@ -386,7 +408,7 @@ async function saveConfiguration() {
         query_ttl: parseInt(document.getElementById('config-query-ttl').value)
     };
     showLoading('Saving configuration...');
-    var result = await api('php/api/performance.php', { 
+    var result = await api('../php/api/performance.php', { 
         method: 'POST', 
         body: JSON.stringify({ action: 'save_config', config: config }) 
     });
@@ -423,9 +445,38 @@ function animateProgress() {
     }, 200);
 }
 
-// Load data on page load
-loadPerformanceData();
-setInterval(loadPerformanceData, 30000); // Refresh every 30 seconds
+// Load data on page load - wait for DOM to be ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM loaded, initializing performance page...');
+        initializeToggles();
+        loadPerformanceData();
+        setInterval(loadPerformanceData, 30000);
+    });
+} else {
+    console.log('DOM already loaded, initializing performance page...');
+    initializeToggles();
+    loadPerformanceData();
+    setInterval(loadPerformanceData, 30000);
+}
+
+// Initialize toggle event listeners
+function initializeToggles() {
+    console.log('Initializing toggle event listeners...');
+    
+    // Add change event listeners to all toggles
+    var toggles = ['toggle-cache', 'toggle-image', 'toggle-assets', 'toggle-query', 'toggle-lazy'];
+    toggles.forEach(function(id) {
+        var toggle = document.getElementById(id);
+        if (toggle) {
+            toggle.addEventListener('change', function() {
+                var feature = id.replace('toggle-', '').replace('-', '_');
+                console.log('Toggle changed:', feature, '=', this.checked);
+                showAdminToast('Feature ' + feature + ' ' + (this.checked ? 'enabled' : 'disabled'), 'success');
+            });
+        }
+    });
+}
 </script>
 JS;
 require 'admin-footer.php';

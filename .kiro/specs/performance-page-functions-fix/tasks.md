@@ -20,7 +20,7 @@
   - Mark task complete when test is written, run, and failure is documented
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5_
 
-- [ ] 2. Write preservation property tests (BEFORE implementing fix)
+- [x] 2. Write preservation property tests (BEFORE implementing fix)
   - **Property 2: Preservation** - Other Admin Pages and Footer Functionality
   - **IMPORTANT**: Follow observation-first methodology
   - Observe behavior on UNFIXED code for non-performance admin pages (dashboard, blogs, bookings, users, gallery, listings, content)
@@ -38,7 +38,7 @@
 
 ## Phase 2: Implementation
 
-- [ ] 3. Fix for performance page functions availability
+- [x] 3. Fix for performance page functions availability
 
   - [x] 3.1 Move api() and showAdminToast() function definitions to admin-header.php
     - Extract `api()` function from admin/admin-footer.php

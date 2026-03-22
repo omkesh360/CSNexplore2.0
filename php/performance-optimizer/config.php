@@ -12,7 +12,7 @@ return array (
   array (
     'enabled' => true,
     'ttl' => 3600,
-    'max_size_mb' => 500,
+    'max_size_mb' => 2000,
     'directory' => '/Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/performance-optimizer/../../cache',
   ),
   'image' => 

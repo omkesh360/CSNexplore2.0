@@ -1,6 +1,18 @@
 <?php
 // header.php – shared header for all CSNExplore pages
 // Usage: set $page_title and $current_page before including this file
+
+// Initialize performance optimization (caching, etc.) - Skip for admin and API pages
+$skip_cache = isset($current_page) && (
+    strpos($current_page, 'admin') !== false || 
+    strpos($_SERVER['REQUEST_URI'] ?? '', '/php/api/') !== false ||
+    strpos($_SERVER['REQUEST_URI'] ?? '', 'listing.php') !== false
+);
+
+if (!$skip_cache && file_exists(__DIR__ . '/php/performance-optimizer/bootstrap.php')) {
+    require_once __DIR__ . '/php/performance-optimizer/bootstrap.php';
+}
+
 $current_page = $current_page ?? '';
 $page_title   = $page_title   ?? 'CSNExplore – Chhatrapati Sambhajinagar';
 $nav_links = [
@@ -51,8 +63,21 @@ $active_listing_type = $listing_type ?? '';
         }
     </script>
     <style>
-        .glass { background:rgba(255,255,255,0.07); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border:1px solid rgba(255,255,255,0.12); }
-        .glass-dark { background:rgba(10,7,5,0.7); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid rgba(236,91,19,0.1); }
+        .glass { background:rgba(255,255,255,0.08); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,0.15); box-shadow:0 8px 32px rgba(0,0,0,0.1); }
+        .glass-dark { background:rgba(10,7,5,0.75); backdrop-filter:blur(25px); -webkit-backdrop-filter:blur(25px); border:1px solid rgba(236,91,19,0.15); box-shadow:0 8px 32px rgba(0,0,0,0.3); }
+        .glass-light { background:rgba(255,255,255,0.12); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); border:1px solid rgba(255,255,255,0.2); }
+        .glass-card { background:rgba(255,255,255,0.06); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border:1px solid rgba(255,255,255,0.1); box-shadow:0 4px 24px rgba(0,0,0,0.08); }
+        .glass-button { background:rgba(236,91,19,0.85); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,0.2); box-shadow:0 4px 16px rgba(236,91,19,0.3); }
+        .glass-button:hover { background:rgba(236,91,19,0.95); box-shadow:0 6px 24px rgba(236,91,19,0.4); }
+        .glass-input { background:rgba(255,255,255,0.08); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,0.15); color:#fff; }
+        .glass-input::placeholder { color:rgba(255,255,255,0.6); }
+        .glass-input:focus { background:rgba(255,255,255,0.12); border-color:rgba(255,255,255,0.25); outline:none; }
+        .glass-badge { background:rgba(236,91,19,0.8); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.15); }
+        .glass-overlay { background:rgba(0,0,0,0.4); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
+        .glass-nav { background:rgba(0,0,0,0.5); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-bottom:1px solid rgba(255,255,255,0.1); }
+        .glass-modal { background:rgba(255,255,255,0.95); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,0.3); box-shadow:0 20px 60px rgba(0,0,0,0.15); }
+        .glass-section { background:linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%); backdrop-filter:blur(15px); -webkit-backdrop-filter:blur(15px); border:1px solid rgba(255,255,255,0.08); }
+        .glass-glow { background:rgba(236,91,19,0.1); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border:1px solid rgba(236,91,19,0.2); box-shadow:0 0 30px rgba(236,91,19,0.15); }
         .header-solid { background:#000000 !important; backdrop-filter:none !important; -webkit-backdrop-filter:none !important; }
         
         /* Mobile-first header height optimization */
@@ -150,7 +175,7 @@ $active_listing_type = $listing_type ?? '';
 </div>
 
 <!-- Morphing Header: full-width at top → pill on scroll -->
-<div id="hdr-wrap" class="sticky top-0 z-50 pointer-events-none transition-all duration-300" style="padding:0">
+<div id="hdr-wrap" class="relative top-0 z-50 pointer-events-none transition-all duration-300" style="padding:0">
     <header id="site-header" class="w-full pointer-events-auto transition-all duration-300" style="background:#000000;border-radius:0;border-bottom:1px solid rgba(255,255,255,0.08);box-shadow:none;border-left:none;border-right:none;border-top:none;backdrop-filter:none;-webkit-backdrop-filter:none;">
         <nav class="flex items-center justify-between">
             <!-- Logo -->

@@ -54,7 +54,7 @@ if (!file_exists($statsFile)) {
 }
 
 // GET request - return REAL performance data
-if ($_SERVER['REQUEST_METHOD'] === 'GET' || !isset($_SERVER['REQUEST_METHOD'])) {
+if (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] === 'GET') {
     $stats = @json_decode(@file_get_contents($statsFile), true) ?: [];
     
     // Calculate real cache hit rate
@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || !isset($_SERVER['REQUEST_METHOD'])) 
             'page_load_time' => ['label' => 'Page Load Time', 'value' => $avgPageLoad . 'ms', 'status' => $avgPageLoad < 300 ? 'good' : ($avgPageLoad < 500 ? 'warning' : 'error')],
             'cache_hit_rate' => ['label' => 'Cache Hit Rate', 'value' => $cacheHitRate . '%', 'status' => $totalRequests === 0 ? 'good' : ($cacheHitRate > 80 ? 'good' : ($cacheHitRate > 60 ? 'warning' : 'error'))],
             'image_optimization' => ['label' => 'Image Optimization', 'value' => $imageSavings . '% reduction', 'status' => $originalSize === 0 ? 'good' : ($imageSavings > 30 ? 'good' : ($imageSavings > 15 ? 'warning' : 'error'))],
-            'cache_size' => ['label' => 'Cache Size', 'value' => $cacheSizeMb . 'MB / 500MB', 'status' => $cacheSizeMb < 400 ? 'good' : ($cacheSizeMb < 450 ? 'warning' : 'error')],
+            'cache_size' => ['label' => 'Cache Size', 'value' => $cacheSizeMb . 'MB / 2000MB', 'status' => $cacheSizeMb < 1600 ? 'good' : ($cacheSizeMb < 1800 ? 'warning' : 'error')],
             'images_count' => ['label' => 'Images Optimized', 'value' => ($stats['images_optimized'] ?? 0) . ' images', 'status' => 'good'],
         ],
         'slow_queries' => getSlowQueries(),
@@ -273,6 +273,3 @@ function getSlowQueries() {
     // Return empty array - will be populated by actual database monitoring
     return [];
 }
-
-http_response_code(405);
-echo json_encode(['error' => 'Method not allowed']);

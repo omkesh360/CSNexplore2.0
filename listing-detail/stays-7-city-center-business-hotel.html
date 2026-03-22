@@ -40,33 +40,54 @@ body.page-ready{animation:pageFadeIn 0.15s ease-out forwards;}
 .img-shimmer{position:relative;overflow:hidden;}
 .img-shimmer::after{content:\"\";position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,0.08) 50%,transparent 60%);transform:translateX(-100%);transition:transform 0.6s ease;}
 .img-shimmer:hover::after{transform:translateX(100%);}
+/* ── Glassmorphism Effects ── */
+.glass{background:rgba(255,255,255,0.08);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.15);box-shadow:0 8px 32px rgba(0,0,0,0.1);}
+.glass-card{background:rgba(255,255,255,0.06);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.1);box-shadow:0 4px 24px rgba(0,0,0,0.08);}
+.glass-button{background:rgba(236,91,19,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.2);box-shadow:0 4px 16px rgba(236,91,19,0.3);}
+.glass-button:hover{background:rgba(236,91,19,0.95);box-shadow:0 6px 24px rgba(236,91,19,0.4);}
+.glass-input{background:rgba(255,255,255,0.08);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.15);color:#fff;}
+.glass-input::placeholder{color:rgba(255,255,255,0.6);}
+.glass-input:focus{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.25);outline:none;}
+.glass-badge{background:rgba(236,91,19,0.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.15);}
+.glass-overlay{background:rgba(0,0,0,0.4);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}
+.glass-section{background:linear-gradient(135deg,rgba(255,255,255,0.05) 0%,rgba(255,255,255,0.02) 100%);backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px);border:1px solid rgba(255,255,255,0.08);}
+.glass-glow{background:rgba(236,91,19,0.1);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(236,91,19,0.2);box-shadow:0 0 30px rgba(236,91,19,0.15);}
 /* ── Gallery Lightbox ── */
-.gallery-thumb{cursor:zoom-in;position:relative;overflow:hidden;border-radius:12px;aspect-ratio:16/9;background:#f1f5f9;border:1px solid #e2e8f0;}
+.gallery-thumb{cursor:zoom-in;position:relative;overflow:hidden;border-radius:12px;aspect-ratio:4/3;background:#f1f5f9;border:1px solid #e2e8f0;}
 .gallery-thumb img{width:100%;height:100%;object-fit:cover;transition:all 0.4s cubic-bezier(0.4, 0, 0.2, 1);background:#f1f5f9;}
 .gallery-thumb:hover img{transform:scale(1.08);filter:brightness(1.05);}
 .gallery-thumb::after{content:"\e8ff";font-family:"Material Symbols Outlined";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.3);color:#fff;font-size:26px;opacity:0;transition:opacity 0.25s;pointer-events:none;}
 .gallery-thumb:hover::after{opacity:1;}
-#csn-lightbox{position:fixed;inset:0;z-index:999999;background:rgba(0,0,0,0.95);display:none;align-items:center;justify-content:center;flex-direction:column;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}
-#csn-lightbox.active{display:flex;}
-#csn-lightbox img{max-width:96vw;max-height:86vh;border-radius:8px;box-shadow:0 10px 100px rgba(0,0,0,1);object-fit:contain;transition:transform 0.3s cubic-bezier(0.165,0.84,0.44,1);}
-#csn-lb-close,#csn-lb-prev,#csn-lb-next{position:absolute;z-index:99999999;background:rgba(255,255,255,0.15);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.25);color:#fff;width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);box-shadow:0 8px 32px rgba(0,0,0,0.5);}
-#csn-lb-close:hover,#csn-lb-prev:hover,#csn-lb-next:hover{background:var(--primary);border-color:var(--primary);transform:scale(1.15);box-shadow:0 0 30px rgba(236,91,19,0.7);}
-#csn-lb-close{top:30px;right:30px;font-weight:900;}
-#csn-lb-prev{left:30px;top:50%;margin-top:-30px;}
-#csn-lb-next{right:30px;top:50%;margin-top:-30px;}
-#csn-lb-counter{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.7);color:#fff;padding:12px 28px;border-radius:99px;font-size:15px;font-weight:800;letter-spacing:1px;border:1px solid rgba(255,255,255,0.2);box-shadow:0 10px 40px rgba(0,0,0,0.5);z-index:99999999;}
-#csn-lightbox img.zoomed{transform:scale(1.3);cursor:zoom-out;max-width:none;max-height:none;width:auto;height:auto;}
-@media(max-width:1024px){ #csn-lb-prev{left:20px;} #csn-lb-next{right:20px;} #csn-lb-close{top:20px;right:20px;} }
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;}
+#csn-gallery-modal{position:fixed !important;top:0 !important;left:0 !important;width:100% !important;height:100% !important;background:rgba(0,0,0,0.85) !important;z-index:999999999 !important;display:none !important;align-items:center !important;justify-content:center !important;overflow:hidden !important;}
+#csn-gallery-modal.active{display:flex !important;}
+.csn-modal-content{position:fixed !important;top:50% !important;left:50% !important;transform:translate(-50%,-50%) !important;background:transparent !important;border-radius:0 !important;padding:0 !important;max-width:85vw !important;max-height:85vh !important;display:flex !important;flex-direction:column !important;align-items:center !important;justify-content:center !important;box-shadow:none !important;z-index:1000000000 !important;overflow:visible !important;border:none !important;}
+.csn-modal-content img{width:85vw !important;height:85vh !important;max-width:85vw !important;max-height:85vh !important;object-fit:contain !important;border-radius:0 !important;transition:transform 0.3s !important;border:none !important;outline:none !important;box-shadow:none !important;}
+.csn-modal-close{position:fixed !important;top:30px !important;right:30px !important;background:#ec5b13 !important;border:none !important;color:#fff !important;width:40px !important;height:40px !important;border-radius:50% !important;cursor:pointer !important;font-size:24px !important;display:flex !important;align-items:center !important;justify-content:center !important;transition:all 0.3s !important;font-weight:bold !important;z-index:1000000001 !important;}
+.csn-modal-close:hover{background:#d94a0a !important;transform:scale(1.1) !important;}
+.csn-modal-nav{position:fixed !important;top:50% !important;transform:translateY(-50%) !important;background:#ec5b13 !important;border:none !important;color:#fff !important;width:45px !important;height:45px !important;border-radius:50% !important;cursor:pointer !important;font-size:20px !important;display:flex !important;align-items:center !important;justify-content:center !important;transition:all 0.3s !important;z-index:1000000001 !important;}
+.csn-modal-nav:hover{background:#d94a0a !important;transform:translateY(-50%) scale(1.1) !important;}
+.csn-modal-prev{left:20px !important;}
+.csn-modal-next{right:20px !important;}
+.csn-modal-counter{position:fixed !important;bottom:30px !important;left:50% !important;transform:translateX(-50%) !important;background:#ec5b13 !important;color:#fff !important;padding:8px 16px !important;border-radius:20px !important;font-size:13px !important;font-weight:bold !important;z-index:1000000001 !important;}
+.csn-zoom-controls{position:fixed !important;bottom:30px !important;right:30px !important;display:flex !important;gap:8px !important;z-index:1000000001 !important;}
+.csn-zoom-btn{background:#ec5b13 !important;border:none !important;color:#fff !important;width:36px !important;height:36px !important;border-radius:50% !important;cursor:pointer !important;font-size:18px !important;display:flex !important;align-items:center !important;justify-content:center !important;transition:all 0.3s !important;font-weight:bold !important;}
+.csn-zoom-btn:hover{background:#d94a0a !important;transform:scale(1.1) !important;}
+.csn-modal-content img.zoomed{max-width:none !important;max-height:none !important;width:auto !important;height:auto !important;}
 @media(max-width:768px){
-  #csn-lb-prev,#csn-lb-next{width:50px;height:50px;bottom:30px;top:auto;margin:0;}
-  #csn-lb-prev{left:25%;} #csn-lb-next{right:25%;}
-  #csn-lb-close{top:30px;right:30px;width:54px;height:54px;background:rgba(0,0,0,0.6);border-color:rgba(255,255,255,0.3);}
-  #csn-lb-counter{bottom:35px;font-size:13px;padding:8px 20px;}
-  #csn-lightbox img.zoomed{transform:scale(1.15);}
+  .csn-modal-content{padding:0 !important;max-width:95vw !important;max-height:85vh !important;}
+  .csn-modal-content img{width:95vw !important;height:85vh !important;max-width:95vw !important;max-height:85vh !important;}
+  .csn-modal-close{top:15px !important;right:15px !important;width:36px !important;height:36px !important;font-size:20px !important;}
+  .csn-modal-nav{width:40px !important;height:40px !important;font-size:18px !important;}
+  .csn-modal-prev{left:10px !important;}
+  .csn-modal-next{right:10px !important;}
+  .csn-zoom-controls{bottom:15px !important;right:15px !important;gap:6px !important;}
+  .csn-zoom-btn{width:32px !important;height:32px !important;font-size:16px !important;}
 }
 /* ── Gallery Grid ── */
-.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;}
-@media(max-width:640px){.gallery-grid{grid-template-columns:repeat(2,1fr);}}
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;}
+@media(max-width:768px){.gallery-grid{grid-template-columns:repeat(2,1fr);gap:10px;}}
+@media(max-width:480px){.gallery-grid{grid-template-columns:repeat(2,1fr);gap:8px;}}
 </style>
 </head>
 <body class="bg-slate-50 font-display text-slate-900">
@@ -85,7 +106,7 @@ body.page-ready{animation:pageFadeIn 0.15s ease-out forwards;}
     </div>
   </div>
 </div>
-<div id="hdr-wrap" class="sticky top-0 z-50 pointer-events-none transition-all duration-300" style="padding:0">
+<div id="hdr-wrap" class="relative top-0 z-50 pointer-events-none transition-all duration-300" style="padding:0">
   <header id="site-header" class="w-full pointer-events-auto transition-all duration-300" style="background:#000000;border-radius:0;border-bottom:1px solid rgba(255,255,255,0.08);box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none;">
     <nav class="px-4 sm:px-6 flex items-center justify-between" style="height:56px">
       <a href="../index.php" class="flex items-center shrink-0">
@@ -399,23 +420,92 @@ body.page-ready{animation:pageFadeIn 0.15s ease-out forwards;}
 })();
 </script>
 <script>
-// ── Lightbox ──
-var _lbImgs = ["..\/images\/uploads\/1773410204-599196131.png","..\/images\/uploads\/hotel-room-standard.jpg","..\/images\/uploads\/hotel-room-1.jpg","..\/images\/uploads\/1772023050152-930666515.jpg","..\/images\/uploads\/1771240949311-157977099.png","..\/images\/uploads\/map-preview.jpg"];
-var _lbIdx = 0;
+// ── Gallery Popup ──
+var _csnGalleryImages = ["..\/images\/uploads\/1773410204-599196131.png","..\/images\/uploads\/hotel-room-standard.jpg","..\/images\/uploads\/hotel-room-1.jpg","..\/images\/uploads\/1772023050152-930666515.jpg","..\/images\/uploads\/1771240949311-157977099.png","..\/images\/uploads\/map-preview.jpg"];
+var _csnCurrentIndex = 0;
+var _csnZoomLevel = 1;
+
 function openLightbox(idx){
-  _lbIdx = idx;
-  var lb = document.getElementById("csn-lightbox");
-  var img = document.getElementById("csn-lb-img");
-  if(!lb||!img||!_lbImgs.length)return;
-  img.src = _lbImgs[_lbIdx];
+  console.log("Opening gallery at index:", idx, "Total images:", _csnGalleryImages.length);
+  _csnCurrentIndex = idx;
+  _csnZoomLevel = 1;
+  var modal = document.getElementById("csn-gallery-modal");
+  var img = document.getElementById("csn-modal-image");
+  if(!_csnGalleryImages.length){console.log("No images found");return;}
+  img.src = _csnGalleryImages[_csnCurrentIndex];
   img.classList.remove("zoomed");
-  lb.classList.add("active");
-  document.body.style.overflow="hidden";
-  document.getElementById("csn-lb-counter").textContent = (_lbIdx+1)+" / "+_lbImgs.length;
+  img.style.transform = "scale(1)";
+  modal.style.display = "flex";
+  modal.classList.add("active");
+  document.body.style.overflow = "hidden";
+  document.documentElement.style.overflow = "hidden";
+  document.getElementById("csn-total-images").textContent = _csnGalleryImages.length;
+  csnUpdateCounter();
+  console.log("Gallery opened successfully");
 }
-function closeLightbox(){var lb=document.getElementById("csn-lightbox");if(lb)lb.classList.remove("active");document.body.style.overflow="";}
-function lbNav(dir){if(!_lbImgs.length)return;_lbIdx=(_lbIdx+dir+_lbImgs.length)%_lbImgs.length;var img=document.getElementById("csn-lb-img");if(img){img.src=_lbImgs[_lbIdx];img.classList.remove("zoomed");}document.getElementById("csn-lb-counter").textContent=(_lbIdx+1)+" / "+_lbImgs.length;}
-document.addEventListener("keydown",function(e){var lb=document.getElementById("csn-lightbox");if(!lb||!lb.classList.contains("active"))return;if(e.key==="Escape")closeLightbox();if(e.key==="ArrowLeft")lbNav(-1);if(e.key==="ArrowRight")lbNav(1);});
+
+function csnCloseGallery(){
+  console.log("Closing gallery");
+  var modal = document.getElementById("csn-gallery-modal");
+  modal.style.display = "none";
+  modal.classList.remove("active");
+  document.body.style.overflow = "auto";
+  document.documentElement.style.overflow = "auto";
+  _csnZoomLevel = 1;
+}
+
+function csnNextImage(){
+  _csnCurrentIndex = (_csnCurrentIndex + 1) % _csnGalleryImages.length;
+  _csnZoomLevel = 1;
+  var img = document.getElementById("csn-modal-image");
+  img.src = _csnGalleryImages[_csnCurrentIndex];
+  img.classList.remove("zoomed");
+  img.style.transform = "scale(1)";
+  csnUpdateCounter();
+}
+
+function csnPrevImage(){
+  _csnCurrentIndex = (_csnCurrentIndex - 1 + _csnGalleryImages.length) % _csnGalleryImages.length;
+  _csnZoomLevel = 1;
+  var img = document.getElementById("csn-modal-image");
+  img.src = _csnGalleryImages[_csnCurrentIndex];
+  img.classList.remove("zoomed");
+  img.style.transform = "scale(1)";
+  csnUpdateCounter();
+}
+
+function csnZoomIn(){
+  _csnZoomLevel = Math.min(_csnZoomLevel + 0.2, 3);
+  csnUpdateZoom();
+}
+
+function csnZoomOut(){
+  _csnZoomLevel = Math.max(_csnZoomLevel - 0.2, 1);
+  csnUpdateZoom();
+}
+
+function csnUpdateZoom(){
+  var img = document.getElementById("csn-modal-image");
+  if(_csnZoomLevel > 1){
+    img.classList.add("zoomed");
+    img.style.transform = "scale(" + _csnZoomLevel + ")";
+  }else{
+    img.classList.remove("zoomed");
+    img.style.transform = "scale(1)";
+  }
+}
+
+function csnUpdateCounter(){
+  document.getElementById("csn-image-counter").textContent = _csnCurrentIndex + 1;
+}
+
+document.addEventListener("keydown",function(e){
+  var modal = document.getElementById("csn-gallery-modal");
+  if(modal.style.display !== "flex")return;
+  if(e.key==="Escape")csnCloseGallery();
+  if(e.key==="ArrowRight")csnNextImage();
+  if(e.key==="ArrowLeft")csnPrevImage();
+});
 </script>
 <script>
 // ── Auth-gate booking form ──
@@ -574,12 +664,18 @@ if(_bookingForm)_bookingForm.addEventListener("submit", async function(e) {
 })();
 </script>
 
-<!-- Image Lightbox Overlay -->
-<div id="csn-lightbox" onclick="if(event.target===this)closeLightbox()">
-  <button id="csn-lb-close" onclick="closeLightbox()" title="Close (Esc)"><span class="material-symbols-outlined">close</span></button>
-  <button id="csn-lb-prev" onclick="lbNav(-1)" title="Previous"><span class="material-symbols-outlined">chevron_left</span></button>
-  <img id="csn-lb-img" src="" alt="Gallery image" onclick="this.classList.toggle('zoomed')" title="Click to zoom"/>
-  <button id="csn-lb-next" onclick="lbNav(1)" title="Next"><span class="material-symbols-outlined">chevron_right</span></button>
-  <div id="csn-lb-counter"></div>
+<!-- Gallery Modal Popup -->
+<div id="csn-gallery-modal" style="display:none !important;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:999999999 !important;align-items:center;justify-content:center;" onclick="if(event.target.id=='csn-gallery-modal')csnCloseGallery()">
+  <div class="csn-modal-content" onclick="event.stopPropagation()">
+    <button class="csn-modal-close" onclick="csnCloseGallery()">✕</button>
+    <button class="csn-modal-nav csn-modal-prev" onclick="csnPrevImage()">❮</button>
+    <img id="csn-modal-image" src="" alt="Gallery image">
+    <button class="csn-modal-nav csn-modal-next" onclick="csnNextImage()">❯</button>
+    <div class="csn-modal-counter"><span id="csn-image-counter">1</span> / <span id="csn-total-images">1</span></div>
+    <div class="csn-zoom-controls">
+      <button class="csn-zoom-btn" onclick="csnZoomIn()" title="Zoom In">+</button>
+      <button class="csn-zoom-btn" onclick="csnZoomOut()" title="Zoom Out">−</button>
+    </div>
+  </div>
 </div>
 </body></html>

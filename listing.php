@@ -142,9 +142,14 @@ function listingSlug($type, $item) {
 }
 
 $extra_styles = "
-  .glassy { background:rgba(255,255,255,0.7); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,0.3); }
+  .glassy { background:rgba(255,255,255,0.08); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); border:1px solid rgba(255,255,255,0.15); box-shadow:0 8px 32px rgba(0,0,0,0.1); }
+  .glassy:hover { background:rgba(255,255,255,0.12); box-shadow:0 12px 40px rgba(0,0,0,0.15); }
   .hide-scrollbar::-webkit-scrollbar{display:none} .hide-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
   body { background-color:#f8f6f6; }
+  .glass-filter { background:rgba(255,255,255,0.06); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border:1px solid rgba(255,255,255,0.12); }
+  .glass-card { background:rgba(255,255,255,0.07); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,0.1); }
+  .glass-button { background:rgba(236,91,19,0.85); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,0.2); }
+  .glass-button:hover { background:rgba(236,91,19,0.95); }
 ";
 require 'header.php';
 
