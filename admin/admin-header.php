@@ -73,6 +73,7 @@ body { font-family: 'Inter', sans-serif; }
             ['href'=>'gallery.php',   'icon'=>'photo_library',    'label'=>'Gallery',      'key'=>'gallery'],
             ['href'=>'users.php',     'icon'=>'group',            'label'=>'Users',        'key'=>'users'],
             ['href'=>'content.php',   'icon'=>'edit_note',        'label'=>'Page Content', 'key'=>'content'],
+            ['href'=>'performance.php', 'icon'=>'speed',          'label'=>'Performance',  'key'=>'performance'],
         ];
         foreach ($nav as $n):
             $active = ($admin_page === $n['key']) ? 'active' : '';
@@ -125,6 +126,50 @@ body { font-family: 'Inter', sans-serif; }
             </div>
         </div>
     </header>
+
+<script>
+// API helper - moved to header to ensure availability before inline scripts
+async function api(url, options = {}) {
+    try {
+        options.headers = options.headers || {};
+        options.headers['Content-Type'] = 'application/json';
+        
+        // Only add Authorization header if token exists
+        if (window._adminToken) {
+            options.headers['Authorization'] = 'Bearer ' + window._adminToken;
+        }
+        
+        var res = await fetch(url, options);
+        
+        if (res.status === 401 || res.status === 403) { 
+            adminLogout(); 
+            return null; 
+        }
+        
+        // Check if response is JSON
+        var contentType = res.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return res.json();
+        } else {
+            console.error('Invalid response type:', contentType);
+            return null;
+        }
+    } catch (error) {
+        console.error('API error:', error);
+        return null;
+    }
+}
+
+// Toast - moved to header to ensure availability before inline scripts
+function showAdminToast(msg, type) {
+    var t = document.createElement('div');
+    var bg = type === 'error' ? 'bg-red-600' : 'bg-slate-900';
+    t.className = 'fixed bottom-6 right-6 ' + bg + ' text-white text-sm px-5 py-3 rounded-2xl shadow-xl z-[200]';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(function(){ t.remove(); }, 2800);
+}
+</script>
 
     <!-- Page content -->
     <main class="flex-1 overflow-y-auto p-6">

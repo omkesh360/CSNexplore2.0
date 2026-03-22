@@ -69,24 +69,6 @@ function adminLogout() {
     window.location.href = '../adminexplorer.php';
 }
 
-// API helper
-async function api(url, options = {}) {
-    options.headers = Object.assign({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + window._adminToken }, options.headers || {});
-    var res = await fetch(url, options);
-    if (res.status === 401 || res.status === 403) { adminLogout(); return null; }
-    return res.json();
-}
-
-// Toast
-function showAdminToast(msg, type) {
-    var t = document.createElement('div');
-    var bg = type === 'error' ? 'bg-red-600' : 'bg-slate-900';
-    t.className = 'fixed bottom-6 right-6 ' + bg + ' text-white text-sm px-5 py-3 rounded-2xl shadow-xl z-[200]';
-    t.textContent = msg;
-    document.body.appendChild(t);
-    setTimeout(function(){ t.remove(); }, 2800);
-}
-
 // Load pending bookings count
 async function loadPendingCount() {
     try {
