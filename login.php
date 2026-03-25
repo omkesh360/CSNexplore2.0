@@ -20,6 +20,7 @@ $extra_styles = "
             theme: { extend: { colors: { "primary": "#ec5b13" }, fontFamily: { "display": ["Inter","sans-serif"], "serif": ["Playfair Display","serif"] } } }
         }
     </script>
+    <link rel="stylesheet" href="mobile-responsive.css"/>
     <style>
         .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; font-family:'Material Symbols Outlined'; font-style:normal; display:inline-block; line-height:1; }
         @keyframes slow-zoom { 0%{transform:scale(1)} 100%{transform:scale(1.1)} }

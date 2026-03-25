@@ -103,6 +103,14 @@ ServerSignature Off
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.*)/$ /$1 [L,R=301]
 
+    # Clean URLs redirect - Remove .php extension from browser URL
+    RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /([^\ ]+)\.php
+    RewriteRule ^/?(.*)\.php$ /$1 [L,R=301]
+
+    # Clean URLs redirect - Remove .html extension from browser URL
+    RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /([^\ ]+)\.html
+    RewriteRule ^/?(.*)\.html$ /$1 [L,R=301]
+
     # Serve existing files/dirs directly
     RewriteCond %{REQUEST_FILENAME} -f [OR]
     RewriteCond %{REQUEST_FILENAME} -d
@@ -113,6 +121,14 @@ ServerSignature Off
 
     # Clean URLs: /listing/type → listing.php?type=type
     RewriteRule ^listing/([a-zA-Z0-9_-]+)/?$ listing.php?type=$1 [L,QSA]
+
+    # Extensionless PHP
+    RewriteCond %{DOCUMENT_ROOT}/$1.php -f
+    RewriteRule ^(.+?)/?$ $1.php [L]
+
+    # Extensionless HTML
+    RewriteCond %{DOCUMENT_ROOT}/$1.html -f
+    RewriteRule ^(.+?)/?$ $1.html [L]
 
     # Dynamic sitemap
     RewriteRule ^sitemap\.xml$ php/api/generate_sitemap.php [L]

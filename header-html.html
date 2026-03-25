@@ -1,0 +1,115 @@
+<!-- Marquee Bar -->
+<div class="bg-[#ec5b13] text-white py-1.5 overflow-hidden relative z-[60]">
+    <div class="max-w-7xl mx-auto px-6 flex justify-between items-center gap-4 text-[11px] font-semibold uppercase tracking-widest">
+        <div class="flex-1 overflow-hidden">
+            <div class="flex whitespace-nowrap" style="animation:marquee 30s linear infinite">
+                <style>@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}</style>
+                <span class="px-6">★ 20% OFF on first heritage tour booking</span>
+                <span class="px-6">★ Verified guides for Ajanta &amp; Ellora</span>
+                <span class="px-6">★ Free cancellation on bike rentals</span>
+                <span class="px-6">★ 24/7 tourist support available</span>
+                <span class="px-6">★ 20% OFF on first heritage tour booking</span>
+                <span class="px-6">★ Verified guides for Ajanta &amp; Ellora</span>
+                <span class="px-6">★ Free cancellation on bike rentals</span>
+                <span class="px-6">★ 24/7 tourist support available</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<header id="site-header" class="sticky top-0 w-full z-50 transition-all duration-300 glass-dark border-b border-white/5 bg-[#0a0705]">
+    <nav class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+        <a href="/index" class="flex items-center shrink-0">
+            <img src="/images/travelhub.png" alt="CSNExplore" class="h-9 object-contain" loading="lazy"/>
+        </a>
+        <div class="hidden md:flex items-center gap-1">
+            <a href="/index" class="text-sm font-semibold px-4 py-2 rounded-full text-white/70 hover:bg-white/10 hover:text-white transition-colors">Home</a>
+            <a href="/about" class="text-sm font-semibold px-4 py-2 rounded-full text-white/70 hover:bg-white/10 hover:text-white transition-colors">About Us</a>
+            <a href="/contact" class="text-sm font-semibold px-4 py-2 rounded-full text-white/70 hover:bg-white/10 hover:text-white transition-colors">Contact Us</a>
+            <a href="/blogs" class="text-sm font-semibold px-4 py-2 rounded-full text-white/70 hover:bg-white/10 hover:text-white transition-colors">Blogs</a>
+        </div>
+        <div class="flex items-center gap-2">
+            <a href="/login" id="hdr-login-btn" class="text-white text-sm font-semibold px-4 py-1.5 hover:bg-white/10 rounded-full transition-all">Login</a>
+            <a href="/register" class="bg-[#ec5b13] text-white text-sm font-bold px-5 py-1.5 rounded-full hover:bg-orange-600 transition-all shadow-lg shadow-primary/20">Register</a>
+            <div id="hdr-user-menu" class="hidden relative">
+                <button id="hdr-user-btn" class="flex items-center gap-1.5 text-white text-xs sm:text-sm font-semibold px-3 py-1.5 hover:bg-white/10 rounded-full transition-all">
+                    <span class="material-symbols-outlined text-base text-[#ec5b13]">account_circle</span>
+                    <span id="hdr-user-name" class="max-w-[70px] sm:max-w-[100px] truncate"></span>
+                    <span class="material-symbols-outlined text-sm">expand_more</span>
+                </button>
+                <div id="hdr-dropdown" class="hidden absolute right-0 top-full mt-2 w-44 bg-[#1a1208] border border-white/10 rounded-2xl shadow-2xl py-1.5 z-[200]">
+                    <button id="hdr-logout-btn" class="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-400 hover:bg-white/5 hover:text-red-300 transition-colors rounded-xl">
+                        <span class="material-symbols-outlined text-base">logout</span>Logout
+                    </button>
+                </div>
+            </div>
+            <button id="mob-btn" class="md:hidden p-2 rounded-lg transition-colors ml-1 hover:bg-white/10 text-white">
+                <span class="material-symbols-outlined text-2xl text-white">menu</span>
+            </button>
+        </div>
+    </nav>
+    <div id="mob-menu" class="hidden md:hidden border-t border-white/10 px-4 py-3 flex flex-col gap-1 bg-[#0a0705]">
+        <a href="/index" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">Home</a>
+        <a href="/about" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">About Us</a>
+        <a href="/contact" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">Contact Us</a>
+        <a href="/blogs" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">Blogs</a>
+        <div class="flex gap-2 pt-2 border-t border-white/10 mt-1">
+            <a href="/login" class="flex-1 text-center text-white hover:bg-white/10 text-sm font-semibold py-2 rounded-xl transition-all">Login</a>
+            <a href="/register" class="flex-1 text-center bg-[#ec5b13] text-white text-sm font-bold py-2 rounded-xl hover:bg-orange-600 transition-all">Register</a>
+        </div>
+    </div>
+    <script>
+        document.getElementById("mob-btn").addEventListener("click", function(){
+            document.getElementById("mob-menu").classList.toggle("hidden");
+        });
+        (function(){
+            var h = document.getElementById("site-header");
+            function updateHeader() {
+                if (window.scrollY === 0) { h.classList.add("header-solid"); }
+                else { h.classList.remove("header-solid"); }
+            }
+            updateHeader();
+            window.addEventListener("scroll", updateHeader, {passive:true});
+        })();
+        function addPageReady(){document.body.classList.add("page-ready");}
+        if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",addPageReady);}else{addPageReady();}
+        document.addEventListener("click", function(e) {
+            var a = e.target.closest("a");
+            if (!a) return;
+            var href = a.getAttribute("href");
+            if (!href || href.startsWith("#") || href.startsWith("mailto:") || href.startsWith("tel:") || href.startsWith("javascript") || a.target === "_blank") return;
+            e.preventDefault();
+            document.body.style.transition = "opacity 0.18s ease";
+            document.body.style.opacity = "0";
+            setTimeout(function(){ window.location.href = href; }, 190);
+        });
+
+      (function(){
+        var token=localStorage.getItem("csn_token");
+        var user=JSON.parse(localStorage.getItem("csn_user")||"null");
+        function clearAll(){
+          localStorage.removeItem("csn_token");localStorage.removeItem("csn_user");
+          localStorage.removeItem("csn_admin_token");localStorage.removeItem("csn_admin_user");
+          token=null;user=null;
+        }
+        if(token){try{var parts=token.split(".");if(parts.length===3){var p=JSON.parse(atob(parts[1].replace(/-/g,"+").replace(/_/g,"/")));if(p.exp&&p.exp<Math.floor(Date.now()/1000)){clearAll();}}else{clearAll();}}catch(e){clearAll();}}
+        if(token&&user){
+          var pl=document.getElementById("hdr-login-btn");
+          var pu=document.getElementById("hdr-user-menu");
+          var pn=document.getElementById("hdr-user-name");
+          if(pl)pl.style.display="none";
+          if(pu)pu.classList.remove("hidden");
+          if(pn)pn.textContent=user.name?user.name.split(" ")[0]:"Account";
+        }
+        var userBtn=document.getElementById("hdr-user-btn");
+        var dropdown=document.getElementById("hdr-dropdown");
+        if(userBtn){
+          userBtn.addEventListener("click",function(e){e.stopPropagation();dropdown.classList.toggle("hidden");});
+          document.addEventListener("click",function(){if(dropdown)dropdown.classList.add("hidden");});
+        }
+        function doLogout(){clearAll();window.location.href="/index";}
+        var lb=document.getElementById("hdr-logout-btn");
+        if(lb)lb.addEventListener("click",doLogout);
+      })();
+    </script>
+</header>

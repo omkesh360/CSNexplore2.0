@@ -16,7 +16,7 @@ $root = dirname(__DIR__, 2); // workspace root
 function htmlHead($title, $depth = 0) {
     $base = str_repeat('../', $depth);
     return '<!DOCTYPE html>
-<html lang="en" style="scroll-behavior:smooth">
+<html class="light" lang="en" style="scroll-behavior:smooth">
 <head>
 <meta charset="utf-8"/>
 <link rel="preconnect" href="https://cdn.tailwindcss.com">
@@ -25,14 +25,20 @@ function htmlHead($title, $depth = 0) {
 <link rel="dns-prefetch" href="https://images.unsplash.com">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>' . htmlspecialchars($title) . '</title>
+
+<meta name="description" content="Discover the best hotels, bikes, cars & attractions in Chhatrapati Sambhajinagar with CSNExplore.">
+<meta name="keywords" content="Chhatrapati Sambhajinagar, Aurangabad, tourism, hotels, bike rent, car rent, attractions">
+<meta property="og:title" content="' . htmlspecialchars($title) . '">
+<meta property="og:description" content="Explore Chhatrapati Sambhajinagar (Aurangabad) with the best travel packages, guides, and rentals.">
+
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
-<script>tailwind.config={{theme:{{extend:{{colors:{{"primary":"#ec5b13"}},fontFamily:{{display:["Inter","sans-serif"],serif:["Playfair Display","serif"]}}}}}}}}</script>
+<script>tailwind.config={{darkMode:"class",theme:{{extend:{{colors:{{"primary":"#ec5b13","whatsapp":"#25D366","background-dark":"#0a0705"}},fontFamily:{{display:["Inter","sans-serif"],serif:["Playfair Display","serif"]}}}}}}}}</script>
 <style>
 body{opacity:0;will-change:opacity;}
-body.page-ready{animation:pageFadeIn 0.15s ease-out forwards;}
-@keyframes pageFadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+body.page-ready{animation:pageFadeIn 0.2s ease forwards;}
+@keyframes pageFadeIn{from{opacity:0;}to{opacity:1;}}
 .material-symbols-outlined{font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;font-family:"Material Symbols Outlined";font-style:normal;display:inline-block;line-height:1;}
 @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 .prose h2{font-size:1.5rem;font-weight:800;margin:2rem 0 0.75rem;}
@@ -59,6 +65,8 @@ body.page-ready{animation:pageFadeIn 0.15s ease-out forwards;}
 .img-shimmer:hover::after{transform:translateX(100%);}
 /* ── Glassmorphism Effects ── */
 .glass{background:rgba(255,255,255,0.08);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.15);box-shadow:0 8px 32px rgba(0,0,0,0.1);}
+.glass-dark { background:rgba(10,7,5,0.7); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid rgba(236,91,19,0.1); }
+.header-solid { background:#000000 !important; backdrop-filter:none !important; -webkit-backdrop-filter:none !important; }
 .glass-card{background:rgba(255,255,255,0.06);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.1);box-shadow:0 4px 24px rgba(0,0,0,0.08);}
 .glass-button{background:rgba(236,91,19,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.2);box-shadow:0 4px 16px rgba(236,91,19,0.3);}
 .glass-button:hover{background:rgba(236,91,19,0.95);box-shadow:0 6px 24px rgba(236,91,19,0.4);}
@@ -107,163 +115,12 @@ body.page-ready{animation:pageFadeIn 0.15s ease-out forwards;}
 @media(max-width:480px){.gallery-grid{grid-template-columns:repeat(2,1fr);gap:8px;}}
 </style>
 </head>
-<body class="bg-slate-50 font-display text-slate-900">
+<body class="bg-white dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
 ' . sharedHeader($base);
 }
 
 function sharedHeader($base) {
-    $nav = [
-        ['href'=>'index.php','label'=>'Home'],
-        ['href'=>'about.php','label'=>'About Us'],
-        ['href'=>'contact.php','label'=>'Contact Us'],
-        ['href'=>'blogs.php','label'=>'Blogs'],
-    ];
-    $links = '';
-    foreach ($nav as $n) {
-        $links .= '<a href="'.$base.$n['href'].'" class="text-sm font-semibold px-4 py-1.5 rounded-full text-white/60 hover:bg-white/10 hover:text-white transition-colors">'.$n['label'].'</a>';
-    }
-    $moblinks = '';
-    foreach ($nav as $n) {
-        $moblinks .= '<a href="'.$base.$n['href'].'" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">'.$n['label'].'</a>';
-    }
-    return '
-<div class="sticky top-0 bg-[#ec5b13] text-white py-1.5 overflow-hidden z-[70]">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 text-[11px] font-semibold uppercase tracking-widest overflow-hidden">
-    <div class="flex whitespace-nowrap" style="animation:marquee 30s linear infinite">
-      <span class="px-6">★ Verified guides for Ajanta &amp; Ellora</span>
-      <span class="px-6">★ Free cancellation on bike rentals</span>
-      <span class="px-6">★ 24/7 tourist support available</span>
-      <span class="px-6">★ 20% OFF on first heritage tour booking</span>
-      <span class="px-6">★ Verified guides for Ajanta &amp; Ellora</span>
-      <span class="px-6">★ Free cancellation on bike rentals</span>
-      <span class="px-6">★ 24/7 tourist support available</span>
-      <span class="px-6">★ 20% OFF on first heritage tour booking</span>
-    </div>
-  </div>
-</div>
-<div id="hdr-wrap" class="sticky top-[32px] z-[60] transition-all duration-300" style="padding:0">
-  <header id="site-header" class="w-full transition-all duration-300" style="background:#000000;border-bottom:1px solid rgba(255,255,255,0.08);border-radius:0;">
-    <nav class="px-4 sm:px-6 flex items-center justify-between" style="height:56px">
-    <a href="'.$base.'index.php" class="flex items-center shrink-0">
-      <img src="'.$base.'images/travelhub.png" alt="CSNExplore" class="h-8 sm:h-9 object-contain" loading="lazy"/>
-    </a>
-    <div class="hidden md:flex items-center gap-0.5">'.$links.'</div>
-    <div class="flex items-center gap-1.5">
-      <a href="tel:+918600968888" id="call-btn" class="hidden sm:flex items-center gap-1 text-white/70 hover:text-white text-xs font-semibold px-2 py-1.5 rounded-full hover:bg-white/10 transition-all" title="Call Us">
-        <span class="material-symbols-outlined text-base">call</span>
-        <span class="call-text">+91 86009 68888</span>
-      </a>
-      <a href="https://wa.me/918600968888" id="whatsapp-btn" target="_blank" rel="noopener" class="hidden sm:flex items-center gap-1 text-[#25D366] hover:text-white text-xs font-semibold px-2 py-1.5 rounded-full hover:bg-white/10 transition-all" title="WhatsApp Us">
-        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        <span class="whatsapp-text">WhatsApp</span>
-      </a>
-      <a href="'.$base.'login.php" id="hdr-login-btn" class="text-white/80 hover:text-white text-xs sm:text-sm font-semibold px-3 sm:px-4 py-1.5 rounded-full hover:bg-white/10 transition-all">Login</a>
-      <div id="hdr-user-menu" class="hidden relative">
-        <button id="hdr-user-btn" class="flex items-center gap-1.5 text-white text-xs sm:text-sm font-semibold px-3 py-1.5 hover:bg-white/10 rounded-full transition-all">
-          <span class="material-symbols-outlined text-base text-[#ec5b13]">account_circle</span>
-          <span id="hdr-user-name" class="max-w-[70px] sm:max-w-[100px] truncate"></span>
-          <span class="material-symbols-outlined text-sm">expand_more</span>
-        </button>
-        <div id="hdr-dropdown" class="hidden absolute right-0 top-full mt-2 w-44 bg-[#1a1208] border border-white/10 rounded-2xl shadow-2xl py-1.5 z-[200]">
-          <button id="hdr-logout-btn" class="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-400 hover:bg-white/5 hover:text-red-300 transition-colors rounded-xl">
-            <span class="material-symbols-outlined text-base">logout</span>Logout
-          </button>
-        </div>
-      </div>
-      <button id="mob-btn" class="md:hidden p-1.5 rounded-full hover:bg-white/10 transition-colors">
-        <span class="material-symbols-outlined text-xl text-white">menu</span>
-      </button>
-    </div>
-  </nav>
-</header>
-</div>
-<div id="mob-menu" class="hidden md:hidden sticky top-[88px] mx-3 rounded-2xl bg-black border border-white/10 shadow-2xl px-2 py-2 flex flex-col gap-0.5 z-[50]">
-  '.$moblinks.'
-</div>
-<script>
-  // Pill transformation on scroll
-  (function(){
-    var wrap = document.getElementById("hdr-wrap");
-    var hdr = document.getElementById("site-header");
-    
-    function onScroll(){
-      if(window.scrollY > 50){
-        wrap.style.padding = "12px 20px";
-        hdr.style.borderRadius = "9999px";
-        hdr.style.background = "rgba(0,0,0,0.8)";
-        hdr.style.backdropFilter = "blur(20px)";
-        hdr.style.webkitBackdropFilter = "blur(20px)";
-        hdr.style.border = "1px solid rgba(255,255,255,0.15)";
-        hdr.style.boxShadow = "0 8px 32px rgba(0,0,0,0.6)";
-      } else {
-        wrap.style.padding = "0";
-        hdr.style.borderRadius = "0";
-        hdr.style.background = "#000000";
-        hdr.style.backdropFilter = "none";
-        hdr.style.webkitBackdropFilter = "none";
-        hdr.style.border = "1px solid rgba(255,255,255,0.08)";
-        hdr.style.boxShadow = "none";
-      }
-    }
-    window.addEventListener("scroll", onScroll, {passive:true});
-    onScroll();
-  })();
-
-  document.getElementById("mob-btn").addEventListener("click",function(){
-    document.getElementById("mob-menu").classList.toggle("hidden");
-  });
-
-  (function(){
-    var token=localStorage.getItem("csn_token");
-    var user=JSON.parse(localStorage.getItem("csn_user")||"null");
-    function clearAll(){
-      localStorage.removeItem("csn_token");localStorage.removeItem("csn_user");
-      localStorage.removeItem("csn_admin_token");localStorage.removeItem("csn_admin_user");
-      token=null;user=null;
-    }
-    if(token){
-      try{
-        var parts=token.split(".");
-        if(parts.length===3){
-          var p=JSON.parse(atob(parts[1].replace(/-/g,"+").replace(/_/g,"/")));
-          if(p.exp&&p.exp<Math.floor(Date.now()/1000)){clearAll();}
-        }else{clearAll();}
-      }catch(e){clearAll();}
-    }
-    if(token&&user){
-      var pl=document.getElementById("hdr-login-btn");
-      var pu=document.getElementById("hdr-user-menu");
-      var pn=document.getElementById("hdr-user-name");
-      if(pl)pl.style.display="none";
-      if(pu)pu.classList.remove("hidden");
-      if(pn)pn.textContent=user.name?user.name.split(" ")[0]:"Account";
-    }
-    var userBtn=document.getElementById("hdr-user-btn");
-    var dropdown=document.getElementById("hdr-dropdown");
-    if(userBtn){
-      userBtn.addEventListener("click",function(e){e.stopPropagation();dropdown.classList.toggle("hidden");});
-      document.addEventListener("click",function(){if(dropdown)dropdown.classList.add("hidden");});
-    }
-    function doLogout(){clearAll();window.location.href="'.$base.'index.php";}
-    var lb=document.getElementById("hdr-logout-btn");
-    if(lb)lb.addEventListener("click",doLogout);
-  })();
-
-  function addPageReady(){document.body.classList.add("page-ready");}
-  if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",addPageReady);}else{addPageReady();}
-
-  document.addEventListener("click",function(e){
-    var a=e.target.closest("a");
-    if(!a)return;
-    var href=a.getAttribute("href");
-    if(!href||href.startsWith("#")||href.startsWith("mailto:")||href.startsWith("tel:")||href.startsWith("javascript")||href.startsWith("whatsapp:")||href.startsWith("https://wa.me")||a.target==="_blank")return;
-    e.preventDefault();
-    document.body.style.transition="opacity 0.12s ease-out";
-    document.body.style.opacity="0";
-    setTimeout(function(){window.location.href=href;},130);
-  });
-</script>
-';
+    return file_get_contents(dirname(__DIR__, 2) . '/header-html.html');
 }
 
 function sharedFooter($base) {
