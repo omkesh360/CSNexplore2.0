@@ -1,0 +1,622 @@
+<?php
+// listing.php – Unified listing page for all categories
+require_once 'php/config.php';
+
+$type = $_GET['type'] ?? 'stays';
+$allowed = ['stays','cars','bikes','attractions','restaurants','buses'];
+if (!in_array($type, $allowed)) $type = 'stays';
+
+// ── Fetch from DB ─────────────────────────────────────────────────────────────
+$db = getDB();
+$search     = trim($_GET['search'] ?? '');
+$filterType = trim($_GET['filter_type'] ?? '');
+
+$priceCol = ['stays'=>'price_per_night','cars'=>'price_per_day','bikes'=>'price_per_day',
+             'restaurants'=>'price_per_person','attractions'=>'entry_fee','buses'=>'price'];
+$pc = $priceCol[$type];
+
+$where  = ['is_active = 1'];
+$params = [];
+if ($filterType) { $where[] = 'type = ?'; $params[] = $filterType; }
+
+$sql = "SELECT * FROM $type WHERE " . implode(' AND ', $where) . " ORDER BY RANDOM()";
+$items = $db->fetchAll($sql, $params);
+
+// Decode JSON fields
+foreach ($items as &$item) {
+    foreach (['amenities','features','gallery','menu_highlights'] as $f) {
+        if (isset($item[$f]) && is_string($item[$f])) {
+            $item[$f] = json_decode($item[$f], true) ?: [];
+        }
+    }
+}
+unset($item);
+
+$config = [
+  'stays' => [
+    'title'    => 'Hotel Stays | CSNExplore',
+    'heading'  => 'Hotels in Chhatrapati Sambhajinagar',
+    'icon'     => 'bed',
+    'label'    => 'Stays',
+    'unit'     => '/ night',
+    'cta'      => 'Book Now',
+    'hero_bg'  => 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1600&q=80',
+    'hero_h1'  => 'Find Your Perfect Stay',
+    'hero_sub' => 'Hotels, resorts & homestays in Chhatrapati Sambhajinagar.',
+    'filters'  => ['Luxury Hotel','Heritage Hotel','Budget Hotel','Resort','Homestay','Hostel','Guesthouse','Business Hotel'],
+    'filter_label' => 'Property Type',
+    'promo'    => 'First hotel booking with CSNExplore',
+  ],
+  'cars' => [
+    'title'    => 'Car Rentals | CSNExplore',
+    'heading'  => 'Cars in Chhatrapati Sambhajinagar',
+    'icon'     => 'directions_car',
+    'label'    => 'Car Rentals',
+    'unit'     => '/ day',
+    'cta'      => 'Book Now',
+    'hero_bg'  => 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=1600&q=80',
+    'hero_h1'  => 'Rent a Car Your Way',
+    'hero_sub' => 'Self-drive or with driver — explore Maharashtra at your pace.',
+    'filters'  => ['Sedan','SUV','Compact SUV','Premium SUV','MUV','Hatchback'],
+    'filter_label' => 'Vehicle Type',
+    'promo'    => 'First car rental with CSNExplore',
+  ],
+  'bikes' => [
+    'title'    => 'Bike Rentals | CSNExplore',
+    'heading'  => 'Bikes in Chhatrapati Sambhajinagar',
+    'icon'     => 'motorcycle',
+    'label'    => 'Bike Rentals',
+    'unit'     => '/ day',
+    'cta'      => 'Book Now',
+    'hero_bg'  => 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&q=80',
+    'hero_h1'  => 'Ride the Open Road',
+    'hero_sub' => 'Scooters, cruisers & sports bikes for every trail.',
+    'filters'  => ['Scooter','Cruiser','Sports Bike','Street Bike','Commuter','Naked Bike','Adventure','Electric Bike','Bicycle'],
+    'filter_label' => 'Bike Type',
+    'promo'    => 'Free cancellation on bike rentals',
+  ],
+  'attractions' => [
+    'title'    => 'Attractions | CSNExplore',
+    'heading'  => 'Attractions near Chhatrapati Sambhajinagar',
+    'icon'     => 'confirmation_number',
+    'label'    => 'Attractions',
+    'unit'     => ' entry',
+    'cta'      => 'Book Now',
+    'hero_bg'  => 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Kailash_Temple%2C_Ellora.jpg/1280px-Kailash_Temple%2C_Ellora.jpg',
+    'hero_h1'  => 'Explore Ancient Marvels',
+    'hero_sub' => 'Forts, caves, temples & UNESCO heritage sites await.',
+    'filters'  => ['UNESCO Heritage','Historical Monument','Historical Fort','Heritage Site','Religious Site','Nature & Wildlife','Garden & Zoo','Historical Caves','Museum','Garden'],
+    'filter_label' => 'Category',
+    'promo'    => 'Verified guides for Ajanta & Ellora',
+  ],
+  'restaurants' => [
+    'title'    => 'Restaurants | CSNExplore',
+    'heading'  => 'Restaurants in Chhatrapati Sambhajinagar',
+    'icon'     => 'restaurant',
+    'label'    => 'Restaurants',
+    'unit'     => ' for two',
+    'cta'      => 'Book Now',
+    'hero_bg'  => 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1600&q=80',
+    'hero_h1'  => 'Dine Out Tonight',
+    'hero_sub' => 'Best restaurants, cafes & local eateries in the city.',
+    'filters'  => ['Traditional','North Indian','South Indian','Biryani Specialist','Multi-cuisine','Vegetarian','Street Food','Fast Food','Fine Dining','Barbecue','Italian','Chinese','Cafe','Seafood','Dessert'],
+    'filter_label' => 'Cuisine Type',
+    'promo'    => 'Best dining deals in the city',
+  ],
+  'buses' => [
+    'title'    => 'Bus Routes | CSNExplore',
+    'heading'  => 'Bus Routes from Chhatrapati Sambhajinagar',
+    'icon'     => 'directions_bus',
+    'label'    => 'Buses',
+    'unit'     => '',
+    'cta'      => 'Book Now',
+    'hero_bg'  => 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=1600&q=80',
+    'hero_h1'  => 'Travel by Bus',
+    'hero_sub' => 'Intercity buses on request — call or WhatsApp to book.',
+    'filters'  => ['AC Semi-Luxury','AC Sleeper','Volvo AC','AC Seater','Non-AC Seater'],
+    'filter_label' => 'Bus Type',
+    'promo'    => 'Group discounts available on buses',
+  ],
+];
+
+$c = $config[$type];
+$page_title    = $c['title'];
+$current_page  = 'listing.php';
+$listing_type  = $type;
+
+// Compute price range for slider
+$prices = array_filter(array_column($items, $pc));
+$price_min = $prices ? (int)min($prices) : 0;
+$price_max = $prices ? (int)max($prices) : 10000;
+// Round nicely
+$slider_min = (int)(floor($price_min / 100) * 100);
+$slider_max = (int)(ceil($price_max / 100) * 100) ?: 10000;
+
+function listingSlug($type, $item) {
+    $name = $item['name'] ?? $item['operator'] ?? 'item';
+    $t = strtolower(trim($name));
+    $t = preg_replace('/[^a-z0-9\s-]/', '', $t);
+    $t = preg_replace('/[\s-]+/', '-', $t);
+    return 'listing-detail/' . $type . '-' . $item['id'] . '-' . substr(trim($t, '-'), 0, 60) . '.html';
+}
+
+$extra_styles = "
+  .glassy { background:rgba(255,255,255,0.7); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,0.3); }
+  .hide-scrollbar::-webkit-scrollbar{display:none} .hide-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
+  body { background-color:#f8f6f6; }
+";
+require 'header.php';
+
+$category_nav = [
+  ['type'=>'stays',       'icon'=>'bed',                'label'=>'Stays'],
+  ['type'=>'cars',        'icon'=>'directions_car',     'label'=>'Car Rentals'],
+  ['type'=>'bikes',       'icon'=>'motorcycle',         'label'=>'Bike Rentals'],
+  ['type'=>'attractions', 'icon'=>'confirmation_number','label'=>'Attractions'],
+  ['type'=>'restaurants', 'icon'=>'restaurant',         'label'=>'Restaurants'],
+  ['type'=>'buses',       'icon'=>'directions_bus',     'label'=>'Buses'],
+];
+?>
+<!-- Category Sub-Nav is in header.php for listing pages -->
+
+<!-- Hero Banner with breadcrumb at top -->
+<div class="relative h-52 md:h-72 overflow-hidden">
+    <img src="https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=1600&q=80"
+         alt="<?php echo htmlspecialchars($c['label']); ?>"
+         class="w-full h-full object-cover"/>
+    <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-[#0a0705]"></div>
+    <!-- Breadcrumb at very top -->
+    <div class="absolute top-0 left-0 right-0 pt-5">
+        <div class="max-w-7xl mx-auto px-6 flex items-center gap-2 text-sm text-white/60 flex-wrap">
+            <a href="index.php" class="hover:text-white transition-colors flex items-center gap-1">
+                <span class="material-symbols-outlined text-base">home</span>Home
+            </a>
+            <span class="material-symbols-outlined text-base">chevron_right</span>
+            <span class="text-white font-semibold"><?php echo htmlspecialchars($c['label']); ?></span>
+        </div>
+    </div>
+    <!-- Title at bottom -->
+    <div class="absolute bottom-0 left-0 right-0 pb-6">
+        <div class="max-w-7xl mx-auto px-6">
+            <h1 class="text-white text-2xl md:text-4xl font-serif font-black flex items-center gap-3">
+                <span class="material-symbols-outlined text-primary text-3xl"><?php echo htmlspecialchars($c['icon']); ?></span>
+                <?php echo htmlspecialchars($c['hero_h1']); ?>
+            </h1>
+            <p class="text-white/60 text-sm mt-1"><?php echo htmlspecialchars($c['hero_sub']); ?></p>
+        </div>
+    </div>
+</div>
+
+<main class="min-h-screen" style="background:#f8f6f6">
+<div class="max-w-7xl mx-auto px-6 py-8">
+  <div class="flex flex-col lg:flex-row gap-8">
+
+    <!-- Mobile filter toggle -->
+    <div class="lg:hidden mb-2">
+      <button id="mob-filter-btn" onclick="document.getElementById('sidebar-filters').classList.toggle('hidden')"
+              class="flex items-center gap-2 bg-white border border-slate-200 text-slate-700 font-bold px-4 py-2.5 rounded-xl text-sm shadow-sm w-full justify-center">
+        <span class="material-symbols-outlined text-base text-primary">tune</span>Filters &amp; Sort
+      </button>
+    </div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar-filters" class="hidden lg:block w-full lg:w-72 shrink-0 space-y-6">
+      <div class="glassy p-6 rounded-2xl shadow-sm">
+        <div class="flex items-center justify-between mb-5">
+          <h3 class="text-lg font-bold">Filters</h3>
+          <button onclick="resetFilters()" class="text-sm text-primary font-semibold hover:underline">Reset</button>
+        </div>
+
+        <!-- Type filters -->
+        <div class="mb-6">
+          <p class="text-xs font-bold text-slate-500 mb-3 flex items-center gap-2 uppercase tracking-wider">
+            <span class="material-symbols-outlined text-base">category</span><?php echo htmlspecialchars($c['filter_label']); ?>
+          </p>
+          <div class="space-y-2 max-h-52 overflow-y-auto pr-1">
+            <?php foreach ($c['filters'] as $f): ?>
+            <label class="flex items-center gap-3 cursor-pointer group">
+              <input type="checkbox" value="<?php echo htmlspecialchars($f); ?>"
+                     class="type-filter rounded text-primary focus:ring-primary size-4 border-slate-300 cursor-pointer"
+                     onchange="applyFilters()"/>
+              <span class="text-sm font-medium group-hover:text-primary transition-colors select-none"><?php echo htmlspecialchars($f); ?></span>
+            </label>
+            <?php endforeach; ?>
+          </div>
+        </div>
+
+        <!-- Price Range -->
+        <div class="mb-6">
+          <p class="text-xs font-bold text-slate-500 mb-3 flex items-center gap-2 uppercase tracking-wider">
+            <span class="material-symbols-outlined text-base">payments</span>Price Range
+          </p>
+          <div class="flex justify-between text-xs font-bold text-slate-700 mb-2">
+            <span>₹<span id="price-min-label"><?php echo $slider_min; ?></span></span>
+            <span>₹<span id="price-max-label"><?php echo $slider_max; ?></span></span>
+          </div>
+          <input type="range" id="price-min-range" min="<?php echo $slider_min; ?>" max="<?php echo $slider_max; ?>"
+                 value="<?php echo $slider_min; ?>" step="100"
+                 class="w-full accent-primary cursor-pointer" oninput="onPriceMin(this.value)"/>
+          <input type="range" id="price-max-range" min="<?php echo $slider_min; ?>" max="<?php echo $slider_max; ?>"
+                 value="<?php echo $slider_max; ?>" step="100"
+                 class="w-full accent-primary cursor-pointer mt-1" oninput="onPriceMax(this.value)"/>
+        </div>
+
+        <!-- Rating -->
+        <div>
+          <p class="text-xs font-bold text-slate-500 mb-3 flex items-center gap-2 uppercase tracking-wider">
+            <span class="material-symbols-outlined text-base">star</span>Min Rating
+          </p>
+          <div class="space-y-2">
+            <?php foreach ([['val'=>'0','label'=>'All ratings'],['val'=>'8','label'=>'8.0+ Very Good'],['val'=>'8.5','label'=>'8.5+ Excellent'],['val'=>'9','label'=>'9.0+ Outstanding']] as $r): ?>
+            <label class="flex items-center gap-3 cursor-pointer">
+              <input type="radio" name="rating-filter" value="<?php echo $r['val']; ?>"
+                     class="text-primary focus:ring-primary size-4 border-slate-300 cursor-pointer"
+                     <?php echo $r['val']==='0'?'checked':''; ?> onchange="applyFilters()"/>
+              <span class="text-sm font-medium select-none flex items-center gap-1">
+                <?php echo $r['label']; ?>
+                <?php if($r['val']!=='0'): ?><span class="material-symbols-outlined text-sm text-amber-400">star</span><?php endif; ?>
+              </span>
+            </label>
+            <?php endforeach; ?>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active filter count badge -->
+      <div id="active-filter-bar" class="hidden glassy rounded-2xl px-4 py-3 flex items-center justify-between">
+        <span class="text-sm font-semibold text-primary"><span id="active-filter-count">0</span> filter(s) active</span>
+        <button onclick="resetFilters()" class="text-xs text-slate-500 hover:text-primary font-semibold">Clear all</button>
+      </div>
+
+      <!-- Promo card -->
+      <div class="rounded-2xl bg-primary overflow-hidden relative p-6 text-white h-44 flex flex-col justify-end">
+        <div class="absolute top-0 right-0 p-4 opacity-20">
+          <span class="material-symbols-outlined text-8xl">local_offer</span>
+        </div>
+        <h4 class="text-xl font-bold relative z-10">Get 20% Off</h4>
+        <p class="text-sm opacity-90 relative z-10 mb-4"><?php echo htmlspecialchars($c['promo']); ?></p>
+        <button class="w-fit px-4 py-2 bg-white text-primary rounded-lg text-sm font-bold relative z-10">Claim Now</button>
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <div class="flex-1">
+      <div class="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4">
+        <div>
+          <h1 class="text-3xl font-extrabold tracking-tight"><?php echo htmlspecialchars($c['heading']); ?></h1>
+          <p class="text-slate-500"><?php echo count($items); ?> result<?php echo count($items) !== 1 ? 's' : ''; ?> found</p>
+        </div>
+        <form method="GET" action="listing.php" class="flex items-center gap-2">
+          <input type="hidden" name="type" value="<?php echo htmlspecialchars($type); ?>"/>
+          <input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>"
+                 placeholder="Search <?php echo htmlspecialchars($c['label']); ?>..."
+                 class="border border-slate-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 bg-white w-48"/>
+          <button type="submit" class="px-4 py-2 bg-primary text-white rounded-xl text-sm font-bold hover:bg-orange-600 transition-all">Search</button>
+        </form>
+      </div>
+
+      <!-- Cards grid -->
+      <div id="listings-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <?php if (empty($items)): ?>
+        <div class="col-span-3 text-center py-16 text-slate-400">
+            <span class="material-symbols-outlined text-5xl mb-3 block">search_off</span>
+            <p class="text-lg font-semibold">No listings found</p>
+            <p class="text-sm mt-1">Try adjusting your search or filters</p>
+        </div>
+        <?php else: foreach ($items as $i => $item):
+            // Normalise price field
+            $price_val = $item[$pc] ?? 0;
+            $price_fmt = $price_val > 0 ? '₹' . number_format($price_val) : 'Free';
+            // Subtitle: buses show route, others show location
+            if ($type === 'buses') {
+                $subtitle = htmlspecialchars(($item['from_location'] ?? '') . ' → ' . ($item['to_location'] ?? ''));
+                $sub2     = htmlspecialchars(($item['bus_type'] ?? '') . ' · ' . ($item['duration'] ?? ''));
+                $item_type = $item['bus_type'] ?? '';
+            } else {
+                $subtitle = htmlspecialchars($item['location'] ?? '');
+                $sub2     = htmlspecialchars($item['type'] ?? '');
+                $item_type = $item['type'] ?? '';
+            }
+            $badge_colors = ['bg-primary','bg-amber-500','bg-green-500','bg-blue-500','bg-purple-500'];
+            $badge_color  = !empty($item['badge']) ? $badge_colors[crc32($item['badge']) % count($badge_colors)] : '';
+            $hidden_class = $i >= 9 ? ' listing-hidden' : '';
+        ?>
+        <div class="group glassy rounded-2xl overflow-hidden flex flex-col hover:shadow-xl transition-all duration-300 hover:-translate-y-1<?php echo $hidden_class; ?>"
+             data-type="<?php echo htmlspecialchars($item_type); ?>"
+             data-price="<?php echo (int)$price_val; ?>"
+             data-rating="<?php echo number_format((float)($item['rating'] ?? 0), 1); ?>">
+          <div class="relative h-56 overflow-hidden">
+            <img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                 src="<?php echo htmlspecialchars($item['image'] ?? ''); ?>"
+                 alt="<?php echo htmlspecialchars($item['name'] ?? $item['operator'] ?? ''); ?>"
+                 loading="lazy"
+                 onerror="this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80'"/>
+            <button class="absolute top-4 right-4 size-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/40 transition-colors">
+              <span class="material-symbols-outlined">favorite</span>
+            </button>
+            <?php if (!empty($item['badge'])): ?>
+            <div class="absolute bottom-4 left-4">
+              <span class="px-3 py-1 <?php echo $badge_color; ?> text-white text-xs font-bold rounded-full">
+                <?php echo htmlspecialchars($item['badge']); ?>
+              </span>
+            </div>
+            <?php endif; ?>
+          </div>
+          <div class="p-5 flex flex-col flex-1">
+            <div class="flex justify-between items-start mb-1">
+              <h3 class="text-base font-bold leading-tight group-hover:text-primary transition-colors">
+                <?php echo htmlspecialchars($item['name'] ?? $item['operator'] ?? ''); ?>
+              </h3>
+              <div class="flex items-center gap-1 text-sm font-bold shrink-0 ml-2">
+                <span class="material-symbols-outlined text-amber-400 text-lg">star</span>
+                <span><?php echo number_format((float)($item['rating'] ?? 0), 1); ?></span>
+              </div>
+            </div>
+            <?php if ($sub2): ?>
+            <p class="text-xs text-primary font-semibold mb-1"><?php echo $sub2; ?></p>
+            <?php endif; ?>
+            <div class="flex items-center gap-1 text-slate-500 text-sm mb-4">
+              <span class="material-symbols-outlined text-sm">location_on</span>
+              <span class="line-clamp-1"><?php echo $subtitle; ?></span>
+            </div>
+            <div class="mt-auto flex items-center justify-between border-t border-slate-100 pt-4">
+              <div>
+                <span class="text-2xl font-black text-primary"><?php echo $price_fmt; ?></span>
+                <?php if ($c['unit'] && $price_val > 0): ?>
+                <span class="text-xs text-slate-400 font-medium"><?php echo htmlspecialchars($c['unit']); ?></span>
+                <?php endif; ?>
+              </div>
+              <a href="<?php echo listingSlug($type, $item); ?>"
+                 class="px-4 py-2 bg-primary/10 text-primary hover:bg-primary hover:text-white rounded-xl text-sm font-bold transition-all">
+                <?php echo htmlspecialchars($c['cta']); ?>
+              </a>
+            </div>
+          </div>
+        </div>
+        <?php endforeach; endif; ?>
+      </div>
+
+      <!-- Load More -->
+      <?php if (count($items) > 9): ?>
+      <div class="mt-10 flex flex-col items-center gap-2" id="load-more-wrap">
+        <button id="load-more-btn" onclick="loadMoreListings()"
+                class="px-8 py-3 bg-primary text-white font-bold rounded-2xl hover:bg-orange-600 transition-all shadow-lg shadow-primary/20 flex items-center gap-2">
+          <span class="material-symbols-outlined">expand_more</span>
+          Load More
+        </button>
+        <p id="load-more-count" class="text-sm text-slate-400">Showing 9 of <?php echo count($items); ?></p>
+      </div>
+      <?php endif; ?>
+      <style>.listing-hidden{display:none!important;}</style>
+      <script>
+      var _shown = 9, _batch = 9;
+      function loadMoreListings() {
+        var cards = document.querySelectorAll('#listings-grid .listing-hidden');
+        var toShow = Array.from(cards).slice(0, _batch);
+        toShow.forEach(function(c){ c.classList.remove('listing-hidden'); c.style.display = ''; });
+        _shown += toShow.length;
+        var total = <?php echo count($items); ?>;
+        document.getElementById('load-more-count').textContent = 'Showing ' + _shown + ' of ' + total;
+        if (_shown >= total) {
+          document.getElementById('load-more-wrap').style.display = 'none';
+        }
+      }
+      </script>
+    </div>
+  </div>
+</div>
+</main>
+
+<?php require 'footer.php'; ?>
+
+<!-- Filter JS -->
+<script>
+var _allCards = null;
+var _priceMin = <?php echo $slider_min; ?>;
+var _priceMax = <?php echo $slider_max; ?>;
+
+function onPriceMin(v) {
+    v = parseInt(v);
+    var maxR = document.getElementById('price-max-range');
+    if (v > parseInt(maxR.value)) { maxR.value = v; _priceMax = v; document.getElementById('price-max-label').textContent = v; }
+    _priceMin = v;
+    document.getElementById('price-min-label').textContent = v;
+    applyFilters();
+}
+function onPriceMax(v) {
+    v = parseInt(v);
+    var minR = document.getElementById('price-min-range');
+    if (v < parseInt(minR.value)) { minR.value = v; _priceMin = v; document.getElementById('price-min-label').textContent = v; }
+    _priceMax = v;
+    document.getElementById('price-max-label').textContent = v;
+    applyFilters();
+}
+
+function applyFilters() {
+    var checkedTypes = Array.from(document.querySelectorAll('.type-filter:checked')).map(function(el){ return el.value.toLowerCase(); });
+    var minRating = parseFloat(document.querySelector('input[name="rating-filter"]:checked')?.value || '0');
+    var grid = document.getElementById('listings-grid');
+    var cards = grid.querySelectorAll('[data-type]');
+    var shown = 0;
+
+    cards.forEach(function(card) {
+        var cType   = (card.dataset.type || '').toLowerCase();
+        var cPrice  = parseInt(card.dataset.price || '0');
+        var cRating = parseFloat(card.dataset.rating || '0');
+
+        var typeOk   = checkedTypes.length === 0 || checkedTypes.includes(cType);
+        var priceOk  = cPrice === 0 || (cPrice >= _priceMin && cPrice <= _priceMax);
+        var ratingOk = cRating >= minRating;
+
+        var pass = typeOk && priceOk && ratingOk;
+        // Remove listing-hidden so display:none!important doesn't block us
+        card.classList.remove('listing-hidden');
+        card.style.display = pass ? '' : 'none';
+        if (pass) shown++;
+    });
+
+    // Update result count
+    var countEl = document.querySelector('.text-slate-500');
+    if (countEl) countEl.textContent = shown + ' result' + (shown !== 1 ? 's' : '') + ' found';
+
+    // Update active filter bar
+    var activeCount = checkedTypes.length + (minRating > 0 ? 1 : 0) +
+        (_priceMin > <?php echo $slider_min; ?> || _priceMax < <?php echo $slider_max; ?> ? 1 : 0);
+    var bar = document.getElementById('active-filter-bar');
+    document.getElementById('active-filter-count').textContent = activeCount;
+    if (activeCount > 0) { bar.classList.remove('hidden'); bar.classList.add('flex'); }
+    else { bar.classList.add('hidden'); bar.classList.remove('flex'); }
+
+    // Hide load-more if filters active
+    var lmw = document.getElementById('load-more-wrap');
+    if (lmw) lmw.style.display = activeCount > 0 ? 'none' : '';
+}
+
+function resetFilters() {
+    document.querySelectorAll('.type-filter').forEach(function(el){ el.checked = false; });
+    document.querySelector('input[name="rating-filter"][value="0"]').checked = true;
+    var minR = document.getElementById('price-min-range');
+    var maxR = document.getElementById('price-max-range');
+    if (minR) { minR.value = minR.min; _priceMin = parseInt(minR.min); document.getElementById('price-min-label').textContent = minR.min; }
+    if (maxR) { maxR.value = maxR.max; _priceMax = parseInt(maxR.max); document.getElementById('price-max-label').textContent = maxR.max; }
+    // Restore load-more hidden state
+    var grid = document.getElementById('listings-grid');
+    var cards = Array.from(grid.querySelectorAll('[data-type]'));
+    cards.forEach(function(card, i) {
+        card.style.display = '';
+        if (i >= _shown) card.classList.add('listing-hidden');
+    });
+    document.getElementById('active-filter-bar').classList.add('hidden');
+    document.getElementById('active-filter-bar').classList.remove('flex');
+    var lmw = document.getElementById('load-more-wrap');
+    if (lmw) lmw.style.display = '';
+    var countEl = document.querySelector('.text-slate-500');
+    if (countEl) countEl.textContent = cards.length + ' result' + (cards.length !== 1 ? 's' : '') + ' found';
+}
+</script>
+
+<!-- Booking Modal -->
+<div id="booking-modal" class="fixed inset-0 z-[200] hidden items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+  <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md p-8 relative">
+    <button onclick="closeBooking()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+    <h2 class="text-2xl font-serif font-black mb-1">Book Now</h2>
+    <p id="modal-listing-name" class="text-primary font-semibold text-sm mb-4"></p>
+    <!-- Need help? -->
+    <div class="flex flex-col gap-2 mb-5 pb-4 border-b border-slate-100">
+      <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Need help?</p>
+      <div class="flex gap-2">
+        <a href="tel:+918600968888" class="flex-1 flex items-center gap-2 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold py-2.5 px-3 rounded-xl text-sm transition-colors">
+          <span class="material-symbols-outlined text-base text-primary">call</span>+91 86009 68888
+        </a>
+        <a href="https://wa.me/918600968888" class="flex-1 flex items-center gap-2 bg-green-50 hover:bg-green-100 text-green-700 font-bold py-2.5 px-3 rounded-xl text-sm transition-colors">
+          <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.417-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.305 1.652zm6.599-3.825c1.63.975 3.41 1.487 5.23 1.488 5.439 0 9.861-4.422 9.863-9.861.001-2.636-1.024-5.115-2.884-6.977-1.862-1.864-4.341-2.887-6.979-2.888-5.439 0-9.861 4.422-9.863 9.862 0 1.842.511 3.641 1.478 5.187l-.995 3.637 3.73-.978zm11.367-7.643c-.31-.155-1.837-.906-2.12-.108-.285.103-.55.515-.674.654-.124.14-.248.155-.558.001-.31-.155-1.31-.483-2.498-1.543-.924-.824-1.548-1.841-1.73-2.15-.181-.31-.019-.477.135-.631.14-.139.31-.36.465-.541.155-.181.206-.31.31-.515.103-.206.052-.386-.026-.541-.077-.155-.674-1.626-.924-2.228-.243-.585-.491-.504-.674-.513-.175-.008-.375-.01-.575-.01s-.525.075-.8.375c-.275.3-1.05 1.026-1.05 2.5s1.075 2.9 1.225 3.1c.15.2 2.11 3.221 5.113 4.513.714.307 1.272.49 1.706.629.718.227 1.37.195 1.886.118.575-.085 1.837-.75 2.096-1.475.258-.725.258-1.346.181-1.475-.077-.129-.283-.206-.593-.361z"/></svg>
+          WhatsApp
+        </a>
+      </div>
+    </div>
+    <form id="booking-form" class="space-y-4">
+      <input type="hidden" id="modal-listing-id"/>
+      <input type="hidden" id="modal-service-type"/>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">Full Name *</label>
+          <input type="text" id="b-name" required placeholder="Your name"
+                 class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"/>
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">Phone *</label>
+          <input type="tel" id="b-phone" required placeholder="+91 XXXXX XXXXX"
+                 class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"/>
+        </div>
+      </div>
+      <div>
+        <label class="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">Email</label>
+        <input type="email" id="b-email" placeholder="your@email.com"
+               class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"/>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">Date</label>
+          <input type="date" id="b-date" min="<?php echo date('Y-m-d'); ?>"
+                 class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"/>
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">Guests</label>
+          <input type="number" id="b-guests" min="1" max="20" value="1"
+                 class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"/>
+        </div>
+      </div>
+      <div>
+        <label class="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">Notes</label>
+        <textarea id="b-notes" rows="2" placeholder="Any special requests..."
+                  class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"></textarea>
+      </div>
+      <div id="booking-success" class="hidden bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl text-sm flex items-center gap-2">
+        <span class="material-symbols-outlined text-base">check_circle</span> Booking request sent! We'll contact you shortly.
+      </div>
+      <div id="booking-error" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm"></div>
+      <button type="submit" class="w-full bg-primary text-white font-black py-4 rounded-2xl hover:bg-orange-600 transition-all shadow-lg shadow-primary/20">
+        Confirm Booking Request
+      </button>
+    </form>
+  </div>
+</div>
+<script>
+function openBooking(id, name, type) {
+    document.getElementById('modal-listing-id').value = id;
+    document.getElementById('modal-listing-name').textContent = name;
+    document.getElementById('modal-service-type').value = type;
+    document.getElementById('booking-success').classList.add('hidden');
+    document.getElementById('booking-error').classList.add('hidden');
+    document.getElementById('booking-form').reset();
+    document.getElementById('modal-listing-id').value = id;
+    document.getElementById('modal-service-type').value = type;
+    var m = document.getElementById('booking-modal');
+    m.classList.remove('hidden');
+    m.classList.add('flex');
+}
+function closeBooking() {
+    var m = document.getElementById('booking-modal');
+    m.classList.add('hidden');
+    m.classList.remove('flex');
+}
+document.getElementById('booking-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    var btn = this.querySelector('button[type=submit]');
+    btn.disabled = true; btn.textContent = 'Sending...';
+    var payload = {
+        full_name: document.getElementById('b-name').value,
+        phone: document.getElementById('b-phone').value,
+        email: document.getElementById('b-email').value,
+        booking_date: document.getElementById('b-date').value,
+        number_of_people: parseInt(document.getElementById('b-guests').value) || 1,
+        service_type: document.getElementById('modal-service-type').value,
+        listing_id: parseInt(document.getElementById('modal-listing-id').value),
+        listing_name: document.getElementById('modal-listing-name').textContent,
+        notes: document.getElementById('b-notes').value,
+    };
+    try {
+        var res = await fetch('php/api/bookings.php', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify(payload)
+        });
+        var data = await res.json();
+        if (res.ok) {
+            document.getElementById('booking-success').classList.remove('hidden');
+            setTimeout(closeBooking, 3000);
+        } else {
+            document.getElementById('booking-error').textContent = data.error || 'Something went wrong.';
+            document.getElementById('booking-error').classList.remove('hidden');
+        }
+    } catch(err) {
+        document.getElementById('booking-error').textContent = 'Network error. Please try again.';
+        document.getElementById('booking-error').classList.remove('hidden');
+    }
+    btn.disabled = false; btn.textContent = 'Confirm Booking Request';
+});
+document.getElementById('booking-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeBooking();
+});
+</script>

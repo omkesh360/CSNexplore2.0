@@ -1,5 +1,5 @@
 <?php // footer.php – shared footer for all CSNExplore pages ?>
-<footer class="bg-[#0a0705] text-white pt-14 pb-8">
+<footer class="bg-slate-900 text-white pt-14 pb-8">
     <div class="max-w-7xl mx-auto px-6">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
             <!-- Brand -->

@@ -51,7 +51,7 @@ $extra_styles = "
 require 'header.php';
 ?>
 
-<main class="bg-white min-h-screen">
+<main>
 
 <!-- Shared hero with breadcrumb at top -->
 <section class="relative h-[420px] flex items-center justify-center overflow-hidden">
