@@ -88,7 +88,7 @@ $extra_styles = "
                         <span class="material-symbols-outlined text-[16px]">home</span>
                         Home
                     </a>
-                    <a href="register.php" class="bg-primary text-white text-xs font-bold px-4 py-1.5 rounded-full hover:bg-orange-600 transition-all">Register</a>
+                    
                 </div>
             </header>
         </div>

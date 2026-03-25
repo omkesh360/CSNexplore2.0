@@ -134,135 +134,84 @@ $hp_blogs = hp_fetch_picks($db, 'blogs', $hp_settings['picks_blogs'], "status='p
         .glass { background:rgba(255,255,255,0.07); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border:1px solid rgba(255,255,255,0.12); }
         .glass-dark { background:rgba(10,7,5,0.7); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid rgba(236,91,19,0.1); }
         .header-solid { background:#000000 !important; backdrop-filter:none !important; -webkit-backdrop-filter:none !important; }
+        /* Pill shape transformation on scroll */
+        #site-header { height:64px; }
+        #site-header.scrolled { height:54px; }
+        #site-header nav { transition: all 0.3s ease; }
+        #site-header.scrolled nav { padding: 0.5rem 1.5rem; }
+        /* Hide text, show icons on scroll */
+        .contact-btn-text { transition: opacity 0.3s ease; }
+        #site-header.scrolled .contact-btn-text { opacity: 0; width: 0; overflow: hidden; }
+        #site-header.scrolled .contact-btn-icon { display: inline-block; }
+        .contact-btn-icon { display: none; transition: display 0.3s ease; }
         /* Page transition */
-        html { background:#0a0705; }
+        html { background:#fff; }
         body { opacity:0; will-change:opacity; backface-visibility:hidden; -webkit-backface-visibility:hidden; }
         body.page-ready { animation: pageFadeIn 0.2s ease forwards; }
         @keyframes pageFadeIn { from { opacity:0; } to { opacity:1; } }
+        .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; font-family:'Material Symbols Outlined'; font-style:normal; display:inline-block; line-height:1; }
+
+        /* ── Card width CSS variables (carousel cards) ── */
+        :root {
+            --card-w-attractions: calc((min(100vw,1280px) - 3rem - 3*1.25rem) / 4);
+            --card-w-bikes:       calc((min(100vw,1280px) - 3rem - 3*1.25rem) / 4);
+            --card-w-restaurants: calc((min(100vw,1280px) - 3rem - 5*1.25rem) / 6);
+            --card-w-buses:       calc((min(100vw,1280px) - 3rem - 1.25rem)   / 2);
+            --card-w-blogs:       calc((min(100vw,1280px) - 3rem - 2*1.25rem) / 3);
+        }
+        @media (max-width:768px) {
+            :root {
+                --card-w-attractions: 78vw;
+                --card-w-bikes:       78vw;
+                --card-w-restaurants: 78vw;
+                --card-w-buses:       90vw;
+                --card-w-blogs:       80vw;
+            }
+        }
+
+        /* ── Floating orb ── */
+        .orb { position:absolute; border-radius:9999px; filter:blur(80px); animation:orbFloat 8s ease-in-out infinite; pointer-events:none; }
+        @keyframes orbFloat { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-30px) scale(1.05)} }
+
+        /* ── Hero search box ── */
+        .search-box { background:rgba(255,255,255,0.08); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,0.15); border-radius:20px; padding:1.25rem 1.25rem 1rem; }
+        .tab-btn { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:50px; font-size:12px; font-weight:700; color:rgba(255,255,255,0.6); background:transparent; border:1px solid transparent; cursor:pointer; transition:all 0.25s ease; white-space:nowrap; }
+        .tab-btn:hover { color:#fff; background:rgba(255,255,255,0.1); }
+        .tab-btn.active { color:#fff; background:#ec5b13; border-color:#ec5b13; }
+        .tab-btn .material-symbols-outlined { font-size:16px; }
+        .search-panel { display:none; }
+        .search-panel.active { display:block; }
+        .search-row { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+        .search-field, .date-field { display:flex; align-items:center; gap:8px; flex:1; min-width:140px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.15); border-radius:12px; padding:10px 14px; cursor:text; transition:border-color 0.2s; }
+        .search-field:focus-within, .date-field:focus-within { border-color:#ec5b13; }
+        .search-field .material-symbols-outlined, .date-field .material-symbols-outlined { color:rgba(255,255,255,0.5); font-size:18px; flex-shrink:0; }
+        .search-field input, .date-field input { background:transparent; border:none; outline:none; color:#fff; font-size:13px; width:100%; }
+        .search-field input::placeholder, .date-field input::placeholder { color:rgba(255,255,255,0.4); }
+        .search-btn { display:inline-flex; align-items:center; gap:6px; background:#ec5b13; color:#fff; border:none; border-radius:12px; padding:10px 22px; font-size:13px; font-weight:700; cursor:pointer; transition:background 0.2s,transform 0.15s; white-space:nowrap; flex-shrink:0; }
+        .search-btn:hover { background:#d94e0e; transform:translateY(-1px); }
+        .search-btn .material-symbols-outlined { font-size:18px; }
+
+        /* ── Scroll-reveal ── */
+        [data-reveal] { opacity:0; transform:translateY(24px); transition:opacity 0.6s ease, transform 0.6s ease; }
+        [data-reveal].revealed { opacity:1; transform:none; }
+        [data-reveal][data-reveal="left"] { transform:translateX(-24px); }
+        [data-reveal][data-reveal="right"] { transform:translateX(24px); }
+        [data-reveal][data-reveal="left"].revealed, [data-reveal][data-reveal="right"].revealed { transform:none; }
+
+        /* ── Card utils ── */
+        .card-hover { transition:transform 0.3s ease, box-shadow 0.3s ease; }
+        .card-hover:hover { transform:translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,0.2); }
+        .btn-pulse { animation:btnPulse 2.5s ease-in-out infinite; }
+        @keyframes btnPulse { 0%,100%{box-shadow:0 0 0 0 rgba(236,91,19,0.35)} 50%{box-shadow:0 0 0 8px rgba(236,91,19,0)} }
+        .img-shimmer::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg,transparent,rgba(255,255,255,0.06),transparent); transform:translateX(-100%); animation:shimmer 2.5s ease infinite; border-radius:inherit; pointer-events:none; }
+        @keyframes shimmer { 100%{transform:translateX(100%)} }
         .hide-scrollbar::-webkit-scrollbar { display:none; }
         .hide-scrollbar { -ms-overflow-style:none; scrollbar-width:none; }
-        .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; font-family:'Material Symbols Outlined'; font-style:normal; display:inline-block; line-height:1; }
-        .card-hover:hover { box-shadow:0 0 30px rgba(236,91,19,0.15); }
-        /* Carousel card widths — mobile: 80vw (shows ~1.1 cards), desktop: percentage */
-        :root {
-            --card-w-attractions: 80vw;
-            --card-w-bikes:       80vw;
-            --card-w-restaurants: 80vw;
-            --card-w-buses:       80vw;
-            --card-w-blogs:       80vw;
-        }
-        @media (min-width: 640px) {
-            :root {
-                --card-w-attractions: calc(50% - 14px);
-                --card-w-bikes:       calc(50% - 14px);
-                --card-w-restaurants: calc(50% - 14px);
-                --card-w-buses:       calc(50% - 14px);
-                --card-w-blogs:       calc(50% - 14px);
-            }
-        }
-        @media (min-width: 1024px) {
-            :root {
-                --card-w-attractions: calc(25% - 15px);
-                --card-w-bikes:       calc(25% - 15px);
-                --card-w-restaurants: calc(20% - 16px);
-                --card-w-buses:       calc(50% - 10px);
-                --card-w-blogs:       calc(33.333% - 14px);
-            }
-        }
-        #hero-label, #hero-pre, #hero-highlight, #hero-post, #hero-desc { transition: opacity 0.25s ease; }
-        .search-box { background:rgba(255,255,255,0.08); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,0.15); border-radius:16px; padding:20px 22px; }
-        .tab-btn { display:flex; align-items:center; gap:6px; padding:8px 16px; border-radius:50px; font-size:13px; font-weight:700; color:rgba(255,255,255,0.55); cursor:pointer; transition:all .2s; border:none; background:transparent; white-space:nowrap; }
-        .tab-btn:hover { color:#fff; background:rgba(255,255,255,0.08); }
-        .tab-btn.active { color:#fff; background:#ec5b13; box-shadow:0 3px 10px rgba(236,91,19,0.35); }
-        .tab-btn .material-symbols-outlined { font-size:17px; }
-        .search-field { display:flex; align-items:center; gap:9px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:0 16px; flex:1; min-width:0; height:54px; transition:border-color .2s; }
-        .search-field:focus-within { border-color:#ec5b13; }
-        .search-field .material-symbols-outlined { color:rgba(255,255,255,0.4); font-size:20px; flex-shrink:0; }
-        .search-field input { background:transparent; border:none; outline:none; color:#fff; font-size:15px; font-weight:500; width:100%; min-width:0; box-shadow:none; -webkit-appearance:none; }
-        .search-field input::placeholder { color:rgba(255,255,255,0.4); }
-        .date-field { display:flex; align-items:center; gap:9px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:0 16px; cursor:pointer; transition:border-color .2s; flex:1; min-width:0; height:54px; }
-        .date-field:focus-within { border-color:#ec5b13; }
-        .date-field .material-symbols-outlined { color:rgba(255,255,255,0.4); font-size:20px; flex-shrink:0; }
-        .date-field input { background:transparent; border:none; outline:none; color:#fff; font-size:15px; font-weight:500; width:100%; cursor:pointer; min-width:0; box-shadow:none; -webkit-appearance:none; }
-        .date-field input::placeholder { color:rgba(255,255,255,0.4); }
-        .search-row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; width:100%; }
-        .search-btn { background:#ec5b13; color:#fff; font-weight:800; font-size:15px; padding:0 28px; border-radius:12px; border:none; cursor:pointer; display:flex; align-items:center; gap:6px; transition:background .2s; white-space:nowrap; flex-shrink:0; height:54px; }
-        .search-btn:hover { background:#d44e0e; }
-        .search-btn .material-symbols-outlined { font-size:18px; }
-        /* Mobile responsive search */
-        @media(max-width:768px){
-          .search-box { padding:14px; }
-          .search-row { flex-wrap:wrap; gap:8px; }
-          .search-field { flex:1 1 100%; height:46px; }
-          .date-field { flex:1 1 calc(50% - 4px); height:46px; min-width:0; }
-          .search-btn { width:100%; justify-content:center; height:46px; font-size:14px; padding:0 16px; }
-          .tab-btn { padding:6px 10px; font-size:12px; }
-          .tab-btn .material-symbols-outlined { font-size:15px; }
-        }
-        @media(max-width:400px){
-          .date-field { flex:1 1 100%; }
-        }
-        .search-panel { display:none; }
-        .search-panel.active { display:flex; flex-direction:column; gap:8px; }
-        .flatpickr-calendar { background:#1c1410 !important; border:1px solid rgba(236,91,19,0.3) !important; border-radius:16px !important; box-shadow:0 20px 60px rgba(0,0,0,0.6) !important; }
-        .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange { background:#ec5b13 !important; border-color:#ec5b13 !important; }
-        .flatpickr-day.inRange { background:rgba(236,91,19,0.2) !important; border-color:transparent !important; }
-        .flatpickr-day:hover { background:rgba(236,91,19,0.3) !important; }
-        .flatpickr-months .flatpickr-month, .flatpickr-current-month { color:#fff !important; }
-        .flatpickr-weekday { color:rgba(255,255,255,0.5) !important; }
-        .flatpickr-day { color:#fff !important; }
-        .flatpickr-day.flatpickr-disabled { color:rgba(255,255,255,0.2) !important; }
-        .flatpickr-prev-month svg, .flatpickr-next-month svg { fill:#fff !important; }
 
-        /* ── Index-specific motion enhancements ── */
-        /* Hero parallax */
-        #hero-bg { will-change: transform; }
-        /* Floating particles */
-        .particle { position:absolute; border-radius:50%; pointer-events:none; animation:particleDrift linear infinite; }
-        @keyframes particleDrift {
-            0%   { transform:translateY(0) translateX(0) scale(1); opacity:0; }
-            10%  { opacity:1; }
-            90%  { opacity:0.6; }
-            100% { transform:translateY(-120vh) translateX(30px) scale(0.5); opacity:0; }
-        }
-        /* Stats counter */
-        .stat-num { display:inline-block; }
-        /* Section divider wave */
-        .wave-divider { line-height:0; overflow:hidden; }
-        /* Gradient text */
-        .gradient-text { background:linear-gradient(135deg,#ec5b13,#ff8c42); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-        /* Glow badge */
-        .glow-badge { box-shadow:0 0 20px rgba(236,91,19,0.4); }
-    </style>
+        <?php if (!empty($extra_styles)) echo $extra_styles; ?>
+</style>
 </head>
 <body class="bg-white dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
-
-<!-- Marquee Bar -->
-<div class="bg-primary text-white py-1.5 overflow-hidden relative z-[60]">
-    <div class="max-w-7xl mx-auto px-6 flex justify-between items-center gap-4 text-[11px] font-semibold uppercase tracking-widest">
-        <div class="flex-1 overflow-hidden">
-            <div class="flex whitespace-nowrap marquee">
-                <?php
-                $default_marquee = [
-                    "★ 20% OFF on first heritage tour booking",
-                    "★ Verified guides for Ajanta &amp; Ellora",
-                    "★ Free cancellation on bike rentals",
-                    "★ 24/7 tourist support available",
-                ];
-                if (!empty($hp_settings['marquee'])) {
-                    $marquee_items = array_filter(array_map('trim', explode("\n", $hp_settings['marquee'])));
-                    if (empty($marquee_items)) $marquee_items = $default_marquee;
-                } else {
-                    $marquee_items = $default_marquee;
-                }
-                $all_items = array_merge($marquee_items, $marquee_items);
-                foreach ($all_items as $item): ?>
-                    <span class="px-6"><?php echo htmlspecialchars($item); ?></span>
-                <?php endforeach; ?>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- Header -->
 <?php
@@ -272,67 +221,9 @@ $nav_links_home = [
     ['href' => 'contact.php', 'label' => 'Contact Us'],
     ['href' => 'blogs.php',   'label' => 'Blogs'],
 ];
+$current_page = 'index.php';
+require 'header.php';
 ?>
-<header id="site-header" class="sticky top-0 w-full z-50 transition-all duration-300 glass-dark border-b border-white/5">
-    <nav class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-        <a href="index.php" class="flex items-center shrink-0">
-            <img src="images/travelhub.png" alt="CSNExplore" class="h-9 object-contain"/>
-        </a>
-        <div class="hidden md:flex items-center gap-1">
-            <?php foreach ($nav_links_home as $link): $active = ($link['href'] === 'index.php'); ?>
-                <a href="<?php echo $link['href']; ?>"
-                   class="text-sm font-semibold px-4 py-2 rounded-full transition-colors <?php echo $active ? 'text-white bg-white/10' : 'text-white/70 hover:bg-white/10 hover:text-white'; ?>">
-                    <?php echo $link['label']; ?>
-                </a>
-            <?php endforeach; ?>
-        </div>
-        <div class="flex items-center gap-2">
-            <a href="login.php" class="text-white text-sm font-semibold px-4 py-1.5 hover:bg-white/10 rounded-full transition-all">Login</a>
-            <a href="register.php" class="bg-primary text-white text-sm font-bold px-5 py-1.5 rounded-full hover:bg-orange-600 transition-all shadow-lg shadow-primary/20">Register</a>
-            <button id="mob-btn" class="md:hidden text-white hover:bg-white/10 p-2 rounded-lg transition-colors ml-1">
-                <span class="material-symbols-outlined text-2xl text-white">menu</span>
-            </button>
-        </div>
-    </nav>
-    <div id="mob-menu" class="hidden md:hidden border-t border-white/10 px-4 py-3 flex flex-col gap-1">
-        <?php foreach ($nav_links_home as $link): $active = ($link['href'] === 'index.php'); ?>
-            <a href="<?php echo $link['href']; ?>"
-               class="text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors <?php echo $active ? 'text-primary' : 'text-white/70 hover:bg-white/10 hover:text-white'; ?>">
-                <?php echo $link['label']; ?>
-            </a>
-        <?php endforeach; ?>
-        <div class="flex gap-2 pt-2 border-t border-white/10 mt-1">
-            <a href="login.php" class="flex-1 text-center text-white text-sm font-semibold py-2 hover:bg-white/10 rounded-xl transition-all">Login</a>
-            <a href="register.php" class="flex-1 text-center bg-primary text-white text-sm font-bold py-2 rounded-xl hover:bg-orange-600 transition-all">Register</a>
-        </div>
-    </div>
-    <script>
-        document.getElementById('mob-btn').addEventListener('click', function(){
-            document.getElementById('mob-menu').classList.toggle('hidden');
-        });
-        (function(){
-            var h = document.getElementById('site-header');
-            function updateHeader() {
-                if (window.scrollY === 0) { h.classList.add('header-solid'); }
-                else { h.classList.remove('header-solid'); }
-            }
-            updateHeader();
-            window.addEventListener('scroll', updateHeader, {passive:true});
-        })();
-        function addPageReady(){document.body.classList.add('page-ready');}
-        if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',addPageReady);}else{addPageReady();}
-        document.addEventListener('click', function(e) {
-            var a = e.target.closest('a');
-            if (!a) return;
-            var href = a.getAttribute('href');
-            if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('javascript') || a.target === '_blank') return;
-            e.preventDefault();
-            document.body.style.transition = 'opacity 0.18s ease';
-            document.body.style.opacity = '0';
-            setTimeout(function(){ window.location.href = href; }, 190);
-        });
-    </script>
-</header>
 
 <main>
 <!-- Hero -->
@@ -794,6 +685,18 @@ foreach ($hp_settings['section_order'] as $_sec_key):
     aria-label="Go to top">
     <span class="material-symbols-outlined" style="font-size:22px;line-height:1;pointer-events:none;">arrow_upward</span>
 </button>
+<script>
+// Scroll-reveal via IntersectionObserver
+(function(){
+    var revealEls = document.querySelectorAll('[data-reveal]');
+    if (!revealEls.length) return;
+    var obs = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('revealed'); obs.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    revealEls.forEach(function(el){ obs.observe(el); });
+})();
+</script>
+
 <script>
 (function(){
     var btn = document.getElementById('go-top-btn');
