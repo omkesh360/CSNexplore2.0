@@ -138,7 +138,7 @@ function listingSlug($type, $item) {
     $t = strtolower(trim($name));
     $t = preg_replace('/[^a-z0-9\s-]/', '', $t);
     $t = preg_replace('/[\s-]+/', '-', $t);
-    return 'listing-detail/' . $type . '-' . $item['id'] . '-' . substr(trim($t, '-'), 0, 60) . '.html';
+    return '/listing-detail/' . $type . '-' . $item['id'] . '-' . substr(trim($t, '-'), 0, 60);
 }
 
 $extra_styles = "
@@ -173,7 +173,7 @@ $category_nav = [
     <!-- Breadcrumb at very top -->
     <div class="absolute top-0 left-0 right-0 pt-5">
         <div class="max-w-7xl mx-auto px-6 flex items-center gap-2 text-sm text-white/60 flex-wrap">
-            <a href="index.php" class="hover:text-white transition-colors flex items-center gap-1">
+            <a href="index" class="hover:text-white transition-colors flex items-center gap-1">
                 <span class="material-symbols-outlined text-base">home</span>Home
             </a>
             <span class="material-symbols-outlined text-base">chevron_right</span>
@@ -291,8 +291,8 @@ $category_nav = [
           <h1 class="text-3xl font-extrabold tracking-tight"><?php echo htmlspecialchars($c['heading']); ?></h1>
           <p class="text-slate-500"><?php echo count($items); ?> result<?php echo count($items) !== 1 ? 's' : ''; ?> found</p>
         </div>
-        <form method="GET" action="listing.php" class="flex items-center gap-2">
-          <input type="hidden" name="type" value="<?php echo htmlspecialchars($type); ?>"/>
+        <form method="GET" action="/listing/<?php echo htmlspecialchars($type); ?>" class="flex items-center gap-2">
+          <!-- <input type="hidden" name="type" --> value="<?php echo htmlspecialchars($type); ?>"/>
           <input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>"
                  placeholder="Search <?php echo htmlspecialchars($c['label']); ?>..."
                  class="border border-slate-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 bg-white w-48"/>
@@ -580,8 +580,8 @@ function resetFilters() {
     <h3 class="text-xl font-serif font-black mb-2">Login Required</h3>
     <p class="text-slate-500 text-sm mb-6">Please login or create an account to make a booking.</p>
     <div class="flex gap-3">
-      <a id="login-redirect-btn" href="login.php" class="flex-1 bg-primary text-white font-bold py-3 rounded-xl text-sm hover:bg-orange-600 transition-all">Login</a>
-      <a id="register-redirect-btn" href="register.php" class="flex-1 border-2 border-primary text-primary font-bold py-3 rounded-xl text-sm hover:bg-primary/5 transition-all">Register</a>
+      <a id="login-redirect-btn" href="login" class="flex-1 bg-primary text-white font-bold py-3 rounded-xl text-sm hover:bg-orange-600 transition-all">Login</a>
+      <a id="register-redirect-btn" href="register" class="flex-1 border-2 border-primary text-primary font-bold py-3 rounded-xl text-sm hover:bg-primary/5 transition-all">Register</a>
     </div>
   </div>
 </div>

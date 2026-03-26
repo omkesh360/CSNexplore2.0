@@ -18,7 +18,7 @@ require 'header.php';
     <!-- Breadcrumb at very top of hero -->
     <div class="absolute top-0 left-0 right-0 z-20 pt-5">
         <div class="max-w-7xl mx-auto px-6 flex items-center gap-2 text-sm text-white/60 flex-wrap">
-            <a href="index.php" class="hover:text-white transition-colors flex items-center gap-1">
+            <a href="index" class="hover:text-white transition-colors flex items-center gap-1">
                 <span class="material-symbols-outlined text-base">home</span>Home
             </a>
             <span class="material-symbols-outlined text-base">chevron_right</span>
@@ -158,8 +158,8 @@ require 'header.php';
             <h3 class="text-3xl md:text-5xl font-serif font-black text-white mb-8">Ready to explore history?</h3>
             <p class="text-white/80 text-lg mb-10 max-w-xl mx-auto">Join us for a journey through time and culture. Book your customized heritage tour today.</p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="listing.php?type=stays" class="bg-white text-primary px-8 py-4 rounded-full font-bold text-lg shadow-xl hover:bg-slate-100 transition-colors">Start Your Journey</a>
-                <a href="contact.php" class="bg-transparent border-2 border-white text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white/10 transition-colors">Contact Support</a>
+                <a href="/listing/stays" class="bg-white text-primary px-8 py-4 rounded-full font-bold text-lg shadow-xl hover:bg-slate-100 transition-colors">Start Your Journey</a>
+                <a href="contact" class="bg-transparent border-2 border-white text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white/10 transition-colors">Contact Support</a>
             </div>
         </div>
         </div>

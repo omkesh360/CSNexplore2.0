@@ -42,11 +42,11 @@ require 'header.php';
         <!-- Breadcrumb at very top of hero -->
         <div class="absolute top-0 left-0 right-0 z-10 pt-5">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-2 text-sm text-white/60 flex-wrap">
-                <a href="index.php" class="hover:text-white transition-colors flex items-center gap-1">
+                <a href="index" class="hover:text-white transition-colors flex items-center gap-1">
                     <span class="material-symbols-outlined text-base">home</span>Home
                 </a>
                 <span class="material-symbols-outlined text-base">chevron_right</span>
-                <a href="blogs.php" class="hover:text-white transition-colors">Blogs</a>
+                <a href="blogs" class="hover:text-white transition-colors">Blogs</a>
                 <span class="material-symbols-outlined text-base">chevron_right</span>
                 <a href="blogs.php?category=<?php echo urlencode($blog['category']); ?>" class="hover:text-white transition-colors">
                     <?php echo htmlspecialchars($blog['category']); ?>
@@ -101,7 +101,7 @@ require 'header.php';
         <div class="mt-10 pt-8 border-t border-slate-100 flex flex-wrap gap-2 items-center">
             <span class="text-xs font-bold text-slate-400 uppercase tracking-widest mr-2">Tags:</span>
             <?php foreach ($blog['tags'] as $tag): ?>
-            <a href="blogs.php?search=<?php echo urlencode($tag); ?>"
+            <a href="blogs?search=<?php echo urlencode($tag); ?>"
                class="px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-xs font-semibold hover:bg-primary hover:text-white transition-colors">
                 <?php echo htmlspecialchars($tag); ?>
             </a>
@@ -133,7 +133,7 @@ require 'header.php';
 
         <!-- Back to blogs -->
         <div class="mt-10">
-            <a href="blogs.php" class="inline-flex items-center gap-2 text-primary font-bold hover:underline text-sm">
+            <a href="blogs" class="inline-flex items-center gap-2 text-primary font-bold hover:underline text-sm">
                 <span class="material-symbols-outlined text-base">arrow_back</span>
                 Back to all blogs
             </a>

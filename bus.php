@@ -11,11 +11,11 @@ $routes = $db->fetchAll("SELECT * FROM buses WHERE is_active=1 ORDER BY display_
 require 'header.php';
 
 $category_nav = [
-    ['href' => 'listing.php?type=stays',       'icon' => 'bed',                'label' => 'Stays'],
-    ['href' => 'listing.php?type=cars',        'icon' => 'directions_car',     'label' => 'Car Rentals'],
-    ['href' => 'listing.php?type=bikes',       'icon' => 'motorcycle',         'label' => 'Bike Rentals'],
-    ['href' => 'listing.php?type=attractions', 'icon' => 'confirmation_number','label' => 'Attractions'],
-    ['href' => 'listing.php?type=restaurants', 'icon' => 'restaurant',         'label' => 'Restaurant'],
+    ['href' => '/listing/stays',       'icon' => 'bed',                'label' => 'Stays'],
+    ['href' => '/listing/cars',        'icon' => 'directions_car',     'label' => 'Car Rentals'],
+    ['href' => '/listing/bikes',       'icon' => 'motorcycle',         'label' => 'Bike Rentals'],
+    ['href' => '/listing/attractions', 'icon' => 'confirmation_number','label' => 'Attractions'],
+    ['href' => '/listing/restaurants', 'icon' => 'restaurant',         'label' => 'Restaurant'],
     ['href' => 'bus.php',                      'icon' => 'directions_bus',     'label' => 'Buses'],
 ];
 ?>
@@ -97,10 +97,10 @@ $category_nav = [
             </div>
 
             <div class="flex gap-4">
-                <a href="index.php" class="flex items-center gap-1.5 text-slate-500 hover:text-primary text-sm font-bold transition-colors">
+                <a href="index" class="flex items-center gap-1.5 text-slate-500 hover:text-primary text-sm font-bold transition-colors">
                     <span class="material-symbols-outlined text-base">home</span> Back to Home
                 </a>
-                <a href="listing.php?type=stays" class="flex items-center gap-1.5 text-slate-500 hover:text-primary text-sm font-bold transition-colors">
+                <a href="/listing/stays" class="flex items-center gap-1.5 text-slate-500 hover:text-primary text-sm font-bold transition-colors">
                     <span class="material-symbols-outlined text-base">bed</span> Explore Stays
                 </a>
             </div>

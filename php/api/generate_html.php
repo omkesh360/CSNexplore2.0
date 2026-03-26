@@ -13,9 +13,11 @@ $db   = getDB();
 $root = dirname(__DIR__, 2); // workspace root
 
 // ── Shared HTML helpers ───────────────────────────────────────────────────────
-function htmlHead($title, $depth = 0) {
+function htmlHead($title, $depth = 0, $canonical = '', $desc = 'Discover the best hotels, bikes, cars & attractions in Chhatrapati Sambhajinagar with CSNExplore.', $image = 'https://csnexplore.com/images/og-image.jpg', $schema = null) {
+    if (!$canonical) $canonical = 'https://csnexplore.com';
     $base = str_repeat('../', $depth);
-    return '<!DOCTYPE html>
+    
+    $head = '<!DOCTYPE html>
 <html class="light" lang="en" style="scroll-behavior:smooth">
 <head>
 <meta charset="utf-8"/>
@@ -26,11 +28,29 @@ function htmlHead($title, $depth = 0) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>' . htmlspecialchars($title) . '</title>
 
-<meta name="description" content="Discover the best hotels, bikes, cars & attractions in Chhatrapati Sambhajinagar with CSNExplore.">
+<meta name="description" content="' . htmlspecialchars($desc) . '">
 <meta name="keywords" content="Chhatrapati Sambhajinagar, Aurangabad, tourism, hotels, bike rent, car rent, attractions">
-<meta property="og:title" content="' . htmlspecialchars($title) . '">
-<meta property="og:description" content="Explore Chhatrapati Sambhajinagar (Aurangabad) with the best travel packages, guides, and rentals.">
+<link rel="canonical" href="' . htmlspecialchars($canonical) . '" />
 
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="' . htmlspecialchars($canonical) . '">
+<meta property="og:title" content="' . htmlspecialchars($title) . '">
+<meta property="og:description" content="' . htmlspecialchars($desc) . '">
+<meta property="og:image" content="' . htmlspecialchars($image) . '">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="' . htmlspecialchars($canonical) . '">
+<meta name="twitter:title" content="' . htmlspecialchars($title) . '">
+<meta name="twitter:description" content="' . htmlspecialchars($desc) . '">
+<meta name="twitter:image" content="' . htmlspecialchars($image) . '">';
+
+    if ($schema) {
+        $head .= "\n" . '<script type="application/ld+json">' . json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>';
+    }
+
+    $head .= '
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
@@ -117,6 +137,8 @@ body.page-ready{animation:pageFadeIn 0.2s ease forwards;}
 </head>
 <body class="bg-white dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
 ' . sharedHeader($base);
+
+    return $head;
 }
 
 function sharedHeader($base) {
@@ -241,7 +263,7 @@ foreach ($blogs as $blog) {
     foreach ($related as $r) {
         $rSlug = $r['id'] . '-' . substr(slugify($r['title']), 0, 60);
         $relatedHtml .= '
-        <a href="'.$rSlug.'.html" class="group flex flex-col bg-white rounded-2xl overflow-hidden border border-slate-100 hover:shadow-lg transition-shadow">
+        <a href="'.$rSlug.'" class="group flex flex-col bg-white rounded-2xl overflow-hidden border border-slate-100 hover:shadow-lg transition-shadow">
           <div class="aspect-video overflow-hidden">
             <img src="'.htmlspecialchars($r['image'] ?? '').'" alt="'.htmlspecialchars($r['title']).'" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" onerror="this.src=\'../images/travelhub.png\'"/>
           </div>
@@ -255,7 +277,7 @@ foreach ($blogs as $blog) {
 
     $tagsHtml = '';
     foreach ($blog['tags'] as $tag) {
-        $tagsHtml .= '<a href="../blogs.php?search='.urlencode($tag).'" class="px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-xs font-semibold hover:bg-[#ec5b13] hover:text-white transition-colors">'.htmlspecialchars($tag).'</a>';
+        $tagsHtml .= '<a href="../blogs?search='.urlencode($tag).'" class="px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-xs font-semibold hover:bg-[#ec5b13] hover:text-white transition-colors">'.htmlspecialchars($tag).'</a>';
     }
 
         // Resolve main image path
@@ -266,7 +288,25 @@ foreach ($blogs as $blog) {
             $mainImg = '../' . $mainImg;
         }
 
-    $html = htmlHead(htmlspecialchars($blog['title']) . ' | CSNExplore', 1);
+    $desc = mb_strimwidth(strip_tags((string)($blog['content'] ?? '')), 0, 155, '...');
+    $canonical = 'https://csnexplore.com/blogs/' . $slug;
+    $absImg = (strpos($mainImg, 'http') === 0) ? $mainImg : 'https://csnexplore.com' . ltrim($mainImg, '.');
+    
+    $schema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'Article',
+        'headline' => $blog['title'],
+        'image' => [$absImg],
+        'datePublished' => date('Y-m-d\TH:i:sP', strtotime($blog['created_at'])),
+        'dateModified' => date('Y-m-d\TH:i:sP', strtotime($blog['updated_at'] ?? $blog['created_at'])),
+        'author' => [[
+            '@type' => 'Organization',
+            'name' => 'CSNExplore',
+            'url' => 'https://csnexplore.com/'
+        ]]
+    ];
+
+    $html = htmlHead(htmlspecialchars($blog['title']) . ' | CSNExplore', 1, $canonical, $desc, $absImg, $schema);
     $html .= '
 <main class="bg-white min-h-screen">
   <!-- Hero: shared image with breadcrumb at top, blog title at bottom -->
@@ -276,11 +316,11 @@ foreach ($blogs as $blog) {
     <!-- Breadcrumb at very top -->
     <div class="absolute top-0 left-0 right-0 pt-5">
       <div class="max-w-4xl mx-auto px-4 flex items-center gap-2 text-sm text-white/60 flex-wrap">
-        <a href="../index.php" class="hover:text-white transition-colors flex items-center gap-1"><span class="material-symbols-outlined text-base">home</span>Home</a>
+        <a href="../index" class="hover:text-white transition-colors flex items-center gap-1"><span class="material-symbols-outlined text-base">home</span>Home</a>
         <span class="material-symbols-outlined text-base">chevron_right</span>
-        <a href="../blogs.php" class="hover:text-white transition-colors">Blogs</a>
+        <a href="../blogs" class="hover:text-white transition-colors">Blogs</a>
         <span class="material-symbols-outlined text-base">chevron_right</span>
-        <a href="../blogs.php?category='.urlencode($blog['category']).'" class="hover:text-white transition-colors">'.htmlspecialchars($blog['category']).'</a>
+        <a href="../blogs?category='.urlencode($blog['category']).'" class="hover:text-white transition-colors">'.htmlspecialchars($blog['category']).'</a>
         <span class="material-symbols-outlined text-base">chevron_right</span>
         <span class="text-white/80 font-semibold truncate max-w-xs">'.htmlspecialchars($blog['title']).'</span>
       </div>
@@ -301,7 +341,7 @@ foreach ($blogs as $blog) {
     '.($tagsHtml ? '<div class="mt-10 pt-8 border-t border-slate-100 flex flex-wrap gap-2 items-center"><span class="text-xs font-bold text-slate-400 uppercase tracking-widest mr-2">Tags:</span>'.$tagsHtml.'</div>' : '').'
     <div class="mt-8 flex items-center gap-4 flex-wrap">
       <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Share:</span>
-      <a href="https://twitter.com/intent/tweet?text='.urlencode($blog['title']).'&url='.urlencode('https://csnexplore.com/blogs/'.$slug.'.html').'" target="_blank" rel="noopener" class="flex items-center gap-1.5 px-4 py-2 bg-[#1DA1F2] text-white rounded-xl text-xs font-bold hover:opacity-90">
+      <a href="https://twitter.com/intent/tweet?text='.urlencode($blog['title']).'&url='.urlencode('https://csnexplore.com/blogs/'.$slug).'" target="_blank" rel="noopener" class="flex items-center gap-1.5 px-4 py-2 bg-[#1DA1F2] text-white rounded-xl text-xs font-bold hover:opacity-90">
         <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
         X / Twitter
       </a>
@@ -309,7 +349,7 @@ foreach ($blogs as $blog) {
         <span class="material-symbols-outlined text-base">link</span>Copy Link
       </button>
     </div>
-    <div class="mt-10"><a href="../blogs.php" class="inline-flex items-center gap-2 text-[#ec5b13] font-bold hover:underline text-sm"><span class="material-symbols-outlined text-base">arrow_back</span>Back to all blogs</a></div>
+    <div class="mt-10"><a href="../blogs" class="inline-flex items-center gap-2 text-[#ec5b13] font-bold hover:underline text-sm"><span class="material-symbols-outlined text-base">arrow_back</span>Back to all blogs</a></div>
   </div>
   '.($relatedHtml ? '
   <div class="border-t border-slate-100 bg-slate-50 py-14">
@@ -372,7 +412,7 @@ foreach ($types as $type) {
         $featuresList = '';
         $feats = $item['amenities'] ?? $item['features'] ?? $item['menu_highlights'] ?? [];
         foreach ($feats as $feat) {
-            $featuresList .= '<li class="flex items-center gap-2 text-sm text-slate-600"><span class="material-symbols-outlined text-[#ec5b13] text-base">check_circle</span>'.htmlspecialchars($feat).'</li>';
+            $featuresList .= '<li class="flex items-center gap-2 text-sm text-slate-800 font-medium"><span class="material-symbols-outlined text-[#ec5b13] text-base">check_circle</span>'.htmlspecialchars($feat).'</li>';
         }
 
         // Gallery
@@ -426,149 +466,164 @@ foreach ($types as $type) {
             $mainImg = '../' . $mainImg;
         }
 
-        $html = htmlHead(htmlspecialchars($item['name']) . ' | CSNExplore', 1);
+        $desc = mb_strimwidth(strip_tags((string)($item['description'] ?? '')), 0, 155, '...');
+        $canonical = 'https://csnexplore.com/listing-detail/' . $slug;
+        $absImg = (strpos($mainImg, 'http') === 0) ? $mainImg : 'https://csnexplore.com' . ltrim($mainImg, '.');
+        
+        $schemaType = in_array($type, ['stays', 'restaurants', 'attractions']) ? 'LocalBusiness' : 'Product';
+        $schema = [
+            '@context' => 'https://schema.org',
+            '@type' => $schemaType,
+            'name' => $item['name'],
+            'image' => $absImg,
+            'description' => $desc
+        ];
+
+        $html = htmlHead(htmlspecialchars($item['name']) . ' | CSNExplore', 1, $canonical, $desc, $absImg, $schema);
         $html .= '
-<main class="bg-slate-50 min-h-screen">
+<main class="bg-slate-100 min-h-screen">
   <!-- Hero: shared image with breadcrumb at top, item name at bottom -->
   <div class="relative h-64 md:h-80 overflow-hidden">
     <img src="'.htmlspecialchars($mainImg).'" alt="'.htmlspecialchars($item['name']).'" class="w-full h-full object-cover" loading="lazy"/>
     <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-[#0a0705]"></div>
     <!-- Breadcrumb at very top -->
     <div class="absolute top-0 left-0 right-0 pt-5">
-      <div class="max-w-6xl mx-auto px-4 flex items-center gap-2 text-sm text-white/60 flex-wrap">
-        <a href="../index.php" class="hover:text-white transition-colors flex items-center gap-1"><span class="material-symbols-outlined text-base">home</span>Home</a>
+      <div class="max-w-6xl mx-auto px-4 flex items-center gap-2 text-sm text-white/70 flex-wrap">
+        <a href="../index" class="hover:text-white transition-colors flex items-center gap-1"><span class="material-symbols-outlined text-base">home</span>Home</a>
         <span class="material-symbols-outlined text-base">chevron_right</span>
-        <a href="../listing.php?type='.$type.'" class="hover:text-white transition-colors">'.htmlspecialchars($meta['label']).'</a>
+        <a href="../listing/'.$type.'" class="hover:text-white transition-colors font-medium">'.htmlspecialchars($meta['label']).'</a>
         <span class="material-symbols-outlined text-base">chevron_right</span>
-        <span class="text-white/80 font-semibold">'.htmlspecialchars($item['name']).'</span>
+        <span class="text-white font-semibold">'.htmlspecialchars($item['name']).'</span>
       </div>
     </div>
     <!-- Title at bottom -->
     <div class="absolute bottom-0 left-0 right-0 pb-6">
       <div class="max-w-6xl mx-auto px-4">
         <span class="text-xs font-bold text-[#ec5b13] uppercase tracking-widest mb-2 block">'.htmlspecialchars($meta['label']).'</span>
-        <h1 class="text-white text-2xl md:text-3xl font-serif font-black leading-tight">'.htmlspecialchars($item['name']).'</h1>
+        <h1 class="text-white text-2xl md:text-4xl font-serif font-black leading-tight drop-shadow-lg">'.htmlspecialchars($item['name']).'</h1>
       </div>
     </div>
   </div>
   <div class="max-w-6xl mx-auto px-4 py-8">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <!-- Left: details -->
-      <div class="lg:col-span-2 space-y-6">
+      <div class="lg:col-span-2 space-y-5">
         <!-- Title & rating card -->
-        <div class="bg-white rounded-2xl p-6 shadow-sm">
-          <div class="flex items-start justify-between gap-4 mb-3">
-            <div>
-              <div class="flex items-center gap-1 bg-amber-50 px-3 py-1.5 rounded-xl">
-                <span class="material-symbols-outlined text-amber-400 text-lg">star</span>
-                <span class="font-bold text-lg">'.number_format((float)($item['rating'] ?? 0), 1).'</span>
-                <span class="text-slate-400 text-xs">('.((int)($item['reviews'] ?? 0)).' reviews)</span>
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+          <div class="flex items-start justify-between gap-4 mb-4">
+            <div class="flex-1">
+              <h2 class="text-2xl font-bold text-slate-900 mb-3">'.htmlspecialchars($item['name']).'</h2>
+              <div class="flex items-center gap-2 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-xl w-fit">
+                <span class="material-symbols-outlined text-amber-500 text-lg">star</span>
+                <span class="font-bold text-lg text-slate-900">'.number_format((float)($item['rating'] ?? 0), 1).'</span>
+                <span class="text-slate-600 text-xs font-semibold">('.((int)($item['reviews'] ?? 0)).' reviews)</span>
               </div>
             </div>
           </div>
-          <div class="flex items-center gap-2 text-slate-500 text-sm mb-4">
-            <span class="material-symbols-outlined text-base">location_on</span>
+          <div class="flex items-center gap-2 text-slate-800 text-sm font-semibold mb-4">
+            <span class="material-symbols-outlined text-base text-[#ec5b13]">location_on</span>
             <span>'.$location.'</span>
           </div>
-          '.($extraMeta ? '<div class="flex flex-wrap gap-4 mb-4">'.$extraMeta.'</div>' : '').'
-          '.(!empty($item['description']) ? '<p class="text-slate-600 leading-relaxed">'.htmlspecialchars($item['description']).'</p>' : '').'
+          '.($extraMeta ? '<div class="flex flex-wrap gap-4 mb-4 pt-4 border-t border-slate-100">'.$extraMeta.'</div>' : '').'
+          '.(!empty($item['description']) ? '<p class="text-slate-800 leading-relaxed text-sm border-t border-slate-100 pt-4">'.htmlspecialchars($item['description']).'</p>' : '').'
         </div>
         '.($featuresList ? '
-        <div class="bg-white rounded-2xl p-6 shadow-sm">
-          <h3 class="text-lg font-bold mb-4 flex items-center gap-2"><span class="material-symbols-outlined text-[#ec5b13]">checklist</span>Features &amp; Amenities</h3>
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+          <h3 class="text-base font-bold text-slate-900 mb-4 flex items-center gap-2"><span class="material-symbols-outlined text-[#ec5b13]">checklist</span>Features &amp; Amenities</h3>
           <ul class="grid grid-cols-1 sm:grid-cols-2 gap-3">'.$featuresList.'</ul>
         </div>' : '').'
         '.($galleryHtml ? '
-        <div class="bg-white rounded-2xl p-6 shadow-sm">
-          <h3 class="text-lg font-bold mb-4 flex items-center gap-2"><span class="material-symbols-outlined text-[#ec5b13]">photo_library</span>Photo Gallery <span class="text-xs font-normal text-slate-400 ml-1">(click to zoom)</span></h3>
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+          <h3 class="text-base font-bold text-slate-900 mb-4 flex items-center gap-2"><span class="material-symbols-outlined text-[#ec5b13]">photo_library</span>Photo Gallery <span class="text-xs font-normal text-slate-500 ml-1">(click to zoom)</span></h3>
           <div class="gallery-grid">'.$galleryHtml.'</div>
         </div>' : '').'
       </div>
       <!-- Right: booking card -->
       <div class="space-y-4">
-        <div class="bg-white rounded-2xl p-6 shadow-sm relative top-24">
+        <div class="bg-white rounded-2xl p-6 shadow-md border border-slate-200 lg:sticky lg:top-24">
           <!-- Need help? -->
-          <div class="flex flex-col gap-2 mb-4 pb-4 border-b border-slate-100">
-            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Need help?</p>
-            <a href="tel:+918600968888" class="flex items-center gap-2 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold py-2.5 px-3 rounded-xl text-sm transition-colors">
+          <div class="flex flex-col gap-2 mb-5 pb-5 border-b border-slate-100">
+            <p class="text-xs font-bold text-slate-800 uppercase tracking-wider">Need help?</p>
+            <a href="tel:+918600968888" class="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-900 font-bold py-2.5 px-3 rounded-xl text-sm transition-colors border border-slate-200">
               <span class="material-symbols-outlined text-base text-[#ec5b13]">call</span>+91 86009 68888
             </a>
-            <a href="https://wa.me/918600968888" class="flex items-center gap-2 bg-green-50 hover:bg-green-100 text-green-700 font-bold py-2.5 px-3 rounded-xl text-sm transition-colors">
-              <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.417-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.305 1.652zm6.599-3.825c1.63.975 3.41 1.487 5.23 1.488 5.439 0 9.861-4.422 9.863-9.861.001-2.636-1.024-5.115-2.884-6.977-1.862-1.864-4.341-2.887-6.979-2.888-5.439 0-9.861 4.422-9.863 9.862 0 1.842.511 3.641 1.478 5.187l-.995 3.637 3.73-.978zm11.367-7.643c-.31-.155-1.837-.906-2.12-.108-.285.103-.55.515-.674.654-.124.14-.248.155-.558.001-.31-.155-1.31-.483-2.498-1.543-.924-.824-1.548-1.841-1.73-2.15-.181-.31-.019-.477.135-.631.14-.139.31-.36.465-.541.155-.181.206-.31.31-.515.103-.206.052-.386-.026-.541-.077-.155-.674-1.626-.924-2.228-.243-.585-.491-.504-.674-.513-.175-.008-.375-.01-.575-.01s-.525.075-.8.375c-.275.3-1.05 1.026-1.05 2.5s1.075 2.9 1.225 3.1c.15.2 2.11 3.221 5.113 4.513.714.307 1.272.49 1.706.629.718.227 1.37.195 1.886.118.575-.085 1.837-.75 2.096-1.475.258-.725.258-1.346.181-1.475-.077-.129-.283-.206-.593-.361z"/></svg>
+            <a href="https://wa.me/918600968888" class="flex items-center gap-2 bg-green-50 hover:bg-green-100 text-green-900 font-bold py-2.5 px-3 rounded-xl text-sm transition-colors border border-green-200">
+              <svg class="w-4 h-4 fill-current shrink-0 text-green-600" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.417-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.305 1.652zm6.599-3.825c1.63.975 3.41 1.487 5.23 1.488 5.439 0 9.861-4.422 9.863-9.861.001-2.636-1.024-5.115-2.884-6.977-1.862-1.864-4.341-2.887-6.979-2.888-5.439 0-9.861 4.422-9.863 9.862 0 1.842.511 3.641 1.478 5.187l-.995 3.637 3.73-.978zm11.367-7.643c-.31-.155-1.837-.906-2.12-.108-.285.103-.55.515-.674.654-.124.14-.248.155-.558.001-.31-.155-1.31-.483-2.498-1.543-.924-.824-1.548-1.841-1.73-2.15-.181-.31-.019-.477.135-.631.14-.139.31-.36.465-.541.155-.181.206-.31.31-.515.103-.206.052-.386-.026-.541-.077-.155-.674-1.626-.924-2.228-.243-.585-.491-.504-.674-.513-.175-.008-.375-.01-.575-.01s-.525.075-.8.375c-.275.3-1.05 1.026-1.05 2.5s1.075 2.9 1.225 3.1c.15.2 2.11 3.221 5.113 4.513.714.307 1.272.49 1.706.629.718.227 1.37.195 1.886.118.575-.085 1.837-.75 2.096-1.475.258-.725.258-1.346.181-1.475-.077-.129-.283-.206-.593-.361z"/></svg>
               WhatsApp
             </a>
           </div>
-          <div class="mb-4">
+          <div class="mb-5">
+            <p class="text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Price</p>
             <span class="text-3xl font-black text-[#ec5b13]">'.$price_fmt.'</span>
-            '.($meta['unit'] && $price_val > 0 ? '<span class="text-slate-400 text-sm font-medium">'.htmlspecialchars($meta['unit']).'</span>' : '').'
+            '.($meta['unit'] && $price_val > 0 ? '<span class="text-slate-700 text-sm font-semibold ml-1">'.htmlspecialchars($meta['unit']).'</span>' : '').'
           </div>
           '.(!empty($item['badge']) ? '<span class="inline-block bg-[#ec5b13] text-white text-xs font-bold px-3 py-1 rounded-full mb-4">'.htmlspecialchars($item['badge']).'</span>' : '').'
           <!-- Login required gate -->
           <div id="booking-login-gate" class="hidden">
             <div class="bg-amber-50 border border-amber-200 rounded-2xl p-5 text-center">
               <span class="material-symbols-outlined text-amber-500 text-3xl mb-2 block">lock</span>
-              <p class="font-bold text-slate-800 mb-1">Sign in to book</p>
-              <p class="text-sm text-slate-500 mb-4">Please log in to make a booking request.</p>
-              <a href="../login.php?redirect='.$slug.'.html" class="inline-block w-full bg-[#ec5b13] text-white font-black py-3 rounded-2xl hover:bg-orange-600 transition-all text-center">Sign In</a>
-              <a href="../register.php" class="inline-block w-full mt-2 border border-[#ec5b13] text-[#ec5b13] font-bold py-3 rounded-2xl hover:bg-orange-50 transition-all text-center text-sm">Create Account</a>
+              <p class="font-bold text-slate-900 mb-1">Sign in to book</p>
+              <p class="text-sm text-slate-700 mb-4">Please log in to make a booking request.</p>
+              <a href="../login?redirect='.$slug.'" class="inline-block w-full bg-[#ec5b13] text-white font-black py-3 rounded-2xl hover:bg-orange-600 transition-all text-center">Sign In</a>
+              <a href="../register" class="inline-block w-full mt-2 border-2 border-[#ec5b13] text-[#ec5b13] font-bold py-3 rounded-2xl hover:bg-orange-50 transition-all text-center text-sm">Create Account</a>
             </div>
           </div>
           <form id="booking-form" class="space-y-3 hidden">
             <div>
-              <label class="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">Full Name *</label>
-              <input type="text" id="b-name" required placeholder="Your name" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#ec5b13]/30"/>
+              <label class="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Full Name *</label>
+              <input type="text" id="b-name" required placeholder="Your name" class="w-full border-2 border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#ec5b13]/30 focus:border-[#ec5b13]"/>
             </div>
             <div>
-              <label class="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">Phone *</label>
-              <input type="tel" id="b-phone" required placeholder="+91 XXXXX XXXXX" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#ec5b13]/30"/>
+              <label class="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Phone *</label>
+              <input type="tel" id="b-phone" required placeholder="+91 XXXXX XXXXX" class="w-full border-2 border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#ec5b13]/30 focus:border-[#ec5b13]"/>
             </div>
             '.($type === 'stays' ? '
             <div>
-              <label class="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">Check-in Date *</label>
-              <input type="date" id="b-checkin" required class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#ec5b13]/30"/>
+              <label class="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Check-in Date *</label>
+              <input type="date" id="b-checkin" required class="w-full border-2 border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#ec5b13]/30 focus:border-[#ec5b13]"/>
             </div>
             <div>
-              <label class="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">Check-out Date *</label>
-              <input type="date" id="b-checkout" required class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#ec5b13]/30"/>
+              <label class="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Check-out Date *</label>
+              <input type="date" id="b-checkout" required class="w-full border-2 border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#ec5b13]/30 focus:border-[#ec5b13]"/>
             </div>' : '
             <div>
-              <label class="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">Date</label>
-              <input type="date" id="b-date" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#ec5b13]/30"/>
+              <label class="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Date</label>
+              <input type="date" id="b-date" class="w-full border-2 border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#ec5b13]/30 focus:border-[#ec5b13]"/>
             </div>').'
             <div>
-              <label class="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">Guests</label>
-              <input type="number" id="b-guests" min="1" max="20" value="1" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#ec5b13]/30"/>
+              <label class="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Guests</label>
+              <input type="number" id="b-guests" min="1" max="20" value="1" class="w-full border-2 border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#ec5b13]/30 focus:border-[#ec5b13]"/>
             </div>
-            <div id="booking-success" class="hidden bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl text-sm">
+            <div id="booking-success" class="hidden bg-green-50 border border-green-200 text-green-900 px-4 py-3 rounded-xl text-sm">
               <div class="flex items-start gap-2 mb-2">
-                <span class="material-symbols-outlined text-base shrink-0 mt-0.5">check_circle</span>
+                <span class="material-symbols-outlined text-base shrink-0 mt-0.5 text-green-600">check_circle</span>
                 <div>
                   <p class="font-bold">Booking request sent!</p>
                 </div>
               </div>
-              <p class="text-xs text-green-700 font-medium bg-green-100 rounded-xl px-3 py-2 mt-1">⏱ We will process your request in the next <strong>4 hours</strong>. Our team will contact you to confirm.</p>
+              <p class="text-xs text-green-900 font-medium bg-green-100 rounded-xl px-3 py-2 mt-1">⏱ We will process your request in the next <strong>4 hours</strong>. Our team will contact you to confirm.</p>
             </div>
-            <div id="booking-error" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm flex items-start gap-2">
-              <span class="material-symbols-outlined text-base shrink-0 mt-0.5">error</span>
+            <div id="booking-error" class="hidden bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-xl text-sm flex items-start gap-2">
+              <span class="material-symbols-outlined text-base shrink-0 mt-0.5 text-red-600">error</span>
               <div id="booking-error-text">Something went wrong. Please try again.</div>
             </div>
-            <button type="submit" class="w-full bg-[#ec5b13] text-white font-black py-4 rounded-2xl hover:bg-orange-600 transition-all shadow-lg">Book Now</button>
+            <button type="submit" class="w-full bg-[#ec5b13] text-white font-black py-4 rounded-2xl hover:bg-orange-600 transition-all shadow-lg text-base">Book Now</button>
           </form>
-          <p class="text-center text-xs text-slate-400 mt-3">Free cancellation · No hidden charges</p>
+          <p class="text-center text-xs text-slate-600 font-medium mt-3">Free cancellation · No hidden charges</p>
         </div>
       </div>
     </div>
     <!-- Back button + Need help — always visible below the grid -->
-    <div class="mt-8 flex flex-col sm:flex-row items-start sm:items-center gap-4 pt-6 border-t border-slate-200">
-      <a href="../listing.php?type='.$type.'" class="flex items-center gap-2 text-[#ec5b13] font-bold text-sm hover:underline">
+    <div class="mt-8 flex flex-col sm:flex-row items-start sm:items-center gap-4 pt-6 border-t border-slate-300">
+      <a href="../listing/'.$type.'" class="flex items-center gap-2 text-[#ec5b13] font-bold text-sm hover:underline">
         <span class="material-symbols-outlined text-base">arrow_back</span>Back to '.htmlspecialchars($meta['label']).'
       </a>
-      <div class="flex items-center gap-3 ml-auto">
-        <span class="text-sm text-slate-500">Need help?</span>
-        <a href="tel:+918600968888" class="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2 px-4 rounded-xl text-sm transition-colors">
+      <div class="flex items-center gap-3 ml-auto flex-wrap">
+        <span class="text-sm font-bold text-slate-800">Need help?</span>
+        <a href="tel:+918600968888" class="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded-xl text-sm transition-colors">
           <span class="material-symbols-outlined text-base text-[#ec5b13]">call</span>+91 86009 68888
         </a>
-        <a href="https://wa.me/918600968888" class="flex items-center gap-2 bg-green-50 hover:bg-green-100 text-green-700 font-bold py-2 px-4 rounded-xl text-sm transition-colors">
+        <a href="https://wa.me/918600968888" class="flex items-center gap-2 bg-[#25D366] hover:bg-[#128C7E] text-white font-bold py-2 px-4 rounded-xl text-sm transition-colors">
           <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.417-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.305 1.652zm6.599-3.825c1.63.975 3.41 1.487 5.23 1.488 5.439 0 9.861-4.422 9.863-9.861.001-2.636-1.024-5.115-2.884-6.977-1.862-1.864-4.341-2.887-6.979-2.888-5.439 0-9.861 4.422-9.863 9.862 0 1.842.511 3.641 1.478 5.187l-.995 3.637 3.73-.978zm11.367-7.643c-.31-.155-1.837-.906-2.12-.108-.285.103-.55.515-.674.654-.124.14-.248.155-.558.001-.31-.155-1.31-.483-2.498-1.543-.924-.824-1.548-1.841-1.73-2.15-.181-.31-.019-.477.135-.631.14-.139.31-.36.465-.541.155-.181.206-.31.31-.515.103-.206.052-.386-.026-.541-.077-.155-.674-1.626-.924-2.228-.243-.585-.491-.504-.674-.513-.175-.008-.375-.01-.575-.01s-.525.075-.8.375c-.275.3-1.05 1.026-1.05 2.5s1.075 2.9 1.225 3.1c.15.2 2.11 3.221 5.113 4.513.714.307 1.272.49 1.706.629.718.227 1.37.195 1.886.118.575-.085 1.837-.75 2.096-1.475.258-.725.258-1.346.181-1.475-.077-.129-.283-.206-.593-.361z"/></svg>
           WhatsApp
         </a>
@@ -576,11 +631,11 @@ foreach ($types as $type) {
     </div>
   </div>
 </main>
-<div id="related-listings-section" class="border-t border-slate-100 bg-slate-50 py-14">
+<div id="related-listings-section" class="border-t border-slate-200 bg-white py-14">
   <div class="max-w-6xl mx-auto px-4">
-    <h3 class="text-2xl font-serif font-black mb-8 flex items-center gap-3"><span class="w-8 h-1 bg-[#ec5b13] rounded-full inline-block"></span>Similar '.$meta['label'].'</h3>
+    <h3 class="text-2xl font-serif font-black text-slate-900 mb-8 flex items-center gap-3"><span class="w-8 h-1 bg-[#ec5b13] rounded-full inline-block"></span>Similar '.$meta['label'].'</h3>
     <div id="related-listings" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <div class="col-span-full text-center text-slate-400 py-8">Loading similar listings...</div>
+      <div class="col-span-full text-center text-slate-600 font-medium py-8">Loading similar listings...</div>
     </div>
   </div>
 </div>
@@ -592,13 +647,13 @@ foreach ($types as $type) {
     if(data.success && data.listings && data.listings.length > 0){
       var html = "";
       data.listings.forEach(function(listing){
-        var slug = "'.$type.'-" + listing.id + "-" + listing.name.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").substring(0,60);
+        var slug = "/listing-detail/'.$type.'-" + listing.id + "-" + listing.name.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").substring(0,60);
         var displayImg = (listing.image_url && listing.image_url.length > 0) ? (listing.image_url.startsWith("http") ? listing.image_url : "../" + listing.image_url) : "../images/travelhub.png";
-        html += "<a href=\"" + slug + ".html\" class=\"group flex flex-col bg-white rounded-2xl overflow-hidden border border-slate-100 hover:shadow-lg transition-shadow shadow-sm\">" +
+        html += "<a href=\"" + slug + "\" class=\"group flex flex-col bg-white rounded-2xl overflow-hidden border border-slate-200 hover:shadow-xl transition-shadow shadow-sm\">" +
           "<div class=\"aspect-video overflow-hidden relative\"><img src=\"" + displayImg + "\" alt=\"" + listing.name + "\" class=\"w-full h-full object-cover group-hover:scale-105 transition-transform duration-700\" loading=\"lazy\" onerror=\"this.src=\'../images/travelhub.png\'\"/>" +
           "<div class=\"absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity\"></div></div>" +
-          "<div class=\"p-4\"><h4 class=\"text-sm font-bold line-clamp-2 group-hover:text-[#ec5b13] transition-colors\">" + listing.name + "</h4>" +
-          "<div class=\"flex items-center gap-1 mt-2\"><span class=\"material-symbols-outlined text-amber-400 text-sm\">star</span><span class=\"text-xs font-bold font-display\">" + (listing.rating || 0).toFixed(1) + "</span></div>" +
+          "<div class=\"p-4\"><h4 class=\"text-sm font-bold text-slate-900 line-clamp-2 group-hover:text-[#ec5b13] transition-colors\">" + listing.name + "</h4>" +
+          "<div class=\"flex items-center gap-1 mt-2\"><span class=\"material-symbols-outlined text-amber-500 text-sm\">star</span><span class=\"text-xs font-bold text-slate-800\">" + (listing.rating || 0).toFixed(1) + "</span></div>" +
           "<p class=\"text-sm font-black text-[#ec5b13] mt-2\">₹" + (listing.price || 0).toLocaleString() + "</p></div></a>";
       });
       document.getElementById("related-listings").innerHTML = html;

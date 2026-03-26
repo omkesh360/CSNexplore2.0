@@ -215,7 +215,7 @@ $hasErrors = count(array_filter($steps, fn($s) => $s['status'] === 'error')) > 0
             </p>
         </div>
         <div class="mt-4 flex gap-3">
-            <a href="index.php" class="flex-1 text-center bg-primary text-white font-bold py-3 rounded-xl hover:bg-orange-600 transition-colors text-sm">
+            <a href="index" class="flex-1 text-center bg-primary text-white font-bold py-3 rounded-xl hover:bg-orange-600 transition-colors text-sm">
                 Go to Website →
             </a>
             <a href="adminexplorer.php" class="flex-1 text-center bg-slate-800 text-white font-bold py-3 rounded-xl hover:bg-slate-900 transition-colors text-sm">

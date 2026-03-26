@@ -21,17 +21,17 @@ $urls = [];
 // ── Static pages ──────────────────────────────────────────────────────────────
 $staticPages = [
     ['loc' => '',              'priority' => '1.0',  'changefreq' => 'daily'],
-    ['loc' => 'about.php',     'priority' => '0.7',  'changefreq' => 'monthly'],
-    ['loc' => 'contact.php',   'priority' => '0.6',  'changefreq' => 'monthly'],
-    ['loc' => 'blogs.php',     'priority' => '0.8',  'changefreq' => 'daily'],
-    ['loc' => 'listing.php?type=stays',       'priority' => '0.9', 'changefreq' => 'weekly'],
-    ['loc' => 'listing.php?type=cars',        'priority' => '0.9', 'changefreq' => 'weekly'],
-    ['loc' => 'listing.php?type=bikes',       'priority' => '0.9', 'changefreq' => 'weekly'],
-    ['loc' => 'listing.php?type=restaurants', 'priority' => '0.8', 'changefreq' => 'weekly'],
-    ['loc' => 'listing.php?type=attractions', 'priority' => '0.9', 'changefreq' => 'weekly'],
-    ['loc' => 'listing.php?type=buses',       'priority' => '0.8', 'changefreq' => 'weekly'],
-    ['loc' => 'privacy.php',   'priority' => '0.3',  'changefreq' => 'yearly'],
-    ['loc' => 'terms.php',     'priority' => '0.3',  'changefreq' => 'yearly'],
+    ['loc' => 'about',         'priority' => '0.7',  'changefreq' => 'monthly'],
+    ['loc' => 'contact',       'priority' => '0.6',  'changefreq' => 'monthly'],
+    ['loc' => 'blogs',         'priority' => '0.8',  'changefreq' => 'daily'],
+    ['loc' => '/listing/stays',       'priority' => '0.9', 'changefreq' => 'weekly'],
+    ['loc' => '/listing/cars',        'priority' => '0.9', 'changefreq' => 'weekly'],
+    ['loc' => '/listing/bikes',       'priority' => '0.9', 'changefreq' => 'weekly'],
+    ['loc' => '/listing/restaurants', 'priority' => '0.8', 'changefreq' => 'weekly'],
+    ['loc' => '/listing/attractions', 'priority' => '0.9', 'changefreq' => 'weekly'],
+    ['loc' => '/listing/buses',       'priority' => '0.8', 'changefreq' => 'weekly'],
+    ['loc' => 'privacy',       'priority' => '0.3',  'changefreq' => 'yearly'],
+    ['loc' => 'terms',         'priority' => '0.3',  'changefreq' => 'yearly'],
 ];
 
 foreach ($staticPages as $p) {
@@ -52,7 +52,7 @@ try {
         $slug = $blog['id'] . '-' . $slug;
         $lastmod = substr($blog['updated_at'] ?? $today, 0, 10);
         $urls[] = [
-            'loc'        => $base . '/blogs/' . $slug . '.html',
+            'loc'        => $base . '/blogs/' . $slug,
             'lastmod'    => $lastmod,
             'changefreq' => 'monthly',
             'priority'   => '0.6',
@@ -80,7 +80,7 @@ foreach ($listingTypes as $lt) {
             $slug    = $lt['prefix'] . '-' . $row['id'] . '-' . $slug;
             $lastmod = substr($row['updated_at'] ?? $today, 0, 10);
             $urls[]  = [
-                'loc'        => $base . '/listing-detail/' . $slug . '.html',
+                'loc'        => $base . '/listing-detail/' . $slug,
                 'lastmod'    => $lastmod,
                 'changefreq' => 'weekly',
                 'priority'   => '0.7',

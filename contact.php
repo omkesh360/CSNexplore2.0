@@ -47,7 +47,7 @@ require 'header.php';
     <!-- Breadcrumb at very top of hero -->
     <div class="absolute top-0 left-0 right-0 z-20 pt-5">
         <div class="max-w-7xl mx-auto px-6 flex items-center gap-2 text-sm text-white/60 flex-wrap">
-            <a href="index.php" class="hover:text-white transition-colors flex items-center gap-1">
+            <a href="index" class="hover:text-white transition-colors flex items-center gap-1">
                 <span class="material-symbols-outlined text-base">home</span>Home
             </a>
             <span class="material-symbols-outlined text-base">chevron_right</span>
@@ -152,7 +152,7 @@ require 'header.php';
                 </div>
                 <?php endif; ?>
 
-                <form method="POST" action="contact.php" class="space-y-6">
+                <form method="POST" action="contact" class="space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-2">
                             <label class="text-xs font-bold uppercase tracking-wider text-slate-500">First Name *</label>

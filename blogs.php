@@ -64,7 +64,7 @@ require 'header.php';
     <!-- Breadcrumb at very top of hero -->
     <div class="absolute top-0 left-0 right-0 z-20 pt-5">
         <div class="max-w-7xl mx-auto px-6 flex items-center gap-2 text-sm text-white/60 flex-wrap">
-            <a href="index.php" class="hover:text-white transition-colors flex items-center gap-1">
+            <a href="index" class="hover:text-white transition-colors flex items-center gap-1">
                 <span class="material-symbols-outlined text-base">home</span>Home
             </a>
             <span class="material-symbols-outlined text-base">chevron_right</span>
@@ -128,7 +128,7 @@ $total_grid_blogs = count($all_blogs_for_filter);
     <!-- Filters -->
     <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-8 mb-12">
         <div class="flex items-center gap-2 overflow-x-auto hide-scrollbar pb-2 snap-x snap-mandatory -mx-6 px-6 md:mx-0 md:px-0">
-            <a href="blogs.php" class="whitespace-nowrap px-6 py-2.5 snap-start <?php echo !$cat_filter ? 'bg-primary text-white shadow-lg shadow-primary/30' : 'bg-white border border-slate-200 text-slate-700 hover:border-primary'; ?> rounded-full font-bold text-sm transition-all active:scale-95">
+            <a href="blogs" class="whitespace-nowrap px-6 py-2.5 snap-start <?php echo !$cat_filter ? 'bg-primary text-white shadow-lg shadow-primary/30' : 'bg-white border border-slate-200 text-slate-700 hover:border-primary'; ?> rounded-full font-bold text-sm transition-all active:scale-95">
                 All Stories
             </a>
             <?php foreach ($categories as $cat): ?>
@@ -138,7 +138,7 @@ $total_grid_blogs = count($all_blogs_for_filter);
             </a>
             <?php endforeach; ?>
         </div>
-        <form method="GET" action="blogs.php" class="flex items-center gap-2 w-full lg:w-auto">
+        <form method="GET" action="blogs" class="flex items-center gap-2 w-full lg:w-auto">
             <?php if ($cat_filter): ?><input type="hidden" name="category" value="<?php echo htmlspecialchars($cat_filter); ?>"/><?php endif; ?>
             <input type="text" name="search" value="<?php echo htmlspecialchars($search_filter); ?>"
                    placeholder="Search blogs..."
@@ -161,7 +161,7 @@ $total_grid_blogs = count($all_blogs_for_filter);
         <span class="material-symbols-outlined text-5xl mb-3 block">article</span>
         <p class="text-lg font-semibold">No blog posts found</p>
         <p class="text-sm mt-1">Try a different search or category</p>
-        <a href="blogs.php" class="mt-4 inline-block text-primary font-bold hover:underline">View all blogs</a>
+        <a href="blogs" class="mt-4 inline-block text-primary font-bold hover:underline">View all blogs</a>
     </div>
     <?php else: ?>
     <div id="blogs-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

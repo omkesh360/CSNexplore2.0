@@ -51,15 +51,15 @@ $page_title = "Create Account | CSNExplore";
         <!-- Mobile Header (visible only on mobile/tablet) -->
         <div class="lg:hidden w-full mb-8">
             <header class="w-full rounded-full bg-black/90 backdrop-blur-xl border border-white/10 shadow-2xl shadow-black/40 px-4 flex items-center justify-between" style="height:52px">
-                <a href="index.php">
+                <a href="index">
                     <img src="images/travelhub.png" alt="CSNExplore" class="h-8 object-contain"/>
                 </a>
                 <div class="flex items-center gap-2">
-                    <a href="index.php" class="flex items-center gap-1 text-white/70 hover:text-white text-xs font-semibold px-3 py-1.5 rounded-full hover:bg-white/10 transition-all">
+                    <a href="index" class="flex items-center gap-1 text-white/70 hover:text-white text-xs font-semibold px-3 py-1.5 rounded-full hover:bg-white/10 transition-all">
                         <span class="material-symbols-outlined text-[16px]">home</span>
                         Home
                     </a>
-                    <a href="login.php" class="bg-primary text-white text-xs font-bold px-4 py-1.5 rounded-full hover:bg-orange-600 transition-all">Sign In</a>
+                    <a href="login" class="bg-primary text-white text-xs font-bold px-4 py-1.5 rounded-full hover:bg-orange-600 transition-all">Sign In</a>
                 </div>
             </header>
         </div>
@@ -69,7 +69,7 @@ $page_title = "Create Account | CSNExplore";
                 <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight md:text-4xl">Start your journey</h2>
                 <p class="mt-3 text-slate-500 font-medium">
                     Already have an account?
-                    <a href="login.php" class="text-primary hover:text-orange-600 font-bold transition-all border-b-2 border-primary/20 hover:border-primary">Sign in here</a>
+                    <a href="login" class="text-primary hover:text-orange-600 font-bold transition-all border-b-2 border-primary/20 hover:border-primary">Sign in here</a>
                 </p>
             </div>
 
@@ -142,7 +142,7 @@ $page_title = "Create Account | CSNExplore";
                     <input id="terms" name="terms" type="checkbox" required
                            class="h-4 w-4 mt-0.5 text-primary focus:ring-primary border-slate-300 rounded"/>
                     <label for="terms" class="ml-3 text-sm text-slate-500">
-                        I agree to the <a href="terms.php" class="text-primary font-bold hover:underline">Terms of Service</a> and <a href="privacy.php" class="text-primary font-bold hover:underline">Privacy Policy</a>
+                        I agree to the <a href="terms" class="text-primary font-bold hover:underline">Terms of Service</a> and <a href="privacy" class="text-primary font-bold hover:underline">Privacy Policy</a>
                     </label>
                 </div>
 
@@ -167,7 +167,7 @@ $page_title = "Create Account | CSNExplore";
              class="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-80 animate-slow-zoom"/>
         <div class="absolute inset-0 bg-gradient-to-tl from-primary/70 to-transparent"></div>
         <div class="relative z-10 w-full p-12 flex flex-col justify-between items-end text-right">
-            <a href="index.php" class="flex items-center gap-2">
+            <a href="index" class="flex items-center gap-2">
                 <img src="images/travelhub.png" alt="CSNExplore" class="h-10 brightness-0 invert"
                      onerror="this.style.display='none'; document.getElementById('reg-logo-text').style.display='flex'"/>
                 <span id="reg-logo-text" style="display:none" class="items-center gap-1.5">

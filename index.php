@@ -289,7 +289,7 @@ var heroTimer = setInterval(autoRotate, 5000);
 var _searchFocused = false;
 document.addEventListener('focusin', function(e){ if(e.target && (e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')){ _searchFocused=true; clearInterval(heroTimer); } });
 document.addEventListener('focusout', function(e){ if(e.target && (e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')){ _searchFocused=false; heroTimer=setInterval(autoRotate,5000); } });
-var searchUrls = { stays:'listing.php?type=stays', cars:'listing.php?type=cars', bikes:'listing.php?type=bikes', attractions:'listing.php?type=attractions', dine:'listing.php?type=restaurants', buses:'listing.php?type=buses' };
+var searchUrls = { stays:'/listing/stays', cars:'/listing/cars', bikes:'/listing/bikes', attractions:'/listing/attractions', dine:'/listing/restaurants', buses:'/listing/buses' };
 function doSearch(tab) {
     window.location.href = searchUrls[tab];
 }
@@ -350,8 +350,8 @@ document.addEventListener('DOMContentLoaded', function() {    var today = new Da
                 <h2 class="font-serif text-2xl md:text-3xl text-slate-900">Ride &amp; Explore</h2>
             </div>
             <div class="flex gap-3 text-sm font-bold text-primary">
-                <a href="listing.php?type=cars" class="hover:underline">Cars →</a>
-                <a href="listing.php?type=bikes" class="hover:underline">Bikes →</a>
+                <a href="/listing/cars" class="hover:underline">Cars →</a>
+                <a href="/listing/bikes" class="hover:underline">Bikes →</a>
             </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -362,7 +362,7 @@ document.addEventListener('DOMContentLoaded', function() {    var today = new Da
                     <span class="text-primary text-[10px] font-bold uppercase tracking-widest mb-1 block">Self-Drive & Chauffeur</span>
                     <h4 class="text-white text-xl font-serif mb-1">Premium Car Rentals</h4>
                     <p class="text-white/70 text-xs mb-3">Luxury sedans, SUVs & hatchbacks at your service.</p>
-                    <a href="listing.php?type=cars" class="inline-block bg-white text-black px-5 py-2 rounded-full font-bold text-xs hover:bg-primary hover:text-white transition-all btn-pulse">Explore Cars</a>
+                    <a href="/listing/cars" class="inline-block bg-white text-black px-5 py-2 rounded-full font-bold text-xs hover:bg-primary hover:text-white transition-all btn-pulse">Explore Cars</a>
                 </div>
             </div>
             <div data-reveal data-reveal="right" class="group relative overflow-hidden rounded-2xl h-64 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 img-shimmer">
@@ -372,7 +372,7 @@ document.addEventListener('DOMContentLoaded', function() {    var today = new Da
                     <span class="text-primary text-[10px] font-bold uppercase tracking-widest mb-1 block">Scooters to Royal Enfields</span>
                     <h4 class="text-white text-xl font-serif mb-1">Bike Rentals</h4>
                     <p class="text-white/70 text-xs mb-3">Ride the city your way — any road, any time.</p>
-                    <a href="listing.php?type=bikes" class="inline-block bg-white text-black px-5 py-2 rounded-full font-bold text-xs hover:bg-primary hover:text-white transition-all btn-pulse">Explore Bikes</a>
+                    <a href="/listing/bikes" class="inline-block bg-white text-black px-5 py-2 rounded-full font-bold text-xs hover:bg-primary hover:text-white transition-all btn-pulse">Explore Bikes</a>
                 </div>
             </div>
         </div>
@@ -413,7 +413,7 @@ foreach ($hp_settings['section_order'] as $_sec_key):
                 <p class="text-primary font-bold text-xs uppercase tracking-widest mb-1">Our Travel Journals</p>
                 <h2 class="font-serif text-2xl md:text-3xl text-slate-900"><?php echo htmlspecialchars($hp_settings['title_blogs']); ?></h2>
             </div>
-            <a href="blogs.php" class="text-sm font-bold text-primary hover:underline">Read more &rarr;</a>
+            <a href="blogs" class="text-sm font-bold text-primary hover:underline">Read more &rarr;</a>
             <?php else: ?>
             <div>
                 <p class="text-primary font-bold text-xs uppercase tracking-widest mb-1"><?php
@@ -422,7 +422,7 @@ foreach ($hp_settings['section_order'] as $_sec_key):
                 ?></p>
                 <h2 class="font-serif text-2xl md:text-3xl text-slate-900"><?php echo htmlspecialchars($hp_settings['title_' . $_sec_key]); ?></h2>
             </div>
-            <a href="listing.php?type=<?php echo $_sec_key; ?>" class="text-sm font-bold text-primary hover:underline">See all &rarr;</a>
+            <a href="/listing/<?php echo $_sec_key; ?>" class="text-sm font-bold text-primary hover:underline">See all &rarr;</a>
             <?php endif; ?>
         </div>
         <?php
@@ -434,7 +434,7 @@ foreach ($hp_settings['section_order'] as $_sec_key):
 
         if ($_sec_key === 'attractions'):
             $render_fn = function($a) {
-                $slug = 'listing-detail/attractions-'.$a['id'].'-'.substr(trim(preg_replace('/[\s-]+/','-',preg_replace('/[^a-z0-9\s-]/', '', strtolower($a['name']))),'-'),0,60).'.html';
+                $slug = '/listing-detail/attractions-'.$a['id'].'-'.substr(trim(preg_replace('/[\s-]+/','-',preg_replace('/[^a-z0-9\s-]/', '', strtolower($a['name']))),'-'),0,60);
                 $img=htmlspecialchars($a['image']); $name=htmlspecialchars($a['name']);
                 $tag=htmlspecialchars($a['type']??'Attraction');
                 $price=$a['entry_fee']>0 ? '&#8377;'.number_format($a['entry_fee']) : 'Free';
@@ -452,7 +452,7 @@ foreach ($hp_settings['section_order'] as $_sec_key):
             $items = $hp_attractions;
         elseif ($_sec_key === 'bikes'):
             $render_fn = function($b) {
-                $slug = 'listing-detail/bikes-'.$b['id'].'-'.substr(trim(preg_replace('/[\s-]+/','-',preg_replace('/[^a-z0-9\s-]/', '', strtolower($b['name']))),'-'),0,60).'.html';
+                $slug = '/listing-detail/bikes-'.$b['id'].'-'.substr(trim(preg_replace('/[\s-]+/','-',preg_replace('/[^a-z0-9\s-]/', '', strtolower($b['name']))),'-'),0,60);
                 $img=htmlspecialchars($b['image']); $name=htmlspecialchars($b['name']);
                 $type=htmlspecialchars($b['type']); $price=number_format($b['price_per_day']);
                 $rating=number_format((float)($b['rating']??0),1);
@@ -469,7 +469,7 @@ foreach ($hp_settings['section_order'] as $_sec_key):
             $items = $hp_bikes;
         elseif ($_sec_key === 'restaurants'):
             $render_fn = function($r) {
-                $slug = 'listing-detail/restaurants-'.$r['id'].'-'.substr(trim(preg_replace('/[\s-]+/','-',preg_replace('/[^a-z0-9\s-]/', '', strtolower($r['name']))),'-'),0,60).'.html';
+                $slug = '/listing-detail/restaurants-'.$r['id'].'-'.substr(trim(preg_replace('/[\s-]+/','-',preg_replace('/[^a-z0-9\s-]/', '', strtolower($r['name']))),'-'),0,60);
                 $img=htmlspecialchars($r['image']); $name=htmlspecialchars($r['name']);
                 $cuisine=htmlspecialchars($r['cuisine']??$r['type']); $price=number_format($r['price_per_person']??0);
                 $rating=number_format((float)($r['rating']??0),1);
@@ -497,7 +497,7 @@ foreach ($hp_settings['section_order'] as $_sec_key):
                     .'<p class="text-white/50 text-xs mt-0.5 truncate">'.$route.'</p></div></div>'
                     .'<div class="flex items-center gap-3 shrink-0">'
                     .'<p class="text-primary font-black text-lg">&#8377;'.$price.'</p>'
-                    .'<a href="bus.php" class="bg-primary text-white px-4 py-2 rounded-xl font-bold text-xs hover:bg-orange-600 transition-all">Book</a>'
+                    .'<a href="bus" class="bg-primary text-white px-4 py-2 rounded-xl font-bold text-xs hover:bg-orange-600 transition-all">Book</a>'
                     .'</div></div>';
             };
             $items = $hp_buses;
@@ -507,7 +507,7 @@ foreach ($hp_settings['section_order'] as $_sec_key):
                 $t=strtolower(trim($blog['title']));
                 $t=preg_replace('/[^a-z0-9\s-]/','',$t);
                 $t=preg_replace('/[\s-]+/','-',$t);
-                $slug='blogs/'.$blog['id'].'-'.substr(trim($t,'-'),0,60).'.html';
+                $slug='blogs/'.$blog['id'].'-'.substr(trim($t,'-'),0,60);
                 $img=htmlspecialchars($blog['image']??''); $title=htmlspecialchars($blog['title']);
                 $cat=htmlspecialchars($blog['category']??'Travel');
                 return '<a href="'.$slug.'" class="group cursor-pointer flex-shrink-0 hover:-translate-y-1 transition-all duration-300" style="width:VAR_W">'

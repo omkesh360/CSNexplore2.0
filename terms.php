@@ -158,7 +158,7 @@ include 'header.php';
 
         <!-- Back link -->
         <div class="text-center mt-10">
-            <a href="index.php" class="inline-flex items-center gap-2 text-primary font-bold hover:underline">
+            <a href="index" class="inline-flex items-center gap-2 text-primary font-bold hover:underline">
                 <span class="material-symbols-outlined text-[18px]">arrow_back</span> Back to Home
             </a>
         </div>

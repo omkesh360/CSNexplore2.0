@@ -56,7 +56,7 @@ $extra_styles = "
              class="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-80 animate-slow-zoom"/>
         <div class="absolute inset-0 bg-gradient-to-tr from-primary/70 to-transparent"></div>
         <div class="relative z-10 w-full p-12 flex flex-col justify-between">
-            <a href="index.php" class="flex items-center gap-2">
+            <a href="index" class="flex items-center gap-2">
                 <img src="images/travelhub.png" alt="CSNExplore" class="h-10 brightness-0 invert"
                      onerror="this.style.display='none'; document.getElementById('login-logo-text').style.display='flex'"/>
                 <span id="login-logo-text" style="display:none" class="items-center gap-1.5">
@@ -81,11 +81,11 @@ $extra_styles = "
         <!-- Mobile Header (visible only on mobile/tablet) -->
         <div class="lg:hidden w-full mb-8">
             <header class="w-full rounded-full bg-black/90 backdrop-blur-xl border border-white/10 shadow-2xl shadow-black/40 px-4 flex items-center justify-between" style="height:52px">
-                <a href="index.php">
+                <a href="index">
                     <img src="images/travelhub.png" alt="CSNExplore" class="h-8 object-contain"/>
                 </a>
                 <div class="flex items-center gap-2">
-                    <a href="index.php" class="flex items-center gap-1 text-white/70 hover:text-white text-xs font-semibold px-3 py-1.5 rounded-full hover:bg-white/10 transition-all">
+                    <a href="index" class="flex items-center gap-1 text-white/70 hover:text-white text-xs font-semibold px-3 py-1.5 rounded-full hover:bg-white/10 transition-all">
                         <span class="material-symbols-outlined text-[16px]">home</span>
                         Home
                     </a>
@@ -99,7 +99,7 @@ $extra_styles = "
                 <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight md:text-4xl">Welcome back</h2>
                 <p class="mt-3 text-slate-500 font-medium">
                     Don't have an account?
-                    <a href="register.php" class="text-primary hover:text-orange-600 font-bold transition-all border-b-2 border-primary/20 hover:border-primary">Create one for free</a>
+                    <a href="register" class="text-primary hover:text-orange-600 font-bold transition-all border-b-2 border-primary/20 hover:border-primary">Create one for free</a>
                 </p>
             </div>
 
@@ -160,8 +160,8 @@ $extra_styles = "
         <div class="mt-auto pt-8 text-center text-xs text-slate-400">
             <p>© <?php echo date('Y'); ?> CSNExplore. All rights reserved.</p>
             <div class="mt-2 flex justify-center gap-4">
-                <a href="privacy.php" class="hover:text-primary transition-colors">Privacy Policy</a>
-                <a href="terms.php" class="hover:text-primary transition-colors">Terms of Service</a>
+                <a href="privacy" class="hover:text-primary transition-colors">Privacy Policy</a>
+                <a href="terms" class="hover:text-primary transition-colors">Terms of Service</a>
             </div>
         </div>
     </div>
