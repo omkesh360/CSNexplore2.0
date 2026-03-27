@@ -202,7 +202,7 @@ require 'header.php';
 
             <!-- STAYS panel -->
             <div id="panel-stays" class="search-panel active">
-                <div class="search-row">
+                <div class="search-row" style="gap: 16px;">
                     <div class="search-field"><span class="material-symbols-outlined">location_on</span><input id="stays-location" type="text" placeholder="Chhatrapati Sambhajinagar" value="Chhatrapati Sambhajinagar"/></div>
                     <div class="date-field" onclick="document.getElementById('stays-checkin').focus()"><span class="material-symbols-outlined">calendar_month</span><input id="stays-checkin" type="text" placeholder="Check-in" readonly/></div>
                     <div class="date-field" onclick="document.getElementById('stays-checkout').focus()"><span class="material-symbols-outlined">calendar_month</span><input id="stays-checkout" type="text" placeholder="Check-out" readonly/></div>
@@ -211,7 +211,7 @@ require 'header.php';
             </div>
             <!-- CARS panel -->
             <div id="panel-cars" class="search-panel">
-                <div class="search-row">
+                <div class="search-row" style="gap: 16px;">
                     <div class="search-field"><span class="material-symbols-outlined">trip_origin</span><input id="cars-pickup" type="text" placeholder="Chhatrapati Sambhajinagar" value="Chhatrapati Sambhajinagar"/></div>
                     <div class="search-field"><span class="material-symbols-outlined">location_on</span><input id="cars-drop" type="text" placeholder="Drop location"/></div>
                     <div class="date-field" onclick="document.getElementById('cars-date').focus()"><span class="material-symbols-outlined">calendar_month</span><input id="cars-date" type="text" placeholder="Select date" readonly/></div>
@@ -220,7 +220,7 @@ require 'header.php';
             </div>
             <!-- BIKES panel -->
             <div id="panel-bikes" class="search-panel">
-                <div class="search-row">
+                <div class="search-row" style="gap: 16px;">
                     <div class="search-field"><span class="material-symbols-outlined">location_on</span><input id="bikes-location" type="text" placeholder="Chhatrapati Sambhajinagar" value="Chhatrapati Sambhajinagar"/></div>
                     <div class="date-field" onclick="document.getElementById('bikes-date').focus()"><span class="material-symbols-outlined">calendar_month</span><input id="bikes-date" type="text" placeholder="From date" readonly/></div>
                     <div class="date-field" onclick="document.getElementById('bikes-return').focus()"><span class="material-symbols-outlined">event_available</span><input id="bikes-return" type="text" placeholder="Return date" readonly/></div>
@@ -229,7 +229,7 @@ require 'header.php';
             </div>
             <!-- ATTRACTIONS panel -->
             <div id="panel-attractions" class="search-panel">
-                <div class="search-row">
+                <div class="search-row" style="gap: 16px;">
                     <div class="search-field"><span class="material-symbols-outlined">location_on</span><input id="attractions-location" type="text" placeholder="Chhatrapati Sambhajinagar" value="Chhatrapati Sambhajinagar"/></div>
                     <div class="date-field" onclick="document.getElementById('attractions-date').focus()"><span class="material-symbols-outlined">calendar_month</span><input id="attractions-date" type="text" placeholder="Select date" readonly/></div>
                     <button class="search-btn" onclick="doSearch('attractions')"><span class="material-symbols-outlined">search</span>Search</button>
@@ -237,7 +237,7 @@ require 'header.php';
             </div>
             <!-- DINE panel -->
             <div id="panel-dine" class="search-panel">
-                <div class="search-row">
+                <div class="search-row" style="gap: 16px;">
                     <div class="search-field"><span class="material-symbols-outlined">location_on</span><input id="dine-location" type="text" placeholder="Chhatrapati Sambhajinagar" value="Chhatrapati Sambhajinagar"/></div>
                     <div class="date-field" onclick="document.getElementById('dine-date').focus()"><span class="material-symbols-outlined">calendar_month</span><input id="dine-date" type="text" placeholder="Select date" readonly/></div>
                     <button class="search-btn" onclick="doSearch('dine')"><span class="material-symbols-outlined">search</span>Search</button>
@@ -245,7 +245,7 @@ require 'header.php';
             </div>
             <!-- BUSES panel -->
             <div id="panel-buses" class="search-panel">
-                <div class="search-row">
+                <div class="search-row" style="gap: 16px;">
                     <div class="search-field"><span class="material-symbols-outlined">trip_origin</span><input id="buses-from" type="text" placeholder="Chhatrapati Sambhajinagar" value="Chhatrapati Sambhajinagar"/></div>
                     <div class="search-field"><span class="material-symbols-outlined">location_on</span><input id="buses-to" type="text" placeholder="Destination city"/></div>
                     <div class="date-field" onclick="document.getElementById('buses-date').focus()"><span class="material-symbols-outlined">calendar_month</span><input id="buses-date" type="text" placeholder="Select date" readonly/></div>
@@ -280,15 +280,9 @@ function switchTab(tab, fromAuto) {
         document.getElementById('hero-desc').textContent = d.desc;
         ['hero-label','hero-pre','hero-highlight','hero-post','hero-desc'].forEach(function(id){ document.getElementById(id).style.opacity='1'; });
     }, 250);
-    if (!fromAuto) { clearInterval(heroTimer); heroTimer = setInterval(autoRotate, 5000); }
+    if (!fromAuto) { /* Interval logic removed */ }
 }
-var heroTabs = ['stays','cars','bikes','attractions','dine','buses'], heroIndex = 0;
-function autoRotate() { heroIndex = (heroIndex + 1) % heroTabs.length; switchTab(heroTabs[heroIndex], true); }
-var heroTimer = setInterval(autoRotate, 5000);
-// Pause auto-rotate when user is typing in any search input
-var _searchFocused = false;
-document.addEventListener('focusin', function(e){ if(e.target && (e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')){ _searchFocused=true; clearInterval(heroTimer); } });
-document.addEventListener('focusout', function(e){ if(e.target && (e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')){ _searchFocused=false; heroTimer=setInterval(autoRotate,5000); } });
+// Auto-rotation disabled per user request
 var searchUrls = { stays:'<?php echo BASE_PATH; ?>/listing/stays', cars:'<?php echo BASE_PATH; ?>/listing/cars', bikes:'<?php echo BASE_PATH; ?>/listing/bikes', attractions:'<?php echo BASE_PATH; ?>/listing/attractions', dine:'<?php echo BASE_PATH; ?>/listing/restaurants', buses:'<?php echo BASE_PATH; ?>/listing/buses' };
 function doSearch(tab) {
     window.location.href = searchUrls[tab];
@@ -575,6 +569,10 @@ foreach ($hp_settings['section_order'] as $_sec_key):
                 }
                 requestAnimationFrame(step);
             }
+
+            // Pause on hover
+            wrap.addEventListener('mouseenter', function(){ paused = true; });
+            wrap.addEventListener('mouseleave', function(){ if(!isDragging) paused = false; });
 
             // Mouse drag — use document for move/up so it works outside the clipped wrap
             wrap.addEventListener('mousedown', function(e){

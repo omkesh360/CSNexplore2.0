@@ -10,12 +10,14 @@ $extra_head  = '
 require 'admin-header.php';
 ?>
 
-<div class="space-y-5">
-    <!-- Toolbar -->
-    <div class="flex flex-wrap items-center gap-3">
-        <h2 class="text-sm font-bold text-slate-700">Uploaded Images</h2>
-        <label class="ml-auto flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-orange-600 transition-all shadow-sm shadow-primary/20 cursor-pointer">
-            <span class="material-symbols-outlined text-base">upload</span> Upload Images
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h2 class="text-xl font-bold text-slate-800">Media Gallery</h2>
+            <p class="text-xs text-slate-500 font-medium">Manage and upload platform assets</p>
+        </div>
+        <label class="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-orange-600 transition-all shadow-sm cursor-pointer">
+            <span class="material-symbols-outlined text-base">upload</span> Upload Media
             <input type="file" id="upload-input" accept="image/jpeg,image/png,image/webp,image/gif" multiple class="hidden"/>
         </label>
     </div>

@@ -146,27 +146,28 @@ $active_listing_type = $listing_type ?? '';
                 <?php endforeach; ?>
             <?php endif; ?>
         </div>
-        <div class="flex items-center gap-2">
-            <a href="<?php echo BASE_PATH; ?>/login?redirect=<?php echo urlencode($_SERVER['REQUEST_URI'] ?? '/'); ?>" id="hdr-login-btn" class="text-white text-sm font-semibold px-4 py-1.5 hover:bg-white/10 rounded-full transition-all">Login</a>
-            <div id="hdr-user-menu" class="hidden relative">
-                <button id="hdr-user-btn" class="flex items-center gap-1.5 text-white text-xs sm:text-sm font-semibold px-3 py-1.5 hover:bg-white/10 rounded-full transition-all">
-                    <span class="material-symbols-outlined text-base text-primary">account_circle</span>
-                    <span id="hdr-user-name" class="max-w-[70px] sm:max-w-[100px] truncate"></span>
-                    <span class="material-symbols-outlined text-sm">expand_more</span>
-                </button>
-                <div id="hdr-dropdown" class="hidden absolute right-0 top-full mt-2 w-44 bg-[#1a1208] border border-white/10 rounded-2xl shadow-2xl py-1.5 z-[200]">
-                    <button id="hdr-logout-btn" class="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-400 hover:bg-white/5 hover:text-red-300 transition-colors rounded-xl">
-                        <span class="material-symbols-outlined text-base">logout</span>Logout
-                    </button>
-                </div>
-            </div>
-            <a href="tel:+918600968888" class="hidden lg:flex items-center gap-1.5 bg-slate-800 text-white text-sm font-bold px-4 py-1.5 rounded-full hover:bg-slate-700 transition-all border border-slate-700">
+        <div class="flex items-c            <a href="tel:+918600968888" class="hidden lg:flex items-center gap-1.5 bg-slate-800 text-white text-sm font-bold px-4 py-1.5 rounded-full hover:bg-slate-700 transition-all border border-slate-700">
                 <span class="material-symbols-outlined text-base text-primary">call</span> Call Now
             </a>
             <a href="https://wa.me/918600968888" target="_blank" class="hidden sm:flex items-center gap-1.5 bg-[#25D366] text-white text-sm font-bold px-4 py-1.5 rounded-full hover:bg-[#128C7E] transition-all shadow-lg shadow-[#25D366]/20">
                 <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.417-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.305 1.652zm6.599-3.825c1.63.975 3.41 1.487 5.23 1.488 5.439 0 9.861-4.422 9.863-9.861.001-2.636-1.024-5.115-2.884-6.977-1.862-1.864-4.341-2.887-6.979-2.888-5.439 0-9.861 4.422-9.863 9.862 0 1.842.511 3.641 1.478 5.187l-.995 3.637 3.73-.978zm11.367-7.643c-.31-.155-1.837-.906-2.12-.108-.285.103-.55.515-.674.654-.124.14-.248.155-.558.001-.31-.155-1.31-.483-2.498-1.543-.924-.824-1.548-1.841-1.73-2.15-.181-.31-.019-.477.135-.631.14-.139.31-.36.465-.541.155-.181.206-.31.31-.515.103-.206.052-.386-.026-.541-.077-.155-.674-1.626-.924-2.228-.243-.585-.491-.504-.674-.513-.175-.008-.375-.01-.575-.01s-.525.075-.8.375c-.275.3-1.05 1.026-1.05 2.5s1.075 2.9 1.225 3.1c.15.2 2.11 3.221 5.113 4.513.714.307 1.272.49 1.706.629.718.227 1.37.195 1.886.118.575-.085 1.837-.75 2.096-1.475.258-.725.258-1.346.181-1.475-.077-.129-.283-.206-.593-.361z"/></svg>
                 WhatsApp
             </a>
+
+            <div class="h-6 w-px bg-white/10 mx-2 hidden sm:block"></div>
+
+            <a href="<?php echo BASE_PATH; ?>/login?redirect=<?php echo urlencode($_SERVER['REQUEST_URI'] ?? '/'); ?>" id="hdr-login-btn" class="text-white text-sm font-semibold px-4 py-1.5 hover:bg-white/10 rounded-full transition-all">Login</a>
+            <div id="hdr-user-menu" class="hidden relative">
+                <button id="hdr-user-btn" class="flex items-center justify-center text-white p-2 hover:bg-white/10 rounded-full transition-all border border-transparent hover:border-white/10">
+                    <span class="material-symbols-outlined text-2xl text-primary">account_circle</span>
+                </button>
+                <div id="hdr-dropdown" class="hidden absolute right-0 top-full mt-2 w-44 bg-[#0a0705] border border-white/10 rounded-2xl shadow-2xl py-1.5 z-[200]">
+                    <button id="hdr-logout-btn" class="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-500 hover:bg-red-500/10 transition-colors rounded-xl font-bold">
+                        <span class="material-symbols-outlined text-base">logout</span>Sign Out
+                    </button>
+                </div>
+            </div>
+         </a>
             <button id="mob-btn" class="md:hidden p-2 rounded-lg transition-colors ml-1">
                 <span class="material-symbols-outlined text-2xl text-white">menu</span>
             </button>
@@ -242,7 +243,7 @@ $active_listing_type = $listing_type ?? '';
               if(pl)pl.style.display="none";
               if(ml)ml.style.display="none";
               if(pu)pu.classList.remove("hidden");
-              if(pn)pn.textContent=user.name?user.name.split(" ")[0]:"Account";
+              if(pn)pn.style.display="none";
             }
             var userBtn=document.getElementById("hdr-user-btn");
             var dropdown=document.getElementById("hdr-dropdown");

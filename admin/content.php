@@ -3,7 +3,15 @@ $admin_page  = 'content';
 $admin_title = 'Page Content | CSNExplore Admin';
 require 'admin-header.php';
 ?>
-<div class="space-y-5">
+
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h2 class="text-xl font-bold text-slate-800">Content Management</h2>
+            <p class="text-xs text-slate-500 font-medium">Manage website text, sections, and communication</p>
+        </div>
+    </div>
 <!-- Tabs -->
 <div class="flex gap-1 bg-white border border-slate-200 p-1 rounded-xl w-fit">
     <button onclick="switchSection('about')" data-section="about"

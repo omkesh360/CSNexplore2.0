@@ -221,6 +221,55 @@ class EmailService {
     }
     
     /**
+     * Send password reset email to user
+     * 
+     * @param string $email User email
+     * @param string $name User name
+     * @param string $resetLink Password reset link
+     * @return bool Success status
+     */
+    public static function sendPasswordResetEmail(string $email, string $name, string $resetLink): bool {
+        try {
+            // Render email template
+            $htmlContent = self::renderTemplate('password-reset', ['name' => $name, 'resetLink' => $resetLink]);
+            
+            if ($htmlContent === false) {
+                self::logError("Failed to render password reset template", [
+                    'email' => $email,
+                    'email_type' => 'password_reset'
+                ]);
+                return false;
+            }
+            
+            // Send email using PHPMailer
+            $mail = self::createMailer();
+            $mail->addAddress($email, $name);
+            $mail->Subject = 'Reset Your Password - CSN Explore';
+            $mail->Body = $htmlContent;
+            $mail->AltBody = strip_tags($htmlContent);
+            
+            if (!$mail->send()) {
+                self::logError("Failed to send password reset email", [
+                    'email' => $email,
+                    'email_type' => 'password_reset',
+                    'error' => $mail->ErrorInfo
+                ]);
+                return false;
+            }
+            
+            return true;
+            
+        } catch (Exception $e) {
+            self::logError("Exception in sendPasswordResetEmail", [
+                'email' => $email,
+                'email_type' => 'password_reset',
+                'error' => $e->getMessage()
+            ]);
+            return false;
+        }
+    }
+    
+    /**
      * Send admin notification email
      * 
      * @param array $booking Booking record data

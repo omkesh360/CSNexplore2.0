@@ -281,3 +281,4 @@ Stack trace:
 [27-Mar-2026 11:48:26 UTC] Booking #20 email status: {"user_sent":true,"admin_sent":true,"errors":[]}
 [27-Mar-2026 11:54:05 UTC] Booking #21 email status: {"user_sent":true,"admin_sent":true,"errors":[]}
 [27-Mar-2026 11:54:38 UTC] Booking #22 email status: {"user_sent":true,"admin_sent":true,"errors":[]}
+[27-Mar-2026 12:27:59 UTC] Booking #22 status update email sent: cancelled

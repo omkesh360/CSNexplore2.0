@@ -1,10 +1,20 @@
 <?php
 $admin_page  = 'performance';
-$admin_title = 'Performance Manager | CSNExplore Admin';
+$admin_title = 'Performance | CSNExplore Admin';
 require 'admin-header.php';
 ?>
 
 <div class="space-y-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h2 class="text-xl font-bold text-slate-800">Performance Manager</h2>
+            <p class="text-xs text-slate-500 font-medium">Optimize system speed and cache settings</p>
+        </div>
+        <button onclick="loadPerformanceData()" class="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-semibold hover:bg-slate-50 transition-all text-slate-600">
+            <span class="material-symbols-outlined text-sm">refresh</span> Refresh
+        </button>
+    </div>
 <!-- Performance Stats Grid -->
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
     <div class="bg-white rounded-2xl border border-slate-100 p-6">

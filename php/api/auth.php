@@ -167,6 +167,73 @@ try {
         sendJson(['success' => true]);
     }
 
+    // POST /api/auth.php?action=forgot_password
+    elseif ($method === 'POST' && $path === 'forgot_password') {
+        require_once __DIR__ . '/../services/EmailService.php';
+        $input = getJsonInput();
+        $email = strtolower(trim($input['email'] ?? ''));
+
+        if (!rateLimit('forgot_pass_' . $_SERVER['REMOTE_ADDR'], 5, 3600)) sendError('Too many attempts. Try again later.', 429);
+        if (!$email || !filter_var($email, FILTER_VALIDATE_EMAIL)) sendError('Invalid email', 400);
+
+        $user = $db->fetchOne("SELECT id, name FROM users WHERE email = ?", [$email]);
+        if (!$user) {
+            sendError('Invalid email', 400); // Specific error as requested
+        }
+
+        $token = bin2hex(random_bytes(32));
+        $token_hash = password_hash($token, PASSWORD_DEFAULT);
+        $expires = date('Y-m-d H:i:s', time() + 1800); // 30 minutes
+
+        $db->insert('password_resets', [
+            'user_id' => $user['id'],
+            'token_hash' => $token_hash,
+            'expires_at' => $expires
+        ]);
+
+        $resetLink = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . BASE_PATH . "/reset-password.php?token=" . $token;
+
+        $sent = EmailService::sendPasswordResetEmail($email, $user['name'], $resetLink);
+        if (!$sent) sendError('Failed to send reset email. Please try again.', 500);
+
+        sendJson(['success' => true, 'message' => 'Reset link sent to your email.']);
+    }
+
+    // POST /api/auth.php?action=reset_password
+    elseif ($method === 'POST' && $path === 'reset_password') {
+        $input = getJsonInput();
+        $token = $input['token'] ?? '';
+        $newPass = $input['password'] ?? '';
+
+        if (!$token || !$newPass) sendError('Token and password required', 400);
+        if (strlen($newPass) < 8 || !preg_match('/[0-9]/', $newPass)) {
+            sendError('Password must be at least 8 characters and contain a number', 400);
+        }
+
+        // Find all active tokens (not expired)
+        $resets = $db->fetchAll("SELECT * FROM password_resets WHERE expires_at > CURRENT_TIMESTAMP");
+        $found = null;
+        foreach ($resets as $r) {
+            if (password_verify($token, $r['token_hash'])) {
+                $found = $r;
+                break;
+            }
+        }
+
+        if (!$found) sendError('Invalid or expired token', 400);
+
+        // Update user password
+        $db->update('users', [
+            'password_hash' => password_hash($newPass, PASSWORD_DEFAULT),
+            'updated_at' => date('Y-m-d H:i:s')
+        ], 'id = :id', [':id' => $found['user_id']]);
+
+        // Delete used token and all other tokens for this user
+        $db->delete('password_resets', 'user_id = ?', [$found['user_id']]);
+
+        sendJson(['success' => true, 'message' => 'Password updated successfully.']);
+    }
+
     else {
         sendError('Not found', 404);
     }

@@ -48,7 +48,7 @@ $extra_styles = "
 require 'header.php';
 ?>
 
-<main>
+<main style="background: #f8f6f6;">
 
 <!-- Shared hero with breadcrumb at top -->
 <section class="relative h-[420px] flex items-center justify-center overflow-hidden">
@@ -56,11 +56,11 @@ require 'header.php';
         <img class="w-full h-full object-cover"
              src="https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=1600&q=80"
              alt="CSNExplore Blogs"/>
-        <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-[#0a0705]"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black"></div>
     </div>
     <!-- Breadcrumb at very top of hero -->
     <div class="absolute top-0 left-0 right-0 z-20 pt-5">
-        <div class="max-w-7xl mx-auto px-6 flex items-center gap-2 text-sm text-white/60 flex-wrap">
+        <div class="max-w-[1140px] mx-auto px-5 flex items-center gap-2 text-sm text-white/60 flex-wrap">
             <a href="index" class="hover:text-white transition-colors flex items-center gap-1">
                 <span class="material-symbols-outlined text-base">home</span>Home
             </a>
@@ -72,20 +72,22 @@ require 'header.php';
             <?php endif; ?>
         </div>
     </div>
-    <div class="relative z-10 text-center px-4 max-w-4xl">
-        <span class="inline-block px-4 py-1.5 rounded-full bg-primary/20 text-primary font-bold text-xs uppercase tracking-widest mb-4">Travel Stories</span>
-        <h1 class="text-5xl md:text-6xl font-serif font-black text-white mb-4 leading-tight">
-            <?php echo $cat_filter ? htmlspecialchars($cat_filter) : 'Explore Our Blogs'; ?>
-        </h1>
-        <p class="text-white/70 text-lg max-w-2xl mx-auto">Guides, tips and stories from Chhatrapati Sambhajinagar.</p>
+    <div class="relative z-10 text-center px-5 max-w-[1140px] mx-auto w-full">
+        <div class="max-w-4xl mx-auto">
+            <span class="inline-block px-4 py-1.5 rounded-full bg-primary/20 text-primary font-bold text-xs uppercase tracking-widest mb-4">Travel Stories</span>
+            <h1 class="text-5xl md:text-6xl font-serif font-black text-white mb-4 leading-tight">
+                <?php echo $cat_filter ? htmlspecialchars($cat_filter) : 'Explore Our Blogs'; ?>
+            </h1>
+            <p class="text-white/70 text-lg max-w-2xl mx-auto">Guides, tips and stories from Chhatrapati Sambhajinagar.</p>
+        </div>
     </div>
 </section>
 
 <?php if ($featured): ?>
 <!-- Featured Article strip below hero -->
-<div class="bg-[#0a0705] py-8">
-    <div class="max-w-7xl mx-auto px-6">
-        <a href="<?php echo blogSlug($featured); ?>" class="group flex flex-col md:flex-row gap-6 items-center bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl p-5 transition-all">
+<div class="bg-white py-8 border-b border-slate-100">
+    <div class="max-w-[1140px] mx-auto px-5 text-slate-900">
+        <a href="<?php echo blogSlug($featured); ?>" class="group flex flex-col md:flex-row gap-6 items-center bg-white hover:bg-slate-50 border border-slate-200 rounded-2xl p-5 transition-all shadow-sm">
             <div class="w-full md:w-64 h-40 rounded-xl overflow-hidden shrink-0">
                 <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                      src="<?php echo htmlspecialchars($featured['image'] ?? ''); ?>"
@@ -95,12 +97,12 @@ require 'header.php';
             <div class="flex-1">
                 <div class="flex items-center gap-3 mb-3">
                     <span class="bg-primary text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">Featured Story</span>
-                    <span class="text-white/50 text-sm"><?php echo htmlspecialchars($featured['read_time'] ?? '5 min read'); ?> · <?php echo htmlspecialchars($featured['category']); ?></span>
+                    <span class="text-slate-500 text-sm"><?php echo htmlspecialchars($featured['read_time'] ?? '5 min read'); ?> · <?php echo htmlspecialchars($featured['category']); ?></span>
                 </div>
-                <h2 class="text-white text-xl md:text-2xl font-serif font-black leading-tight mb-2 group-hover:text-primary transition-colors">
+                <h2 class="text-slate-900 text-xl md:text-2xl font-serif font-black leading-tight mb-2 group-hover:text-primary transition-colors">
                     <?php echo htmlspecialchars($featured['title']); ?>
                 </h2>
-                <p class="text-white/50 text-sm line-clamp-2"><?php echo htmlspecialchars($featured['meta_description'] ?? ''); ?></p>
+                <p class="text-slate-600 text-sm line-clamp-2"><?php echo htmlspecialchars($featured['meta_description'] ?? ''); ?></p>
                 <span class="mt-3 inline-flex items-center gap-1 text-primary font-bold text-sm">Read Full Story <span class="material-symbols-outlined text-base">arrow_forward</span></span>
             </div>
         </a>
@@ -120,7 +122,7 @@ if ($featured) {
 }
 $total_grid_blogs = count($all_blogs_for_filter);
 ?>
-<div class="max-w-7xl mx-auto px-6 py-12">
+<div class="max-w-[1140px] mx-auto px-5 py-12">
 
     <!-- Filters -->
     <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-8 mb-12">
@@ -139,14 +141,14 @@ $total_grid_blogs = count($all_blogs_for_filter);
             <?php if ($cat_filter): ?><input type="hidden" name="category" value="<?php echo htmlspecialchars($cat_filter); ?>"/><?php endif; ?>
             <input type="text" name="search" value="<?php echo htmlspecialchars($search_filter); ?>"
                    placeholder="Search blogs..."
-                   class="border border-slate-200 bg-white rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 w-48"/>
+                   class="border border-slate-200 bg-white rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 w-48 text-slate-900"/>
             <button type="submit" class="bg-primary text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-orange-600 transition-all">Search</button>
         </form>
     </div>
 
     <!-- Blog Grid -->
     <div class="flex items-center justify-between mb-8">
-        <h3 class="text-2xl font-serif font-black flex items-center gap-3">
+        <h3 class="text-2xl font-serif font-black flex items-center gap-3 text-slate-900">
             <span class="w-8 h-1 bg-primary rounded-full inline-block"></span>
             <?php echo $cat_filter ? htmlspecialchars($cat_filter) : 'Latest Insights'; ?>
             <span class="text-sm font-normal text-slate-400">(<?php echo $total_blogs; ?> posts)</span>
@@ -163,7 +165,7 @@ $total_grid_blogs = count($all_blogs_for_filter);
     <?php else: ?>
     <div id="blogs-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <?php foreach ($all_blogs_for_filter as $bi => $blog): ?>
-        <article class="flex flex-col group h-full relative<?php echo $bi >= 9 ? ' blog-hidden' : ''; ?>">
+        <article class="flex flex-col group h-full relative bg-white p-5 rounded-2xl shadow-sm border border-slate-100<?php echo $bi >= 9 ? ' blog-hidden' : ''; ?>">
             <!-- Entire Card Link -->
             <a href="<?php echo blogSlug($blog); ?>" class="absolute inset-0 z-10" aria-label="<?php echo htmlspecialchars($blog['title']); ?>"></a>
 
@@ -190,10 +192,10 @@ $total_grid_blogs = count($all_blogs_for_filter);
                         <?php echo date('M d, Y', strtotime($blog['created_at'])); ?>
                     </span>
                 </div>
-                <h4 class="text-xl font-serif font-bold leading-snug mb-3 group-hover:text-primary transition-colors">
+                <h4 class="text-xl font-serif font-bold leading-snug mb-3 group-hover:text-primary transition-colors text-slate-900">
                     <?php echo htmlspecialchars($blog['title']); ?>
                 </h4>
-                <p class="text-slate-500 text-sm line-clamp-2 mb-6">
+                <p class="text-slate-600 text-sm line-clamp-2 mb-6">
                     <?php echo htmlspecialchars($blog['meta_description'] ?? strip_tags(substr($blog['content'], 0, 150)) . '...'); ?>
                 </p>
                 <div class="mt-auto pt-4 border-t border-slate-100 flex justify-between items-center">
@@ -238,13 +240,13 @@ $total_grid_blogs = count($all_blogs_for_filter);
     <!-- Newsletter -->
     <section class="mt-20 mb-8 p-8 md:p-12 rounded-3xl bg-primary/10 border border-primary/20 flex flex-col md:flex-row items-center gap-12">
         <div class="flex-1">
-            <h3 class="text-3xl font-serif font-black mb-4">Never miss a hidden gem</h3>
+            <h3 class="text-3xl font-serif font-black mb-4 text-slate-900">Never miss a hidden gem</h3>
             <p class="text-slate-600">Weekly travel inspiration, local tips, and exclusive stories from Sambhajinagar.</p>
         </div>
         <div class="flex-1 w-full max-w-md">
-            <form method="POST" action="subscribe.php" class="flex flex-col sm:flex-row gap-3">
+            <form method="POST" action="subscribe.php" class="flex flex-col gap-4">
                 <input type="email" name="email" required placeholder="Your email address"
-                       class="flex-grow rounded-xl border border-slate-200 bg-white focus:ring-primary focus:border-primary px-6 py-4 text-sm outline-none"/>
+                       class="flex-grow rounded-xl border border-slate-200 bg-white focus:ring-primary focus:border-primary px-6 py-4 text-sm outline-none text-slate-900"/>
                 <button type="submit" class="bg-primary hover:bg-orange-600 text-white font-bold py-4 px-8 rounded-xl transition-all shadow-lg shadow-primary/20">Subscribe</button>
             </form>
         </div>

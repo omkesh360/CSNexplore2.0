@@ -1,4 +1,5 @@
 <?php
+require_once 'php/config.php';
 $page_title   = "Contact Us | CSNExplore – Chhatrapati Sambhajinagar";
 $current_page = "contact.php";
 $extra_styles = "
@@ -46,7 +47,7 @@ require 'header.php';
     </div>
     <!-- Breadcrumb at very top of hero -->
     <div class="absolute top-0 left-0 right-0 z-20 pt-5">
-        <div class="max-w-7xl mx-auto px-6 flex items-center gap-2 text-sm text-white/60 flex-wrap">
+        <div class="max-w-[1140px] mx-auto px-5 flex items-center gap-2 text-sm text-white/60 flex-wrap">
             <a href="index" class="hover:text-white transition-colors flex items-center gap-1">
                 <span class="material-symbols-outlined text-base">home</span>Home
             </a>
@@ -54,58 +55,63 @@ require 'header.php';
             <span class="text-white font-semibold">Contact Us</span>
         </div>
     </div>
-    <div class="relative z-10 text-center px-4 max-w-4xl mx-auto">
-        <h1 class="text-5xl md:text-6xl font-serif font-black text-white mb-6">Get in Touch</h1>
-        <p class="text-lg text-white/80 max-w-2xl mx-auto leading-relaxed">
-            Our travel experts are available to help you plan the perfect Sambhajinagar experience. Reach out anytime.
-        </p>
+    <div class="relative z-10 text-center px-5 max-w-[1140px] mx-auto w-full">
+        <div class="max-w-4xl mx-auto">
+            <span class="inline-block px-4 py-1.5 rounded-full bg-primary/20 text-primary font-bold text-xs uppercase tracking-widest mb-6">Got Questions?</span>
+            <h1 class="text-5xl md:text-6xl font-serif font-black text-white mb-6 leading-tight">We're Here to <span class="text-primary">Help</span></h1>
+            <p class="text-lg text-white/80 max-w-2xl mx-auto leading-relaxed">
+                Our travel experts are available to help you plan the perfect Sambhajinagar experience. Reach out anytime.
+            </p>
+        </div>
     </div>
 </section>
 
-<!-- Contact Content -->
-<section class="py-16 bg-white">
-<div class="max-w-7xl mx-auto px-6">
+<!-- Boxed Content Area -->
+<div class="max-w-[1140px] mx-auto px-5 py-12 space-y-12">
+    <!-- Contact Content -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
         <!-- Info Cards -->
         <div class="space-y-6">
-            <div class="glass-effect p-8 rounded-3xl shadow-xl bg-white">
-                <div class="flex items-start gap-4">
+            <div class="p-8 rounded-3xl shadow-xl border border-slate-100" style="background: white;">
+                <!-- Call -->
+                <div class="flex items-start gap-4 mb-8">
                     <div class="bg-primary/10 p-3 rounded-2xl shrink-0">
                         <span class="material-symbols-outlined text-primary text-3xl">call</span>
                     </div>
                     <div>
-                        <h3 class="text-lg font-bold mb-1">Call Us</h3>
-                        <p class="text-slate-500 text-sm mb-3">Mon–Sat, 9am – 7pm IST</p>
+                        <h3 class="text-lg font-bold mb-1" style="color: #0f172a;">Call Us</h3>
+                        <p class="text-sm mb-2" style="color: #64748b;">Mon–Sat, 9am – 7pm IST</p>
                         <a class="text-xl font-bold text-primary hover:underline" href="tel:+918600968888">+91 86009 68888</a>
                     </div>
                 </div>
-            </div>
+                
+                <div class="border-t border-slate-100 pt-8"></div>
 
-            <div class="glass-effect p-8 rounded-3xl shadow-xl bg-white">
+                <!-- WhatsApp -->
                 <div class="flex items-start gap-4">
                     <div class="bg-green-500/10 p-3 rounded-2xl shrink-0">
                         <span class="material-symbols-outlined text-green-600 text-3xl">chat</span>
                     </div>
                     <div>
-                        <h3 class="text-lg font-bold mb-1">WhatsApp</h3>
-                        <p class="text-slate-500 text-sm mb-3">Instant chat with our team</p>
+                        <h3 class="text-lg font-bold mb-1" style="color: #0f172a;">WhatsApp</h3>
+                        <p class="text-sm mb-3" style="color: #64748b;">Instant chat with our team</p>
                         <a href="https://wa.me/918600968888"
-                           class="inline-block bg-green-600 text-white px-6 py-2 rounded-xl font-bold text-sm hover:bg-green-700 transition-colors">
+                           class="inline-block bg-green-600 text-white px-6 py-2.5 rounded-xl font-bold text-sm hover:bg-green-700 transition-colors shadow-lg shadow-green-500/20">
                             Start Chat
                         </a>
                     </div>
                 </div>
             </div>
 
-            <div class="glass-effect p-8 rounded-3xl shadow-xl bg-white">
+            <div class="p-8 rounded-3xl shadow-xl border border-slate-100" style="background: white;">
                 <div class="flex items-start gap-4">
                     <div class="bg-primary/10 p-3 rounded-2xl shrink-0">
                         <span class="material-symbols-outlined text-primary text-3xl">mail</span>
                     </div>
                     <div>
-                        <h3 class="text-lg font-bold mb-1">Email Us</h3>
-                        <p class="text-slate-500 text-sm mb-2">We reply within 2 hours</p>
+                        <h3 class="text-lg font-bold mb-1" style="color: #0f172a;">Email Us</h3>
+                        <p class="text-sm mb-2" style="color: #64748b;">We reply within 2 hours</p>
                         <a href="mailto:supportcsnexplore@gmail.com" class="text-primary font-bold text-sm hover:underline">
                             supportcsnexplore@gmail.com
                         </a>
@@ -113,14 +119,14 @@ require 'header.php';
                 </div>
             </div>
 
-            <div class="glass-effect p-8 rounded-3xl shadow-xl bg-white">
+            <div class="p-8 rounded-3xl shadow-xl border border-slate-100" style="background: white;">
                 <div class="flex items-start gap-4">
                     <div class="bg-primary/10 p-3 rounded-2xl shrink-0">
                         <span class="material-symbols-outlined text-primary text-3xl">location_on</span>
                     </div>
                     <div>
-                        <h3 class="text-lg font-bold mb-2">Our Office</h3>
-                        <p class="text-slate-500 text-sm leading-relaxed">
+                        <h3 class="text-lg font-bold mb-2" style="color: #0f172a;">Our Office</h3>
+                        <p class="text-sm leading-relaxed" style="color: #64748b;">
                             Behind State Bank Of India,<br/>
                             Plot No. 273 Samarth Nagar,<br/>
                             Central Bus Stand,<br/>
@@ -134,10 +140,10 @@ require 'header.php';
 
         <!-- Contact Form -->
         <div class="lg:col-span-2">
-            <div class="glass-effect p-8 md:p-12 rounded-3xl shadow-2xl bg-white">
+            <div class="p-8 md:p-12 rounded-3xl shadow-2xl border border-slate-100" style="background: white; height: 100%;">
                 <div class="mb-8">
-                    <h2 class="text-3xl font-serif font-black mb-2">Send us a Message</h2>
-                    <p class="text-slate-500">Fill out the form and we'll get back to you within 2 hours.</p>
+                    <h2 class="text-3xl font-serif font-black mb-2" style="color: #0f172a;">Send us a Message</h2>
+                    <p style="color: #64748b;">Fill out the form and we'll get back to you within 2 hours.</p>
                 </div>
 
                 <?php if ($success): ?>
@@ -201,7 +207,7 @@ require 'header.php';
     </div>
 
     <!-- Map -->
-    <div class="mt-12 rounded-3xl overflow-hidden shadow-2xl h-[400px] relative">
+    <div class="rounded-3xl overflow-hidden shadow-2xl h-[400px] relative">
         <iframe
             src="
 https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3752.0!2d75.3433!3d19.8762!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bdb98f0a8a8a8a8%3A0x0!2sSamarth+Nagar%2C+Chhatrapati+Sambhajinagar!5e0!3m2!1sen!2sin!4v1"
@@ -214,7 +220,6 @@ https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3752.0!2d75.3433!3d19.8762
         </div>
     </div>
 </div>
-</section>
 </main>
 
 <?php require 'footer.php'; ?>

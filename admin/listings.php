@@ -4,60 +4,69 @@ $admin_title = 'Manage Listings | CSNExplore Admin';
 require 'admin-header.php';
 ?>
 
-<div class="space-y-5">
-<!-- Toolbar -->
-<div class="flex flex-wrap items-center gap-3">
-    <!-- Category tabs -->
-    <div class="flex gap-1 bg-white border border-slate-200 p-1 rounded-xl overflow-x-auto">
-        <?php
-        $cats = [
-            ['key'=>'stays',       'icon'=>'bed',                'label'=>'Stays'],
-            ['key'=>'cars',        'icon'=>'directions_car',     'label'=>'Cars'],
-            ['key'=>'bikes',       'icon'=>'motorcycle',         'label'=>'Bikes'],
-            ['key'=>'restaurants', 'icon'=>'restaurant',         'label'=>'Restaurants'],
-            ['key'=>'attractions', 'icon'=>'confirmation_number','label'=>'Attractions'],
-            ['key'=>'buses',       'icon'=>'directions_bus',     'label'=>'Buses'],
-        ];
-        foreach ($cats as $cat): ?>
-        <button onclick="switchCat('<?php echo $cat['key']; ?>')"
-                data-cat="<?php echo $cat['key']; ?>"
-                class="cat-tab flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-500 hover:text-slate-900 whitespace-nowrap transition-all">
-            <span class="material-symbols-outlined text-sm"><?php echo $cat['icon']; ?></span>
-            <?php echo $cat['label']; ?>
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h2 class="text-xl font-bold text-slate-800">Listings Gallery</h2>
+            <p class="text-xs text-slate-500 font-medium">Manage your platform inventory</p>
+        </div>
+        <button onclick="openAddModal()"
+                class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-orange-600 transition-all shadow-sm">
+            Add New Listing
         </button>
-        <?php endforeach; ?>
     </div>
-    <input id="search-input" type="text" placeholder="Search listings..."
-           class="flex-1 min-w-[180px] border border-slate-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"/>
-    <button onclick="openAddModal()"
-            class="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-orange-600 transition-all shadow-sm shadow-primary/20">
-        <span class="material-symbols-outlined text-base">add</span> Add Listing
-    </button>
-</div>
 
-<!-- Table -->
-<div class="bg-white rounded-2xl border border-slate-100 overflow-hidden">
-    <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-            <thead class="bg-slate-50 border-b border-slate-100">
-                <tr>
-                    <th class="text-left py-3 px-4 text-xs font-semibold text-slate-500">Order</th>
-                    <th class="text-left py-3 px-4 text-xs font-semibold text-slate-500">Image</th>
-                    <th class="text-left py-3 px-4 text-xs font-semibold text-slate-500">Name</th>
-                    <th class="text-left py-3 px-4 text-xs font-semibold text-slate-500">Type</th>
-                    <th class="text-left py-3 px-4 text-xs font-semibold text-slate-500">Location</th>
-                    <th class="text-left py-3 px-4 text-xs font-semibold text-slate-500">Price</th>
-                    <th class="text-left py-3 px-4 text-xs font-semibold text-slate-500">Rating</th>
-                    <th class="text-left py-3 px-4 text-xs font-semibold text-slate-500">Status</th>
-                    <th class="text-left py-3 px-4 text-xs font-semibold text-slate-500">Actions</th>
-                </tr>
-            </thead>
-            <tbody id="listings-tbody">
-                <tr><td colspan="9" class="text-center py-12 text-slate-400">Loading...</td></tr>
-            </tbody>
-        </table>
+    <!-- Toolbar -->
+    <div class="flex flex-col lg:flex-row gap-4 items-center bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+        <!-- Category tabs -->
+        <div class="flex gap-1 p-1 bg-slate-100 rounded-lg overflow-x-auto w-full lg:w-auto no-scrollbar">
+            <?php
+            $cats = [
+                ['key'=>'stays',       'icon'=>'bed',                'label'=>'Hotels'],
+                ['key'=>'cars',        'icon'=>'directions_car',     'label'=>'Cars'],
+                ['key'=>'bikes',       'icon'=>'motorcycle',         'label'=>'Bikes'],
+                ['key'=>'restaurants', 'icon'=>'restaurant',         'label'=>'Dining'],
+                ['key'=>'attractions', 'icon'=>'confirmation_number','label'=>'Attractions'],
+                ['key'=>'buses',       'icon'=>'directions_bus',     'label'=>'Buses'],
+            ];
+            foreach ($cats as $cat): ?>
+            <button onclick="switchCat('<?php echo $cat['key']; ?>')"
+                    data-cat="<?php echo $cat['key']; ?>"
+                    class="cat-tab flex items-center gap-1.5 px-4 py-2 rounded-md text-xs font-semibold whitespace-nowrap transition-all">
+                <span class="material-symbols-outlined text-lg"><?php echo $cat['icon']; ?></span>
+                <?php echo $cat['label']; ?>
+            </button>
+            <?php endforeach; ?>
+        </div>
+
+        <div class="flex-1 w-full relative">
+            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+            <input id="search-input" type="text" placeholder="Search by name, type, or location..."
+                   class="w-full bg-slate-50 border border-slate-200 rounded-lg pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/20 focus:border-primary transition-all"/>
+        </div>
     </div>
-</div>
+
+    <!-- Table -->
+    <div class="admin-card overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="text-xs font-bold text-slate-400 bg-slate-50 border-b border-slate-100">
+                        <th class="py-3 px-4 text-left w-16">#</th>
+                        <th class="py-3 px-4 text-left">Listing Info</th>
+                        <th class="py-3 px-4 text-left">Location</th>
+                        <th class="py-3 px-4 text-center">Price</th>
+                        <th class="py-3 px-4 text-center">Status</th>
+                        <th class="py-3 px-4 text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="listings-tbody" class="divide-y divide-slate-50">
+                    <tr><td colspan="6" class="text-center py-12 text-slate-400">Loading listings...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 <!-- Add/Edit Modal -->
@@ -214,24 +223,38 @@ async function loadListings() {
     });
     var priceKey = {stays:'price_per_night',cars:'price_per_day',bikes:'price_per_day',restaurants:'price_per_person',attractions:'entry_fee',buses:'price'};
     tbody.innerHTML = items.map(function(item) {
-        var statusBg = item.is_active ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-500';
+        var statusColor = item.is_active ? 'bg-green-50 text-green-600 border-green-100' : 'bg-slate-50 text-slate-400 border-slate-100';
         var statusTxt = item.is_active ? 'Active' : 'Hidden';
-        var img = item.image ? '<img src="' + escHtml(imgSrc(item.image)) + '" class="w-10 h-10 rounded-lg object-cover"/>' : '<div class="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center"><span class="material-symbols-outlined text-slate-400 text-base">image</span></div>';
+        var imgUrl = item.image ? imgSrc(item.image) : '../images/placeholder.jpg';
         var displayOrder = parseInt(item.display_order) || 0;
-        return '<tr class="border-b border-slate-50 hover:bg-slate-50 draggable-row" data-id="' + item.id + '" draggable="true">' +
-            '<td class="py-2.5 px-4"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-slate-400 cursor-move drag-handle">drag_indicator</span><span class="text-xs font-semibold text-slate-500 order-number">' + displayOrder + '</span></div></td>' +
-            '<td class="py-2.5 px-4">' + img + '</td>' +
-            '<td class="py-2.5 px-4 font-medium max-w-[160px] truncate">' + escHtml(item.name) + '</td>' +
-            '<td class="py-2.5 px-4 text-slate-500">' + escHtml(item.type || '—') + '</td>' +
-            '<td class="py-2.5 px-4 text-slate-500 max-w-[120px] truncate">' + escHtml(item.location) + '</td>' +
-            '<td class="py-2.5 px-4 font-semibold text-primary">₹' + (item[priceKey[currentCat]] || 0) + '</td>' +
-            '<td class="py-2.5 px-4 text-slate-500">' + (item.rating || '—') + '</td>' +
-            '<td class="py-2.5 px-4"><span class="px-2 py-0.5 rounded-full text-xs font-bold ' + statusBg + '">' + statusTxt + '</span></td>' +
-            '<td class="py-2.5 px-4">' +
-                '<div class="flex gap-1">' +
-                '<button onclick="openEditModal(' + item.id + ')" class="p-1.5 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all"><span class="material-symbols-outlined text-base">edit</span></button>' +
-                '<button onclick="toggleActive(' + item.id + ',' + (item.is_active ? 0 : 1) + ')" class="p-1.5 text-slate-400 hover:text-amber-500 hover:bg-amber-50 rounded-lg transition-all"><span class="material-symbols-outlined text-base">' + (item.is_active ? 'visibility_off' : 'visibility') + '</span></button>' +
-                '<button onclick="deleteListing(' + item.id + ')" class="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"><span class="material-symbols-outlined text-base">delete</span></button>' +
+        return '<tr class="hover:bg-slate-50 transition-colors group draggable-row" data-id="' + item.id + '" draggable="true">' +
+            '<td class="py-4 px-6">' +
+                '<div class="flex items-center gap-2">' +
+                    '<span class="material-symbols-outlined text-slate-300 cursor-move drag-handle group-hover:text-primary transition-colors">drag_indicator</span>' +
+                    '<span class="text-[11px] font-black text-slate-400 order-number">' + displayOrder + '</span>' +
+                '</div>' +
+            '</td>' +
+            '<td class="py-4 px-6">' +
+                '<div class="flex items-center gap-3">' +
+                    '<img src="' + escHtml(imgUrl) + '" class="w-12 h-12 rounded-2xl object-cover border border-slate-100 shadow-sm" onerror="this.src=\'../images/placeholder.jpg\'">' +
+                    '<div>' +
+                        '<p class="font-bold text-slate-900 leading-tight">' + escHtml(item.name) + '</p>' +
+                        '<p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">' + escHtml(item.type || 'Standard') + '</p>' +
+                    '</div>' +
+                '</div>' +
+            '</td>' +
+            '<td class="py-4 px-6 text-[13px] font-semibold text-slate-500">' + escHtml(item.location) + '</td>' +
+            '<td class="py-4 px-6 text-center">' +
+                '<p class="text-[15px] font-black text-primary tracking-tight">₹' + (item[priceKey[currentCat]] || 0) + '</p>' +
+            '</td>' +
+            '<td class="py-4 px-6 text-center">' +
+                '<span class="inline-block px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider border ' + statusColor + '">' + statusTxt + '</span>' +
+            '</td>' +
+            '<td class="py-4 px-6 text-right">' +
+                '<div class="flex justify-end gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">' +
+                    '<button onclick="openEditModal(' + item.id + ')" class="p-2.5 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-xl transition-all"><span class="material-symbols-outlined text-lg">edit_note</span></button>' +
+                    '<button onclick="toggleActive(' + item.id + ',' + (item.is_active ? 0 : 1) + ')" class="p-2.5 text-slate-400 hover:text-amber-500 hover:bg-amber-50 rounded-xl transition-all"><span class="material-symbols-outlined text-lg">' + (item.is_active ? 'visibility_off' : 'visibility') + '</span></button>' +
+                    '<button onclick="deleteListing(' + item.id + ')" class="p-2.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"><span class="material-symbols-outlined text-lg">delete</span></button>' +
                 '</div>' +
             '</td>' +
         '</tr>';

@@ -32,7 +32,20 @@ try {
         }
 
         $sql = "SELECT * FROM bookings WHERE " . implode(' AND ', $where) . " ORDER BY created_at DESC";
-        sendJson($db->fetchAll($sql, $params));
+        $bookings = $db->fetchAll($sql, $params);
+        
+        // Fetch listing images
+        foreach ($bookings as &$b) {
+            $table = $b['service_type'];
+            $lid   = (int)$b['listing_id'];
+            $b['listing_image'] = null;
+            if ($table && $lid && in_array($table, ['stays','cars','bikes','restaurants','attractions','buses'])) {
+                $item = $db->fetchOne("SELECT image FROM $table WHERE id = ?", [$lid]);
+                if ($item) $b['listing_image'] = $item['image'];
+            }
+        }
+        unset($b);
+        sendJson($bookings);
     }
 
     // POST – public (create booking)

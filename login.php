@@ -148,7 +148,7 @@ $extra_styles = "
                         <input type="checkbox" name="remember" class="h-4 w-4 text-primary focus:ring-primary border-slate-300 rounded"/>
                         <span class="text-sm font-medium text-slate-700">Stay signed in</span>
                     </label>
-                    <a href="#" class="text-sm font-bold text-primary hover:text-orange-600 transition-colors">Forgot password?</a>
+                    <a href="forgot-password" class="text-sm font-bold text-primary hover:text-orange-600 transition-colors">Forgot password?</a>
                 </div>
 
                 <!-- <div class="cf-turnstile" data-sitekey="0x4AAAAAACwv8-Es__nv5t6c" data-theme="light"></div> -->

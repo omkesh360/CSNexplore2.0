@@ -203,9 +203,9 @@ $category_nav = [
 
     <!-- Sidebar -->
     <aside id="sidebar-filters" class="hidden lg:block w-full lg:w-72 shrink-0 space-y-6">
-      <div class="glassy p-6 rounded-2xl shadow-sm">
+      <div class="bg-white/80 p-6 rounded-2xl shadow-sm border border-slate-100">
         <div class="flex items-center justify-between mb-5">
-          <h3 class="text-lg font-bold">Filters</h3>
+          <h3 class="text-lg font-bold text-slate-900">Filters</h3>
           <button onclick="resetFilters()" class="text-sm text-primary font-semibold hover:underline">Reset</button>
         </div>
 
@@ -220,7 +220,7 @@ $category_nav = [
               <input type="checkbox" value="<?php echo htmlspecialchars($f); ?>"
                      class="type-filter rounded text-primary focus:ring-primary size-4 border-slate-300 cursor-pointer"
                      onchange="applyFilters()"/>
-              <span class="text-sm font-medium group-hover:text-primary transition-colors select-none"><?php echo htmlspecialchars($f); ?></span>
+              <span class="text-sm font-medium text-slate-700 group-hover:text-primary transition-colors select-none"><?php echo htmlspecialchars($f); ?></span>
             </label>
             <?php endforeach; ?>
           </div>
@@ -254,7 +254,7 @@ $category_nav = [
               <input type="radio" name="rating-filter" value="<?php echo $r['val']; ?>"
                      class="text-primary focus:ring-primary size-4 border-slate-300 cursor-pointer"
                      <?php echo $r['val']==='0'?'checked':''; ?> onchange="applyFilters()"/>
-              <span class="text-sm font-medium select-none flex items-center gap-1">
+              <span class="text-sm font-medium text-slate-700 select-none flex items-center gap-1">
                 <?php echo $r['label']; ?>
                 <?php if($r['val']!=='0'): ?><span class="material-symbols-outlined text-sm text-amber-400">star</span><?php endif; ?>
               </span>
@@ -265,19 +265,9 @@ $category_nav = [
       </div>
 
       <!-- Active filter count badge -->
-      <div id="active-filter-bar" class="hidden glassy rounded-2xl px-4 py-3 flex items-center justify-between">
+      <div id="active-filter-bar" class="hidden bg-white border border-slate-100 rounded-2xl px-4 py-3 flex items-center justify-between">
         <span class="text-sm font-semibold text-primary"><span id="active-filter-count">0</span> filter(s) active</span>
         <button onclick="resetFilters()" class="text-xs text-slate-500 hover:text-primary font-semibold">Clear all</button>
-      </div>
-
-      <!-- Promo card -->
-      <div class="rounded-2xl bg-primary overflow-hidden relative p-6 text-white h-44 flex flex-col justify-end">
-        <div class="absolute top-0 right-0 p-4 opacity-20">
-          <span class="material-symbols-outlined text-8xl">local_offer</span>
-        </div>
-        <h4 class="text-xl font-bold relative z-10">Get 20% Off</h4>
-        <p class="text-sm opacity-90 relative z-10 mb-4"><?php echo htmlspecialchars($c['promo']); ?></p>
-        <button class="w-fit px-4 py-2 bg-white text-primary rounded-lg text-sm font-bold relative z-10">Claim Now</button>
       </div>
     </aside>
 
@@ -285,13 +275,13 @@ $category_nav = [
     <div class="flex-1">
       <div class="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4">
         <div>
-          <h1 class="text-3xl font-extrabold tracking-tight"><?php echo htmlspecialchars($c['heading']); ?></h1>
-          <p class="text-slate-500"><?php echo count($items); ?> result<?php echo count($items) !== 1 ? 's' : ''; ?> found</p>
+          <h1 class="text-3xl font-extrabold tracking-tight text-slate-900"><?php echo htmlspecialchars($c['heading']); ?></h1>
+          <p class="text-slate-500 font-medium"><?php echo count($items); ?> result<?php echo count($items) !== 1 ? 's' : ''; ?> found</p>
         </div>
         <form method="GET" action="<?php echo BASE_PATH; ?>/listing/<?php echo htmlspecialchars($type); ?>" class="flex items-center gap-2">
           <input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>"
                  placeholder="Search <?php echo htmlspecialchars($c['label']); ?>..."
-                 class="border border-slate-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 bg-white w-48"/>
+                 class="border border-slate-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 bg-white text-slate-900 w-48"/>
           <button type="submit" class="px-4 py-2 bg-primary text-white rounded-xl text-sm font-bold hover:bg-orange-600 transition-all">Search</button>
         </form>
       </div>
@@ -322,7 +312,7 @@ $category_nav = [
             $badge_color  = !empty($item['badge']) ? $badge_colors[crc32($item['badge']) % count($badge_colors)] : '';
             $hidden_class = $i >= 9 ? ' listing-hidden' : '';
         ?>
-        <div class="group glassy rounded-2xl overflow-hidden flex flex-col hover:shadow-2xl transition-all duration-300 hover:-translate-y-1.5 relative<?php echo $hidden_class; ?>"
+        <div class="group bg-white rounded-2xl overflow-hidden flex flex-col hover:shadow-2xl transition-all duration-300 hover:-translate-y-1.5 relative border border-slate-100<?php echo $hidden_class; ?>"
              data-type="<?php echo htmlspecialchars($item_type); ?>"
              data-price="<?php echo (int)$price_val; ?>"
              data-rating="<?php echo number_format((float)($item['rating'] ?? 0), 1); ?>">

@@ -62,7 +62,7 @@
             <div data-reveal data-reveal="right" data-delay="4">
                 <h5 class="font-bold text-sm mb-4">Stay Updated</h5>
                 <p class="text-white/50 text-sm mb-4">Get travel tips and exclusive deals in your inbox.</p>
-                <form method="POST" action="subscribe.php" class="flex flex-col gap-2">
+                <form method="POST" action="subscribe.php" class="flex flex-col gap-4">
                     <input type="email" name="email" placeholder="Your email address" required
                            class="bg-white/5 border border-white/10 text-white placeholder:text-white/30 px-3 py-2.5 rounded-xl text-sm focus:outline-none focus:border-primary transition-colors"/>
                     <button type="submit" class="bg-primary text-white font-bold py-2.5 rounded-xl text-sm hover:bg-orange-600 hover:scale-[1.02] transition-all duration-200">Subscribe</button>

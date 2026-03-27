@@ -74,8 +74,10 @@ function sanitize($val) {
 
 // Dynamic Base Path Detection
 $_dir = dirname($_SERVER['SCRIPT_NAME']);
-$_base = ($_dir === '/' || $_dir === '\\' || $_dir === '.') ? '' : $_dir;
-define('BASE_PATH', str_replace(['/php','/php/api'], '', $_base));
+$_base = trim($_dir, '/\\');
+$_base = str_replace(['php/api', 'php'], '', $_base);
+$_base = trim($_base, '/\\');
+define('BASE_PATH', $_base ? '/' . $_base : '');
 
 // Security Headers
 header("X-Frame-Options: SAMEORIGIN");

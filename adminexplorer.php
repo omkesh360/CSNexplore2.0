@@ -82,6 +82,10 @@ body { font-family: 'Inter', sans-serif; }
             </button>
         </form>
 
+        <div class="flex items-center justify-end mt-2">
+            <a href="forgot-password" class="text-xs font-bold text-primary hover:underline">Forgot password?</a>
+        </div>
+
         <div class="mt-6 pt-5 border-t border-slate-100 text-center">
             <a href="index" class="text-sm text-slate-500 hover:text-primary transition-colors flex items-center justify-center gap-1">
                 <span class="material-symbols-outlined text-base">arrow_back</span> Back to Website
