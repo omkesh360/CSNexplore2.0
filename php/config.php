@@ -27,6 +27,10 @@ define('MAILERLITE_FROM_EMAIL', getenv('MAILERLITE_FROM_EMAIL') ?: 'noreply@csne
 define('MAILERLITE_FROM_NAME', getenv('MAILERLITE_FROM_NAME') ?: 'CSN Explore');
 define('ADMIN_NOTIFICATION_EMAIL', getenv('ADMIN_NOTIFICATION_EMAIL') ?: 'supportcsnexplore@gmail.com');
 
+// Cloudflare Turnstile
+define('TURNSTILE_SITE_KEY',   '0x4AAAAAACwv8-Es__nv5t6c');
+define('TURNSTILE_SECRET_KEY', '0x4AAAAAACwv86YKoPIGp89MIJ-yltIRW2g');
+
 // SMTP Configuration for PHPMailer
 define('SMTP_HOST', getenv('SMTP_HOST') ?: 'smtp.gmail.com');
 define('SMTP_PORT', getenv('SMTP_PORT') ?: 587);
@@ -52,7 +56,14 @@ function getJsonInput() {
     $raw = file_get_contents('php://input');
     return json_decode($raw, true) ?? [];
 }
-
+// Centralized Slug Generation
+function generateSlug($type, $id, $name) {
+    $t = strtolower(trim($name));
+    $t = preg_replace('/[^a-z0-9\s-]/', '', $t);
+    $t = preg_replace('/[\s-]+/', '-', $t);
+    $t = trim($t, '-');
+    return $type . '-' . $id . '-' . substr($t, 0, 60);
+}
 function getDB() {
     return Database::getInstance();
 }
@@ -60,3 +71,15 @@ function getDB() {
 function sanitize($val) {
     return htmlspecialchars(strip_tags(trim((string)$val)), ENT_QUOTES, 'UTF-8');
 }
+
+// Dynamic Base Path Detection
+$_dir = dirname($_SERVER['SCRIPT_NAME']);
+$_base = ($_dir === '/' || $_dir === '\\' || $_dir === '.') ? '' : $_dir;
+define('BASE_PATH', str_replace(['/php','/php/api'], '', $_base));
+
+// Security Headers
+header("X-Frame-Options: SAMEORIGIN");
+header("X-XSS-Protection: 1; mode=block");
+header("X-Content-Type-Options: nosniff");
+header("Referrer-Policy: strict-origin-when-cross-origin");
+header("Content-Security-Policy: default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https:;");

@@ -20,12 +20,14 @@ $extra_styles = "
             theme: { extend: { colors: { "primary": "#ec5b13" }, fontFamily: { "display": ["Inter","sans-serif"], "serif": ["Playfair Display","serif"] } } }
         }
     </script>
+    <link rel="preconnect" href="https://challenges.cloudflare.com">
     <link rel="stylesheet" href="mobile-responsive.css"/>
     <style>
         .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; font-family:'Material Symbols Outlined'; font-style:normal; display:inline-block; line-height:1; }
         @keyframes slow-zoom { 0%{transform:scale(1)} 100%{transform:scale(1.1)} }
         .animate-slow-zoom { animation: slow-zoom 20s linear infinite alternate; }
     </style>
+    <!-- <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script> -->
 </head>
 <body class="bg-white font-display text-slate-900 antialiased min-h-screen">
 <script>
@@ -149,6 +151,8 @@ $extra_styles = "
                     <a href="#" class="text-sm font-bold text-primary hover:text-orange-600 transition-colors">Forgot password?</a>
                 </div>
 
+                <!-- <div class="cf-turnstile" data-sitekey="0x4AAAAAACwv8-Es__nv5t6c" data-theme="light"></div> -->
+
                 <button type="submit" id="login-btn"
                         class="w-full flex justify-center items-center gap-2 py-3.5 px-4 rounded-xl shadow-lg text-sm font-bold text-white bg-primary hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all active:scale-[0.98] hover:shadow-primary/30">
                     <span id="login-btn-text">Sign in to CSNExplore</span>
@@ -197,12 +201,13 @@ $extra_styles = "
 
         const email    = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value;
+        const turnstileResponse = document.querySelector('[name="cf-turnstile-response"]')?.value || "";
 
         try {
             const res  = await fetch('php/api/auth.php?action=login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
+                body: JSON.stringify({ email, password, turnstileResponse })
             });
             const data = await res.json();
 

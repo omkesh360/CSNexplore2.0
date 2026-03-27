@@ -4,7 +4,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
             <!-- Brand -->
             <div data-reveal data-reveal="left">
-                <img src="images/travelhub.png" alt="CSNExplore" class="h-9 object-contain mb-4"
+                <img src="<?php echo BASE_PATH; ?>/images/travelhub.png" alt="CSNExplore" class="h-9 object-contain mb-4"
                      onerror="this.style.display='none'; document.getElementById('footer-logo-text').style.display='flex'"/>
                 <span id="footer-logo-text" style="display:none" class="items-center gap-1.5 mb-4">
                     <span class="material-symbols-outlined text-primary text-2xl">explore</span>
@@ -23,18 +23,18 @@
             <div data-reveal data-delay="2">
                 <h5 class="font-bold text-sm mb-4">Quick Links</h5>
                 <div class="grid grid-cols-2 gap-x-4 gap-y-2.5 text-white/50 text-sm">
-                    <a href="/listing/stays"       class="hover:text-primary transition-colors hover:translate-x-1 inline-block transition-transform duration-200">Hotel Bookings</a>
-                    <a href="/listing/cars"        class="hover:text-primary transition-colors hover:translate-x-1 inline-block transition-transform duration-200">Car Rentals</a>
-                    <a href="/listing/bikes"       class="hover:text-primary transition-colors hover:translate-x-1 inline-block transition-transform duration-200">Bike Rentals</a>
-                    <a href="/listing/attractions" class="hover:text-primary transition-colors hover:translate-x-1 inline-block transition-transform duration-200">Heritage Sites</a>
-                    <a href="/listing/restaurants" class="hover:text-primary transition-colors hover:translate-x-1 inline-block transition-transform duration-200">Restaurants</a>
-                    <a href="/listing/buses"       class="hover:text-primary transition-colors hover:translate-x-1 inline-block transition-transform duration-200">Bus Tickets</a>
-                    <a href="blogs"                    class="hover:text-primary transition-colors hover:translate-x-1 inline-block transition-transform duration-200">Travel Guide</a>
-                    <a href="about"                    class="hover:text-primary transition-colors hover:translate-x-1 inline-block transition-transform duration-200">About Us</a>
-                    <a href="contact"                  class="hover:text-primary transition-colors hover:translate-x-1 inline-block transition-transform duration-200">Contact Us</a>
-                    <a href="privacy"                  class="hover:text-primary transition-colors hover:translate-x-1 inline-block transition-transform duration-200">Privacy Policy</a>
-                    <a href="terms"                    class="hover:text-primary transition-colors hover:translate-x-1 inline-block transition-transform duration-200">Terms of Service</a>
-                    <a href="my-booking"               class="hover:text-primary transition-colors hover:translate-x-1 inline-block transition-transform duration-200">Track Booking</a>
+                    <a href="<?php echo BASE_PATH; ?>/listing/stays"       class="hover:text-primary transition-colors hover:translate-x-1 inline-block transition-transform duration-200">Hotel Bookings</a>
+                    <a href="<?php echo BASE_PATH; ?>/listing/cars"        class="hover:text-primary transition-colors hover:translate-x-1 inline-block transition-transform duration-200">Car Rentals</a>
+                    <a href="<?php echo BASE_PATH; ?>/listing/bikes"       class="hover:text-primary transition-colors hover:translate-x-1 inline-block transition-transform duration-200">Bike Rentals</a>
+                    <a href="<?php echo BASE_PATH; ?>/listing/attractions" class="hover:text-primary transition-colors hover:translate-x-1 inline-block transition-transform duration-200">Heritage Sites</a>
+                    <a href="<?php echo BASE_PATH; ?>/listing/restaurants" class="hover:text-primary transition-colors hover:translate-x-1 inline-block transition-transform duration-200">Restaurants</a>
+                    <a href="<?php echo BASE_PATH; ?>/listing/buses"       class="hover:text-primary transition-colors hover:translate-x-1 inline-block transition-transform duration-200">Bus Tickets</a>
+                    <a href="<?php echo BASE_PATH; ?>/blogs"                    class="hover:text-primary transition-colors hover:translate-x-1 inline-block transition-transform duration-200">Travel Guide</a>
+                    <a href="<?php echo BASE_PATH; ?>/about"                    class="hover:text-primary transition-colors hover:translate-x-1 inline-block transition-transform duration-200">About Us</a>
+                    <a href="<?php echo BASE_PATH; ?>/contact"                  class="hover:text-primary transition-colors hover:translate-x-1 inline-block transition-transform duration-200">Contact Us</a>
+                    <a href="<?php echo BASE_PATH; ?>/privacy"                  class="hover:text-primary transition-colors hover:translate-x-1 inline-block transition-transform duration-200">Privacy Policy</a>
+                    <a href="<?php echo BASE_PATH; ?>/terms"                    class="hover:text-primary transition-colors hover:translate-x-1 inline-block transition-transform duration-200">Terms of Service</a>
+                    <a href="<?php echo BASE_PATH; ?>/my-booking"               class="hover:text-primary transition-colors hover:translate-x-1 inline-block transition-transform duration-200">Track Booking</a>
                 </div>
             </div>
             <!-- Contact Info -->
@@ -72,9 +72,9 @@
         <div class="border-t border-white/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-white/30 text-xs">
             <p>© <?php echo date('Y'); ?> CSNExplore. All rights reserved.</p>
             <div class="flex gap-5">
-                <a href="privacy" class="hover:text-primary transition-colors">Privacy Policy</a>
-                <a href="terms"   class="hover:text-primary transition-colors">Terms of Service</a>
-                <a href="sitemap.xml" class="hover:text-primary transition-colors">Sitemap</a>
+                <a href="<?php echo BASE_PATH; ?>/privacy" class="hover:text-primary transition-colors">Privacy Policy</a>
+                <a href="<?php echo BASE_PATH; ?>/terms"   class="hover:text-primary transition-colors">Terms of Service</a>
+                <a href="<?php echo BASE_PATH; ?>/sitemap.xml" class="hover:text-primary transition-colors">Sitemap</a>
             </div>
         </div>
     </div>

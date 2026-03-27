@@ -272,3 +272,12 @@ Stack trace:
 Stack trace:
 #0 {main}
   thrown in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/php/performance-optimizer/test-initialization.php on line 24
+[26-Mar-2026 17:03:37 UTC] PHP Warning:  Undefined array key "REQUEST_URI" in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/header.php on line 35
+[26-Mar-2026 17:03:37 UTC] PHP Deprecated:  strtok(): Passing null to parameter #1 ($string) of type string is deprecated in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/header.php on line 35
+[26-Mar-2026 17:07:43 UTC] PHP Warning:  Undefined array key "REQUEST_URI" in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/header.php on line 35
+[26-Mar-2026 17:07:43 UTC] PHP Deprecated:  strtok(): Passing null to parameter #1 ($string) of type string is deprecated in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/header.php on line 35
+[26-Mar-2026 17:08:21 UTC] PHP Warning:  Undefined array key "REQUEST_URI" in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/header.php on line 35
+[26-Mar-2026 17:08:21 UTC] PHP Deprecated:  strtok(): Passing null to parameter #1 ($string) of type string is deprecated in /Users/omkesh360/Documents/GitHub/CSNexplore2.0/header.php on line 35
+[27-Mar-2026 11:48:26 UTC] Booking #20 email status: {"user_sent":true,"admin_sent":true,"errors":[]}
+[27-Mar-2026 11:54:05 UTC] Booking #21 email status: {"user_sent":true,"admin_sent":true,"errors":[]}
+[27-Mar-2026 11:54:38 UTC] Booking #22 email status: {"user_sent":true,"admin_sent":true,"errors":[]}

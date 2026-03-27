@@ -107,7 +107,7 @@ async function loadBookings() {
             '<td class="py-2.5 px-4"><a href="tel:' + escHtml(b.phone) + '" onclick="event.stopPropagation()" class="text-primary hover:underline">' + escHtml(b.phone) + '</a></td>' +
             '<td class="py-2.5 px-4 text-slate-500 max-w-[140px] truncate">' + escHtml(b.listing_name || b.service_type || '—') + '</td>' +
             '<td class="py-2.5 px-4"><span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">' + escHtml(catLabel) + '</span></td>' +
-            '<td class="py-2.5 px-4 text-slate-500">' + escHtml(b.booking_date || '—') + '</td>' +
+            '<td class="py-2.5 px-4 text-slate-500">' + escHtml(b.booking_date || b.created_at || '—') + '</td>' +
             '<td class="py-2.5 px-4 text-slate-500">' + (b.number_of_people || 1) + '</td>' +
             '<td class="py-2.5 px-4"><span class="px-2 py-0.5 rounded-full text-xs font-bold ' + sc + '">' + escHtml(b.status) + '</span></td>' +
             '<td class="py-2.5 px-4">' +
@@ -144,7 +144,7 @@ async function openModal(id) {
         row('Category', catLabel) +
         row('Listing / Service', b.listing_name || b.service_type || '—') +
         row('Listing ID', b.listing_id ? '#' + b.listing_id : '—') +
-        row('Booking Date', b.booking_date || '—') +
+        row('Booking Date', b.booking_date || b.created_at || '—') +
         row('No. of People', b.number_of_people || 1) +
         row('Booked On', b.created_at || '—') +
         row('Last Updated', b.updated_at || '—') +

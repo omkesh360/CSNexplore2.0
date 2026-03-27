@@ -84,9 +84,13 @@ try {
     elseif ($method === 'POST' && $action === 'reorder') {
         requireAdmin();
         $data = getJsonInput();
-        $ids  = $data['ids'] ?? [];
-        foreach ($ids as $order => $rid) {
-            $db->update($category, ['display_order' => $order], 'id = :id', [':id' => (int)$rid]);
+        $updates = $data['updates'] ?? [];
+        foreach ($updates as $update) {
+            $rid = (int)($update['id'] ?? 0);
+            $order = (int)($update['display_order'] ?? 0);
+            if ($rid > 0) {
+                $db->update($category, ['display_order' => $order], 'id = :id', [':id' => $rid]);
+            }
         }
         sendJson(['success' => true]);
     }

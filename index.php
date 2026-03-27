@@ -64,7 +64,7 @@ function hp_grid_class($layout) {
         '4-col' => 'grid grid-cols-2 md:grid-cols-4 gap-5',
         '2-col' => 'grid grid-cols-1 md:grid-cols-2 gap-4',
         'list'  => 'flex flex-col gap-3',
-        'scroll'=> 'flex gap-5 overflow-x-auto hide-scrollbar pb-3',
+        'scroll'=> 'flex gap-5 overflow-x-auto hide-scrollbar pb-3 snap-x snap-mandatory',
     ];
     return $map[$layout] ?? $map['3-col'];
 }
@@ -289,7 +289,7 @@ var heroTimer = setInterval(autoRotate, 5000);
 var _searchFocused = false;
 document.addEventListener('focusin', function(e){ if(e.target && (e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')){ _searchFocused=true; clearInterval(heroTimer); } });
 document.addEventListener('focusout', function(e){ if(e.target && (e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')){ _searchFocused=false; heroTimer=setInterval(autoRotate,5000); } });
-var searchUrls = { stays:'/listing/stays', cars:'/listing/cars', bikes:'/listing/bikes', attractions:'/listing/attractions', dine:'/listing/restaurants', buses:'/listing/buses' };
+var searchUrls = { stays:'<?php echo BASE_PATH; ?>/listing/stays', cars:'<?php echo BASE_PATH; ?>/listing/cars', bikes:'<?php echo BASE_PATH; ?>/listing/bikes', attractions:'<?php echo BASE_PATH; ?>/listing/attractions', dine:'<?php echo BASE_PATH; ?>/listing/restaurants', buses:'<?php echo BASE_PATH; ?>/listing/buses' };
 function doSearch(tab) {
     window.location.href = searchUrls[tab];
 }
@@ -350,8 +350,8 @@ document.addEventListener('DOMContentLoaded', function() {    var today = new Da
                 <h2 class="font-serif text-2xl md:text-3xl text-slate-900">Ride &amp; Explore</h2>
             </div>
             <div class="flex gap-3 text-sm font-bold text-primary">
-                <a href="/listing/cars" class="hover:underline">Cars →</a>
-                <a href="/listing/bikes" class="hover:underline">Bikes →</a>
+                <a href="<?php echo BASE_PATH; ?>/listing/cars" class="hover:underline">Cars →</a>
+                <a href="<?php echo BASE_PATH; ?>/listing/bikes" class="hover:underline">Bikes →</a>
             </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -362,7 +362,7 @@ document.addEventListener('DOMContentLoaded', function() {    var today = new Da
                     <span class="text-primary text-[10px] font-bold uppercase tracking-widest mb-1 block">Self-Drive & Chauffeur</span>
                     <h4 class="text-white text-xl font-serif mb-1">Premium Car Rentals</h4>
                     <p class="text-white/70 text-xs mb-3">Luxury sedans, SUVs & hatchbacks at your service.</p>
-                    <a href="/listing/cars" class="inline-block bg-white text-black px-5 py-2 rounded-full font-bold text-xs hover:bg-primary hover:text-white transition-all btn-pulse">Explore Cars</a>
+                    <a href="<?php echo BASE_PATH; ?>/listing/cars" class="inline-block bg-white text-black px-5 py-2 rounded-full font-bold text-xs hover:bg-primary hover:text-white transition-all btn-pulse">Explore Cars</a>
                 </div>
             </div>
             <div data-reveal data-reveal="right" class="group relative overflow-hidden rounded-2xl h-64 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 img-shimmer">
@@ -372,7 +372,7 @@ document.addEventListener('DOMContentLoaded', function() {    var today = new Da
                     <span class="text-primary text-[10px] font-bold uppercase tracking-widest mb-1 block">Scooters to Royal Enfields</span>
                     <h4 class="text-white text-xl font-serif mb-1">Bike Rentals</h4>
                     <p class="text-white/70 text-xs mb-3">Ride the city your way — any road, any time.</p>
-                    <a href="/listing/bikes" class="inline-block bg-white text-black px-5 py-2 rounded-full font-bold text-xs hover:bg-primary hover:text-white transition-all btn-pulse">Explore Bikes</a>
+                    <a href="<?php echo BASE_PATH; ?>/listing/bikes" class="inline-block bg-white text-black px-5 py-2 rounded-full font-bold text-xs hover:bg-primary hover:text-white transition-all btn-pulse">Explore Bikes</a>
                 </div>
             </div>
         </div>
@@ -413,7 +413,7 @@ foreach ($hp_settings['section_order'] as $_sec_key):
                 <p class="text-primary font-bold text-xs uppercase tracking-widest mb-1">Our Travel Journals</p>
                 <h2 class="font-serif text-2xl md:text-3xl text-slate-900"><?php echo htmlspecialchars($hp_settings['title_blogs']); ?></h2>
             </div>
-            <a href="blogs" class="text-sm font-bold text-primary hover:underline">Read more &rarr;</a>
+            <a href="<?php echo BASE_PATH; ?>/blogs" class="text-sm font-bold text-primary hover:underline">Read more &rarr;</a>
             <?php else: ?>
             <div>
                 <p class="text-primary font-bold text-xs uppercase tracking-widest mb-1"><?php
@@ -422,7 +422,7 @@ foreach ($hp_settings['section_order'] as $_sec_key):
                 ?></p>
                 <h2 class="font-serif text-2xl md:text-3xl text-slate-900"><?php echo htmlspecialchars($hp_settings['title_' . $_sec_key]); ?></h2>
             </div>
-            <a href="/listing/<?php echo $_sec_key; ?>" class="text-sm font-bold text-primary hover:underline">See all &rarr;</a>
+            <a href="<?php echo BASE_PATH; ?>/listing/<?php echo $_sec_key; ?>" class="text-sm font-bold text-primary hover:underline">See all &rarr;</a>
             <?php endif; ?>
         </div>
         <?php
@@ -434,25 +434,25 @@ foreach ($hp_settings['section_order'] as $_sec_key):
 
         if ($_sec_key === 'attractions'):
             $render_fn = function($a) {
-                $slug = '/listing-detail/attractions-'.$a['id'].'-'.substr(trim(preg_replace('/[\s-]+/','-',preg_replace('/[^a-z0-9\s-]/', '', strtolower($a['name']))),'-'),0,60);
+                $slug = BASE_PATH . '/listing-detail/' . generateSlug('attractions', $a['id'], $a['name']) . '.html';
                 $img=htmlspecialchars($a['image']); $name=htmlspecialchars($a['name']);
                 $tag=htmlspecialchars($a['type']??'Attraction');
                 $price=$a['entry_fee']>0 ? '&#8377;'.number_format($a['entry_fee']) : 'Free';
                 $rating=number_format((float)($a['rating']??0),1);
-                return '<a href="'.$slug.'" class="group overflow-hidden rounded-2xl bg-white border border-slate-100 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex-shrink-0" style="width:VAR_W">'
+                return '<a href="'.$slug.'" class="group relative overflow-hidden rounded-2xl bg-white border border-slate-100 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex-shrink-0" style="width:VAR_W">'
                     .'<div class="h-44 overflow-hidden relative"><img alt="'.$name.'" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="'.$img.'"/>'
-                    .'<div class="absolute top-2.5 right-2.5 flex items-center gap-1 bg-black/60 backdrop-blur-sm text-white text-xs font-bold px-2 py-0.5 rounded-full"><span style="font-family:Material Symbols Outlined;font-size:12px;color:#fbbf24">star</span>'.$rating.'</div></div>'
-                    .'<div class="p-4"><span class="text-primary text-[10px] font-bold uppercase tracking-widest">'.$tag.'</span>'
-                    .'<h5 class="font-serif text-base text-slate-900 mt-1 mb-3 line-clamp-1">'.$name.'</h5>'
-                    .'<div class="flex items-center justify-between">'
+                    .'<div class="absolute top-2.5 right-2.5 flex items-center gap-1 bg-black/60 backdrop-blur-sm text-white text-xs font-bold px-2 py-0.5 rounded-full z-20"><span style="font-family:Material Symbols Outlined;font-size:12px;color:#fbbf24">star</span>'.$rating.'</div></div>'
+                    .'<div class="p-4"><span class="text-primary text-[10px] font-bold uppercase tracking-widest relative z-20">'.$tag.'</span>'
+                    .'<h5 class="font-serif text-base text-slate-900 mt-1 mb-3 line-clamp-1 relative z-20">'.$name.'</h5>'
+                    .'<div class="flex items-center justify-between relative z-20">'
                     .'<p class="font-black text-slate-900 text-sm">'.$price.' <span class="text-xs text-slate-400 font-normal">entry</span></p>'
-                    .'<span class="bg-primary text-white px-3 py-1.5 rounded-full font-bold text-xs group-hover:bg-orange-600 transition-all">Check Availability</span>'
+                    .'<span class="bg-primary text-white px-3 py-1.5 rounded-full font-bold text-xs group-hover:bg-orange-600 transition-all">Check Details</span>'
                     .'</div></div></a>';
             };
             $items = $hp_attractions;
         elseif ($_sec_key === 'bikes'):
             $render_fn = function($b) {
-                $slug = '/listing-detail/bikes-'.$b['id'].'-'.substr(trim(preg_replace('/[\s-]+/','-',preg_replace('/[^a-z0-9\s-]/', '', strtolower($b['name']))),'-'),0,60);
+                $slug = BASE_PATH . '/listing-detail/' . generateSlug('bikes', $b['id'], $b['name']) . '.html';
                 $img=htmlspecialchars($b['image']); $name=htmlspecialchars($b['name']);
                 $type=htmlspecialchars($b['type']); $price=number_format($b['price_per_day']);
                 $rating=number_format((float)($b['rating']??0),1);
@@ -469,18 +469,18 @@ foreach ($hp_settings['section_order'] as $_sec_key):
             $items = $hp_bikes;
         elseif ($_sec_key === 'restaurants'):
             $render_fn = function($r) {
-                $slug = '/listing-detail/restaurants-'.$r['id'].'-'.substr(trim(preg_replace('/[\s-]+/','-',preg_replace('/[^a-z0-9\s-]/', '', strtolower($r['name']))),'-'),0,60);
+                $slug = BASE_PATH . '/listing-detail/' . generateSlug('restaurants', $r['id'], $r['name']) . '.html';
                 $img=htmlspecialchars($r['image']); $name=htmlspecialchars($r['name']);
                 $cuisine=htmlspecialchars($r['cuisine']??$r['type']); $price=number_format($r['price_per_person']??0);
                 $rating=number_format((float)($r['rating']??0),1);
-                return '<a href="'.$slug.'" class="group overflow-hidden rounded-2xl bg-white border border-slate-100 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex-shrink-0" style="width:VAR_W">'
+                return '<a href="'.$slug.'" class="group relative overflow-hidden rounded-2xl bg-white border border-slate-100 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex-shrink-0" style="width:VAR_W">'
                     .'<div class="h-44 overflow-hidden relative"><img alt="'.$name.'" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="'.$img.'"/>'
-                    .'<div class="absolute top-2.5 right-2.5 flex items-center gap-1 bg-black/60 backdrop-blur-sm text-white text-xs font-bold px-2 py-0.5 rounded-full"><span style="font-family:Material Symbols Outlined;font-size:12px;color:#fbbf24">star</span>'.$rating.'</div></div>'
-                    .'<div class="p-4"><span class="text-primary text-[10px] font-bold uppercase tracking-widest">'.$cuisine.'</span>'
-                    .'<h5 class="font-serif text-base text-slate-900 mt-1 mb-3 line-clamp-1">'.$name.'</h5>'
-                    .'<div class="flex items-center justify-between">'
+                    .'<div class="absolute top-2.5 right-2.5 flex items-center gap-1 bg-black/60 backdrop-blur-sm text-white text-xs font-bold px-2 py-0.5 rounded-full z-20"><span style="font-family:Material Symbols Outlined;font-size:12px;color:#fbbf24">star</span>'.$rating.'</div></div>'
+                    .'<div class="p-4"><span class="text-primary text-[10px] font-bold uppercase tracking-widest relative z-20">'.$cuisine.'</span>'
+                    .'<h5 class="font-serif text-base text-slate-900 mt-1 mb-3 line-clamp-1 relative z-20">'.$name.'</h5>'
+                    .'<div class="flex items-center justify-between relative z-20">'
                     .'<p class="font-black text-slate-900 text-sm">&#8377;'.$price.' <span class="text-xs text-slate-400 font-normal">for two</span></p>'
-                    .'<span class="bg-primary text-white px-3 py-1.5 rounded-full font-bold text-xs group-hover:bg-orange-600 transition-all">Check Availability</span>'
+                    .'<span class="bg-primary text-white px-3 py-1.5 rounded-full font-bold text-xs group-hover:bg-orange-600 transition-all">Check Details</span>'
                     .'</div></div></a>';
             };
             $items = $hp_restaurants;
@@ -489,16 +489,17 @@ foreach ($hp_settings['section_order'] as $_sec_key):
                 $op=htmlspecialchars($bus['operator']); $bt=htmlspecialchars($bus['bus_type']);
                 $route=htmlspecialchars($bus['from_location']).' → '.htmlspecialchars($bus['to_location']);
                 $price=number_format($bus['price']);
-                return '<div class="glass-dark p-5 rounded-2xl flex items-center justify-between gap-4 card-hover flex-shrink-0" style="width:VAR_W">'
-                    .'<div class="flex items-center gap-4 min-w-0">'
+                $slug = BASE_PATH . '/listing-detail/' . generateSlug('buses', $bus['id'], $bus['operator']) . '.html';
+                return '<a href="'.$slug.'" class="glass-dark p-5 rounded-2xl flex items-center justify-between gap-4 card-hover flex-shrink-0 group relative overflow-hidden" style="width:VAR_W">'
+                    .'<div class="flex items-center gap-4 min-w-0 relative z-20">'
                     .'<div class="w-12 h-12 bg-primary/15 rounded-xl flex items-center justify-center shrink-0">'
                     .'<span class="material-symbols-outlined text-primary text-2xl">directions_bus</span></div>'
                     .'<div class="min-w-0"><p class="text-white font-bold text-sm truncate">'.$op.' <span class="text-[10px] font-normal text-white/50 bg-white/10 px-2 py-0.5 rounded ml-1">'.$bt.'</span></p>'
                     .'<p class="text-white/50 text-xs mt-0.5 truncate">'.$route.'</p></div></div>'
-                    .'<div class="flex items-center gap-3 shrink-0">'
+                    .'<div class="flex items-center gap-3 shrink-0 relative z-20">'
                     .'<p class="text-primary font-black text-lg">&#8377;'.$price.'</p>'
-                    .'<a href="bus" class="bg-primary text-white px-4 py-2 rounded-xl font-bold text-xs hover:bg-orange-600 transition-all">Book</a>'
-                    .'</div></div>';
+                    .'<span class="bg-primary text-white px-4 py-2 rounded-xl font-bold text-xs group-hover:bg-orange-600 transition-all">Check Details</span>'
+                    .'</div></a>';
             };
             $items = $hp_buses;
         else:
@@ -507,7 +508,7 @@ foreach ($hp_settings['section_order'] as $_sec_key):
                 $t=strtolower(trim($blog['title']));
                 $t=preg_replace('/[^a-z0-9\s-]/','',$t);
                 $t=preg_replace('/[\s-]+/','-',$t);
-                $slug='blogs/'.$blog['id'].'-'.substr(trim($t,'-'),0,60);
+                $slug = BASE_PATH . '/blogs/'.$blog['id'].'-'.substr(trim($t,'-'),0,60) . '.html';
                 $img=htmlspecialchars($blog['image']??''); $title=htmlspecialchars($blog['title']);
                 $cat=htmlspecialchars($blog['category']??'Travel');
                 return '<a href="'.$slug.'" class="group cursor-pointer flex-shrink-0 hover:-translate-y-1 transition-all duration-300" style="width:VAR_W">'

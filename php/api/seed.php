@@ -1,4 +1,6 @@
-<?php
+photo_libraryPhoto Gallery (click to zoom)
+City Center Business Hotel photo 1
+City Center Business Hotel photo 2<?php
 // php/api/seed.php – Seeds all real listing data into the database
 // Run once: php php/api/seed.php  OR  visit /php/api/seed.php?secret=csnexplore_seed
 require_once __DIR__ . '/../config.php';

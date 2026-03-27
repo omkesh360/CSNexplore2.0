@@ -41,6 +41,7 @@ require 'admin-header.php';
         <table class="w-full text-sm">
             <thead class="bg-slate-50 border-b border-slate-100">
                 <tr>
+                    <th class="text-left py-3 px-4 text-xs font-semibold text-slate-500">Order</th>
                     <th class="text-left py-3 px-4 text-xs font-semibold text-slate-500">Image</th>
                     <th class="text-left py-3 px-4 text-xs font-semibold text-slate-500">Name</th>
                     <th class="text-left py-3 px-4 text-xs font-semibold text-slate-500">Type</th>
@@ -52,7 +53,7 @@ require 'admin-header.php';
                 </tr>
             </thead>
             <tbody id="listings-tbody">
-                <tr><td colspan="8" class="text-center py-12 text-slate-400">Loading...</td></tr>
+                <tr><td colspan="9" class="text-center py-12 text-slate-400">Loading...</td></tr>
             </tbody>
         </table>
     </div>
@@ -94,6 +95,10 @@ require 'admin-header.php';
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Badge</label>
                     <input id="f-badge" type="text" placeholder="e.g. Top Rated" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"/>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Display Order</label>
+                    <input id="f-display_order" type="number" min="0" value="0" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"/>
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Status</label>
@@ -194,18 +199,27 @@ async function loadListings() {
     var search = document.getElementById('search-input').value;
     var url = '../php/api/listings.php?category=' + currentCat + (search ? '&search=' + encodeURIComponent(search) : '');
     var tbody = document.getElementById('listings-tbody');
-    tbody.innerHTML = '<tr><td colspan="8" class="text-center py-12 text-slate-400">Loading...</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="9" class="text-center py-12 text-slate-400">Loading...</td></tr>';
     var items = await api(url);
     if (!items || !items.length) {
-        tbody.innerHTML = '<tr><td colspan="8" class="text-center py-12 text-slate-400">No listings found</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="9" class="text-center py-12 text-slate-400">No listings found</td></tr>';
         return;
     }
+    // Sort by display_order, then by id
+    items.sort(function(a, b) { 
+        var orderA = parseInt(a.display_order) || 0;
+        var orderB = parseInt(b.display_order) || 0;
+        if (orderA !== orderB) return orderA - orderB;
+        return a.id - b.id;
+    });
     var priceKey = {stays:'price_per_night',cars:'price_per_day',bikes:'price_per_day',restaurants:'price_per_person',attractions:'entry_fee',buses:'price'};
     tbody.innerHTML = items.map(function(item) {
         var statusBg = item.is_active ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-500';
         var statusTxt = item.is_active ? 'Active' : 'Hidden';
         var img = item.image ? '<img src="' + escHtml(imgSrc(item.image)) + '" class="w-10 h-10 rounded-lg object-cover"/>' : '<div class="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center"><span class="material-symbols-outlined text-slate-400 text-base">image</span></div>';
-        return '<tr class="border-b border-slate-50 hover:bg-slate-50">' +
+        var displayOrder = parseInt(item.display_order) || 0;
+        return '<tr class="border-b border-slate-50 hover:bg-slate-50 draggable-row" data-id="' + item.id + '" draggable="true">' +
+            '<td class="py-2.5 px-4"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-slate-400 cursor-move drag-handle">drag_indicator</span><span class="text-xs font-semibold text-slate-500 order-number">' + displayOrder + '</span></div></td>' +
             '<td class="py-2.5 px-4">' + img + '</td>' +
             '<td class="py-2.5 px-4 font-medium max-w-[160px] truncate">' + escHtml(item.name) + '</td>' +
             '<td class="py-2.5 px-4 text-slate-500">' + escHtml(item.type || '—') + '</td>' +
@@ -222,6 +236,7 @@ async function loadListings() {
             '</td>' +
         '</tr>';
     }).join('');
+    initDragAndDrop();
 }
 
 function buildExtraFields(cat) {
@@ -264,6 +279,7 @@ async function openEditModal(id) {
     document.getElementById('f-description').value = item.description || '';
     document.getElementById('f-rating').value = item.rating || '';
     document.getElementById('f-active').value = item.is_active ?? 1;
+    document.getElementById('f-display_order').value = item.display_order || 0;
     updateMainPreview(item.image || '');
     // Gallery
     var gallery = Array.isArray(item.gallery) ? item.gallery : (item.gallery ? JSON.parse(item.gallery) : []);
@@ -349,6 +365,7 @@ document.getElementById('listing-form').addEventListener('submit', async functio
         description: document.getElementById('f-description').value,
         rating: parseFloat(document.getElementById('f-rating').value) || 0,
         is_active: parseInt(document.getElementById('f-active').value),
+        display_order: parseInt(document.getElementById('f-display_order').value) || 0,
     };
     data[priceKey[currentCat]] = parseFloat(document.getElementById('f-price').value) || 0;
     // Extra fields
@@ -396,6 +413,102 @@ document.getElementById('search-input').addEventListener('input', function() {
     clearTimeout(window._searchTimer);
     window._searchTimer = setTimeout(loadListings, 400);
 });
+
+// Drag and drop reordering
+var draggedRow = null;
+var draggedOverRow = null;
+
+function initDragAndDrop() {
+    var rows = document.querySelectorAll('.draggable-row');
+    rows.forEach(function(row) {
+        row.addEventListener('dragstart', handleDragStart);
+        row.addEventListener('dragenter', handleDragEnter);
+        row.addEventListener('dragover', handleDragOver);
+        row.addEventListener('dragleave', handleDragLeave);
+        row.addEventListener('drop', handleDrop);
+        row.addEventListener('dragend', handleDragEnd);
+    });
+}
+
+function handleDragStart(e) {
+    draggedRow = this;
+    this.style.opacity = '0.5';
+    this.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', this.innerHTML);
+}
+
+function handleDragEnter(e) {
+    if (draggedRow !== this) {
+        this.classList.add('drag-over');
+        draggedOverRow = this;
+    }
+}
+
+function handleDragOver(e) {
+    if (e.preventDefault) e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    return false;
+}
+
+function handleDragLeave(e) {
+    this.classList.remove('drag-over');
+}
+
+function handleDrop(e) {
+    if (e.stopPropagation) e.stopPropagation();
+    e.preventDefault();
+    
+    if (draggedRow !== this) {
+        var tbody = document.getElementById('listings-tbody');
+        var allRows = Array.from(tbody.querySelectorAll('.draggable-row'));
+        var draggedIndex = allRows.indexOf(draggedRow);
+        var targetIndex = allRows.indexOf(this);
+        
+        if (draggedIndex < targetIndex) {
+            this.parentNode.insertBefore(draggedRow, this.nextSibling);
+        } else {
+            this.parentNode.insertBefore(draggedRow, this);
+        }
+        
+        // Update display orders
+        updateDisplayOrders();
+    }
+    return false;
+}
+
+function handleDragEnd(e) {
+    this.style.opacity = '1';
+    this.classList.remove('dragging');
+    var rows = document.querySelectorAll('.draggable-row');
+    rows.forEach(function(row) {
+        row.classList.remove('drag-over');
+    });
+}
+
+async function updateDisplayOrders() {
+    var rows = document.querySelectorAll('.draggable-row');
+    var updates = [];
+    rows.forEach(function(row, index) {
+        var id = parseInt(row.dataset.id);
+        updates.push({ id: id, display_order: index });
+        // Update the display order text in the row
+        var orderCell = row.querySelector('.order-number');
+        if (orderCell) orderCell.textContent = index;
+    });
+    
+    // Send batch update to server
+    try {
+        await api('../php/api/listings.php?category=' + currentCat + '&action=reorder', {
+            method: 'POST',
+            body: JSON.stringify({ updates: updates })
+        });
+        showAdminToast('Order updated successfully', 'success');
+    } catch(ex) {
+        showAdminToast('Failed to update order: ' + ex.message, 'error');
+        loadListings(); // Reload to restore original order
+    }
+}
 
 // Init
 switchCat('stays');

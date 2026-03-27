@@ -37,10 +37,7 @@ if ($page === 1 && !$cat_filter && !$search_filter && !empty($blogs)) {
 $categories = $db->fetchAll("SELECT DISTINCT category FROM blogs WHERE status='published' ORDER BY category ASC");
 
 function blogSlug($blog) {
-    $t = strtolower(trim($blog['title']));
-    $t = preg_replace('/[^a-z0-9\s-]/', '', $t);
-    $t = preg_replace('/[\s-]+/', '-', $t);
-    return 'blogs/' . $blog['id'] . '-' . substr(trim($t, '-'), 0, 60) . '.html';
+    return BASE_PATH . '/blogs/' . generateSlug('blogs', $blog['id'], $blog['title']) . '.html';
 }
 
 $extra_styles = "
@@ -166,7 +163,10 @@ $total_grid_blogs = count($all_blogs_for_filter);
     <?php else: ?>
     <div id="blogs-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <?php foreach ($all_blogs_for_filter as $bi => $blog): ?>
-        <article class="flex flex-col group h-full<?php echo $bi >= 9 ? ' blog-hidden' : ''; ?>">
+        <article class="flex flex-col group h-full relative<?php echo $bi >= 9 ? ' blog-hidden' : ''; ?>">
+            <!-- Entire Card Link -->
+            <a href="<?php echo blogSlug($blog); ?>" class="absolute inset-0 z-10" aria-label="<?php echo htmlspecialchars($blog['title']); ?>"></a>
+
             <div class="relative rounded-2xl overflow-hidden mb-5 aspect-video shadow-lg">
                 <img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                      src="<?php echo htmlspecialchars($blog['image'] ?? ''); ?>"
@@ -174,7 +174,7 @@ $total_grid_blogs = count($all_blogs_for_filter);
                      loading="lazy"
                      onerror="this.src='https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=600&q=80'"/>
                 <div class="absolute top-4 left-4">
-                    <span class="bg-white/90 backdrop-blur px-3 py-1 rounded-lg text-xs font-bold text-primary uppercase">
+                    <span class="bg-white/90 backdrop-blur px-3 py-1 rounded-lg text-xs font-bold text-primary uppercase relative z-20">
                         <?php echo htmlspecialchars($blog['category']); ?>
                     </span>
                 </div>

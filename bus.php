@@ -11,12 +11,12 @@ $routes = $db->fetchAll("SELECT * FROM buses WHERE is_active=1 ORDER BY display_
 require 'header.php';
 
 $category_nav = [
-    ['href' => '/listing/stays',       'icon' => 'bed',                'label' => 'Stays'],
-    ['href' => '/listing/cars',        'icon' => 'directions_car',     'label' => 'Car Rentals'],
-    ['href' => '/listing/bikes',       'icon' => 'motorcycle',         'label' => 'Bike Rentals'],
-    ['href' => '/listing/attractions', 'icon' => 'confirmation_number','label' => 'Attractions'],
-    ['href' => '/listing/restaurants', 'icon' => 'restaurant',         'label' => 'Restaurant'],
-    ['href' => 'bus.php',                      'icon' => 'directions_bus',     'label' => 'Buses'],
+    ['href' => BASE_PATH . '/listing/stays',       'icon' => 'bed',                'label' => 'Stays'],
+    ['href' => BASE_PATH . '/listing/cars',        'icon' => 'directions_car',     'label' => 'Car Rentals'],
+    ['href' => BASE_PATH . '/listing/bikes',       'icon' => 'motorcycle',         'label' => 'Bike Rentals'],
+    ['href' => BASE_PATH . '/listing/attractions', 'icon' => 'confirmation_number','label' => 'Attractions'],
+    ['href' => BASE_PATH . '/listing/restaurants', 'icon' => 'restaurant',         'label' => 'Restaurant'],
+    ['href' => BASE_PATH . '/bus',                 'icon' => 'directions_bus',     'label' => 'Buses'],
 ];
 ?>
 <nav class="bg-white border-b border-slate-100 relative top-16 z-40">
@@ -97,10 +97,10 @@ $category_nav = [
             </div>
 
             <div class="flex gap-4">
-                <a href="index" class="flex items-center gap-1.5 text-slate-500 hover:text-primary text-sm font-bold transition-colors">
+                <a href="<?php echo BASE_PATH; ?>/index" class="flex items-center gap-1.5 text-slate-500 hover:text-primary text-sm font-bold transition-colors">
                     <span class="material-symbols-outlined text-base">home</span> Back to Home
                 </a>
-                <a href="/listing/stays" class="flex items-center gap-1.5 text-slate-500 hover:text-primary text-sm font-bold transition-colors">
+                <a href="<?php echo BASE_PATH; ?>/listing/stays" class="flex items-center gap-1.5 text-slate-500 hover:text-primary text-sm font-bold transition-colors">
                     <span class="material-symbols-outlined text-base">bed</span> Explore Stays
                 </a>
             </div>

@@ -90,54 +90,45 @@ ServerSignature Off
 # ── URL Rewriting ─────────────────────────────────────────────────────────────
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteBase /
 
-    # Prevent Apache from auto-redirecting /blogs → /blogs/ before our rules fire
-    DirectorySlash Off
-
-    # Pass Authorization header to PHP (required for JWT auth)
+    # Pass Authorization header (required for JWT)
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-    # Force HTTPS (uncomment on live server with SSL)
-    # RewriteCond %{HTTPS} off
-    # RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+    # Remove RewriteBase if present or set to current dir
+    # RewriteBase /
 
-    # Remove trailing slash (unless it's the root)
+    # ── 1. Remove trailing slashes (except for real directories) ───────────
+    RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} (.+)/$
     RewriteRule ^ %1 [R=301,L]
 
+    # ── 2. Handle Listing detail: /listing-detail/cars-5-slug ───────────────
+    # If a match is found, rewrite to the .html file inside listing-detail/
+    RewriteRule ^listing-detail/([a-z0-9-]+)$ listing-detail/$1.html [L]
 
+    # ── 3. Handle Blog pages: /blogs/1-my-slug ───────────────────────────────
+    RewriteRule ^blogs/([a-z0-9-]+)$ blogs/$1.html [L]
 
-
-    # ── Explicit clean URL mappings for every PHP page ───────────────────────
-    RewriteRule ^$                    index.php       [L]
-    RewriteRule ^index$               index.php       [L]
-    RewriteRule ^about$               about.php       [L]
-    RewriteRule ^contact$             contact.php     [L]
-    RewriteRule ^blogs$               blogs.php       [L]
-    RewriteRule ^listing/([a-z-]+)$   listing.php?type=$1 [QSA,L]
-    RewriteRule ^listing$             listing.php     [QSA,L]
-    RewriteRule ^login$               login.php       [L]
-    RewriteRule ^register$            register.php    [L]
-    RewriteRule ^privacy$             privacy.php     [L]
-    RewriteRule ^terms$               terms.php       [L]
-    RewriteRule ^my-booking$          my-booking.php  [L]
-    RewriteRule ^bus$                 bus.php         [L]
-    RewriteRule ^blog-detail$         blog-detail.php [QSA,L]
-
-    # ── Serve real static files (images, CSS, JS, fonts, etc.) ──────────────
+    # ── 4. Serve real static files (images, CSS, JS, etc.) ──────────────────
     RewriteCond %{REQUEST_FILENAME} -f
     RewriteRule ^ - [L]
 
-    # ── Static HTML pages: /blogs/1-my-slug → blogs/1-my-slug.html ──────────
-    RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI}.html -f
-    RewriteRule ^ %{REQUEST_URI}.html [L]
-
-    # ── Serve real directories (needed for /admin etc.) ─────────────────────
+    # ── 5. Serve real directories (like /admin) ─────────────────────────────
     RewriteCond %{REQUEST_FILENAME} -d
     RewriteRule ^ - [L]
 
-    # Dynamic sitemap
+    # ── 6. Extensionless PHP files (/about → about.php) ──────────────────────
+    RewriteCond %{REQUEST_FILENAME}.php -f
+    RewriteRule ^([^/.]+)$ $1.php [L]
+
+    # ── 7. Home & Listing fallback ──────────────────────────────────────────
+    RewriteRule ^$                    index.php       [L]
+    RewriteRule ^index/?$             index.php       [L]
+    RewriteRule ^listing/([a-z-]+)/?$ listing.php?type=$1 [QSA,L]
+    RewriteRule ^listing/?$           listing.php     [QSA,L]
+    RewriteRule ^blog-detail/?$       blog-detail.php [QSA,L]
+
+    # Dynamic sitemap (note: updated path to match your structure)
     RewriteRule ^sitemap\.xml$ php/api/generate_sitemap.php [L]
 </IfModule>
 

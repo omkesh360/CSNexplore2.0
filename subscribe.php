@@ -63,7 +63,7 @@ try {
     $existing = $db->fetchOne("SELECT id, is_active FROM newsletter_subscribers WHERE email = ?", [$email]);
     if ($existing) {
         if (!$existing['is_active']) {
-            $db->update('newsletter_subscribers', ['is_active' => 1], 'email = ?', [':email' => $email]);
+            $db->update('newsletter_subscribers', ['is_active' => 1], 'email = :where_email', [':where_email' => $email]);
         }
     } else {
         $db->insert('newsletter_subscribers', ['email' => $email]);

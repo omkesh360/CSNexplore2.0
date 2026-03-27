@@ -20,7 +20,7 @@ $params = [];
 if ($filterType) { $where[] = 'type = ?'; $params[] = $filterType; }
 if ($search) { $where[] = 'name LIKE ?'; $params[] = '%' . $search . '%'; }
 
-$sql = "SELECT * FROM $type WHERE " . implode(' AND ', $where) . " ORDER BY RANDOM()";
+$sql = "SELECT * FROM $type WHERE " . implode(' AND ', $where) . " ORDER BY display_order ASC, rating DESC, id ASC";
 $items = $db->fetchAll($sql, $params);
 
 // Decode JSON fields
@@ -135,10 +135,7 @@ $slider_max = (int)(ceil($price_max / 100) * 100) ?: 10000;
 
 function listingSlug($type, $item) {
     $name = $item['name'] ?? $item['operator'] ?? 'item';
-    $t = strtolower(trim($name));
-    $t = preg_replace('/[^a-z0-9\s-]/', '', $t);
-    $t = preg_replace('/[\s-]+/', '-', $t);
-    return '/listing-detail/' . $type . '-' . $item['id'] . '-' . substr(trim($t, '-'), 0, 60);
+    return BASE_PATH . '/listing-detail/' . generateSlug($type, $item['id'], $name) . '.html';
 }
 
 $extra_styles = "
@@ -173,7 +170,7 @@ $category_nav = [
     <!-- Breadcrumb at very top -->
     <div class="absolute top-0 left-0 right-0 pt-5">
         <div class="max-w-7xl mx-auto px-6 flex items-center gap-2 text-sm text-white/60 flex-wrap">
-            <a href="index" class="hover:text-white transition-colors flex items-center gap-1">
+            <a href="<?php echo BASE_PATH; ?>/index" class="hover:text-white transition-colors flex items-center gap-1">
                 <span class="material-symbols-outlined text-base">home</span>Home
             </a>
             <span class="material-symbols-outlined text-base">chevron_right</span>
@@ -291,8 +288,7 @@ $category_nav = [
           <h1 class="text-3xl font-extrabold tracking-tight"><?php echo htmlspecialchars($c['heading']); ?></h1>
           <p class="text-slate-500"><?php echo count($items); ?> result<?php echo count($items) !== 1 ? 's' : ''; ?> found</p>
         </div>
-        <form method="GET" action="/listing/<?php echo htmlspecialchars($type); ?>" class="flex items-center gap-2">
-          <!-- <input type="hidden" name="type" --> value="<?php echo htmlspecialchars($type); ?>"/>
+        <form method="GET" action="<?php echo BASE_PATH; ?>/listing/<?php echo htmlspecialchars($type); ?>" class="flex items-center gap-2">
           <input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>"
                  placeholder="Search <?php echo htmlspecialchars($c['label']); ?>..."
                  class="border border-slate-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 bg-white w-48"/>
@@ -326,10 +322,14 @@ $category_nav = [
             $badge_color  = !empty($item['badge']) ? $badge_colors[crc32($item['badge']) % count($badge_colors)] : '';
             $hidden_class = $i >= 9 ? ' listing-hidden' : '';
         ?>
-        <div class="group glassy rounded-2xl overflow-hidden flex flex-col hover:shadow-2xl transition-all duration-300 hover:-translate-y-1.5<?php echo $hidden_class; ?>"
+        <div class="group glassy rounded-2xl overflow-hidden flex flex-col hover:shadow-2xl transition-all duration-300 hover:-translate-y-1.5 relative<?php echo $hidden_class; ?>"
              data-type="<?php echo htmlspecialchars($item_type); ?>"
              data-price="<?php echo (int)$price_val; ?>"
              data-rating="<?php echo number_format((float)($item['rating'] ?? 0), 1); ?>">
+          
+          <!-- Entire Card Link -->
+          <a href="<?php echo listingSlug($type, $item); ?>" class="absolute inset-0 z-10" aria-label="View Details"></a>
+
           <div class="relative h-52 overflow-hidden">
             <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                  src="<?php echo htmlspecialchars($item['image'] ?? ''); ?>"
@@ -337,7 +337,8 @@ $category_nav = [
                  loading="lazy"
                  onerror="this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80'"/>
             <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            <button class="absolute top-3 right-3 size-9 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/40 transition-colors">
+            
+            <button class="absolute top-3 right-3 size-9 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/40 transition-colors z-20">
               <span class="material-symbols-outlined text-sm">favorite</span>
             </button>
             <div class="absolute top-3 left-3 flex items-center gap-1 bg-black/50 backdrop-blur-sm text-white text-xs font-bold px-2.5 py-1 rounded-full">
@@ -580,8 +581,8 @@ function resetFilters() {
     <h3 class="text-xl font-serif font-black mb-2">Login Required</h3>
     <p class="text-slate-500 text-sm mb-6">Please login or create an account to make a booking.</p>
     <div class="flex gap-3">
-      <a id="login-redirect-btn" href="login" class="flex-1 bg-primary text-white font-bold py-3 rounded-xl text-sm hover:bg-orange-600 transition-all">Login</a>
-      <a id="register-redirect-btn" href="register" class="flex-1 border-2 border-primary text-primary font-bold py-3 rounded-xl text-sm hover:bg-primary/5 transition-all">Register</a>
+      <a id="login-redirect-btn" href="<?php echo BASE_PATH; ?>/login" class="flex-1 bg-primary text-white font-bold py-3 rounded-xl text-sm hover:bg-orange-600 transition-all">Login</a>
+      <a id="register-redirect-btn" href="<?php echo BASE_PATH; ?>/register" class="flex-1 border-2 border-primary text-primary font-bold py-3 rounded-xl text-sm hover:bg-primary/5 transition-all">Register</a>
     </div>
   </div>
 </div>
@@ -643,7 +644,7 @@ document.getElementById('booking-form').addEventListener('submit', async functio
         notes: document.getElementById('b-notes').value,
     };
     try {
-        var res = await fetch('php/api/bookings.php', {
+        var res = await fetch('<?php echo BASE_PATH; ?>/php/api/bookings.php', {
             method: 'POST',
             headers: {'Content-Type':'application/json'},
             body: JSON.stringify(payload)

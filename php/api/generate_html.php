@@ -107,7 +107,7 @@ body.page-ready{animation:pageFadeIn 0.2s ease forwards;}
 #csn-gallery-modal{position:fixed !important;top:0 !important;left:0 !important;width:100% !important;height:100% !important;background:rgba(0,0,0,0.85) !important;z-index:999999999 !important;display:none !important;align-items:center !important;justify-content:center !important;overflow:hidden !important;}
 #csn-gallery-modal.active{display:flex !important;}
 .csn-modal-content{position:fixed !important;top:50% !important;left:50% !important;transform:translate(-50%,-50%) !important;background:transparent !important;border-radius:0 !important;padding:0 !important;max-width:85vw !important;max-height:85vh !important;display:flex !important;flex-direction:column !important;align-items:center !important;justify-content:center !important;box-shadow:none !important;z-index:1000000000 !important;overflow:visible !important;border:none !important;}
-.csn-modal-content img{width:85vw !important;height:85vh !important;max-width:85vw !important;max-height:85vh !important;object-fit:contain !important;border-radius:0 !important;transition:transform 0.3s !important;border:none !important;outline:none !important;box-shadow:none !important;}
+.csn-modal-content img{width:85vw !important;height:85vh !important;max-width:85vw !important;max-height:85vh !important;object-fit:contain !important;border-radius:0 !important;transition:opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;border:none !important;outline:none !important;box-shadow:none !important;opacity:1 !important;}
 .csn-modal-close{position:fixed !important;top:30px !important;right:30px !important;background:#ec5b13 !important;border:none !important;color:#fff !important;width:40px !important;height:40px !important;border-radius:50% !important;cursor:pointer !important;font-size:24px !important;display:flex !important;align-items:center !important;justify-content:center !important;transition:all 0.3s !important;font-weight:bold !important;z-index:1000000001 !important;}
 .csn-modal-close:hover{background:#d94a0a !important;transform:scale(1.1) !important;}
 .csn-modal-nav{position:fixed !important;top:50% !important;transform:translateY(-50%) !important;background:#ec5b13 !important;border:none !important;color:#fff !important;width:45px !important;height:45px !important;border-radius:50% !important;cursor:pointer !important;font-size:20px !important;display:flex !important;align-items:center !important;justify-content:center !important;transition:all 0.3s !important;z-index:1000000001 !important;}
@@ -134,6 +134,28 @@ body.page-ready{animation:pageFadeIn 0.2s ease forwards;}
 @media(max-width:768px){.gallery-grid{grid-template-columns:repeat(2,1fr);gap:10px;}}
 @media(max-width:480px){.gallery-grid{grid-template-columns:repeat(2,1fr);gap:8px;}}
 </style>
+<script>
+function playBookingSound() {
+  try {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playTone(freq, start, duration) {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.frequency.value = freq; osc.type = "sine";
+      gain.gain.setValueAtTime(0.3, start);
+      gain.gain.exponentialRampToValueAtTime(0.01, start + duration);
+      osc.start(start); osc.stop(start + duration);
+    }
+    // "Tring Tring" 10 times
+    for(let i=0; i<10; i++) {
+        let t = audioCtx.currentTime + (i * 0.4);
+        playTone(880, t, 0.1);
+        playTone(880, t + 0.15, 0.1);
+    }
+  } catch(e) { console.error("Sound failed", e); }
+}
+</script>
 </head>
 <body class="bg-white dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
 ' . sharedHeader($base);
@@ -142,47 +164,94 @@ body.page-ready{animation:pageFadeIn 0.2s ease forwards;}
 }
 
 function sharedHeader($base) {
-    return file_get_contents(dirname(__DIR__, 2) . '/header-html.html');
+    $content = file_get_contents(dirname(__DIR__, 2) . '/header-html.html');
+    return str_replace('{{BASE}}', $base, $content);
 }
 
 function sharedFooter($base) {
     return '
-<footer class="bg-[#0a0705] text-white pt-14 pb-8 mt-16">
-  <div class="max-w-7xl mx-auto px-4">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
-      <div>
-        <img src="'.$base.'images/travelhub.png" alt="CSNExplore" class="h-9 object-contain mb-4"/>
-        <p class="text-white/50 text-sm leading-relaxed">Your premium gateway to the wonders of Chhatrapati Sambhajinagar, Maharashtra.</p>
-      </div>
-      <div>
-        <h5 class="font-bold text-sm mb-4">Quick Links</h5>
-        <ul class="flex flex-col gap-2.5 text-white/50 text-sm">
-          <li><a href="'.$base.'listing.php?type=stays" class="hover:text-[#ec5b13] transition-colors">Hotel Bookings</a></li>
-          <li><a href="'.$base.'listing.php?type=cars" class="hover:text-[#ec5b13] transition-colors">Car Rentals</a></li>
-          <li><a href="'.$base.'listing.php?type=bikes" class="hover:text-[#ec5b13] transition-colors">Bike Rentals</a></li>
-          <li><a href="'.$base.'listing.php?type=attractions" class="hover:text-[#ec5b13] transition-colors">Heritage Sites</a></li>
-          <li><a href="'.$base.'blogs.php" class="hover:text-[#ec5b13] transition-colors">Travel Guide</a></li>
-        </ul>
-      </div>
-      <div>
-        <h5 class="font-bold text-sm mb-4">Contact Info</h5>
-        <ul class="flex flex-col gap-3 text-white/50 text-sm">
-          <li class="flex items-start gap-2"><span class="material-symbols-outlined text-[#ec5b13] text-base mt-0.5 shrink-0">location_on</span>Behind State Bank Of India, Plot No. 273 Samarth Nagar, Central Bus Stand, Chhatrapati Sambhajinagar, Maharashtra 431001</li>
-          <li class="flex items-center gap-2"><span class="material-symbols-outlined text-[#ec5b13] text-base">call</span><a href="tel:+918600968888" class="hover:text-[#ec5b13]">+91 86009 68888</a></li>
-          <li class="flex items-center gap-2"><span class="material-symbols-outlined text-[#ec5b13] text-base">mail</span><a href="mailto:supportcsnexplore@gmail.com" class="hover:text-[#ec5b13]">supportcsnexplore@gmail.com</a></li>
-        </ul>
-      </div>
-      <div>
-        <h5 class="font-bold text-sm mb-4">Stay Updated</h5>
-        <p class="text-white/50 text-sm mb-4">Get travel tips and exclusive deals in your inbox.</p>
-        <a href="'.$base.'blogs.php" class="inline-block bg-[#ec5b13] text-white font-bold py-2.5 px-6 rounded-xl text-sm hover:bg-orange-600 transition-colors">Read Blogs</a>
-      </div>
+<footer class="bg-slate-900 text-white pt-14 pb-8">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
+            <!-- Brand -->
+            <div data-reveal data-reveal="left">
+                <img src="'.$base.'images/travelhub.png" alt="CSNExplore" class="h-9 object-contain mb-4"
+                     onerror="this.style.display=\'none\'; document.getElementById(\'footer-logo-text\').style.display=\'flex\'"/>
+                <span id="footer-logo-text" style="display:none" class="items-center gap-1.5 mb-4">
+                    <span class="material-symbols-outlined text-primary text-2xl">explore</span>
+                    <span class="font-serif font-black text-white text-lg tracking-tight">CSNExplore</span>
+                </span>
+                <p class="text-white/50 text-sm leading-relaxed mb-5">Your premium gateway to the wonders of Chhatrapati Sambhajinagar, Maharashtra.</p>
+                <div class="flex gap-3">
+                    <a href="#" aria-label="Share" class="w-9 h-9 rounded-full glass flex items-center justify-center hover:bg-primary hover:scale-110 transition-all duration-300"><span class="material-symbols-outlined text-sm">share</span></a>
+                    <a href="mailto:supportcsnexplore@gmail.com" target="_blank" rel="noopener noreferrer" aria-label="Email Us" class="w-9 h-9 rounded-full glass flex items-center justify-center hover:bg-primary hover:scale-110 transition-all duration-300"><span class="material-symbols-outlined text-sm">mail</span></a>
+                    <a href="https://wa.me/918600968888" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp Us" class="w-9 h-9 rounded-full glass flex items-center justify-center hover:bg-primary hover:scale-110 transition-all duration-300">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.417-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.305 1.652zm6.599-3.825c1.63.975 3.41 1.487 5.23 1.488 5.439 0 9.861-4.422 9.863-9.861.001-2.636-1.024-5.115-2.884-6.977-1.862-1.864-4.341-2.887-6.979-2.888-5.439 0-9.861 4.422-9.863 9.862 0 1.842.511 3.641 1.478 5.187l-.995 3.637 3.73-.978zm11.367-7.643c-.31-.155-1.837-.906-2.12-.108-.285.103-.55.515-.674.654-.124.14-.248.155-.558.001-.31-.155-1.31-.483-2.498-1.543-.924-.824-1.548-1.841-1.73-2.15-.181-.31-.019-.477.135-.631.14-.139.31-.36.465-.541.155-.181.206-.31.31-.515.103-.206.052-.386-.026-.541-.077-.155-.674-1.626-.924-2.228-.243-.585-.491-.504-.674-.513-.175-.008-.375-.01-.575-.01s-.525.075-.8.375c-.275.3-1.05 1.026-1.05 2.5s1.075 2.9 1.225 3.1c.15.2 2.11 3.221 5.113 4.513.714.307 1.272.49 1.706.629.718.227 1.37.195 1.886.118.575-.085 1.837-.75 2.096-1.475.258-.725.258-1.346.181-1.475-.077-.129-.283-.206-.593-.361z"/></svg>
+                    </a>
+                </div>
+            </div>
+            <!-- Quick Links -->
+            <div data-reveal data-delay="2">
+                <h5 class="font-bold text-sm mb-4">Quick Links</h5>
+                <div class="grid grid-cols-2 gap-x-4 gap-y-2.5 text-white/50 text-sm">
+                    <a href="'.$base.'listing/stays"       class="hover:text-primary transition-colors hover:translate-x-1 inline-block transition-transform duration-200">Hotel Bookings</a>
+                    <a href="'.$base.'listing/cars"        class="hover:text-primary transition-colors hover:translate-x-1 inline-block transition-transform duration-200">Car Rentals</a>
+                    <a href="'.$base.'listing/bikes"       class="hover:text-primary transition-colors hover:translate-x-1 inline-block transition-transform duration-200">Bike Rentals</a>
+                    <a href="'.$base.'listing/attractions" class="hover:text-primary transition-colors hover:translate-x-1 inline-block transition-transform duration-200">Heritage Sites</a>
+                    <a href="'.$base.'listing/restaurants" class="hover:text-primary transition-colors hover:translate-x-1 inline-block transition-transform duration-200">Restaurants</a>
+                    <a href="'.$base.'listing/buses"       class="hover:text-primary transition-colors hover:translate-x-1 inline-block transition-transform duration-200">Bus Tickets</a>
+                    <a href="'.$base.'blogs"                    class="hover:text-primary transition-colors hover:translate-x-1 inline-block transition-transform duration-200">Travel Guide</a>
+                    <a href="'.$base.'about"                    class="hover:text-primary transition-colors hover:translate-x-1 inline-block transition-transform duration-200">About Us</a>
+                    <a href="'.$base.'contact"                  class="hover:text-primary transition-colors hover:translate-x-1 inline-block transition-transform duration-200">Contact Us</a>
+                    <a href="'.$base.'privacy"                  class="hover:text-primary transition-colors hover:translate-x-1 inline-block transition-transform duration-200">Privacy Policy</a>
+                    <a href="'.$base.'terms"                    class="hover:text-primary transition-colors hover:translate-x-1 inline-block transition-transform duration-200">Terms of Service</a>
+                    <a href="'.$base.'my-booking"               class="hover:text-primary transition-colors hover:translate-x-1 inline-block transition-transform duration-200">Track Booking</a>
+                </div>
+            </div>
+            <!-- Contact Info -->
+            <div data-reveal data-delay="3">
+                <h5 class="font-bold text-sm mb-4">Contact Info</h5>
+                <ul class="flex flex-col gap-3 text-white/50 text-sm">
+                    <li class="flex items-start gap-2">
+                        <span class="material-symbols-outlined text-primary text-base mt-0.5 shrink-0">location_on</span>
+                        <a href="https://maps.google.com/?q=Behind+State+Bank+Of+India,+Plot+No.+273+Samarth+Nagar,+Central+Bus+Stand,+Chhatrapati+Sambhajinagar,+Maharashtra+431001" target="_blank" rel="noopener noreferrer" class="hover:text-primary transition-colors">Behind State Bank Of India, Plot No. 273 Samarth Nagar, Central Bus Stand, Chhatrapati Sambhajinagar, Maharashtra 431001</a>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary text-base">call</span>
+                        <a href="tel:+918600968888" class="hover:text-primary transition-colors">+91 86009 68888</a>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary text-base">mail</span>
+                        <a href="mailto:supportcsnexplore@gmail.com" class="hover:text-primary transition-colors">supportcsnexplore@gmail.com</a>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary text-base">schedule</span>Mon–Sat: 9am – 7pm
+                    </li>
+                </ul>
+            </div>
+            <!-- Newsletter -->
+            <div data-reveal data-reveal="right" data-delay="4">
+                <h5 class="font-bold text-sm mb-4">Stay Updated</h5>
+                <p class="text-white/50 text-sm mb-4">Get travel tips and exclusive deals in your inbox.</p>
+                <form method="POST" action="'.$base.'subscribe.php" class="flex flex-col gap-2">
+                    <input type="email" name="email" placeholder="Your email address" required
+                           class="bg-white/5 border border-white/10 text-white placeholder:text-white/30 px-3 py-2.5 rounded-xl text-sm focus:outline-none focus:border-primary transition-colors"/>
+                    <button type="submit" class="bg-primary text-white font-bold py-2.5 rounded-xl text-sm hover:bg-orange-600 hover:scale-[1.02] transition-all duration-200">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        <div class="border-t border-white/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-white/30 text-xs">
+            <p>© ' . date('Y') . ' CSNExplore. All rights reserved.</p>
+            <div class="flex gap-5">
+                <a href="'.$base.'privacy" class="hover:text-primary transition-colors">Privacy Policy</a>
+                <a href="'.$base.'terms"   class="hover:text-primary transition-colors">Terms of Service</a>
+                <a href="'.$base.'sitemap.xml" class="hover:text-primary transition-colors">Sitemap</a>
+            </div>
+        </div>
     </div>
-    <div class="border-t border-white/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-white/30 text-xs">
-      <p>© ' . date('Y') . ' CSNExplore. All rights reserved.</p>
-    </div>
-  </div>
 </footer>
+
+<!-- Go to Top Button -->
 <button id="go-top-btn" onclick="window.scrollTo({top:0,behavior:\'smooth\'})"
     style="position:fixed;bottom:28px;right:24px;z-index:9999;width:48px;height:48px;border-radius:50%;background:#ec5b13;color:#fff;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(236,91,19,0.5);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity .25s ease,visibility .25s ease,transform .25s ease;"
     aria-label="Go to top">
@@ -190,13 +259,20 @@ function sharedFooter($base) {
 </button>
 <script>
 (function(){
-    var btn=document.getElementById("go-top-btn");
-    function updateBtn(){
-        if(window.scrollY>200){btn.style.opacity="1";btn.style.visibility="visible";btn.style.transform="translateY(0)";}
-        else{btn.style.opacity="0";btn.style.visibility="hidden";btn.style.transform="translateY(12px)";}
+    var btn = document.getElementById(\'go-top-btn\');
+    function updateBtn() {
+        if (window.scrollY > 200) {
+            btn.style.opacity = \'1\';
+            btn.style.visibility = \'visible\';
+            btn.style.transform = \'translateY(0)\';
+        } else {
+            btn.style.opacity = \'0\';
+            btn.style.visibility = \'hidden\';
+            btn.style.transform = \'translateY(12px)\';
+        }
     }
     updateBtn();
-    window.addEventListener("scroll",updateBtn,{passive:true});
+    window.addEventListener(\'scroll\', updateBtn, {passive:true});
 })();
 </script>
 
@@ -228,12 +304,7 @@ function sharedFooter($base) {
 </body></html>';
 }
 
-function slugify($text) {
-    $text = strtolower(trim($text));
-    $text = preg_replace('/[^a-z0-9\s-]/', '', $text);
-    $text = preg_replace('/[\s-]+/', '-', $text);
-    return trim($text, '-');
-}
+// Centralized slugify moved to config.php as generateSlug
 
 $log = [];
 
@@ -251,8 +322,7 @@ foreach ($blogs as $b) $byCategory[$b['category']][] = $b;
 
 $blogCount = 0;
 foreach ($blogs as $blog) {
-    $slug = $blog['id'] . '-' . slugify($blog['title']);
-    $slug = substr($slug, 0, 80);
+    $slug = generateSlug('blogs', $blog['id'], $blog['title']);
     $file = $blogsDir . '/' . $slug . '.html';
 
     // Related: same category, up to 3, exclude self
@@ -261,7 +331,7 @@ foreach ($blogs as $blog) {
 
     $relatedHtml = '';
     foreach ($related as $r) {
-        $rSlug = $r['id'] . '-' . substr(slugify($r['title']), 0, 60);
+        $rSlug = generateSlug('blogs', $r['id'], $r['title']);
         $relatedHtml .= '
         <a href="'.$rSlug.'" class="group flex flex-col bg-white rounded-2xl overflow-hidden border border-slate-100 hover:shadow-lg transition-shadow">
           <div class="aspect-video overflow-hidden">
@@ -396,7 +466,7 @@ foreach ($types as $type) {
             if (isset($item[$f]) && is_string($item[$f])) $item[$f] = json_decode($item[$f], true) ?: [];
         }
 
-        $slug = $type . '-' . $item['id'] . '-' . substr(slugify($item['name'] ?? 'item'), 0, 60);
+        $slug = generateSlug($type, $item['id'], $item['name'] ?? 'item');
         $file = $listingsDir . '/' . $slug . '.html';
 
         $price_val = $item[$meta['price_col']] ?? 0;
@@ -439,7 +509,6 @@ foreach ($types as $type) {
         $extraMeta = '';
         if ($type === 'stays') {
             if (!empty($item['room_type'])) $extraMeta .= '<div class="flex items-center gap-2 text-sm text-slate-600"><span class="material-symbols-outlined text-[#ec5b13] text-base">bed</span>'.htmlspecialchars($item['room_type']).'</div>';
-            if (!empty($item['max_guests'])) $extraMeta .= '<div class="flex items-center gap-2 text-sm text-slate-600"><span class="material-symbols-outlined text-[#ec5b13] text-base">group</span>Up to '.(int)$item['max_guests'].' guests</div>';
         } elseif ($type === 'cars') {
             if (!empty($item['fuel_type'])) $extraMeta .= '<div class="flex items-center gap-2 text-sm text-slate-600"><span class="material-symbols-outlined text-[#ec5b13] text-base">local_gas_station</span>'.htmlspecialchars($item['fuel_type']).'</div>';
             if (!empty($item['transmission'])) $extraMeta .= '<div class="flex items-center gap-2 text-sm text-slate-600"><span class="material-symbols-outlined text-[#ec5b13] text-base">settings</span>'.htmlspecialchars($item['transmission']).'</div>';
@@ -480,92 +549,163 @@ foreach ($types as $type) {
         ];
 
         $html = htmlHead(htmlspecialchars($item['name']) . ' | CSNExplore', 1, $canonical, $desc, $absImg, $schema);
+
+        // Build thumbnail strip HTML
+        $thumbHtml = '';
+        foreach ($resolvedGalleryImages as $idx => $img) {
+            $thumbHtml .= '<button onclick="slideTo('.$idx.')" id="thumb-'.$idx.'" class="flex-shrink-0 w-16 h-16 rounded-xl overflow-hidden border-2 border-transparent transition-all hover:border-[#ec5b13] focus:outline-none" title="Photo '.($idx+1).'">'.
+                '<img src="'.htmlspecialchars($img).'" loading="lazy" alt="thumb '.($idx+1).'" class="w-full h-full object-cover" onerror="this.src=\'../images/travelhub.png\'"/>'.
+                '</button>';
+        }
+
         $html .= '
-<main class="bg-slate-100 min-h-screen">
-  <!-- Hero: shared image with breadcrumb at top, item name at bottom -->
-  <div class="relative h-64 md:h-80 overflow-hidden">
-    <img src="'.htmlspecialchars($mainImg).'" alt="'.htmlspecialchars($item['name']).'" class="w-full h-full object-cover" loading="lazy"/>
-    <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-[#0a0705]"></div>
-    <!-- Breadcrumb at very top -->
-    <div class="absolute top-0 left-0 right-0 pt-5">
-      <div class="max-w-6xl mx-auto px-4 flex items-center gap-2 text-sm text-white/70 flex-wrap">
+<main class="bg-[#f4f5f7] min-h-screen pb-16">
+
+  <!-- ── Full-width hero image ── -->
+  <div class="relative w-full bg-slate-900 overflow-hidden" style="height:420px">
+    <img id="slide-main" src="'.htmlspecialchars(!empty($resolvedGalleryImages) ? $resolvedGalleryImages[0] : $mainImg).'" alt="'.htmlspecialchars($item['name']).'" class="w-full h-full object-cover transition-opacity duration-300" onerror="this.src=\'../images/travelhub.png\'"/>
+    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/30"></div>
+
+    <!-- Breadcrumb top-left -->
+    <div class="absolute top-0 left-0 right-0 pt-5 px-6">
+      <div class="max-w-7xl mx-auto flex items-center gap-2 text-sm text-white/70 flex-wrap">
         <a href="../index" class="hover:text-white transition-colors flex items-center gap-1"><span class="material-symbols-outlined text-base">home</span>Home</a>
-        <span class="material-symbols-outlined text-base">chevron_right</span>
-        <a href="../listing/'.$type.'" class="hover:text-white transition-colors font-medium">'.htmlspecialchars($meta['label']).'</a>
-        <span class="material-symbols-outlined text-base">chevron_right</span>
-        <span class="text-white font-semibold">'.htmlspecialchars($item['name']).'</span>
+        <span class="material-symbols-outlined text-sm opacity-50">chevron_right</span>
+        <a href="../listing/'.$type.'" class="hover:text-white transition-colors">'.htmlspecialchars($meta['label']).'</a>
+        <span class="material-symbols-outlined text-sm opacity-50">chevron_right</span>
+        <span class="text-white font-semibold truncate max-w-xs">'.htmlspecialchars($item['name']).'</span>
       </div>
     </div>
-    <!-- Title at bottom -->
-    <div class="absolute bottom-0 left-0 right-0 pb-6">
-      <div class="max-w-6xl mx-auto px-4">
-        <span class="text-xs font-bold text-[#ec5b13] uppercase tracking-widest mb-2 block">'.htmlspecialchars($meta['label']).'</span>
-        <h1 class="text-white text-2xl md:text-4xl font-serif font-black leading-tight drop-shadow-lg">'.htmlspecialchars($item['name']).'</h1>
+
+    <!-- Title + rating bottom-left -->
+    <div class="absolute bottom-0 left-0 right-0 pb-6 px-6">
+      <div class="max-w-7xl mx-auto">
+        '.(!empty($item['badge']) ? '<div class="mb-2"><span class="inline-block bg-[#ec5b13] text-white text-xs font-bold px-3 py-1 rounded-full">'.htmlspecialchars($item['badge']).'</span></div>' : '').'
+        <h1 class="text-white text-2xl md:text-4xl font-serif font-black leading-tight mb-2">'.htmlspecialchars($item['name']).'</h1>
+        <div class="flex flex-wrap items-center gap-4 text-white/80 text-sm">
+          <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-base text-[#ec5b13]">location_on</span>'.$location.'</span>
+          <span class="flex items-center gap-1.5 bg-amber-400/20 border border-amber-400/30 px-2.5 py-1 rounded-full">
+            <span class="material-symbols-outlined text-amber-400 text-sm">star</span>
+            <span class="font-bold text-white">'.number_format((float)($item['rating'] ?? 0), 1).'</span>
+            <span class="text-white/60 text-xs">('.((int)($item['reviews'] ?? 0)).' reviews)</span>
+          </span>
+        </div>
       </div>
     </div>
+
+    <!-- Prev / Next arrows -->
+    '.( count($resolvedGalleryImages) > 1 ? '
+    <button onclick="slidePrev()" class="absolute left-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/50 hover:bg-black/80 text-white flex items-center justify-center transition-all z-10 backdrop-blur-sm border border-white/10">
+      <span class="material-symbols-outlined text-xl">chevron_left</span>
+    </button>
+    <button onclick="slideNext()" class="absolute right-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/50 hover:bg-black/80 text-white flex items-center justify-center transition-all z-10 backdrop-blur-sm border border-white/10">
+      <span class="material-symbols-outlined text-xl">chevron_right</span>
+    </button>
+    <div class="absolute bottom-6 right-6 bg-black/60 text-white text-xs font-bold px-3 py-1.5 rounded-full backdrop-blur-sm flex items-center gap-1.5">
+      <span class="material-symbols-outlined text-sm">photo_library</span>
+      <span id="slide-current">1</span> / '.count($resolvedGalleryImages).'
+    </div>' : '' ).'
+    <button onclick="openLightbox(_slideIndex)" class="absolute bottom-6 '.( count($resolvedGalleryImages) > 1 ? 'right-28' : 'right-6' ).' w-9 h-9 rounded-full bg-black/50 hover:bg-black/80 text-white flex items-center justify-center transition-all z-10 backdrop-blur-sm border border-white/10" title="View fullscreen">
+      <span class="material-symbols-outlined text-base">zoom_out_map</span>
+    </button>
   </div>
-  <div class="max-w-6xl mx-auto px-4 py-8">
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <!-- Left: details -->
+
+  <!-- ── Thumbnail strip ── -->
+  '.( count($resolvedGalleryImages) > 1 ? '
+  <div class="bg-slate-800 border-b border-slate-700">
+    <div class="max-w-7xl mx-auto px-4 py-2">
+      <div class="flex gap-2 overflow-x-auto hide-scrollbar" id="thumb-strip">
+        '.$thumbHtml.'
+      </div>
+    </div>
+  </div>' : '' ).'
+
+  <!-- ── Main content ── -->
+  <div class="max-w-7xl mx-auto px-4 pt-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+
+      <!-- ── LEFT: Details (2/3) ── -->
       <div class="lg:col-span-2 space-y-5">
-        <!-- Title & rating card -->
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-          <div class="flex items-start justify-between gap-4 mb-4">
-            <div class="flex-1">
-              <h2 class="text-2xl font-bold text-slate-900 mb-3">'.htmlspecialchars($item['name']).'</h2>
-              <div class="flex items-center gap-2 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-xl w-fit">
-                <span class="material-symbols-outlined text-amber-500 text-lg">star</span>
-                <span class="font-bold text-lg text-slate-900">'.number_format((float)($item['rating'] ?? 0), 1).'</span>
-                <span class="text-slate-600 text-xs font-semibold">('.((int)($item['reviews'] ?? 0)).' reviews)</span>
+
+        <!-- Quick specs bar -->
+        '.(trim($extraMeta) ? '
+        <div class="bg-white rounded-2xl px-6 py-4 shadow-sm border border-slate-200 flex flex-wrap gap-5">
+          '.$extraMeta.'
+        </div>' : '').'
+
+        <!-- Single merged info card: About + Amenities + Location -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+
+          '.(!empty($item['description']) ? '
+          <!-- About -->
+          <div class="p-6 border-b border-slate-100">
+            <h2 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3 flex items-center gap-2">
+              <span class="material-symbols-outlined text-[#ec5b13] text-base">info</span>About
+            </h2>
+            <p class="text-slate-800 leading-relaxed text-sm">'.htmlspecialchars($item['description']).'</p>
+          </div>' : '').'
+
+          '.($featuresList ? '
+          <!-- Amenities -->
+          <div class="p-6 border-b border-slate-100">
+            <h2 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4 flex items-center gap-2">
+              <span class="material-symbols-outlined text-[#ec5b13] text-base">checklist</span>Features &amp; Amenities
+            </h2>
+            <ul class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">'.$featuresList.'</ul>
+          </div>' : '').'
+
+          <!-- Location -->
+          <div class="p-6">
+            <h2 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-2">
+              <span class="material-symbols-outlined text-[#ec5b13] text-base">location_on</span>Location
+            </h2>
+            <p class="text-slate-800 text-sm font-medium">'.$location.'</p>
+          </div>
+        </div>
+
+        <a href="../listing/'.$type.'" class="inline-flex items-center gap-2 text-[#ec5b13] font-bold text-sm hover:underline">
+          <span class="material-symbols-outlined text-base">arrow_back</span>Back to '.htmlspecialchars($meta['label']).'
+        </a>
+      </div>
+
+      <!-- ── RIGHT: Booking card (1/3, sticky) ── -->
+      <div class="lg:col-span-1">
+        <div class="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden lg:sticky lg:top-24">
+
+          <!-- Price header -->
+          <div class="bg-gradient-to-br from-[#ec5b13] to-orange-400 px-6 py-5 text-white">
+            <p class="text-xs font-bold uppercase tracking-widest opacity-80 mb-1">'.htmlspecialchars($meta['label']).' Price</p>
+            <div class="flex items-baseline gap-1.5">
+              <span class="text-3xl font-black">'.$price_fmt.'</span>
+              '.($meta['unit'] && $price_val > 0 ? '<span class="text-sm font-semibold opacity-80">'.htmlspecialchars($meta['unit']).'</span>' : '').'
+            </div>
+            <p class="text-xs opacity-70 mt-1.5 flex items-center gap-1"><span class="material-symbols-outlined text-sm">verified</span>Free cancellation · No hidden charges</p>
+          </div>
+
+          <div class="p-5 space-y-4">
+            <!-- Contact -->
+            <div>
+              <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Need help?</p>
+              <div class="grid grid-cols-2 gap-2">
+                <a href="tel:+918600968888" class="flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-900 font-bold py-2.5 rounded-xl text-sm transition-colors border border-slate-200">
+                  <span class="material-symbols-outlined text-base text-[#ec5b13]">call</span>Call
+                </a>
+                <a href="https://wa.me/918600968888" class="flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#128C7E] text-white font-bold py-2.5 rounded-xl text-sm transition-colors">
+                  <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.417-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.305 1.652zm6.599-3.825c1.63.975 3.41 1.487 5.23 1.488 5.439 0 9.861-4.422 9.863-9.861.001-2.636-1.024-5.115-2.884-6.977-1.862-1.864-4.341-2.887-6.979-2.888-5.439 0-9.861 4.422-9.863 9.862 0 1.842.511 3.641 1.478 5.187l-.995 3.637 3.73-.978zm11.367-7.643c-.31-.155-1.837-.906-2.12-.108-.285.103-.55.515-.674.654-.124.14-.248.155-.558.001-.31-.155-1.31-.483-2.498-1.543-.924-.824-1.548-1.841-1.73-2.15-.181-.31-.019-.477.135-.631.14-.139.31-.36.465-.541.155-.181.206-.31.31-.515.103-.206.052-.386-.026-.541-.077-.155-.674-1.626-.924-2.228-.243-.585-.491-.504-.674-.513-.175-.008-.375-.01-.575-.01s-.525.075-.8.375c-.275.3-1.05 1.026-1.05 2.5s1.075 2.9 1.225 3.1c.15.2 2.11 3.221 5.113 4.513.714.307 1.272.49 1.706.629.718.227 1.37.195 1.886.118.575-.085 1.837-.75 2.096-1.475.258-.725.258-1.346.181-1.475-.077-.129-.283-.206-.593-.361z"/></svg>
+                  WhatsApp
+                </a>
               </div>
             </div>
-          </div>
-          <div class="flex items-center gap-2 text-slate-800 text-sm font-semibold mb-4">
-            <span class="material-symbols-outlined text-base text-[#ec5b13]">location_on</span>
-            <span>'.$location.'</span>
-          </div>
-          '.($extraMeta ? '<div class="flex flex-wrap gap-4 mb-4 pt-4 border-t border-slate-100">'.$extraMeta.'</div>' : '').'
-          '.(!empty($item['description']) ? '<p class="text-slate-800 leading-relaxed text-sm border-t border-slate-100 pt-4">'.htmlspecialchars($item['description']).'</p>' : '').'
-        </div>
-        '.($featuresList ? '
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-          <h3 class="text-base font-bold text-slate-900 mb-4 flex items-center gap-2"><span class="material-symbols-outlined text-[#ec5b13]">checklist</span>Features &amp; Amenities</h3>
-          <ul class="grid grid-cols-1 sm:grid-cols-2 gap-3">'.$featuresList.'</ul>
-        </div>' : '').'
-        '.($galleryHtml ? '
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-          <h3 class="text-base font-bold text-slate-900 mb-4 flex items-center gap-2"><span class="material-symbols-outlined text-[#ec5b13]">photo_library</span>Photo Gallery <span class="text-xs font-normal text-slate-500 ml-1">(click to zoom)</span></h3>
-          <div class="gallery-grid">'.$galleryHtml.'</div>
-        </div>' : '').'
-      </div>
-      <!-- Right: booking card -->
-      <div class="space-y-4">
-        <div class="bg-white rounded-2xl p-6 shadow-md border border-slate-200 lg:sticky lg:top-24">
-          <!-- Need help? -->
-          <div class="flex flex-col gap-2 mb-5 pb-5 border-b border-slate-100">
-            <p class="text-xs font-bold text-slate-800 uppercase tracking-wider">Need help?</p>
-            <a href="tel:+918600968888" class="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-900 font-bold py-2.5 px-3 rounded-xl text-sm transition-colors border border-slate-200">
-              <span class="material-symbols-outlined text-base text-[#ec5b13]">call</span>+91 86009 68888
-            </a>
-            <a href="https://wa.me/918600968888" class="flex items-center gap-2 bg-green-50 hover:bg-green-100 text-green-900 font-bold py-2.5 px-3 rounded-xl text-sm transition-colors border border-green-200">
-              <svg class="w-4 h-4 fill-current shrink-0 text-green-600" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.417-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.305 1.652zm6.599-3.825c1.63.975 3.41 1.487 5.23 1.488 5.439 0 9.861-4.422 9.863-9.861.001-2.636-1.024-5.115-2.884-6.977-1.862-1.864-4.341-2.887-6.979-2.888-5.439 0-9.861 4.422-9.863 9.862 0 1.842.511 3.641 1.478 5.187l-.995 3.637 3.73-.978zm11.367-7.643c-.31-.155-1.837-.906-2.12-.108-.285.103-.55.515-.674.654-.124.14-.248.155-.558.001-.31-.155-1.31-.483-2.498-1.543-.924-.824-1.548-1.841-1.73-2.15-.181-.31-.019-.477.135-.631.14-.139.31-.36.465-.541.155-.181.206-.31.31-.515.103-.206.052-.386-.026-.541-.077-.155-.674-1.626-.924-2.228-.243-.585-.491-.504-.674-.513-.175-.008-.375-.01-.575-.01s-.525.075-.8.375c-.275.3-1.05 1.026-1.05 2.5s1.075 2.9 1.225 3.1c.15.2 2.11 3.221 5.113 4.513.714.307 1.272.49 1.706.629.718.227 1.37.195 1.886.118.575-.085 1.837-.75 2.096-1.475.258-.725.258-1.346.181-1.475-.077-.129-.283-.206-.593-.361z"/></svg>
-              WhatsApp
-            </a>
-          </div>
-          <div class="mb-5">
-            <p class="text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Price</p>
-            <span class="text-3xl font-black text-[#ec5b13]">'.$price_fmt.'</span>
-            '.($meta['unit'] && $price_val > 0 ? '<span class="text-slate-700 text-sm font-semibold ml-1">'.htmlspecialchars($meta['unit']).'</span>' : '').'
-          </div>
-          '.(!empty($item['badge']) ? '<span class="inline-block bg-[#ec5b13] text-white text-xs font-bold px-3 py-1 rounded-full mb-4">'.htmlspecialchars($item['badge']).'</span>' : '').'
+
+            <div class="border-t border-slate-100"></div>
           <!-- Login required gate -->
           <div id="booking-login-gate" class="hidden">
             <div class="bg-amber-50 border border-amber-200 rounded-2xl p-5 text-center">
               <span class="material-symbols-outlined text-amber-500 text-3xl mb-2 block">lock</span>
               <p class="font-bold text-slate-900 mb-1">Sign in to book</p>
               <p class="text-sm text-slate-700 mb-4">Please log in to make a booking request.</p>
-              <a href="../login?redirect='.$slug.'" class="inline-block w-full bg-[#ec5b13] text-white font-black py-3 rounded-2xl hover:bg-orange-600 transition-all text-center">Sign In</a>
-              <a href="../register" class="inline-block w-full mt-2 border-2 border-[#ec5b13] text-[#ec5b13] font-bold py-3 rounded-2xl hover:bg-orange-50 transition-all text-center text-sm">Create Account</a>
+              <a href="../login?redirect=listing-detail/'.$slug.'.html" class="inline-block w-full bg-[#ec5b13] text-white font-black py-3 rounded-2xl hover:bg-orange-600 transition-all text-center">Sign In</a>
+              <a href="../register?redirect=listing-detail/'.$slug.'.html" class="inline-block w-full mt-2 border-2 border-[#ec5b13] text-[#ec5b13] font-bold py-3 rounded-2xl hover:bg-orange-50 transition-all text-center text-sm">Create Account</a>
             </div>
           </div>
           <form id="booking-form" class="space-y-3 hidden">
@@ -587,8 +727,8 @@ foreach ($types as $type) {
               <input type="date" id="b-checkout" required class="w-full border-2 border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#ec5b13]/30 focus:border-[#ec5b13]"/>
             </div>' : '
             <div>
-              <label class="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Date</label>
-              <input type="date" id="b-date" class="w-full border-2 border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#ec5b13]/30 focus:border-[#ec5b13]"/>
+              <label class="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Date *</label>
+              <input type="date" id="b-date" required class="w-full border-2 border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#ec5b13]/30 focus:border-[#ec5b13]"/>
             </div>').'
             <div>
               <label class="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Guests</label>
@@ -599,6 +739,7 @@ foreach ($types as $type) {
                 <span class="material-symbols-outlined text-base shrink-0 mt-0.5 text-green-600">check_circle</span>
                 <div>
                   <p class="font-bold">Booking request sent!</p>
+                  <p id="booking-success-date" class="text-[10px] opacity-70"></p>
                 </div>
               </div>
               <p class="text-xs text-green-900 font-medium bg-green-100 rounded-xl px-3 py-2 mt-1">⏱ We will process your request in the next <strong>4 hours</strong>. Our team will contact you to confirm.</p>
@@ -610,23 +751,8 @@ foreach ($types as $type) {
             <button type="submit" class="w-full bg-[#ec5b13] text-white font-black py-4 rounded-2xl hover:bg-orange-600 transition-all shadow-lg text-base">Book Now</button>
           </form>
           <p class="text-center text-xs text-slate-600 font-medium mt-3">Free cancellation · No hidden charges</p>
+          </div>
         </div>
-      </div>
-    </div>
-    <!-- Back button + Need help — always visible below the grid -->
-    <div class="mt-8 flex flex-col sm:flex-row items-start sm:items-center gap-4 pt-6 border-t border-slate-300">
-      <a href="../listing/'.$type.'" class="flex items-center gap-2 text-[#ec5b13] font-bold text-sm hover:underline">
-        <span class="material-symbols-outlined text-base">arrow_back</span>Back to '.htmlspecialchars($meta['label']).'
-      </a>
-      <div class="flex items-center gap-3 ml-auto flex-wrap">
-        <span class="text-sm font-bold text-slate-800">Need help?</span>
-        <a href="tel:+918600968888" class="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded-xl text-sm transition-colors">
-          <span class="material-symbols-outlined text-base text-[#ec5b13]">call</span>+91 86009 68888
-        </a>
-        <a href="https://wa.me/918600968888" class="flex items-center gap-2 bg-[#25D366] hover:bg-[#128C7E] text-white font-bold py-2 px-4 rounded-xl text-sm transition-colors">
-          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.417-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.305 1.652zm6.599-3.825c1.63.975 3.41 1.487 5.23 1.488 5.439 0 9.861-4.422 9.863-9.861.001-2.636-1.024-5.115-2.884-6.977-1.862-1.864-4.341-2.887-6.979-2.888-5.439 0-9.861 4.422-9.863 9.862 0 1.842.511 3.641 1.478 5.187l-.995 3.637 3.73-.978zm11.367-7.643c-.31-.155-1.837-.906-2.12-.108-.285.103-.55.515-.674.654-.124.14-.248.155-.558.001-.31-.155-1.31-.483-2.498-1.543-.924-.824-1.548-1.841-1.73-2.15-.181-.31-.019-.477.135-.631.14-.139.31-.36.465-.541.155-.181.206-.31.31-.515.103-.206.052-.386-.026-.541-.077-.155-.674-1.626-.924-2.228-.243-.585-.491-.504-.674-.513-.175-.008-.375-.01-.575-.01s-.525.075-.8.375c-.275.3-1.05 1.026-1.05 2.5s1.075 2.9 1.225 3.1c.15.2 2.11 3.221 5.113 4.513.714.307 1.272.49 1.706.629.718.227 1.37.195 1.886.118.575-.085 1.837-.75 2.096-1.475.258-.725.258-1.346.181-1.475-.077-.129-.283-.206-.593-.361z"/></svg>
-          WhatsApp
-        </a>
       </div>
     </div>
   </div>
@@ -647,7 +773,7 @@ foreach ($types as $type) {
     if(data.success && data.listings && data.listings.length > 0){
       var html = "";
       data.listings.forEach(function(listing){
-        var slug = "/listing-detail/'.$type.'-" + listing.id + "-" + listing.name.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").substring(0,60);
+         var slug = "../listing-detail/'.$type.'-" + listing.id + "-" + listing.name.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").substring(0,60) + ".html";
         var displayImg = (listing.image_url && listing.image_url.length > 0) ? (listing.image_url.startsWith("http") ? listing.image_url : "../" + listing.image_url) : "../images/travelhub.png";
         html += "<a href=\"" + slug + "\" class=\"group flex flex-col bg-white rounded-2xl overflow-hidden border border-slate-200 hover:shadow-xl transition-shadow shadow-sm\">" +
           "<div class=\"aspect-video overflow-hidden relative\"><img src=\"" + displayImg + "\" alt=\"" + listing.name + "\" class=\"w-full h-full object-cover group-hover:scale-105 transition-transform duration-700\" loading=\"lazy\" onerror=\"this.src=\'../images/travelhub.png\'\"/>" +
@@ -663,6 +789,57 @@ foreach ($types as $type) {
   } catch(e){
     document.getElementById("related-listings-section").style.display = "none";
   }
+})();
+</script>
+<script>
+// ── Slideshow ──
+var _slideImages = '.$galleryJsArr.';
+var _slideIndex = 0;
+
+function slideTo(idx) {
+  _slideIndex = idx;
+  var img = document.getElementById("slide-main");
+  var counter = document.getElementById("slide-current");
+  if (!img || !_slideImages.length) return;
+  img.style.opacity = "0";
+  setTimeout(function() {
+    img.src = _slideImages[_slideIndex];
+    img.style.opacity = "1";
+  }, 150);
+  if (counter) counter.textContent = _slideIndex + 1;
+  // Update thumb active state
+  document.querySelectorAll("#thumb-strip button").forEach(function(b, i) {
+    b.style.borderColor = i === _slideIndex ? "#ec5b13" : "transparent";
+  });
+}
+
+function slideNext() { slideTo((_slideIndex + 1) % _slideImages.length); }
+function slidePrev() { slideTo((_slideIndex - 1 + _slideImages.length) % _slideImages.length); }
+
+// Keyboard nav
+document.addEventListener("keydown", function(e) {
+  var modal = document.getElementById("csn-gallery-modal");
+  if (modal && modal.style.display === "flex") return; // let lightbox handle it
+  if (e.key === "ArrowRight") slideNext();
+  if (e.key === "ArrowLeft") slidePrev();
+});
+
+// Touch swipe
+(function() {
+  var el = document.getElementById("slide-main");
+  if (!el) return;
+  var startX = 0;
+  el.addEventListener("touchstart", function(e) { startX = e.touches[0].clientX; }, {passive:true});
+  el.addEventListener("touchend", function(e) {
+    var diff = startX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) { diff > 0 ? slideNext() : slidePrev(); }
+  }, {passive:true});
+})();
+
+// Init first thumb active
+(function() {
+  var first = document.querySelector("#thumb-strip button");
+  if (first) first.style.borderColor = "#ec5b13";
 })();
 </script>
 <script>
@@ -827,6 +1004,9 @@ if(_bookingForm)_bookingForm.addEventListener("submit", async function(e) {
         var res = await fetch("../php/api/bookings.php", { method:"POST", headers:headers, body:JSON.stringify(payload) });
         var data = await res.json();
         if (res.ok) {
+            playBookingSound();
+            var successDate = document.getElementById("booking-success-date");
+            if(successDate) successDate.textContent = "Booked on: " + new Date().toLocaleString();
             successDiv.classList.remove("hidden");
             this.reset();
             setTimeout(function(){

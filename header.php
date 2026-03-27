@@ -4,19 +4,19 @@
 $current_page = $current_page ?? '';
 $page_title   = $page_title   ?? 'CSNExplore – Chhatrapati Sambhajinagar';
 $nav_links = [
-    ['href' => '/index',   'label' => 'Home'],
-    ['href' => '/about',   'label' => 'About Us'],
-    ['href' => '/contact', 'label' => 'Contact Us'],
-    ['href' => '/blogs',   'label' => 'Blogs'],
+    ['href' => BASE_PATH . '/index',   'label' => 'Home'],
+    ['href' => BASE_PATH . '/about',   'label' => 'About Us'],
+    ['href' => BASE_PATH . '/contact', 'label' => 'Contact Us'],
+    ['href' => BASE_PATH . '/blogs',   'label' => 'Our Blogs'],
 ];
 
 $listing_nav = [
-    ['href' => '/listing/stays',       'icon' => 'bed',                'label' => 'Stays',       'type' => 'stays'],
-    ['href' => '/listing/cars',        'icon' => 'directions_car',     'label' => 'Cars',        'type' => 'cars'],
-    ['href' => '/listing/bikes',       'icon' => 'motorcycle',         'label' => 'Bikes',       'type' => 'bikes'],
-    ['href' => '/listing/attractions', 'icon' => 'confirmation_number','label' => 'Attractions', 'type' => 'attractions'],
-    ['href' => '/listing/restaurants', 'icon' => 'restaurant',         'label' => 'Dine',        'type' => 'restaurants'],
-    ['href' => '/listing/buses',       'icon' => 'directions_bus',     'label' => 'Buses',       'type' => 'buses'],
+    ['href' => BASE_PATH . '/listing/stays',       'icon' => 'bed',                'label' => 'Stays',       'type' => 'stays'],
+    ['href' => BASE_PATH . '/listing/cars',        'icon' => 'directions_car',     'label' => 'Cars',        'type' => 'cars'],
+    ['href' => BASE_PATH . '/listing/bikes',       'icon' => 'motorcycle',         'label' => 'Bikes',       'type' => 'bikes'],
+    ['href' => BASE_PATH . '/listing/attractions', 'icon' => 'confirmation_number','label' => 'Attractions', 'type' => 'attractions'],
+    ['href' => BASE_PATH . '/listing/restaurants', 'icon' => 'restaurant',         'label' => 'Dine',        'type' => 'restaurants'],
+    ['href' => BASE_PATH . '/listing/buses',       'icon' => 'directions_bus',     'label' => 'Buses',       'type' => 'buses'],
 ];
 
 // Show listing nav on listing pages AND listing-detail pages
@@ -32,7 +32,7 @@ $active_listing_type = $listing_type ?? '';
     <meta name="description" content="<?php echo htmlspecialchars($page_desc ?? 'Discover the best hotels, bikes, cars & attractions in Chhatrapati Sambhajinagar with CSNExplore.'); ?>">
     <meta name="keywords" content="Chhatrapati Sambhajinagar, Aurangabad, tourism, hotels, bike rent, car rent, attractions">
     <?php
-        $canonical_url = 'https://' . ($_SERVER['HTTP_HOST'] ?? 'csnexplore.com') . strtok($_SERVER['REQUEST_URI'], '?');
+        $canonical_url = 'https://' . ($_SERVER['HTTP_HOST'] ?? 'csnexplore.com') . strtok($_SERVER['REQUEST_URI'] ?? '/', '?');
         // Clean trailing slash or index.php if needed
         $canonical_url = rtrim($canonical_url, '/');
         if (str_ends_with($canonical_url, '/index.php') || str_ends_with($canonical_url, '/index')) {
@@ -124,19 +124,42 @@ $active_listing_type = $listing_type ?? '';
 <!-- Header – always dark/black with blur -->
 <header id="site-header" class="sticky top-0 w-full z-50 transition-all duration-300 glass-dark border-b border-white/5">
     <nav class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-        <a href="/index" class="flex items-center shrink-0">
-            <img src="/images/travelhub.png" alt="CSNExplore" class="h-9 object-contain"/>
+        <a href="<?php echo BASE_PATH; ?>/index" class="flex items-center shrink-0">
+            <img src="<?php echo BASE_PATH; ?>/images/travelhub.png" alt="CSNExplore" class="h-9 object-contain"/>
         </a>
         <div class="hidden md:flex items-center gap-0.5">
-            <?php foreach ($listing_nav as $link): $is_active = ($link['type'] === $active_listing_type); ?>
-            <a href="<?php echo $link['href']; ?>"
-               class="text-sm font-semibold px-3 py-1.5 rounded-full transition-colors <?php echo $is_active ? 'text-white bg-white/15' : 'text-white/60 hover:bg-white/10 hover:text-white'; ?>">
-                <?php echo $link['label']; ?>
-            </a>
-            <?php endforeach; ?>
+            <?php if ($is_listing_page): ?>
+                <?php foreach ($listing_nav as $link): $is_active = ($link['type'] === $active_listing_type); ?>
+                <a href="<?php echo $link['href']; ?>"
+                   class="text-sm font-semibold px-3 py-1.5 rounded-full transition-colors <?php echo $is_active ? 'text-white bg-white/15' : 'text-white/60 hover:bg-white/10 hover:text-white'; ?>">
+                    <?php echo $link['label']; ?>
+                </a>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <?php foreach ($nav_links as $link): 
+                    $is_active = (trim($link['href'], '/') === trim($current_page, '/') || ($current_page === 'home' && $link['href'] === '/index')); 
+                ?>
+                <a href="<?php echo $link['href']; ?>"
+                   class="text-sm font-semibold px-4 py-2 rounded-full transition-colors <?php echo $is_active ? 'text-white bg-white/10' : 'text-white/70 hover:bg-white/10 hover:text-white'; ?>">
+                    <?php echo $link['label']; ?>
+                </a>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
         <div class="flex items-center gap-2">
-            <a href="/login" class="text-white text-sm font-semibold px-4 py-1.5 hover:bg-white/10 rounded-full transition-all">Login</a>
+            <a href="<?php echo BASE_PATH; ?>/login?redirect=<?php echo urlencode($_SERVER['REQUEST_URI'] ?? '/'); ?>" id="hdr-login-btn" class="text-white text-sm font-semibold px-4 py-1.5 hover:bg-white/10 rounded-full transition-all">Login</a>
+            <div id="hdr-user-menu" class="hidden relative">
+                <button id="hdr-user-btn" class="flex items-center gap-1.5 text-white text-xs sm:text-sm font-semibold px-3 py-1.5 hover:bg-white/10 rounded-full transition-all">
+                    <span class="material-symbols-outlined text-base text-primary">account_circle</span>
+                    <span id="hdr-user-name" class="max-w-[70px] sm:max-w-[100px] truncate"></span>
+                    <span class="material-symbols-outlined text-sm">expand_more</span>
+                </button>
+                <div id="hdr-dropdown" class="hidden absolute right-0 top-full mt-2 w-44 bg-[#1a1208] border border-white/10 rounded-2xl shadow-2xl py-1.5 z-[200]">
+                    <button id="hdr-logout-btn" class="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-400 hover:bg-white/5 hover:text-red-300 transition-colors rounded-xl">
+                        <span class="material-symbols-outlined text-base">logout</span>Logout
+                    </button>
+                </div>
+            </div>
             <a href="tel:+918600968888" class="hidden lg:flex items-center gap-1.5 bg-slate-800 text-white text-sm font-bold px-4 py-1.5 rounded-full hover:bg-slate-700 transition-all border border-slate-700">
                 <span class="material-symbols-outlined text-base text-primary">call</span> Call Now
             </a>
@@ -149,15 +172,26 @@ $active_listing_type = $listing_type ?? '';
             </button>
         </div>
     </nav>
-        <div id="mob-menu" class="hidden md:hidden border-t border-white/10 px-4 py-3 flex flex-col gap-1">
-        <?php foreach ($listing_nav as $link): $is_active = ($link['type'] === $active_listing_type); ?>
-        <a href="<?php echo $link['href']; ?>"
-           class="text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors <?php echo $is_active ? 'text-primary bg-white/5' : 'text-white/70 hover:bg-white/10 hover:text-white'; ?>">
-            <?php echo $link['label']; ?>
-        </a>
-        <?php endforeach; ?>
+    <div id="mob-menu" class="hidden md:hidden border-t border-white/10 px-4 py-3 flex flex-col gap-1">
+        <?php if ($is_listing_page): ?>
+            <?php foreach ($listing_nav as $link): $is_active = ($link['type'] === $active_listing_type); ?>
+            <a href="<?php echo $link['href']; ?>"
+               class="text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors <?php echo $is_active ? 'text-primary bg-white/5' : 'text-white/70 hover:bg-white/10 hover:text-white'; ?>">
+                <?php echo $link['label']; ?>
+            </a>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <?php foreach ($nav_links as $link): 
+                $is_active = (trim($link['href'], '/') === trim($current_page, '/') || ($current_page === 'home' && $link['href'] === '/index')); 
+            ?>
+            <a href="<?php echo $link['href']; ?>"
+               class="text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors <?php echo $is_active ? 'text-primary bg-white/5' : 'text-white/70 hover:bg-white/10 hover:text-white'; ?>">
+                <?php echo $link['label']; ?>
+            </a>
+            <?php endforeach; ?>
+        <?php endif; ?>
         <div class="flex gap-2 pt-2 border-t border-white/10 mt-1">
-            <a href="/login" class="flex-1 text-center text-white hover:bg-white/10 text-sm font-semibold py-2 rounded-xl transition-all">Login</a>
+            <a href="<?php echo BASE_PATH; ?>/login?redirect=<?php echo urlencode($_SERVER['REQUEST_URI'] ?? '/'); ?>" id="mob-login-btn" class="flex-1 text-center text-white hover:bg-white/10 text-sm font-semibold py-2 rounded-xl transition-all">Login</a>
             <a href="tel:+918600968888" class="flex-1 text-center bg-slate-800 text-white text-sm font-bold py-2 rounded-xl hover:bg-slate-700 transition-all border border-slate-700">Call Now</a>
         </div>
         <a href="https://wa.me/918600968888" target="_blank" class="w-full mt-2 text-center bg-[#25D366] text-white text-sm font-bold py-2.5 rounded-xl hover:bg-[#128C7E] transition-all flex items-center justify-center gap-2">
@@ -191,5 +225,34 @@ $active_listing_type = $listing_type ?? '';
             document.body.style.opacity = '0';
             setTimeout(function(){ window.location.href = href; }, 190);
         });
+
+        (function(){
+            var token=localStorage.getItem("csn_token");
+            var user=JSON.parse(localStorage.getItem("csn_user")||"null");
+            function clearAll(){
+              localStorage.removeItem("csn_token"); localStorage.removeItem("csn_user");
+              localStorage.removeItem("csn_admin_token"); localStorage.removeItem("csn_admin_user");
+            }
+            if(token){try{var parts=token.split(".");if(parts.length===3){var p=JSON.parse(atob(parts[1].replace(/-/g,"+").replace(/_/g,"/")));if(p.exp&&p.exp<Math.floor(Date.now()/1000)){clearAll();token=null;user=null;}}}catch(e){clearAll();token=null;user=null;}}
+            if(token&&user){
+              var pl=document.getElementById("hdr-login-btn");
+              var ml=document.getElementById("mob-login-btn");
+              var pu=document.getElementById("hdr-user-menu");
+              var pn=document.getElementById("hdr-user-name");
+              if(pl)pl.style.display="none";
+              if(ml)ml.style.display="none";
+              if(pu)pu.classList.remove("hidden");
+              if(pn)pn.textContent=user.name?user.name.split(" ")[0]:"Account";
+            }
+            var userBtn=document.getElementById("hdr-user-btn");
+            var dropdown=document.getElementById("hdr-dropdown");
+            if(userBtn){
+              userBtn.addEventListener("click",function(e){e.stopPropagation();dropdown.classList.toggle("hidden");});
+              document.addEventListener("click",function(){if(dropdown)dropdown.classList.add("hidden");});
+            }
+            function doLogout(){clearAll();window.location.reload();}
+            var lb=document.getElementById("hdr-logout-btn");
+            if(lb)lb.addEventListener("click",doLogout);
+        })();
     </script>
 </header>

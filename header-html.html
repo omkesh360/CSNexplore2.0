@@ -19,19 +19,19 @@
 
 <header id="site-header" class="sticky top-0 w-full z-50 transition-all duration-300 glass-dark border-b border-white/5 bg-[#0a0705]">
     <nav class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-        <a href="/index" class="flex items-center shrink-0">
-            <img src="/images/travelhub.png" alt="CSNExplore" class="h-9 object-contain" loading="lazy"/>
+        <a href="{{BASE}}index" class="flex items-center shrink-0">
+            <img src="{{BASE}}images/travelhub.png" alt="CSNExplore" class="h-9 object-contain" loading="lazy"/>
         </a>
         <div class="hidden md:flex items-center gap-0.5">
-            <a href="/listing/stays" class="text-sm font-semibold px-3 py-1.5 rounded-full text-white/60 hover:bg-white/10 hover:text-white transition-colors">Stays</a>
-            <a href="/listing/cars" class="text-sm font-semibold px-3 py-1.5 rounded-full text-white/60 hover:bg-white/10 hover:text-white transition-colors">Cars</a>
-            <a href="/listing/bikes" class="text-sm font-semibold px-3 py-1.5 rounded-full text-white/60 hover:bg-white/10 hover:text-white transition-colors">Bikes</a>
-            <a href="/listing/attractions" class="text-sm font-semibold px-3 py-1.5 rounded-full text-white/60 hover:bg-white/10 hover:text-white transition-colors">Attractions</a>
-            <a href="/listing/restaurants" class="text-sm font-semibold px-3 py-1.5 rounded-full text-white/60 hover:bg-white/10 hover:text-white transition-colors">Dine</a>
-            <a href="/listing/buses" class="text-sm font-semibold px-3 py-1.5 rounded-full text-white/60 hover:bg-white/10 hover:text-white transition-colors">Buses</a>
+            <a href="{{BASE}}listing/stays" class="text-sm font-semibold px-3 py-1.5 rounded-full text-white/60 hover:bg-white/10 hover:text-white transition-colors">Stays</a>
+            <a href="{{BASE}}listing/cars" class="text-sm font-semibold px-3 py-1.5 rounded-full text-white/60 hover:bg-white/10 hover:text-white transition-colors">Cars</a>
+            <a href="{{BASE}}listing/bikes" class="text-sm font-semibold px-3 py-1.5 rounded-full text-white/60 hover:bg-white/10 hover:text-white transition-colors">Bikes</a>
+            <a href="{{BASE}}listing/attractions" class="text-sm font-semibold px-3 py-1.5 rounded-full text-white/60 hover:bg-white/10 hover:text-white transition-colors">Attractions</a>
+            <a href="{{BASE}}listing/restaurants" class="text-sm font-semibold px-3 py-1.5 rounded-full text-white/60 hover:bg-white/10 hover:text-white transition-colors">Dine</a>
+            <a href="{{BASE}}listing/buses" class="text-sm font-semibold px-3 py-1.5 rounded-full text-white/60 hover:bg-white/10 hover:text-white transition-colors">Buses</a>
         </div>
         <div class="flex items-center gap-2">
-            <a href="/login" id="hdr-login-btn" class="text-white text-sm font-semibold px-4 py-1.5 hover:bg-white/10 rounded-full transition-all">Login</a>
+            <a href="{{BASE}}login" id="hdr-login-btn" class="text-white text-sm font-semibold px-4 py-1.5 hover:bg-white/10 rounded-full transition-all">Login</a>
             <a href="tel:+918600968888" class="hidden lg:flex items-center gap-1.5 bg-slate-800 text-white text-sm font-bold px-4 py-1.5 rounded-full hover:bg-slate-700 transition-all border border-slate-700">
                 <span class="material-symbols-outlined text-base text-[#ec5b13]">call</span> Call Now
             </a>
@@ -57,15 +57,15 @@
         </div>
     </nav>
     <div id="mob-menu" class="hidden md:hidden border-t border-white/10 px-4 py-3 flex flex-col gap-1 bg-[#0a0705]">
-        <a href="/listing/stays" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">Stays</a>
-        <a href="/listing/cars" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">Cars</a>
-        <a href="/listing/bikes" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">Bikes</a>
-        <a href="/listing/attractions" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">Attractions</a>
-        <a href="/listing/restaurants" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">Dine</a>
-        <a href="/listing/buses" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">Buses</a>
+        <a href="{{BASE}}listing/stays" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">Stays</a>
+        <a href="{{BASE}}listing/cars" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">Cars</a>
+        <a href="{{BASE}}listing/bikes" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">Bikes</a>
+        <a href="{{BASE}}listing/attractions" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">Attractions</a>
+        <a href="{{BASE}}listing/restaurants" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">Dine</a>
+        <a href="{{BASE}}listing/buses" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">Buses</a>
         
         <div class="flex gap-2 pt-2 border-t border-white/10 mt-1">
-            <a href="/login" class="flex-1 text-center text-white hover:bg-white/10 text-sm font-semibold py-2 rounded-xl transition-all">Login</a>
+            <a href="{{BASE}}login" class="flex-1 text-center text-white hover:bg-white/10 text-sm font-semibold py-2 rounded-xl transition-all">Login</a>
             <a href="tel:+918600968888" class="flex-1 text-center bg-slate-800 text-white text-sm font-bold py-2 rounded-xl hover:bg-slate-700 transition-all border border-slate-700">Call Now</a>
         </div>
         <a href="https://wa.me/918600968888" target="_blank" class="w-full mt-2 text-center bg-[#25D366] text-white text-sm font-bold py-2.5 rounded-xl hover:bg-[#128C7E] transition-all flex items-center justify-center gap-2">
@@ -114,6 +114,14 @@
           if(pl)pl.style.display="none";
           if(pu)pu.classList.remove("hidden");
           if(pn)pn.textContent=user.name?user.name.split(" ")[0]:"Account";
+        } else {
+          // Add redirect to login/register links
+          var pl=document.getElementById("hdr-login-btn");
+          if(pl){
+            var cur = window.location.pathname.split("/").slice(-2).join("/"); // e.g. listing-detail/stays-1.html
+            if(!cur.includes(".html")) cur = window.location.pathname.substring(1);
+            pl.href += "?redirect=" + encodeURIComponent(cur);
+          }
         }
         var userBtn=document.getElementById("hdr-user-btn");
         var dropdown=document.getElementById("hdr-dropdown");
@@ -121,7 +129,7 @@
           userBtn.addEventListener("click",function(e){e.stopPropagation();dropdown.classList.toggle("hidden");});
           document.addEventListener("click",function(){if(dropdown)dropdown.classList.add("hidden");});
         }
-        function doLogout(){clearAll();window.location.href="/index";}
+        function doLogout(){clearAll();window.location.reload();}
         var lb=document.getElementById("hdr-logout-btn");
         if(lb)lb.addEventListener("click",doLogout);
       })();

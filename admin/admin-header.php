@@ -27,6 +27,11 @@ body { font-family: 'Inter', sans-serif; }
 .sidebar-link.active { background: rgba(236,91,19,0.12); color: #ec5b13; }
 .sidebar-link.active .material-symbols-outlined { color: #ec5b13; }
 @keyframes spin { to { transform: rotate(360deg); } }
+.draggable-row { cursor: move; transition: all 0.2s; }
+.draggable-row.dragging { opacity: 0.5; background: #f8fafc; }
+.draggable-row.drag-over { border-top: 3px solid #ec5b13; }
+.drag-handle { cursor: grab; }
+.drag-handle:active { cursor: grabbing; }
 </style>
 <?php if (!empty($extra_head)) echo $extra_head; ?>
 </head>
