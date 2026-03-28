@@ -1,35 +1,13 @@
 <?php
 $page_title = "Login | CSNExplore";
+$current_page = "login";
+require_once 'php/config.php';
 $extra_styles = "
     @keyframes slow-zoom { 0%{transform:scale(1)} 100%{transform:scale(1.1)} }
     .animate-slow-zoom { animation: slow-zoom 20s linear infinite alternate; }
 ";
+require 'header.php';
 ?>
-<!DOCTYPE html>
-<html class="light" lang="en">
-<head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title><?php echo htmlspecialchars($page_title); ?></title>
-    <script src="https://cdn.tailwindcss.com?plugins=container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
-    <script>
-        tailwind.config = {
-            darkMode: "class",
-            theme: { extend: { colors: { "primary": "#ec5b13" }, fontFamily: { "display": ["Inter","sans-serif"], "serif": ["Playfair Display","serif"] } } }
-        }
-    </script>
-    <link rel="preconnect" href="https://challenges.cloudflare.com">
-    <link rel="stylesheet" href="mobile-responsive.css"/>
-    <style>
-        .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; font-family:'Material Symbols Outlined'; font-style:normal; display:inline-block; line-height:1; }
-        @keyframes slow-zoom { 0%{transform:scale(1)} 100%{transform:scale(1.1)} }
-        .animate-slow-zoom { animation: slow-zoom 20s linear infinite alternate; }
-    </style>
-    <!-- <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script> -->
-</head>
-<body class="bg-white font-display text-slate-900 antialiased min-h-screen">
 <script>
 // If already logged in, redirect away immediately
 (function(){
@@ -58,14 +36,7 @@ $extra_styles = "
              class="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-80 animate-slow-zoom"/>
         <div class="absolute inset-0 bg-gradient-to-tr from-primary/70 to-transparent"></div>
         <div class="relative z-10 w-full p-12 flex flex-col justify-between">
-            <a href="index" class="flex items-center gap-2">
-                <img src="images/travelhub.png" alt="CSNExplore" class="h-10 brightness-0 invert"
-                     onerror="this.style.display='none'; document.getElementById('login-logo-text').style.display='flex'"/>
-                <span id="login-logo-text" style="display:none" class="items-center gap-1.5">
-                    <span class="material-symbols-outlined text-white text-2xl">explore</span>
-                    <span class="font-serif font-black text-white text-xl">CSNExplore</span>
-                </span>
-            </a>
+            <div></div>
             <div class="max-w-md">
                 <h1 class="text-5xl font-serif font-black text-white leading-tight mb-6 tracking-tight">Your next adventure starts here.</h1>
                 <p class="text-xl text-white/80 font-medium">Join thousands of travelers exploring the hidden gems of Chhatrapati Sambhajinagar and beyond.</p>
@@ -80,23 +51,7 @@ $extra_styles = "
     <!-- Right: Login Form -->
     <div class="w-full lg:w-1/2 flex flex-col items-center px-6 md:px-12 pt-6 pb-12 lg:py-12 bg-slate-50 relative overflow-y-auto min-h-screen lg:min-h-0">
 
-        <!-- Mobile Header (visible only on mobile/tablet) -->
-        <div class="lg:hidden w-full mb-8">
-            <header class="w-full rounded-full bg-black/90 backdrop-blur-xl border border-white/10 shadow-2xl shadow-black/40 px-4 flex items-center justify-between" style="height:52px">
-                <a href="index">
-                    <img src="images/travelhub.png" alt="CSNExplore" class="h-8 object-contain"/>
-                </a>
-                <div class="flex items-center gap-2">
-                    <a href="index" class="flex items-center gap-1 text-white/70 hover:text-white text-xs font-semibold px-3 py-1.5 rounded-full hover:bg-white/10 transition-all">
-                        <span class="material-symbols-outlined text-[16px]">home</span>
-                        Home
-                    </a>
-                    
-                </div>
-            </header>
-        </div>
-
-        <div class="w-full max-w-md space-y-8 lg:my-auto">
+        <div class="w-full max-w-md space-y-8 lg:my-auto mt-4">
             <div class="text-center lg:text-left">
                 <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight md:text-4xl">Welcome back</h2>
                 <p class="mt-3 text-slate-500 font-medium">
@@ -150,8 +105,6 @@ $extra_styles = "
                     </label>
                     <a href="forgot-password" class="text-sm font-bold text-primary hover:text-orange-600 transition-colors">Forgot password?</a>
                 </div>
-
-                <!-- <div class="cf-turnstile" data-sitekey="0x4AAAAAACwv8-Es__nv5t6c" data-theme="light"></div> -->
 
                 <button type="submit" id="login-btn"
                         class="w-full flex justify-center items-center gap-2 py-3.5 px-4 rounded-xl shadow-lg text-sm font-bold text-white bg-primary hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all active:scale-[0.98] hover:shadow-primary/30">
@@ -220,20 +173,17 @@ $extra_styles = "
             localStorage.setItem('csn_token', data.token);
             localStorage.setItem('csn_user',  JSON.stringify(data.user));
 
-            // If admin, also set admin keys so the admin panel auth guard works
             if (data.user.role === 'admin') {
                 localStorage.setItem('csn_admin_token', data.token);
                 localStorage.setItem('csn_admin_user',  JSON.stringify(data.user));
             }
 
-            // Redirect: honour ?redirect= for everyone, fall back to referrer or home
             const redirect = new URLSearchParams(window.location.search).get('redirect') || '';
             if (redirect) {
                 window.location.href = redirect;
             } else if (data.user.role === 'admin') {
                 window.location.href = 'admin/dashboard.php';
             } else {
-                // Go back to where the user came from, or home
                 const ref = document.referrer;
                 if (ref && !ref.includes('login.php') && !ref.includes('register.php')) {
                     window.location.href = ref;
@@ -251,5 +201,4 @@ $extra_styles = "
         }
     });
 </script>
-</body>
-</html>
+<?php require 'footer.php'; ?>

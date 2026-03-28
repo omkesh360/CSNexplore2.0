@@ -37,7 +37,10 @@ if ($page === 1 && !$cat_filter && !$search_filter && !empty($blogs)) {
 $categories = $db->fetchAll("SELECT DISTINCT category FROM blogs WHERE status='published' ORDER BY category ASC");
 
 function blogSlug($blog) {
-    return BASE_PATH . '/blogs/' . generateSlug('blogs', $blog['id'], $blog['title']) . '.html';
+    $t = strtolower(trim($blog['title']));
+    $t = preg_replace('/[^a-z0-9\s-]/', '', $t);
+    $t = preg_replace('/[\s-]+/', '-', $t);
+    return BASE_PATH . '/blogs/' . $blog['id'] . '-' . substr(trim($t, '-'), 0, 60) . '.html';
 }
 
 $extra_styles = "
@@ -61,7 +64,7 @@ require 'header.php';
     <!-- Breadcrumb at very top of hero -->
     <div class="absolute top-0 left-0 right-0 z-20 pt-5">
         <div class="max-w-[1140px] mx-auto px-5 flex items-center gap-2 text-sm text-white/60 flex-wrap">
-            <a href="index" class="hover:text-white transition-colors flex items-center gap-1">
+            <a href="<?php echo BASE_PATH; ?>/index" class="hover:text-white transition-colors flex items-center gap-1">
                 <span class="material-symbols-outlined text-base">home</span>Home
             </a>
             <span class="material-symbols-outlined text-base">chevron_right</span>
@@ -127,11 +130,11 @@ $total_grid_blogs = count($all_blogs_for_filter);
     <!-- Filters -->
     <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-8 mb-12">
         <div class="flex items-center gap-2 overflow-x-auto hide-scrollbar pb-2 snap-x snap-mandatory -mx-6 px-6 md:mx-0 md:px-0">
-            <a href="blogs" class="whitespace-nowrap px-6 py-2.5 snap-start <?php echo !$cat_filter ? 'bg-primary text-white shadow-lg shadow-primary/30' : 'bg-white border border-slate-200 text-slate-700 hover:border-primary'; ?> rounded-full font-bold text-sm transition-all active:scale-95">
+            <a href="<?php echo BASE_PATH; ?>/blogs" class="whitespace-nowrap px-6 py-2.5 snap-start <?php echo !$cat_filter ? 'bg-primary text-white shadow-lg shadow-primary/30' : 'bg-white border border-slate-200 text-slate-700 hover:border-primary'; ?> rounded-full font-bold text-sm transition-all active:scale-95">
                 All Stories
             </a>
             <?php foreach ($categories as $cat): ?>
-            <a href="blogs.php?category=<?php echo urlencode($cat['category']); ?>"
+            <a href="<?php echo BASE_PATH; ?>/blogs.php?category=<?php echo urlencode($cat['category']); ?>"
                class="whitespace-nowrap px-6 py-2.5 snap-start <?php echo $cat_filter === $cat['category'] ? 'bg-primary text-white shadow-lg shadow-primary/30' : 'bg-white border border-slate-200 text-slate-700 hover:border-primary'; ?> rounded-full font-bold text-sm transition-all active:scale-95">
                 <?php echo htmlspecialchars($cat['category']); ?>
             </a>
@@ -160,7 +163,7 @@ $total_grid_blogs = count($all_blogs_for_filter);
         <span class="material-symbols-outlined text-5xl mb-3 block">article</span>
         <p class="text-lg font-semibold">No blog posts found</p>
         <p class="text-sm mt-1">Try a different search or category</p>
-        <a href="blogs" class="mt-4 inline-block text-primary font-bold hover:underline">View all blogs</a>
+        <a href="<?php echo BASE_PATH; ?>/blogs" class="mt-4 inline-block text-primary font-bold hover:underline">View all blogs</a>
     </div>
     <?php else: ?>
     <div id="blogs-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

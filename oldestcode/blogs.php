@@ -40,7 +40,7 @@ function blogSlug($blog) {
     $t = strtolower(trim($blog['title']));
     $t = preg_replace('/[^a-z0-9\s-]/', '', $t);
     $t = preg_replace('/[\s-]+/', '-', $t);
-    return 'blogs/' . $blog['id'] . '-' . substr(trim($t, '-'), 0, 60) . '.html';
+    return BASE_PATH . '/blogs/' . $blog['id'] . '-' . substr(trim($t, '-'), 0, 60) . '.html';
 }
 
 $extra_styles = "
@@ -64,7 +64,7 @@ require 'header.php';
     <!-- Breadcrumb at very top of hero -->
     <div class="absolute top-0 left-0 right-0 z-20 pt-5">
         <div class="max-w-7xl mx-auto px-6 flex items-center gap-2 text-sm text-white/60 flex-wrap">
-            <a href="index.php" class="hover:text-white transition-colors flex items-center gap-1">
+            <a href="<?php echo BASE_PATH; ?>/index.php" class="hover:text-white transition-colors flex items-center gap-1">
                 <span class="material-symbols-outlined text-base">home</span>Home
             </a>
             <span class="material-symbols-outlined text-base">chevron_right</span>
@@ -128,11 +128,11 @@ $total_grid_blogs = count($all_blogs_for_filter);
     <!-- Filters -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
         <div class="flex items-center gap-2 overflow-x-auto pb-2 flex-wrap">
-            <a href="blogs.php" class="whitespace-nowrap px-5 py-2 <?php echo !$cat_filter ? 'bg-primary text-white' : 'bg-white border border-slate-200 text-slate-700 hover:border-primary'; ?> rounded-full font-semibold text-sm transition-colors">
+            <a href="<?php echo BASE_PATH; ?>/blogs.php" class="whitespace-nowrap px-5 py-2 <?php echo !$cat_filter ? 'bg-primary text-white' : 'bg-white border border-slate-200 text-slate-700 hover:border-primary'; ?> rounded-full font-semibold text-sm transition-colors">
                 All Stories
             </a>
             <?php foreach ($categories as $cat): ?>
-            <a href="blogs.php?category=<?php echo urlencode($cat['category']); ?>"
+            <a href="<?php echo BASE_PATH; ?>/blogs.php?category=<?php echo urlencode($cat['category']); ?>"
                class="whitespace-nowrap px-5 py-2 <?php echo $cat_filter === $cat['category'] ? 'bg-primary text-white' : 'bg-white border border-slate-200 text-slate-700 hover:border-primary'; ?> rounded-full font-semibold text-sm transition-colors">
                 <?php echo htmlspecialchars($cat['category']); ?>
             </a>
@@ -161,7 +161,7 @@ $total_grid_blogs = count($all_blogs_for_filter);
         <span class="material-symbols-outlined text-5xl mb-3 block">article</span>
         <p class="text-lg font-semibold">No blog posts found</p>
         <p class="text-sm mt-1">Try a different search or category</p>
-        <a href="blogs.php" class="mt-4 inline-block text-primary font-bold hover:underline">View all blogs</a>
+        <a href="<?php echo BASE_PATH; ?>/blogs.php" class="mt-4 inline-block text-primary font-bold hover:underline">View all blogs</a>
     </div>
     <?php else: ?>
     <div id="blogs-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

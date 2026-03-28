@@ -73,11 +73,11 @@ function sanitize($val) {
 }
 
 // Dynamic Base Path Detection
-$_dir = dirname($_SERVER['SCRIPT_NAME']);
+$_dir = dirname($_SERVER['SCRIPT_NAME'] ?? '');
 $_base = trim($_dir, '/\\');
 $_base = str_replace(['php/api', 'php'], '', $_base);
 $_base = trim($_base, '/\\');
-define('BASE_PATH', $_base ? '/' . $_base : '');
+define('BASE_PATH', $_base && $_base !== '.' ? '/' . $_base : '');
 
 // Security Headers
 header("X-Frame-Options: SAMEORIGIN");

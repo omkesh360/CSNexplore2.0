@@ -554,7 +554,7 @@ foreach ($hp_settings['section_order'] as $_sec_key):
                 <p class="text-primary font-bold text-xs uppercase tracking-widest mb-1">Our Travel Journals</p>
                 <h2 class="font-serif text-2xl md:text-3xl text-slate-900"><?php echo htmlspecialchars($hp_settings['title_blogs']); ?></h2>
             </div>
-            <a href="blogs.php" class="text-sm font-bold text-primary hover:underline">Read more &rarr;</a>
+            <a href="<?php echo BASE_PATH; ?>/blogs.php" class="text-sm font-bold text-primary hover:underline">Read more &rarr;</a>
             <?php else: ?>
             <h2 class="font-serif text-2xl md:text-3xl text-slate-900"><?php echo htmlspecialchars($hp_settings['title_' . $_sec_key]); ?></h2>
             <a href="listing.php?type=<?php echo $_sec_key; ?>" class="text-sm font-bold text-primary hover:underline">See all &rarr;</a>

@@ -1,60 +1,32 @@
 <?php
-// header.php – shared header for all CSNExplore pages
-// Usage: set $page_title and $current_page before including this file
+require_once 'php/config.php';
 $current_page = $current_page ?? '';
-$page_title   = $page_title   ?? 'CSNExplore – Chhatrapati Sambhajinagar';
+$page_title = $page_title ?? 'CSNExplore – Chhatrapati Sambhajinagar';
 $nav_links = [
-    ['href' => BASE_PATH . '/index',   'label' => 'Home'],
-    ['href' => BASE_PATH . '/about',   'label' => 'About Us'],
+    ['href' => BASE_PATH . '/index', 'label' => 'Home'],
+    ['href' => BASE_PATH . '/about', 'label' => 'About Us'],
     ['href' => BASE_PATH . '/contact', 'label' => 'Contact Us'],
-    ['href' => BASE_PATH . '/blogs',   'label' => 'Our Blogs'],
+    ['href' => BASE_PATH . '/blogs', 'label' => 'Our Blogs'],
 ];
 
 $listing_nav = [
-    ['href' => BASE_PATH . '/listing/stays',       'icon' => 'bed',                'label' => 'Stays',       'type' => 'stays'],
-    ['href' => BASE_PATH . '/listing/cars',        'icon' => 'directions_car',     'label' => 'Cars',        'type' => 'cars'],
-    ['href' => BASE_PATH . '/listing/bikes',       'icon' => 'motorcycle',         'label' => 'Bikes',       'type' => 'bikes'],
-    ['href' => BASE_PATH . '/listing/attractions', 'icon' => 'confirmation_number','label' => 'Attractions', 'type' => 'attractions'],
-    ['href' => BASE_PATH . '/listing/restaurants', 'icon' => 'restaurant',         'label' => 'Dine',        'type' => 'restaurants'],
-    ['href' => BASE_PATH . '/listing/buses',       'icon' => 'directions_bus',     'label' => 'Buses',       'type' => 'buses'],
+    ['href' => BASE_PATH . '/listing/stays', 'icon' => 'bed', 'label' => 'Stays', 'type' => 'stays'],
+    ['href' => BASE_PATH . '/listing/cars', 'icon' => 'directions_car', 'label' => 'Cars', 'type' => 'cars'],
+    ['href' => BASE_PATH . '/listing/bikes', 'icon' => 'motorcycle', 'label' => 'Bikes', 'type' => 'bikes'],
+    ['href' => BASE_PATH . '/listing/attractions', 'icon' => 'confirmation_number', 'label' => 'Attractions', 'type' => 'attractions'],
+    ['href' => BASE_PATH . '/listing/restaurants', 'icon' => 'restaurant', 'label' => 'Dine', 'type' => 'restaurants'],
+    ['href' => BASE_PATH . '/listing/buses', 'icon' => 'directions_bus', 'label' => 'Buses', 'type' => 'buses'],
 ];
 
-// Show listing nav on listing pages AND listing-detail pages
 $is_listing_page = ($current_page === 'listing' || $current_page === 'listing-detail' || isset($listing_type));
 $active_listing_type = $listing_type ?? '';
 ?>
 <!DOCTYPE html>
-<html class="light" lang="en">
+<html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title><?php echo htmlspecialchars($page_title); ?></title>
-    <meta name="description" content="<?php echo htmlspecialchars($page_desc ?? 'Discover the best hotels, bikes, cars & attractions in Chhatrapati Sambhajinagar with CSNExplore.'); ?>">
-    <meta name="keywords" content="Chhatrapati Sambhajinagar, Aurangabad, tourism, hotels, bike rent, car rent, attractions">
-    <?php
-        $canonical_url = 'https://' . ($_SERVER['HTTP_HOST'] ?? 'csnexplore.com') . strtok($_SERVER['REQUEST_URI'] ?? '/', '?');
-        // Clean trailing slash or index.php if needed
-        $canonical_url = rtrim($canonical_url, '/');
-        if (str_ends_with($canonical_url, '/index.php') || str_ends_with($canonical_url, '/index')) {
-            $canonical_url = str_replace(['/index.php', '/index'], '', $canonical_url);
-        }
-    ?>
-    <link rel="canonical" href="<?php echo htmlspecialchars($canonical_url); ?>" />
-    
-    <!-- Open Graph -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="<?php echo htmlspecialchars($canonical_url); ?>">
-    <meta property="og:title" content="<?php echo htmlspecialchars($page_title); ?>">
-    <meta property="og:description" content="<?php echo htmlspecialchars($page_desc ?? 'Explore Chhatrapati Sambhajinagar (Aurangabad) with the best travel packages, guides, and rentals.'); ?>">
-    <meta property="og:image" content="https://csnexplore.com/images/og-image.jpg">
-    
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="<?php echo htmlspecialchars($canonical_url); ?>">
-    <meta name="twitter:title" content="<?php echo htmlspecialchars($page_title); ?>">
-    <meta name="twitter:description" content="<?php echo htmlspecialchars($page_desc ?? 'Explore Chhatrapati Sambhajinagar (Aurangabad) with the best travel packages, guides, and rentals.'); ?>">
-    <meta name="twitter:image" content="https://csnexplore.com/images/og-image.jpg">
-    
     <script src="https://cdn.tailwindcss.com?plugins=container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
@@ -63,197 +35,271 @@ $active_listing_type = $listing_type ?? '';
             darkMode: "class",
             theme: {
                 extend: {
-                    colors: {
-                        "primary": "#ec5b13",
-                        "whatsapp": "#25D366",
-                        "background-dark": "#0a0705",
-                    },
-                    fontFamily: {
-                        "display": ["Inter", "sans-serif"],
-                        "serif": ["Playfair Display", "serif"]
-                    }
+                    colors: { "primary": "#ec5b13", "whatsapp": "#25D366", "background-dark": "#0a0705" },
+                    fontFamily: { "display": ["Inter", "sans-serif"], "serif": ["Playfair Display", "serif"] }
                 }
             }
         }
     </script>
     <style>
-        .glass { background:rgba(255,255,255,0.07); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border:1px solid rgba(255,255,255,0.12); }
-        .glass-dark { background:rgba(10,7,5,0.7); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid rgba(236,91,19,0.1); }
-        .header-solid { background:#000000 !important; backdrop-filter:none !important; -webkit-backdrop-filter:none !important; }
-        /* Page transition */
+        .glass-dark { background:#000000; backdrop-filter:blur(20px); border-b:1px solid rgba(255,255,255,0.05); }
+        .header-solid { background:#000000 !important; }
         html { background:#fff; }
-        body { opacity:0; will-change:opacity; backface-visibility:hidden; -webkit-backface-visibility:hidden; }
-        body.page-ready { animation: pageFadeIn 0.2s ease forwards; }
-        @keyframes pageFadeIn { from { opacity:0; } to { opacity:1; } }
+        body { background:#fff; opacity:1; }
         .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; font-family:'Material Symbols Outlined'; font-style:normal; display:inline-block; line-height:1; }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .animate-marquee { display: flex; width: max-content; animation: marquee 120s linear infinite; }
+        .animate-marquee:hover { animation-play-state: paused; }
+        /* ── Marquee bar – fixed at very top ── */
+        #marquee-bar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 70;
+            overflow: hidden; max-height: 60px;
+        }
+        #marquee-bar.hidden-bar {
+            opacity: 0; max-height: 0;
+            padding-top: 0 !important; padding-bottom: 0 !important;
+            pointer-events: none;
+        }
+        /* ── Site Header ── */
+        #site-header {
+            position: fixed !important;
+            left: 50%; transform: translateX(-50%);
+            width: 100%; max-width: 100%;
+            border-radius: 0; background: #000;
+            border: none; border-bottom: 1px solid rgba(255,255,255,0.06);
+            box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none;
+            z-index: 60;
+            transition:
+                top        0.5s cubic-bezier(0.32,0,0.15,1),
+                width      0.5s cubic-bezier(0.32,0,0.15,1),
+                max-width  0.5s cubic-bezier(0.32,0,0.15,1),
+                border-radius 0.5s cubic-bezier(0.32,0,0.15,1),
+                background 0.5s cubic-bezier(0.32,0,0.15,1),
+                box-shadow 0.5s cubic-bezier(0.32,0,0.15,1),
+                backdrop-filter 0.5s ease;
+        }
+        #site-header.pill-mode {
+            top: 14px !important;
+            width: calc(100% - 32px); max-width: 1120px;
+            border-radius: 9999px;
+            background: rgba(8,5,3,0.88);
+            backdrop-filter: blur(28px); -webkit-backdrop-filter: blur(28px);
+            border: 1px solid rgba(255,255,255,0.10);
+            box-shadow: 0 4px 32px rgba(0,0,0,0.45), 0 1px 0 rgba(255,255,255,0.04) inset;
+        }
+        #site-header nav { height: 64px; min-height: 64px; }
+        #site-header.pill-mode nav { height: 60px !important; min-height: 60px !important; }
+        /* Call/WA buttons – pill mode shrink to icon only */
+        #site-header.pill-mode .hdr-call-text,
+        #site-header.pill-mode .hdr-wa-text { display: none !important; }
+        #site-header.pill-mode .hdr-call-btn { padding: 0 !important; width: 34px !important; height: 34px !important; border-radius: 50% !important; }
+        #site-header.pill-mode .hdr-wa-btn  { padding: 0 !important; width: 34px !important; height: 34px !important; border-radius: 50% !important; }
+        /* Remove any extra circle/ring on call & WA icons */
+        .hdr-call-btn, .hdr-wa-btn { position: relative; overflow: hidden; }
+        .hdr-call-btn::before, .hdr-wa-btn::before { display: none !important; }
+        #site-header-placeholder { display: block; background: #000; }
+        /* ── Global mobile fixes ── */
+        @media (max-width: 640px) {
+            .max-w-\[1140px\] { padding-left: 12px !important; padding-right: 12px !important; }
+            section { padding-top: 2.5rem !important; padding-bottom: 2.5rem !important; }
+            h1.font-serif, h2.font-serif { font-size: 1.75rem !important; line-height: 1.2 !important; }
+            .py-16 { padding-top: 2rem !important; padding-bottom: 2rem !important; }
+            .py-12 { padding-top: 1.5rem !important; padding-bottom: 1.5rem !important; }
+            .mb-16 { margin-bottom: 2rem !important; }
+            .mb-12 { margin-bottom: 1.5rem !important; }
+            .gap-12 { gap: 1.5rem !important; }
+        }
         <?php if (!empty($extra_styles)) echo $extra_styles; ?>
     </style>
-    <?php if (!empty($extra_head)) echo $extra_head; ?>
 </head>
-<body class="bg-white dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
-
-<!-- Marquee Bar -->
-<div class="bg-primary text-white py-1.5 overflow-hidden relative z-[60]">
-    <div class="max-w-7xl mx-auto px-6 flex justify-between items-center gap-4 text-[11px] font-semibold uppercase tracking-widest">
-        <div class="flex-1 overflow-hidden">
-            <div class="flex whitespace-nowrap" style="animation:marquee 30s linear infinite">
-                <style>@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}</style>
-                <?php
-                $default_marquee = [
-                    "★ 20% OFF on first heritage tour booking",
-                    "★ Verified guides for Ajanta &amp; Ellora",
-                    "★ Free cancellation on bike rentals",
-                    "★ 24/7 tourist support available",
-                ];
-                global $hp_settings;
-                if (!empty($hp_settings['marquee'])) {
-                    $marquee_items = array_filter(array_map('trim', explode("\n", $hp_settings['marquee'])));
-                    if (empty($marquee_items)) $marquee_items = $default_marquee;
-                } else {
-                    $marquee_items = $default_marquee;
-                }
-                $all_items = array_merge($marquee_items, $marquee_items);
-                foreach ($all_items as $item): ?>
-                    <span class="px-6"><?php echo htmlspecialchars($item); ?></span>
-                <?php endforeach; ?>
-            </div>
-        </div>
+<body class="bg-white font-display text-slate-900">
+<!-- Top Announcement Marquee -->
+<div id="marquee-bar" class="bg-primary text-white py-2 overflow-hidden whitespace-nowrap border-b border-primary/20">
+    <div class="animate-marquee flex items-center">
+        <?php for($i=0; $i<10; $i++): ?>
+        <span class="inline-flex items-center gap-2 px-6 font-bold text-[10px] uppercase tracking-[0.2em]">
+            <span class="material-symbols-outlined text-sm">stars</span> Discover The Wonders of Chhatrapati Sambhajinagar
+            <span class="w-1.5 h-1.5 rounded-full bg-white opacity-50"></span>
+            Book Premium Stays, Car Rentals & Local Tours
+            <span class="w-1.5 h-1.5 rounded-full bg-white opacity-50"></span>
+            Special Offers Available For First Time Visitors!
+        </span>
+        <?php endfor; ?>
     </div>
 </div>
 
-<!-- Header – always dark/black with blur -->
-<header id="site-header" class="sticky top-0 w-full z-50 transition-all duration-300 glass-dark border-b border-white/5">
-    <nav class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+<!-- Placeholder keeps page layout when marquee + header are both fixed -->
+<div id="site-header-placeholder" class="w-full"></div>
+<header id="site-header" class="w-full">
+    <nav class="max-w-[1140px] mx-auto px-4 sm:px-5 flex items-center justify-between" style="height:64px;min-height:64px">
         <a href="<?php echo BASE_PATH; ?>/index" class="flex items-center shrink-0">
-            <img src="<?php echo BASE_PATH; ?>/images/travelhub.png" alt="CSNExplore" class="h-9 object-contain"/>
+            <img src="<?php echo BASE_PATH; ?>/images/travelhub.png" alt="CSNExplore" class="h-8 sm:h-9 object-contain"/>
         </a>
         <div class="hidden md:flex items-center gap-0.5">
-            <?php if ($is_listing_page): ?>
-                <?php foreach ($listing_nav as $link): $is_active = ($link['type'] === $active_listing_type); ?>
-                <a href="<?php echo $link['href']; ?>"
-                   class="text-sm font-semibold px-3 py-1.5 rounded-full transition-colors <?php echo $is_active ? 'text-white bg-white/15' : 'text-white/60 hover:bg-white/10 hover:text-white'; ?>">
-                    <?php echo $link['label']; ?>
-                </a>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <?php foreach ($nav_links as $link): 
-                    $is_active = (trim($link['href'], '/') === trim($current_page, '/') || ($current_page === 'home' && $link['href'] === '/index')); 
-                ?>
-                <a href="<?php echo $link['href']; ?>"
-                   class="text-sm font-semibold px-4 py-2 rounded-full transition-colors <?php echo $is_active ? 'text-white bg-white/10' : 'text-white/70 hover:bg-white/10 hover:text-white'; ?>">
-                    <?php echo $link['label']; ?>
-                </a>
-                <?php endforeach; ?>
-            <?php endif; ?>
+            <?php foreach (($is_listing_page ? $listing_nav : $nav_links) as $link):
+                $is_active = ($is_listing_page
+                    ? ($link['type'] === $active_listing_type)
+                    : (trim($link['href'],'/') === trim($current_page,'/') || ($current_page==='home' && strpos($link['href'],'/index')!==false)));
+            ?>
+            <a href="<?php echo $link['href']; ?>"
+               class="text-sm font-semibold px-4 py-2 rounded-full transition-colors duration-200 <?php echo $is_active ? 'text-white bg-white/10' : 'text-white/65 hover:bg-white/10 hover:text-white'; ?>">
+                <?php echo $link['label']; ?>
+            </a>
+            <?php endforeach; ?>
         </div>
-        <div class="flex items-c            <a href="tel:+918600968888" class="hidden lg:flex items-center gap-1.5 bg-slate-800 text-white text-sm font-bold px-4 py-1.5 rounded-full hover:bg-slate-700 transition-all border border-slate-700">
-                <span class="material-symbols-outlined text-base text-primary">call</span> Call Now
-            </a>
-            <a href="https://wa.me/918600968888" target="_blank" class="hidden sm:flex items-center gap-1.5 bg-[#25D366] text-white text-sm font-bold px-4 py-1.5 rounded-full hover:bg-[#128C7E] transition-all shadow-lg shadow-[#25D366]/20">
-                <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.417-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.305 1.652zm6.599-3.825c1.63.975 3.41 1.487 5.23 1.488 5.439 0 9.861-4.422 9.863-9.861.001-2.636-1.024-5.115-2.884-6.977-1.862-1.864-4.341-2.887-6.979-2.888-5.439 0-9.861 4.422-9.863 9.862 0 1.842.511 3.641 1.478 5.187l-.995 3.637 3.73-.978zm11.367-7.643c-.31-.155-1.837-.906-2.12-.108-.285.103-.55.515-.674.654-.124.14-.248.155-.558.001-.31-.155-1.31-.483-2.498-1.543-.924-.824-1.548-1.841-1.73-2.15-.181-.31-.019-.477.135-.631.14-.139.31-.36.465-.541.155-.181.206-.31.31-.515.103-.206.052-.386-.026-.541-.077-.155-.674-1.626-.924-2.228-.243-.585-.491-.504-.674-.513-.175-.008-.375-.01-.575-.01s-.525.075-.8.375c-.275.3-1.05 1.026-1.05 2.5s1.075 2.9 1.225 3.1c.15.2 2.11 3.221 5.113 4.513.714.307 1.272.49 1.706.629.718.227 1.37.195 1.886.118.575-.085 1.837-.75 2.096-1.475.258-.725.258-1.346.181-1.475-.077-.129-.283-.206-.593-.361z"/></svg>
-                WhatsApp
-            </a>
-
-            <div class="h-6 w-px bg-white/10 mx-2 hidden sm:block"></div>
-
-            <a href="<?php echo BASE_PATH; ?>/login?redirect=<?php echo urlencode($_SERVER['REQUEST_URI'] ?? '/'); ?>" id="hdr-login-btn" class="text-white text-sm font-semibold px-4 py-1.5 hover:bg-white/10 rounded-full transition-all">Login</a>
+        <div class="flex items-center gap-1.5">
+            <div class="hidden lg:flex items-center gap-1.5">
+                <a href="tel:+918600968888"
+                   class="hdr-call-btn flex items-center justify-center gap-1.5 bg-slate-800 text-white h-9 px-4 rounded-full hover:bg-slate-700 transition-all border border-slate-700 text-sm font-bold">
+                    <span class="material-symbols-outlined text-[17px] text-primary">call</span>
+                    <span class="hdr-call-text">+91 86009 68888</span>
+                </a>
+                <a href="https://wa.me/918600968888" target="_blank"
+                   class="hdr-wa-btn flex items-center justify-center gap-1.5 bg-[#25D366] text-white h-9 px-3 rounded-full hover:bg-[#1ebe5d] transition-all text-sm font-bold">
+                    <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                    <span class="hdr-wa-text">WhatsApp</span>
+                </a>
+            </div>
+            <div class="h-5 w-px bg-white/10 mx-0.5 hidden lg:block"></div>
+            <a href="<?php echo BASE_PATH; ?>/login" id="hdr-login-btn"
+               class="text-white text-[13px] font-bold px-3 py-1.5 hover:bg-white/10 rounded-full transition-all">Login</a>
             <div id="hdr-user-menu" class="hidden relative">
-                <button id="hdr-user-btn" class="flex items-center justify-center text-white p-2 hover:bg-white/10 rounded-full transition-all border border-transparent hover:border-white/10">
-                    <span class="material-symbols-outlined text-2xl text-primary">account_circle</span>
+                <button id="hdr-user-btn" class="size-9 flex items-center justify-center hover:bg-white/10 rounded-full transition-all">
+                    <span class="material-symbols-outlined text-[22px] text-primary" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24">account_circle</span>
                 </button>
-                <div id="hdr-dropdown" class="hidden absolute right-0 top-full mt-2 w-44 bg-[#0a0705] border border-white/10 rounded-2xl shadow-2xl py-1.5 z-[200]">
-                    <button id="hdr-logout-btn" class="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-500 hover:bg-red-500/10 transition-colors rounded-xl font-bold">
-                        <span class="material-symbols-outlined text-base">logout</span>Sign Out
+                <div id="hdr-dropdown" class="hidden absolute right-0 top-full mt-2 w-44 bg-white border border-slate-200 rounded-2xl shadow-xl py-2 z-[200]">
+                    <div class="px-4 py-2 border-b border-slate-100 mb-1">
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">My Account</p>
+                    </div>
+                    <a href="<?php echo BASE_PATH; ?>/my-booking" class="w-full flex items-center gap-2 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 transition-colors font-bold text-left">
+                        <span class="material-symbols-outlined text-slate-600 text-[18px]">calendar_today</span> My Bookings
+                    </a>
+                    <button id="hdr-logout-btn" class="w-full flex items-center gap-2 px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors font-bold text-left">
+                        <span class="material-symbols-outlined text-red-500 text-[18px]">logout</span> Sign Out
                     </button>
                 </div>
             </div>
-         </a>
-            <button id="mob-btn" class="md:hidden p-2 rounded-lg transition-colors ml-1">
-                <span class="material-symbols-outlined text-2xl text-white">menu</span>
+            <button id="mob-btn" class="md:hidden size-9 flex items-center justify-center rounded-full text-white active:bg-white/10 transition-colors ml-0.5">
+                <span class="material-symbols-outlined text-xl">menu</span>
             </button>
         </div>
     </nav>
-    <div id="mob-menu" class="hidden md:hidden border-t border-white/10 px-4 py-3 flex flex-col gap-1">
-        <?php if ($is_listing_page): ?>
-            <?php foreach ($listing_nav as $link): $is_active = ($link['type'] === $active_listing_type); ?>
-            <a href="<?php echo $link['href']; ?>"
-               class="text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors <?php echo $is_active ? 'text-primary bg-white/5' : 'text-white/70 hover:bg-white/10 hover:text-white'; ?>">
+</header>
+
+<!-- ═══ MOBILE MENU — outside header, full viewport overlay ═══ -->
+<style>
+@keyframes mobMenuIn { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+#mob-menu.mob-open { animation: mobMenuIn 0.22s cubic-bezier(0.32,0,0.15,1) forwards; }
+</style>
+<div id="mob-menu" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999;background:#0a0705;overflow-y:auto;flex-direction:column;opacity:0">
+    <!-- header row -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.1)">
+        <img src="<?php echo BASE_PATH; ?>/images/travelhub.png" alt="CSNExplore" style="height:28px;object-fit:contain"/>
+        <button id="mob-close" style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.08);border:none;border-radius:50%;cursor:pointer;color:#fff">
+            <span class="material-symbols-outlined" style="font-size:20px">close</span>
+        </button>
+    </div>
+    <!-- nav links -->
+    <div style="padding:14px 12px 8px;display:flex;flex-direction:column;gap:2px">
+        <p style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:rgba(255,255,255,0.35);margin:0 0 6px 10px">Navigation</p>
+        <?php foreach ($nav_links as $link): ?>
+        <a href="<?php echo $link['href']; ?>" style="display:flex;align-items:center;padding:11px 14px;border-radius:12px;font-size:14px;font-weight:600;color:#fff;text-decoration:none;background:rgba(255,255,255,0.04)"><?php echo $link['label']; ?></a>
+        <?php endforeach; ?>
+    </div>
+    <?php if ($is_listing_page): ?>
+    <!-- listing categories -->
+    <div style="padding:0 12px 12px">
+        <p style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:rgba(255,255,255,0.35);margin:0 0 8px 10px">Categories</p>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+            <?php foreach ($listing_nav as $link): ?>
+            <a href="<?php echo $link['href']; ?>" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px 6px;border-radius:12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#fff;text-decoration:none;font-size:10px;font-weight:700">
+                <span class="material-symbols-outlined" style="font-size:18px;color:#ec5b13"><?php echo $link['icon']; ?></span>
                 <?php echo $link['label']; ?>
             </a>
             <?php endforeach; ?>
-        <?php else: ?>
-            <?php foreach ($nav_links as $link): 
-                $is_active = (trim($link['href'], '/') === trim($current_page, '/') || ($current_page === 'home' && $link['href'] === '/index')); 
-            ?>
-            <a href="<?php echo $link['href']; ?>"
-               class="text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors <?php echo $is_active ? 'text-primary bg-white/5' : 'text-white/70 hover:bg-white/10 hover:text-white'; ?>">
-                <?php echo $link['label']; ?>
-            </a>
-            <?php endforeach; ?>
-        <?php endif; ?>
-        <div class="flex gap-2 pt-2 border-t border-white/10 mt-1">
-            <a href="<?php echo BASE_PATH; ?>/login?redirect=<?php echo urlencode($_SERVER['REQUEST_URI'] ?? '/'); ?>" id="mob-login-btn" class="flex-1 text-center text-white hover:bg-white/10 text-sm font-semibold py-2 rounded-xl transition-all">Login</a>
-            <a href="tel:+918600968888" class="flex-1 text-center bg-slate-800 text-white text-sm font-bold py-2 rounded-xl hover:bg-slate-700 transition-all border border-slate-700">Call Now</a>
         </div>
-        <a href="https://wa.me/918600968888" target="_blank" class="w-full mt-2 text-center bg-[#25D366] text-white text-sm font-bold py-2.5 rounded-xl hover:bg-[#128C7E] transition-all flex items-center justify-center gap-2">
-            <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.417-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.305 1.652zm6.599-3.825c1.63.975 3.41 1.487 5.23 1.488 5.439 0 9.861-4.422 9.863-9.861.001-2.636-1.024-5.115-2.884-6.977-1.862-1.864-4.341-2.887-6.979-2.888-5.439 0-9.861 4.422-9.863 9.862 0 1.842.511 3.641 1.478 5.187l-.995 3.637 3.73-.978zm11.367-7.643c-.31-.155-1.837-.906-2.12-.108-.285.103-.55.515-.674.654-.124.14-.248.155-.558.001-.31-.155-1.31-.483-2.498-1.543-.924-.824-1.548-1.841-1.73-2.15-.181-.31-.019-.477.135-.631.14-.139.31-.36.465-.541.155-.181.206-.31.31-.515.103-.206.052-.386-.026-.541-.077-.155-.674-1.626-.924-2.228-.243-.585-.491-.504-.674-.513-.175-.008-.375-.01-.575-.01s-.525.075-.8.375c-.275.3-1.05 1.026-1.05 2.5s1.075 2.9 1.225 3.1c.15.2 2.11 3.221 5.113 4.513.714.307 1.272.49 1.706.629.718.227 1.37.195 1.886.118.575-.085 1.837-.75 2.096-1.475.258-.725.258-1.346.181-1.475-.077-.129-.283-.206-.593-.361z"/></svg> WhatsApp
+    </div>
+    <?php endif; ?>
+    <!-- spacer -->
+    <div style="flex:1;min-height:12px"></div>
+    <!-- bottom actions -->
+    <div style="padding:12px 12px 28px;border-top:1px solid rgba(255,255,255,0.1);display:flex;flex-direction:column;gap:8px">
+        <!-- auth -->
+        <div id="mob-auth-login" style="display:flex;gap:6px">
+            <a href="<?php echo BASE_PATH; ?>/login" style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:11px;background:#ec5b13;color:#fff;font-weight:700;border-radius:12px;font-size:13px;text-decoration:none">
+                <span class="material-symbols-outlined" style="font-size:15px">login</span> Sign In
+            </a>
+            <a href="<?php echo BASE_PATH; ?>/register" style="flex:1;display:flex;align-items:center;justify-content:center;padding:11px;background:rgba(255,255,255,0.08);color:#fff;font-weight:700;border-radius:12px;font-size:13px;border:1px solid rgba(255,255,255,0.15);text-decoration:none">Register</a>
+        </div>
+        <div id="mob-auth-user" style="display:none">
+            <button id="mob-logout-btn" style="width:100%;display:flex;align-items:center;justify-content:center;gap:6px;padding:11px;color:#f87171;font-weight:700;background:rgba(248,113,113,0.12);border:1px solid rgba(248,113,113,0.2);border-radius:12px;font-size:13px;cursor:pointer">
+                <span class="material-symbols-outlined" style="font-size:15px">logout</span> Sign Out
+            </button>
+        </div>
+        <!-- call -->
+        <a href="tel:+918600968888" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:12px;background:#1e293b;color:#fff;font-weight:700;border-radius:12px;border:1px solid #334155;font-size:13px;text-decoration:none">
+            <span class="material-symbols-outlined" style="font-size:15px;color:#ec5b13">call</span> +91 86009 68888
+        </a>
+        <!-- whatsapp -->
+        <a href="https://wa.me/918600968888" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:12px;background:#25D366;color:#fff;font-weight:700;border-radius:12px;font-size:13px;text-decoration:none">
+            <svg style="width:14px;height:14px;fill:currentColor;flex-shrink:0" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            WhatsApp Us
         </a>
     </div>
-    <script>
-        document.getElementById('mob-btn').addEventListener('click', function(){
-            document.getElementById('mob-menu').classList.toggle('hidden');
-        });
-        (function(){
-            var h = document.getElementById('site-header');
-            function updateHeader() {
-                if (window.scrollY === 0) { h.classList.add('header-solid'); }
-                else { h.classList.remove('header-solid'); }
-            }
-            updateHeader();
-            window.addEventListener('scroll', updateHeader, {passive:true});
-        })();
-        // Fade in on load
-        function addPageReady(){document.body.classList.add('page-ready');}
-        if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',addPageReady);}else{addPageReady();}
-        // Fade out on navigation
-        document.addEventListener('click', function(e) {
-            var a = e.target.closest('a');
-            if (!a) return;
-            var href = a.getAttribute('href');
-            if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('javascript') || a.target === '_blank') return;
-            e.preventDefault();
-            document.body.style.transition = 'opacity 0.18s ease';
-            document.body.style.opacity = '0';
-            setTimeout(function(){ window.location.href = href; }, 190);
-        });
+</div>
 
+<script>
+    var _mob = document.getElementById('mob-menu');
+    function openMob() {
+        _mob.style.display = 'flex';
+        _mob.style.opacity = '0';
+        // Trigger animation on next frame
+        requestAnimationFrame(function() {
+            _mob.classList.add('mob-open');
+            document.body.style.overflow = 'hidden';
+        });
+    }
+    function closeMob() {
+        _mob.style.opacity = '0';
+        _mob.style.transition = 'opacity 0.18s ease';
+        setTimeout(function() {
+            _mob.style.display = 'none';
+            _mob.style.opacity = '';
+            _mob.style.transition = '';
+            _mob.classList.remove('mob-open');
+            document.body.style.overflow = '';
+        }, 180);
+    }
+    document.getElementById('mob-btn').addEventListener('click', openMob);
+    document.getElementById('mob-close').addEventListener('click', closeMob);
+
+        // Scroll → pill
         (function(){
-            var token=localStorage.getItem("csn_token");
-            var user=JSON.parse(localStorage.getItem("csn_user")||"null");
-            function clearAll(){
-              localStorage.removeItem("csn_token"); localStorage.removeItem("csn_user");
-              localStorage.removeItem("csn_admin_token"); localStorage.removeItem("csn_admin_user");
+            var h=document.getElementById('site-header'),ph=document.getElementById('site-header-placeholder'),mb=document.getElementById('marquee-bar');
+            var ticking=false, MH=0;
+            function measure(){ if(!mb)return 0; mb.style.transition='none'; mb.classList.remove('hidden-bar'); var v=mb.offsetHeight; mb.style.transition=''; return v; }
+            function normal(){ if(mb){mb.style.transition='none';mb.classList.remove('hidden-bar');mb.offsetHeight;mb.style.transition='';} h.classList.remove('pill-mode'); h.style.top=MH+'px'; if(ph)ph.style.height=(MH+64)+'px'; }
+            function pill(){ if(mb)mb.classList.add('hidden-bar'); h.classList.add('pill-mode'); h.style.top=''; if(ph)ph.style.height=(MH+64)+'px'; }
+            function upd(){ window.scrollY>40?pill():normal(); ticking=false; }
+            MH=measure(); h.style.top=MH+'px'; if(ph)ph.style.height=(MH+64)+'px';
+            window.addEventListener('scroll',function(){if(!ticking){requestAnimationFrame(upd);ticking=true;}},{passive:true});
+            window.addEventListener('load',function(){MH=measure();upd();});
+            upd();
+        })();
+
+        // Auth
+        (function(){
+            var tok=localStorage.getItem('csn_token'), usr=JSON.parse(localStorage.getItem('csn_user')||'null');
+            if(tok&&usr){
+                var lb=document.getElementById('hdr-login-btn'); if(lb)lb.style.display='none';
+                var um=document.getElementById('hdr-user-menu'); if(um)um.classList.remove('hidden');
+                var mal=document.getElementById('mob-auth-login'); if(mal)mal.style.display='none';
+                var mau=document.getElementById('mob-auth-user');  if(mau)mau.style.display='block';
             }
-            if(token){try{var parts=token.split(".");if(parts.length===3){var p=JSON.parse(atob(parts[1].replace(/-/g,"+").replace(/_/g,"/")));if(p.exp&&p.exp<Math.floor(Date.now()/1000)){clearAll();token=null;user=null;}}}catch(e){clearAll();token=null;user=null;}}
-            if(token&&user){
-              var pl=document.getElementById("hdr-login-btn");
-              var ml=document.getElementById("mob-login-btn");
-              var pu=document.getElementById("hdr-user-menu");
-              var pn=document.getElementById("hdr-user-name");
-              if(pl)pl.style.display="none";
-              if(ml)ml.style.display="none";
-              if(pu)pu.classList.remove("hidden");
-              if(pn)pn.style.display="none";
-            }
-            var userBtn=document.getElementById("hdr-user-btn");
-            var dropdown=document.getElementById("hdr-dropdown");
-            if(userBtn){
-              userBtn.addEventListener("click",function(e){e.stopPropagation();dropdown.classList.toggle("hidden");});
-              document.addEventListener("click",function(){if(dropdown)dropdown.classList.add("hidden");});
-            }
-            function doLogout(){clearAll();window.location.reload();}
-            var lb=document.getElementById("hdr-logout-btn");
-            if(lb)lb.addEventListener("click",doLogout);
+            var ub=document.getElementById('hdr-user-btn'),dd=document.getElementById('hdr-dropdown');
+            if(ub&&dd){ ub.addEventListener('click',function(e){e.stopPropagation();dd.classList.toggle('hidden');}); document.addEventListener('click',function(){dd.classList.add('hidden');}); }
+            function logout(){ ['csn_token','csn_user','csn_admin_token','csn_admin_user'].forEach(function(k){localStorage.removeItem(k);}); location.reload(); }
+            var dl=document.getElementById('hdr-logout-btn'); if(dl)dl.addEventListener('click',logout);
+            var ml=document.getElementById('mob-logout-btn'); if(ml)ml.addEventListener('click',logout);
         })();
     </script>
-</header>

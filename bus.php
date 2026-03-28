@@ -20,7 +20,7 @@ $category_nav = [
 ];
 ?>
 <nav class="bg-white border-b border-slate-100 relative top-16 z-40">
-    <div class="max-w-7xl mx-auto px-6 overflow-x-auto hide-scrollbar">
+    <div class="max-w-[1140px] mx-auto px-5 overflow-x-auto hide-scrollbar">
         <div class="flex items-center gap-1 h-12">
             <?php foreach ($category_nav as $cat):
                 $active = ($cat['href'] === 'bus.php');

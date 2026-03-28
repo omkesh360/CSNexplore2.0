@@ -109,6 +109,30 @@ body.page-ready{animation:pageFadeIn 0.2s ease forwards;}
 .gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;}
 @media(max-width:768px){.gallery-grid{grid-template-columns:repeat(2,1fr);gap:10px;}}
 @media(max-width:480px){.gallery-grid{grid-template-columns:repeat(2,1fr);gap:8px;}}
+
+/* ── Marquee bar fixed at top ── */
+#marquee-bar{position:fixed;top:0;left:0;right:0;z-index:70;
+  transition:opacity 0.35s ease,max-height 0.35s ease,padding 0.35s ease;
+  max-height:60px;overflow:hidden;}
+#marquee-bar.hidden-bar{opacity:0;max-height:0;
+  padding-top:0!important;padding-bottom:0!important;pointer-events:none;}
+/* ── Pill header ── */
+#site-header{
+  position:fixed!important;left:50%;transform:translateX(-50%);
+  width:100%;max-width:100%;border-radius:0;
+  background:#000;border:none;border-bottom:1px solid rgba(255,255,255,0.05);
+  box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none;z-index:60;
+  transition:top .45s cubic-bezier(.4,0,.2,1),width .45s cubic-bezier(.4,0,.2,1),
+    max-width .45s cubic-bezier(.4,0,.2,1),border-radius .45s cubic-bezier(.4,0,.2,1),
+    background .45s cubic-bezier(.4,0,.2,1),box-shadow .45s cubic-bezier(.4,0,.2,1);}
+#site-header.pill-mode{
+  top:15px!important;width:calc(100% - 32px);max-width:1120px;
+  border-radius:9999px;background:rgba(10,7,5,0.85);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border:1px solid rgba(255,255,255,0.10);box-shadow:0 8px 40px rgba(0,0,0,0.38);}
+#site-header nav{height:64px;min-height:64px;}
+#site-header.pill-mode nav{height:62px!important;min-height:62px!important;}
+#site-header-placeholder{display:block;}
 </style>
 <script>
 function playBookingSound() {
@@ -134,12 +158,46 @@ function playBookingSound() {
 </script>
 </head>
 <body class="bg-white dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+<style>
+/* ── Pill Header on Scroll ── */
+#site-header {
+    transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+#site-header.pill-mode {
+    top: 10px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: calc(100% - 20px) !important;
+    max-width: 1120px !important;
+    border-radius: 9999px !important;
+    background: rgba(10,7,5,0.72) !important;
+    backdrop-filter: blur(24px) !important;
+    -webkit-backdrop-filter: blur(24px) !important;
+    border: 1px solid rgba(255,255,255,0.10) !important;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.38) !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+#site-header.pill-mode nav {
+    height: 52px !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+}
+/* Icon-only buttons in pill mode */
+#site-header.pill-mode .hdr-call-text,
+#site-header.pill-mode .hdr-wa-text { display: none !important; }
+#site-header.pill-mode .hdr-call-btn { padding: 0 !important; width: 36px !important; height: 36px !important; justify-content: center !important; }
+#site-header.pill-mode .hdr-wa-btn  { padding: 0 !important; width: 36px !important; height: 36px !important; justify-content: center !important; }
+/* Normal mode: show text */
+#site-header:not(.pill-mode) .hdr-call-text,
+#site-header:not(.pill-mode) .hdr-wa-text { display: inline !important; }
+</style>
+
 <!-- Marquee Bar -->
-<div class="bg-[#ec5b13] text-white py-1.5 overflow-hidden relative z-[60]">
-    <div class="max-w-7xl mx-auto px-6 flex justify-between items-center gap-4 text-[11px] font-semibold uppercase tracking-widest">
+<div id="marquee-bar" class="bg-[#ec5b13] text-white py-1.5 overflow-hidden relative z-[60]">
+    <div class="max-w-[1140px] mx-auto px-5 flex justify-between items-center gap-4 text-[11px] font-semibold uppercase tracking-widest">
         <div class="flex-1 overflow-hidden">
             <div class="flex whitespace-nowrap" style="animation:marquee 30s linear infinite">
-                <style>@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}</style>
                 <span class="px-6">★ 20% OFF on first heritage tour booking</span>
                 <span class="px-6">★ Verified guides for Ajanta &amp; Ellora</span>
                 <span class="px-6">★ Free cancellation on bike rentals</span>
@@ -153,27 +211,29 @@ function playBookingSound() {
     </div>
 </div>
 
-<header id="site-header" class="sticky top-0 w-full z-50 transition-all duration-300 glass-dark border-b border-white/5 bg-[#0a0705]">
-    <nav class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+<div id="site-header-placeholder" style="height:96px"></div>
+<header id="site-header" class="  w-full z-50 glass-dark border-b border-white/5 bg-[#0a0705]">
+    <nav class="max-w-[1140px] mx-auto px-5 h-16 flex items-center justify-between" style="transition:height 0.7s cubic-bezier(0.4,0,0.2,1),padding 0.7s cubic-bezier(0.4,0,0.2,1)">
         <a href="../index" class="flex items-center shrink-0">
             <img src="../images/travelhub.png" alt="CSNExplore" class="h-9 object-contain" loading="lazy"/>
         </a>
         <div class="hidden md:flex items-center gap-0.5">
-            <a href="../listing/stays" class="text-sm font-semibold px-3 py-1.5 rounded-full text-white/60 hover:bg-white/10 hover:text-white transition-colors">Stays</a>
-            <a href="../listing/cars" class="text-sm font-semibold px-3 py-1.5 rounded-full text-white/60 hover:bg-white/10 hover:text-white transition-colors">Cars</a>
-            <a href="../listing/bikes" class="text-sm font-semibold px-3 py-1.5 rounded-full text-white/60 hover:bg-white/10 hover:text-white transition-colors">Bikes</a>
+            <a href="../listing/stays"       class="text-sm font-semibold px-3 py-1.5 rounded-full text-white/60 hover:bg-white/10 hover:text-white transition-colors">Stays</a>
+            <a href="../listing/cars"        class="text-sm font-semibold px-3 py-1.5 rounded-full text-white/60 hover:bg-white/10 hover:text-white transition-colors">Cars</a>
+            <a href="../listing/bikes"       class="text-sm font-semibold px-3 py-1.5 rounded-full text-white/60 hover:bg-white/10 hover:text-white transition-colors">Bikes</a>
             <a href="../listing/attractions" class="text-sm font-semibold px-3 py-1.5 rounded-full text-white/60 hover:bg-white/10 hover:text-white transition-colors">Attractions</a>
             <a href="../listing/restaurants" class="text-sm font-semibold px-3 py-1.5 rounded-full text-white/60 hover:bg-white/10 hover:text-white transition-colors">Dine</a>
-            <a href="../listing/buses" class="text-sm font-semibold px-3 py-1.5 rounded-full text-white/60 hover:bg-white/10 hover:text-white transition-colors">Buses</a>
+            <a href="../listing/buses"       class="text-sm font-semibold px-3 py-1.5 rounded-full text-white/60 hover:bg-white/10 hover:text-white transition-colors">Buses</a>
         </div>
         <div class="flex items-center gap-2">
             <a href="../login" id="hdr-login-btn" class="text-white text-sm font-semibold px-4 py-1.5 hover:bg-white/10 rounded-full transition-all">Login</a>
-            <a href="tel:+918600968888" class="hidden lg:flex items-center gap-1.5 bg-slate-800 text-white text-sm font-bold px-4 py-1.5 rounded-full hover:bg-slate-700 transition-all border border-slate-700">
-                <span class="material-symbols-outlined text-base text-[#ec5b13]">call</span> Call Now
+            <a href="tel:+918600968888" class="hdr-call-btn hidden lg:flex items-center gap-1.5 bg-slate-800 text-white text-sm font-bold px-4 py-1.5 rounded-full hover:bg-slate-700 transition-all border border-slate-700" style="transition:all 0.7s cubic-bezier(0.4,0,0.2,1)">
+                <span class="material-symbols-outlined text-base text-[#ec5b13]">call</span>
+                <span class="hdr-call-text">Call Now</span>
             </a>
-            <a href="https://wa.me/918600968888" target="_blank" class="hidden sm:flex items-center gap-1.5 bg-[#25D366] text-white text-sm font-bold px-4 py-1.5 rounded-full hover:bg-[#128C7E] transition-all shadow-lg shadow-[#25D366]/20">
+            <a href="https://wa.me/918600968888" target="_blank" class="hdr-wa-btn hidden sm:flex items-center gap-1.5 bg-[#25D366] text-white text-sm font-bold px-4 py-1.5 rounded-full hover:bg-[#128C7E] transition-all shadow-lg shadow-[#25D366]/20" style="transition:all 0.7s cubic-bezier(0.4,0,0.2,1)">
                 <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.417-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.305 1.652zm6.599-3.825c1.63.975 3.41 1.487 5.23 1.488 5.439 0 9.861-4.422 9.863-9.861.001-2.636-1.024-5.115-2.884-6.977-1.862-1.864-4.341-2.887-6.979-2.888-5.439 0-9.861 4.422-9.863 9.862 0 1.842.511 3.641 1.478 5.187l-.995 3.637 3.73-.978zm11.367-7.643c-.31-.155-1.837-.906-2.12-.108-.285.103-.55.515-.674.654-.124.14-.248.155-.558.001-.31-.155-1.31-.483-2.498-1.543-.924-.824-1.548-1.841-1.73-2.15-.181-.31-.019-.477.135-.631.14-.139.31-.36.465-.541.155-.181.206-.31.31-.515.103-.206.052-.386-.026-.541-.077-.155-.674-1.626-.924-2.228-.243-.585-.491-.504-.674-.513-.175-.008-.375-.01-.575-.01s-.525.075-.8.375c-.275.3-1.05 1.026-1.05 2.5s1.075 2.9 1.225 3.1c.15.2 2.11 3.221 5.113 4.513.714.307 1.272.49 1.706.629.718.227 1.37.195 1.886.118.575-.085 1.837-.75 2.096-1.475.258-.725.258-1.346.181-1.475-.077-.129-.283-.206-.593-.361z"/></svg>
-                WhatsApp
+                <span class="hdr-wa-text">WhatsApp</span>
             </a>
             <div id="hdr-user-menu" class="hidden relative">
                 <button id="hdr-user-btn" class="flex items-center gap-1.5 text-white text-xs sm:text-sm font-semibold px-3 py-1.5 hover:bg-white/10 rounded-full transition-all">
@@ -193,19 +253,20 @@ function playBookingSound() {
         </div>
     </nav>
     <div id="mob-menu" class="hidden md:hidden border-t border-white/10 px-4 py-3 flex flex-col gap-1 bg-[#0a0705]">
-        <a href="../listing/stays" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">Stays</a>
-        <a href="../listing/cars" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">Cars</a>
-        <a href="../listing/bikes" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">Bikes</a>
+        <a href="../listing/stays"       class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">Stays</a>
+        <a href="../listing/cars"        class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">Cars</a>
+        <a href="../listing/bikes"       class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">Bikes</a>
         <a href="../listing/attractions" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">Attractions</a>
         <a href="../listing/restaurants" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">Dine</a>
-        <a href="../listing/buses" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">Buses</a>
-        
+        <a href="../listing/buses"       class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">Buses</a>
         <div class="flex gap-2 pt-2 border-t border-white/10 mt-1">
             <a href="../login" class="flex-1 text-center text-white hover:bg-white/10 text-sm font-semibold py-2 rounded-xl transition-all">Login</a>
-            <a href="tel:+918600968888" class="flex-1 text-center bg-slate-800 text-white text-sm font-bold py-2 rounded-xl hover:bg-slate-700 transition-all border border-slate-700">Call Now</a>
+            <a href="tel:+918600968888" class="flex-1 text-center bg-slate-800 text-white text-sm font-bold py-2 rounded-xl hover:bg-slate-700 transition-all border border-slate-700 flex items-center justify-center gap-1">
+                <span class="material-symbols-outlined text-base text-[#ec5b13]">call</span>
+            </a>
         </div>
         <a href="https://wa.me/918600968888" target="_blank" class="w-full mt-2 text-center bg-[#25D366] text-white text-sm font-bold py-2.5 rounded-xl hover:bg-[#128C7E] transition-all flex items-center justify-center gap-2">
-            <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.417-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.305 1.652zm6.599-3.825c1.63.975 3.41 1.487 5.23 1.488 5.439 0 9.861-4.422 9.863-9.861.001-2.636-1.024-5.115-2.884-6.977-1.862-1.864-4.341-2.887-6.979-2.888-5.439 0-9.861 4.422-9.863 9.862 0 1.842.511 3.641 1.478 5.187l-.995 3.637 3.73-.978zm11.367-7.643c-.31-.155-1.837-.906-2.12-.108-.285.103-.55.515-.674.654-.124.14-.248.155-.558.001-.31-.155-1.31-.483-2.498-1.543-.924-.824-1.548-1.841-1.73-2.15-.181-.31-.019-.477.135-.631.14-.139.31-.36.465-.541.155-.181.206-.31.31-.515.103-.206.052-.386-.026-.541-.077-.155-.674-1.626-.924-2.228-.243-.585-.491-.504-.674-.513-.175-.008-.375-.01-.575-.01s-.525.075-.8.375c-.275.3-1.05 1.026-1.05 2.5s1.075 2.9 1.225 3.1c.15.2 2.11 3.221 5.113 4.513.714.307 1.272.49 1.706.629.718.227 1.37.195 1.886.118.575-.085 1.837-.75 2.096-1.475.258-.725.258-1.346.181-1.475-.077-.129-.283-.206-.593-.361z"/></svg> WhatsApp
+            <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.417-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.305 1.652zm6.599-3.825c1.63.975 3.41 1.487 5.23 1.488 5.439 0 9.861-4.422 9.863-9.861.001-2.636-1.024-5.115-2.884-6.977-1.862-1.864-4.341-2.887-6.979-2.888-5.439 0-9.861 4.422-9.863 9.862 0 1.842.511 3.641 1.478 5.187l-.995 3.637 3.73-.978zm11.367-7.643c-.31-.155-1.837-.906-2.12-.108-.285.103-.55.515-.674.654-.124.14-.248.155-.558.001-.31-.155-1.31-.483-2.498-1.543-.924-.824-1.548-1.841-1.73-2.15-.181-.31-.019-.477.135-.631.14-.139.31-.36.465-.541.155-.181.206-.31.31-.515.103-.206.052-.386-.026-.541-.077-.155-.674-1.626-.924-2.228-.243-.585-.491-.504-.674-.513-.175-.008-.375-.01-.575-.01s-.525.075-.8.375c-.275.3-1.05 1.026-1.05 2.5s1.075 2.9 1.225 3.1c.15.2 2.11 3.221 5.113 4.513.714.307 1.272.49 1.706.629.718.227 1.37.195 1.886.118.575-.085 1.837-.75 2.096-1.475.258-.725.258-1.346.181-1.475-.077-.129-.283-.206-.593-.361z"/></svg>
         </a>
     </div>
     <script>
@@ -214,12 +275,27 @@ function playBookingSound() {
         });
         (function(){
             var h = document.getElementById("site-header");
+            var ticking = false;
             function updateHeader() {
-                if (window.scrollY === 0) { h.classList.add("header-solid"); }
-                else { h.classList.remove("header-solid"); }
+                if (window.scrollY > 60) {
+                    h.classList.add("pill-mode");
+                    h.style.position = "fixed";
+                } else {
+                    h.classList.remove("pill-mode");
+                    h.style.position = "sticky";
+                    h.style.top = "0";
+                    h.style.left = "";
+                    h.style.transform = "";
+                    h.style.width = "";
+                    h.style.maxWidth = "";
+                    h.style.borderRadius = "";
+                }
+                ticking = false;
             }
+            window.addEventListener("scroll", function(){
+                if (!ticking) { requestAnimationFrame(updateHeader); ticking = true; }
+            }, {passive:true});
             updateHeader();
-            window.addEventListener("scroll", updateHeader, {passive:true});
         })();
         function addPageReady(){document.body.classList.add("page-ready");}
         if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",addPageReady);}else{addPageReady();}
@@ -233,43 +309,79 @@ function playBookingSound() {
             document.body.style.opacity = "0";
             setTimeout(function(){ window.location.href = href; }, 190);
         });
-
-      (function(){
-        var token=localStorage.getItem("csn_token");
-        var user=JSON.parse(localStorage.getItem("csn_user")||"null");
-        function clearAll(){
-          localStorage.removeItem("csn_token");localStorage.removeItem("csn_user");
-          localStorage.removeItem("csn_admin_token");localStorage.removeItem("csn_admin_user");
-          token=null;user=null;
-        }
-        if(token){try{var parts=token.split(".");if(parts.length===3){var p=JSON.parse(atob(parts[1].replace(/-/g,"+").replace(/_/g,"/")));if(p.exp&&p.exp<Math.floor(Date.now()/1000)){clearAll();}}else{clearAll();}}catch(e){clearAll();}}
-        if(token&&user){
-          var pl=document.getElementById("hdr-login-btn");
-          var pu=document.getElementById("hdr-user-menu");
-          var pn=document.getElementById("hdr-user-name");
-          if(pl)pl.style.display="none";
-          if(pu)pu.classList.remove("hidden");
-          if(pn)pn.textContent=user.name?user.name.split(" ")[0]:"Account";
-        } else {
-          // Add redirect to login/register links
-          var pl=document.getElementById("hdr-login-btn");
-          if(pl){
-            var cur = window.location.pathname.split("/").slice(-2).join("/"); // e.g. listing-detail/stays-1.html
-            if(!cur.includes(".html")) cur = window.location.pathname.substring(1);
-            pl.href += "?redirect=" + encodeURIComponent(cur);
-          }
-        }
-        var userBtn=document.getElementById("hdr-user-btn");
-        var dropdown=document.getElementById("hdr-dropdown");
-        if(userBtn){
-          userBtn.addEventListener("click",function(e){e.stopPropagation();dropdown.classList.toggle("hidden");});
-          document.addEventListener("click",function(){if(dropdown)dropdown.classList.add("hidden");});
-        }
-        function doLogout(){clearAll();window.location.reload();}
-        var lb=document.getElementById("hdr-logout-btn");
-        if(lb)lb.addEventListener("click",doLogout);
-      })();
+        (function(){
+            var token=localStorage.getItem("csn_token");
+            var user=JSON.parse(localStorage.getItem("csn_user")||"null");
+            function clearAll(){
+                localStorage.removeItem("csn_token");localStorage.removeItem("csn_user");
+                localStorage.removeItem("csn_admin_token");localStorage.removeItem("csn_admin_user");
+                token=null;user=null;
+            }
+            if(token){try{var parts=token.split(".");if(parts.length===3){var p=JSON.parse(atob(parts[1].replace(/-/g,"+").replace(/_/g,"/")));if(p.exp&&p.exp<Math.floor(Date.now()/1000)){clearAll();}}else{clearAll();}}catch(e){clearAll();}}
+            if(token&&user){
+                var pl=document.getElementById("hdr-login-btn");
+                var pu=document.getElementById("hdr-user-menu");
+                var pn=document.getElementById("hdr-user-name");
+                if(pl)pl.style.display="none";
+                if(pu)pu.classList.remove("hidden");
+                if(pn)pn.textContent=user.name?user.name.split(" ")[0]:"Account";
+            } else {
+                var pl=document.getElementById("hdr-login-btn");
+                if(pl){
+                    var cur=window.location.pathname.split("/").slice(-2).join("/");
+                    if(!cur.includes(".html"))cur=window.location.pathname.substring(1);
+                    pl.href+="?redirect="+encodeURIComponent(cur);
+                }
+            }
+            var userBtn=document.getElementById("hdr-user-btn");
+            var dropdown=document.getElementById("hdr-dropdown");
+            if(userBtn){
+                userBtn.addEventListener("click",function(e){e.stopPropagation();dropdown.classList.toggle("hidden");});
+                document.addEventListener("click",function(){if(dropdown)dropdown.classList.add("hidden");});
+            }
+            function doLogout(){clearAll();window.location.reload();}
+            var lb=document.getElementById("hdr-logout-btn");
+            if(lb)lb.addEventListener("click",doLogout);
+        })();
     </script>
+
+<script>
+(function(){
+  var h=document.getElementById('site-header');
+  var ph=document.getElementById('site-header-placeholder');
+  var mb=document.getElementById('marquee-bar');
+  if(!h)return;
+  var MARQUEE_H=0,ticking=false;
+  function measureMarquee(){
+    if(!mb)return 0;
+    mb.style.transition='none';
+    mb.classList.remove('hidden-bar');
+    var ht=mb.offsetHeight;
+    mb.style.transition='';
+    return ht;
+  }
+  function setNormal(){
+    if(mb){mb.style.transition='none';mb.classList.remove('hidden-bar');mb.offsetHeight;mb.style.transition='';}
+    h.classList.remove('pill-mode');
+    h.style.top=MARQUEE_H+'px';
+    if(ph)ph.style.height=(MARQUEE_H+64)+'px';
+  }
+  function setPill(){
+    if(mb)mb.classList.add('hidden-bar');
+    h.classList.add('pill-mode');
+    h.style.top='';
+    if(ph)ph.style.height=(MARQUEE_H+64)+'px';
+  }
+  function update(){if(window.scrollY>40)setPill();else setNormal();ticking=false;}
+  MARQUEE_H=measureMarquee();
+  h.style.top=MARQUEE_H+'px';
+  if(ph)ph.style.height=(MARQUEE_H+64)+'px';
+  window.addEventListener('scroll',function(){if(!ticking){requestAnimationFrame(update);ticking=true;}},{passive:true});
+  window.addEventListener('load',function(){MARQUEE_H=measureMarquee();update();});
+  update();
+})();
+</script>
+
 </header>
 
 <main class="bg-[#f4f5f7] min-h-screen pb-16">

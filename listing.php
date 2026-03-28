@@ -147,15 +147,31 @@ $extra_styles = "
   .glass-card { background:rgba(255,255,255,0.07); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,0.1); }
   .glass-button { background:rgba(236,91,19,0.85); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,0.2); }
   .glass-button:hover { background:rgba(236,91,19,0.95); }
+  
+  /* Smooth Morph Animation Styles */
+  #listings-grid { position: relative; transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+  .listing-card-anim { transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); backface-visibility: hidden; transform-origin: center; opacity: 1; transform: scale(1) translateY(0); }
+  .listing-card-anim.fade-out { opacity: 0; transform: scale(0.95) translateY(10px); pointer-events: none; }
+  .listing-card-anim.fade-in { opacity: 1; transform: scale(1) translateY(0); }
+
+  /* Sidebar transition */
+  #sidebar-filters { transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; }
+  #sidebar-filters.collapsed { width: 0; margin-right: 0; opacity: 0; transform: translateX(-20px); pointer-events: none; }
+  .grid-container-anim { transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+
+  /* Adaptive card footer when filters are open */
+  .grid-filtered .card-footer { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .grid-filtered .card-footer a { width: 100%; text-align: center; }
+  .card-footer { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
 ";
-require 'header.php';
+require_once 'header.php';
 
 $category_nav = [
   ['type'=>'stays',       'icon'=>'bed',                'label'=>'Stays'],
-  ['type'=>'cars',        'icon'=>'directions_car',     'label'=>'Car Rentals'],
-  ['type'=>'bikes',       'icon'=>'motorcycle',         'label'=>'Bike Rentals'],
+  ['type'=>'cars',        'icon'=>'directions_car',     'label'=>'Cars'],
+  ['type'=>'bikes',       'icon'=>'motorcycle',         'label'=>'Bikes'],
   ['type'=>'attractions', 'icon'=>'confirmation_number','label'=>'Attractions'],
-  ['type'=>'restaurants', 'icon'=>'restaurant',         'label'=>'Restaurants'],
+  ['type'=>'restaurants', 'icon'=>'restaurant',         'label'=>'Dine'],
   ['type'=>'buses',       'icon'=>'directions_bus',     'label'=>'Buses'],
 ];
 ?>
@@ -169,7 +185,7 @@ $category_nav = [
     <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-[#0a0705]"></div>
     <!-- Breadcrumb at very top -->
     <div class="absolute top-0 left-0 right-0 pt-5">
-        <div class="max-w-7xl mx-auto px-6 flex items-center gap-2 text-sm text-white/60 flex-wrap">
+        <div class="max-w-[1140px] mx-auto px-5 flex items-center gap-2 text-sm text-white/60 flex-wrap">
             <a href="<?php echo BASE_PATH; ?>/index" class="hover:text-white transition-colors flex items-center gap-1">
                 <span class="material-symbols-outlined text-base">home</span>Home
             </a>
@@ -179,7 +195,7 @@ $category_nav = [
     </div>
     <!-- Title at bottom -->
     <div class="absolute bottom-0 left-0 right-0 pb-6">
-        <div class="max-w-7xl mx-auto px-6">
+        <div class="max-w-[1140px] mx-auto px-5">
             <h1 class="text-white text-2xl md:text-4xl font-serif font-black flex items-center gap-3">
                 <span class="material-symbols-outlined text-primary text-3xl"><?php echo htmlspecialchars($c['icon']); ?></span>
                 <?php echo htmlspecialchars($c['hero_h1']); ?>
@@ -190,19 +206,62 @@ $category_nav = [
 </div>
 
 <main class="min-h-screen" style="background:#f8f6f6">
-<div class="max-w-7xl mx-auto px-6 py-8">
-  <div class="flex flex-col lg:flex-row gap-8">
-
-    <!-- Mobile filter toggle -->
-    <div class="lg:hidden relative top-[72px] z-40 mb-4">
-      <button id="mob-filter-btn" onclick="document.getElementById('sidebar-filters').classList.toggle('hidden'); this.classList.toggle('bg-primary'); this.classList.toggle('text-white')"
-              class="flex items-center gap-2 bg-white/90 backdrop-blur-md border border-slate-200 text-slate-700 font-bold px-4 py-3 rounded-2xl text-sm shadow-lg w-full justify-center transition-all active:scale-95">
-        <span class="material-symbols-outlined text-base">tune</span>Filters &amp; Sort
-      </button>
+<div class="max-w-[1140px] mx-auto px-3 sm:px-5 py-4 sm:py-8">
+    <!-- Page Title & Search Bar -->
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-3">
+      <div>
+        <h1 class="text-xl sm:text-3xl font-extrabold tracking-tight text-slate-900 leading-tight"><?php echo htmlspecialchars($c['heading']); ?></h1>
+        <p class="text-slate-500 text-sm font-medium"><?php echo count($items); ?> result<?php echo count($items) !== 1 ? 's' : ''; ?> found</p>
+      </div>
+      <form method="GET" action="<?php echo BASE_PATH; ?>/listing/<?php echo htmlspecialchars($type); ?>" class="flex items-center gap-2 w-full sm:w-auto">
+        <div class="relative flex-1 sm:w-64">
+           <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+           <input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>"
+                  placeholder="Search <?php echo htmlspecialchars($c['label']); ?>..."
+                  class="w-full border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 bg-white text-slate-900 transition-all"/>
+        </div>
+        <button type="submit" class="px-4 py-2.5 bg-primary text-white rounded-xl text-sm font-bold hover:bg-orange-600 transition-all shadow active:scale-95">Search</button>
+      </form>
     </div>
 
-    <!-- Sidebar -->
-    <aside id="sidebar-filters" class="hidden lg:block w-full lg:w-72 shrink-0 space-y-6">
+    <!-- Filter & Sort Bar (Spans full width above content) -->
+    <div class="mb-4 flex flex-col sm:flex-row items-center justify-between bg-white px-4 py-3 rounded-2xl border border-slate-100 shadow-sm gap-3">
+      <div class="flex items-center gap-2 w-full sm:w-auto">
+        <button onclick="document.getElementById('sidebar-filters').classList.toggle('collapsed'); document.getElementById('listings-wrapper').classList.toggle('grid-filtered')" 
+                class="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2.5 bg-slate-900 text-white rounded-xl text-sm font-bold hover:bg-slate-800 transition-all shadow active:scale-95 group">
+          <span class="material-symbols-outlined text-base group-hover:rotate-12 transition-transform">tune</span>
+          Filters
+          <span id="active-filter-badge" class="hidden ml-1 size-4 bg-primary text-white text-[9px] rounded-full flex items-center justify-center border-2 border-slate-900">0</span>
+        </button>
+        <button onclick="resetFilters()" class="px-3 py-2.5 text-slate-400 hover:text-primary transition-colors text-sm font-bold">Clear</button>
+        <!-- Sort inline on mobile -->
+        <div class="flex items-center gap-1.5 flex-1 sm:hidden bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200">
+           <span class="material-symbols-outlined text-slate-400 text-base">sort</span>
+           <select onchange="applyFilters(this.value)" class="bg-transparent text-xs font-bold text-slate-700 outline-none cursor-pointer py-1 w-full">
+             <option value="default">Featured</option>
+             <option value="price-low">Price ↑</option>
+             <option value="price-high">Price ↓</option>
+             <option value="rating">Top Rated</option>
+           </select>
+        </div>
+      </div>
+
+      <div class="hidden sm:flex items-center gap-4 w-full sm:w-auto">
+        <div class="flex items-center gap-2 flex-1 sm:flex-none bg-slate-50 px-4 py-1.5 rounded-2xl border border-slate-200">
+           <span class="material-symbols-outlined text-slate-400 text-lg">sort</span>
+           <select onchange="applyFilters(this.value)" class="bg-transparent text-sm font-bold text-slate-700 outline-none cursor-pointer py-1.5 min-w-[120px]">
+             <option value="default">Sort by: Featured</option>
+             <option value="price-low">Price: Low to High</option>
+             <option value="price-high">Price: High to Low</option>
+             <option value="rating">Top Rated</option>
+           </select>
+        </div>
+      </div>
+    </div>
+
+    <div id="listings-wrapper" class="flex flex-col lg:flex-row gap-0 lg:gap-8 items-start grid-container-anim collapsed-active">
+      <!-- Sidebar (Hidden by default, shown via toggle) -->
+      <aside id="sidebar-filters" class="collapsed w-full lg:w-72 shrink-0 sticky top-24">
       <div class="bg-white/80 p-6 rounded-2xl shadow-sm border border-slate-100">
         <div class="flex items-center justify-between mb-5">
           <h3 class="text-lg font-bold text-slate-900">Filters</h3>
@@ -271,23 +330,11 @@ $category_nav = [
       </div>
     </aside>
 
-    <!-- Main content -->
-    <div class="flex-1">
-      <div class="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4">
-        <div>
-          <h1 class="text-3xl font-extrabold tracking-tight text-slate-900"><?php echo htmlspecialchars($c['heading']); ?></h1>
-          <p class="text-slate-500 font-medium"><?php echo count($items); ?> result<?php echo count($items) !== 1 ? 's' : ''; ?> found</p>
-        </div>
-        <form method="GET" action="<?php echo BASE_PATH; ?>/listing/<?php echo htmlspecialchars($type); ?>" class="flex items-center gap-2">
-          <input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>"
-                 placeholder="Search <?php echo htmlspecialchars($c['label']); ?>..."
-                 class="border border-slate-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 bg-white text-slate-900 w-48"/>
-          <button type="submit" class="px-4 py-2 bg-primary text-white rounded-xl text-sm font-bold hover:bg-orange-600 transition-all">Search</button>
-        </form>
-      </div>
 
-      <!-- Cards grid -->
-      <div id="listings-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Main content -->
+      <div class="flex-1 min-w-0">
+        <!-- Cards grid -->
+        <div id="listings-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <?php if (empty($items)): ?>
         <div class="col-span-3 text-center py-16 text-slate-400">
             <span class="material-symbols-outlined text-5xl mb-3 block">search_off</span>
@@ -312,7 +359,7 @@ $category_nav = [
             $badge_color  = !empty($item['badge']) ? $badge_colors[crc32($item['badge']) % count($badge_colors)] : '';
             $hidden_class = $i >= 9 ? ' listing-hidden' : '';
         ?>
-        <div class="group bg-white rounded-2xl overflow-hidden flex flex-col hover:shadow-2xl transition-all duration-300 hover:-translate-y-1.5 relative border border-slate-100<?php echo $hidden_class; ?>"
+        <div class="listing-card-anim group bg-white rounded-2xl overflow-hidden flex flex-col hover:shadow-2xl transition-all duration-300 hover:-translate-y-1.5 relative border border-slate-100<?php echo $hidden_class; ?>"
              data-type="<?php echo htmlspecialchars($item_type); ?>"
              data-price="<?php echo (int)$price_val; ?>"
              data-rating="<?php echo number_format((float)($item['rating'] ?? 0), 1); ?>">
@@ -356,7 +403,7 @@ $category_nav = [
               <span class="material-symbols-outlined text-sm text-primary/70">location_on</span>
               <span class="line-clamp-1"><?php echo $subtitle; ?></span>
             </div>
-            <div class="mt-auto flex items-center justify-between border-t border-slate-100 pt-4">
+            <div class="card-footer mt-auto flex items-center justify-between border-t border-slate-100 pt-4">
               <div>
                 <span class="text-xl font-black text-primary"><?php echo $price_fmt; ?></span>
                 <?php if ($c['unit'] && $price_val > 0): ?>
@@ -429,44 +476,72 @@ function onPriceMax(v) {
     applyFilters();
 }
 
-function applyFilters() {
+function applyFilters(sortBy = 'default') {
     var checkedTypes = Array.from(document.querySelectorAll('.type-filter:checked')).map(function(el){ return el.value.toLowerCase(); });
     var minRating = parseFloat(document.querySelector('input[name="rating-filter"]:checked')?.value || '0');
     var grid = document.getElementById('listings-grid');
-    var cards = grid.querySelectorAll('[data-type]');
-    var shown = 0;
+    var cards = Array.from(grid.querySelectorAll('.listing-card-anim'));
+    
+    // Add fade-out to all cards first for smooth transition
+    cards.forEach(card => card.classList.add('fade-out'));
 
-    cards.forEach(function(card) {
-        var cType   = (card.dataset.type || '').toLowerCase();
-        var cPrice  = parseInt(card.dataset.price || '0');
-        var cRating = parseFloat(card.dataset.rating || '0');
+    setTimeout(() => {
+        var shown = 0;
+        cards.forEach(function(card) {
+            var cType   = (card.dataset.type || '').toLowerCase();
+            var cPrice  = parseInt(card.dataset.price || '0');
+            var cRating = parseFloat(card.dataset.rating || '0');
 
-        var typeOk   = checkedTypes.length === 0 || checkedTypes.includes(cType);
-        var priceOk  = cPrice === 0 || (cPrice >= _priceMin && cPrice <= _priceMax);
-        var ratingOk = cRating >= minRating;
+            var typeOk   = checkedTypes.length === 0 || checkedTypes.includes(cType);
+            var priceOk  = cPrice === 0 || (cPrice >= _priceMin && cPrice <= _priceMax);
+            var ratingOk = cRating >= minRating;
 
-        var pass = typeOk && priceOk && ratingOk;
-        // Remove listing-hidden so display:none!important doesn't block us
-        card.classList.remove('listing-hidden');
-        card.style.display = pass ? '' : 'none';
-        if (pass) shown++;
-    });
+            var pass = typeOk && priceOk && ratingOk;
+            card.classList.remove('listing-hidden');
+            card.style.display = pass ? '' : 'none';
+            if (pass) {
+                shown++;
+                card.classList.remove('fade-out');
+                card.classList.add('fade-in');
+            }
+        });
 
-    // Update result count
-    var countEl = document.querySelector('.text-slate-500');
-    if (countEl) countEl.textContent = shown + ' result' + (shown !== 1 ? 's' : '') + ' found';
+        // Sorting (with re-appending)
+        if (sortBy !== 'default') {
+            cards.sort(function(a, b) {
+                if (sortBy === 'price-low') return parseInt(a.dataset.price) - parseInt(b.dataset.price);
+                if (sortBy === 'price-high') return parseInt(b.dataset.price) - parseInt(a.dataset.price);
+                if (sortBy === 'rating') return parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating);
+                return 0;
+            });
+            // Re-order DOM elements
+            cards.forEach(function(c) { grid.appendChild(c); });
+        }
 
-    // Update active filter bar
-    var activeCount = checkedTypes.length + (minRating > 0 ? 1 : 0) +
-        (_priceMin > <?php echo $slider_min; ?> || _priceMax < <?php echo $slider_max; ?> ? 1 : 0);
-    var bar = document.getElementById('active-filter-bar');
-    document.getElementById('active-filter-count').textContent = activeCount;
-    if (activeCount > 0) { bar.classList.remove('hidden'); bar.classList.add('flex'); }
-    else { bar.classList.add('hidden'); bar.classList.remove('flex'); }
+        // Update result count
+        var countEl = document.querySelector('.text-slate-500');
+        if (countEl) countEl.textContent = shown + ' result' + (shown !== 1 ? 's' : '') + ' found';
 
-    // Hide load-more if filters active
-    var lmw = document.getElementById('load-more-wrap');
-    if (lmw) lmw.style.display = activeCount > 0 ? 'none' : '';
+        // Update active filter bar
+        var activeCount = checkedTypes.length + (minRating > 0 ? 1 : 0) +
+            (_priceMin > <?php echo $slider_min; ?> || _priceMax < <?php echo $slider_max; ?> ? 1 : 0);
+        
+        var badge = document.getElementById('active-filter-badge');
+        if (badge) {
+            badge.textContent = activeCount;
+            badge.classList.toggle('hidden', activeCount === 0);
+            badge.classList.toggle('flex', activeCount > 0);
+        }
+
+        var bar = document.getElementById('active-filter-bar');
+        document.getElementById('active-filter-count').textContent = activeCount;
+        if (activeCount > 0) { bar.classList.remove('hidden'); bar.classList.add('flex'); }
+        else { bar.classList.add('hidden'); bar.classList.remove('flex'); }
+
+        // Hide load-more if filters active
+        var lmw = document.getElementById('load-more-wrap');
+        if (lmw) lmw.style.display = activeCount > 0 ? 'none' : '';
+    }, 300); // Wait for fade-out to finish
 }
 
 function resetFilters() {

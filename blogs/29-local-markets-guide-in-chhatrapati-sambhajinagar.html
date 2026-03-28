@@ -35,7 +35,7 @@ Welcome to our comprehensive guide on Local Markets Guide in Chhatrapati Sambhaj
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
 <script>tailwind.config={{darkMode:"class",theme:{{extend:{{colors:{{"primary":"#ec5b13","whatsapp":"#25D366","background-dark":"#0a0705"}},fontFamily:{{display:["Inter","sans-serif"],serif:["Playfair Display","serif"]}}}}}}}}</script>
 <style>
-body{opacity:0;will-change:opacity;}
+body{opacity:0;will-change:opacity;transition:opacity 0.15s ease;}
 body.page-ready{animation:pageFadeIn 0.2s ease forwards;}
 @keyframes pageFadeIn{from{opacity:0;}to{opacity:1;}}
 .material-symbols-outlined{font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;font-family:"Material Symbols Outlined";font-style:normal;display:inline-block;line-height:1;}
@@ -112,12 +112,36 @@ body.page-ready{animation:pageFadeIn 0.2s ease forwards;}
 .gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;}
 @media(max-width:768px){.gallery-grid{grid-template-columns:repeat(2,1fr);gap:10px;}}
 @media(max-width:480px){.gallery-grid{grid-template-columns:repeat(2,1fr);gap:8px;}}
+
+/* ── Marquee bar fixed at top ── */
+#marquee-bar{position:fixed;top:0;left:0;right:0;z-index:70;
+  transition:opacity 0.35s ease,max-height 0.35s ease,padding 0.35s ease;
+  max-height:60px;overflow:hidden;}
+#marquee-bar.hidden-bar{opacity:0;max-height:0;
+  padding-top:0!important;padding-bottom:0!important;pointer-events:none;}
+/* ── Pill header ── */
+#site-header{
+  position:fixed!important;left:50%;transform:translateX(-50%);
+  width:100%;max-width:100%;border-radius:0;
+  background:#000;border:none;border-bottom:1px solid rgba(255,255,255,0.05);
+  box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none;z-index:60;
+  transition:top .45s cubic-bezier(.4,0,.2,1),width .45s cubic-bezier(.4,0,.2,1),
+    max-width .45s cubic-bezier(.4,0,.2,1),border-radius .45s cubic-bezier(.4,0,.2,1),
+    background .45s cubic-bezier(.4,0,.2,1),box-shadow .45s cubic-bezier(.4,0,.2,1);}
+#site-header.pill-mode{
+  top:15px!important;width:calc(100% - 32px);max-width:1120px;
+  border-radius:9999px;background:rgba(10,7,5,0.85);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border:1px solid rgba(255,255,255,0.10);box-shadow:0 8px 40px rgba(0,0,0,0.38);}
+#site-header nav{height:64px;min-height:64px;}
+#site-header.pill-mode nav{height:62px!important;min-height:62px!important;}
+#site-header-placeholder{display:block;}
 </style>
 </head>
 <body class="bg-white dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
 <!-- Marquee Bar -->
-<div class="bg-[#ec5b13] text-white py-1.5 overflow-hidden relative z-[60]">
-    <div class="max-w-7xl mx-auto px-6 flex justify-between items-center gap-4 text-[11px] font-semibold uppercase tracking-widest">
+<div id="marquee-bar" class="bg-[#ec5b13] text-white py-1.5 overflow-hidden relative z-[60]">
+    <div class="max-w-[1140px] mx-auto px-5 flex justify-between items-center gap-4 text-[11px] font-semibold uppercase tracking-widest">
         <div class="flex-1 overflow-hidden">
             <div class="flex whitespace-nowrap" style="animation:marquee 30s linear infinite">
                 <style>@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}</style>
@@ -134,116 +158,142 @@ body.page-ready{animation:pageFadeIn 0.2s ease forwards;}
     </div>
 </div>
 
-<header id="site-header" class="sticky top-0 w-full z-50 transition-all duration-300 glass-dark border-b border-white/5 bg-[#0a0705]">
-    <nav class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-        <a href="../index" class="flex items-center shrink-0">
-            <img src="../images/travelhub.png" alt="CSNExplore" class="h-9 object-contain" loading="lazy"/>
-        </a>
-        <div class="hidden md:flex items-center gap-0.5">
-            <a href="../listing/stays" class="text-sm font-semibold px-3 py-1.5 rounded-full text-white/60 hover:bg-white/10 hover:text-white transition-colors">Stays</a>
-            <a href="../listing/cars" class="text-sm font-semibold px-3 py-1.5 rounded-full text-white/60 hover:bg-white/10 hover:text-white transition-colors">Cars</a>
-            <a href="../listing/bikes" class="text-sm font-semibold px-3 py-1.5 rounded-full text-white/60 hover:bg-white/10 hover:text-white transition-colors">Bikes</a>
-            <a href="../listing/attractions" class="text-sm font-semibold px-3 py-1.5 rounded-full text-white/60 hover:bg-white/10 hover:text-white transition-colors">Attractions</a>
-            <a href="../listing/restaurants" class="text-sm font-semibold px-3 py-1.5 rounded-full text-white/60 hover:bg-white/10 hover:text-white transition-colors">Dine</a>
-            <a href="../listing/buses" class="text-sm font-semibold px-3 py-1.5 rounded-full text-white/60 hover:bg-white/10 hover:text-white transition-colors">Buses</a>
-        </div>
-        <div class="flex items-center gap-2">
-            <a href="../login" id="hdr-login-btn" class="text-white text-sm font-semibold px-4 py-1.5 hover:bg-white/10 rounded-full transition-all">Login</a>
-            <a href="tel:+918600968888" class="hidden lg:flex items-center gap-1.5 bg-slate-800 text-white text-sm font-bold px-4 py-1.5 rounded-full hover:bg-slate-700 transition-all border border-slate-700">
-                <span class="material-symbols-outlined text-base text-[#ec5b13]">call</span> Call Now
-            </a>
-            <a href="https://wa.me/918600968888" target="_blank" class="hidden sm:flex items-center gap-1.5 bg-[#25D366] text-white text-sm font-bold px-4 py-1.5 rounded-full hover:bg-[#128C7E] transition-all shadow-lg shadow-[#25D366]/20">
-                <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.417-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.305 1.652zm6.599-3.825c1.63.975 3.41 1.487 5.23 1.488 5.439 0 9.861-4.422 9.863-9.861.001-2.636-1.024-5.115-2.884-6.977-1.862-1.864-4.341-2.887-6.979-2.888-5.439 0-9.861 4.422-9.863 9.862 0 1.842.511 3.641 1.478 5.187l-.995 3.637 3.73-.978zm11.367-7.643c-.31-.155-1.837-.906-2.12-.108-.285.103-.55.515-.674.654-.124.14-.248.155-.558.001-.31-.155-1.31-.483-2.498-1.543-.924-.824-1.548-1.841-1.73-2.15-.181-.31-.019-.477.135-.631.14-.139.31-.36.465-.541.155-.181.206-.31.31-.515.103-.206.052-.386-.026-.541-.077-.155-.674-1.626-.924-2.228-.243-.585-.491-.504-.674-.513-.175-.008-.375-.01-.575-.01s-.525.075-.8.375c-.275.3-1.05 1.026-1.05 2.5s1.075 2.9 1.225 3.1c.15.2 2.11 3.221 5.113 4.513.714.307 1.272.49 1.706.629.718.227 1.37.195 1.886.118.575-.085 1.837-.75 2.096-1.475.258-.725.258-1.346.181-1.475-.077-.129-.283-.206-.593-.361z"/></svg>
-                WhatsApp
-            </a>
-            <div id="hdr-user-menu" class="hidden relative">
-                <button id="hdr-user-btn" class="flex items-center gap-1.5 text-white text-xs sm:text-sm font-semibold px-3 py-1.5 hover:bg-white/10 rounded-full transition-all">
-                    <span class="material-symbols-outlined text-base text-[#ec5b13]">account_circle</span>
-                    <span id="hdr-user-name" class="max-w-[70px] sm:max-w-[100px] truncate"></span>
-                    <span class="material-symbols-outlined text-sm">expand_more</span>
-                </button>
-                <div id="hdr-dropdown" class="hidden absolute right-0 top-full mt-2 w-44 bg-[#1a1208] border border-white/10 rounded-2xl shadow-2xl py-1.5 z-[200]">
-                    <button id="hdr-logout-btn" class="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-400 hover:bg-white/5 hover:text-red-300 transition-colors rounded-xl">
-                        <span class="material-symbols-outlined text-base">logout</span>Logout
-                    </button>
-                </div>
-            </div>
-            <button id="mob-btn" class="md:hidden p-2 rounded-lg transition-colors ml-1 hover:bg-white/10 text-white">
-                <span class="material-symbols-outlined text-2xl text-white">menu</span>
-            </button>
-        </div>
-    </nav>
-    <div id="mob-menu" class="hidden md:hidden border-t border-white/10 px-4 py-3 flex flex-col gap-1 bg-[#0a0705]">
-        <a href="../listing/stays" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">Stays</a>
-        <a href="../listing/cars" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">Cars</a>
-        <a href="../listing/bikes" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">Bikes</a>
-        <a href="../listing/attractions" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">Attractions</a>
-        <a href="../listing/restaurants" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">Dine</a>
-        <a href="../listing/buses" class="text-sm font-semibold px-4 py-2.5 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-colors">Buses</a>
-        
-        <div class="flex gap-2 pt-2 border-t border-white/10 mt-1">
-            <a href="../login" class="flex-1 text-center text-white hover:bg-white/10 text-sm font-semibold py-2 rounded-xl transition-all">Login</a>
-            <a href="tel:+918600968888" class="flex-1 text-center bg-slate-800 text-white text-sm font-bold py-2 rounded-xl hover:bg-slate-700 transition-all border border-slate-700">Call Now</a>
-        </div>
-        <a href="https://wa.me/918600968888" target="_blank" class="w-full mt-2 text-center bg-[#25D366] text-white text-sm font-bold py-2.5 rounded-xl hover:bg-[#128C7E] transition-all flex items-center justify-center gap-2">
-            <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.417-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.305 1.652zm6.599-3.825c1.63.975 3.41 1.487 5.23 1.488 5.439 0 9.861-4.422 9.863-9.861.001-2.636-1.024-5.115-2.884-6.977-1.862-1.864-4.341-2.887-6.979-2.888-5.439 0-9.861 4.422-9.863 9.862 0 1.842.511 3.641 1.478 5.187l-.995 3.637 3.73-.978zm11.367-7.643c-.31-.155-1.837-.906-2.12-.108-.285.103-.55.515-.674.654-.124.14-.248.155-.558.001-.31-.155-1.31-.483-2.498-1.543-.924-.824-1.548-1.841-1.73-2.15-.181-.31-.019-.477.135-.631.14-.139.31-.36.465-.541.155-.181.206-.31.31-.515.103-.206.052-.386-.026-.541-.077-.155-.674-1.626-.924-2.228-.243-.585-.491-.504-.674-.513-.175-.008-.375-.01-.575-.01s-.525.075-.8.375c-.275.3-1.05 1.026-1.05 2.5s1.075 2.9 1.225 3.1c.15.2 2.11 3.221 5.113 4.513.714.307 1.272.49 1.706.629.718.227 1.37.195 1.886.118.575-.085 1.837-.75 2.096-1.475.258-.725.258-1.346.181-1.475-.077-.129-.283-.206-.593-.361z"/></svg> WhatsApp
-        </a>
+<div id="site-header-placeholder" style="height:96px;background:#000000"></div>
+<style>
+#marquee-bar{position:fixed;top:0;left:0;right:0;z-index:70;overflow:hidden;max-height:60px;}
+#marquee-bar.hidden-bar{opacity:0;max-height:0;padding-top:0!important;padding-bottom:0!important;pointer-events:none;}
+#site-header{position:fixed!important;left:50%;transform:translateX(-50%);width:100%;max-width:100%;border-radius:0;background:#000;border:none;border-bottom:1px solid rgba(255,255,255,0.06);box-shadow:none;backdrop-filter:none;z-index:60;transition:top .5s cubic-bezier(.32,0,.15,1),width .5s cubic-bezier(.32,0,.15,1),max-width .5s cubic-bezier(.32,0,.15,1),border-radius .5s cubic-bezier(.32,0,.15,1),background .5s cubic-bezier(.32,0,.15,1),box-shadow .5s cubic-bezier(.32,0,.15,1);}
+#site-header.pill-mode{top:14px!important;width:calc(100% - 32px);max-width:1120px;border-radius:9999px;background:rgba(8,5,3,0.88);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border:1px solid rgba(255,255,255,0.10);box-shadow:0 4px 32px rgba(0,0,0,0.45);}
+#site-header nav{height:64px;min-height:64px;}
+#site-header.pill-mode nav{height:60px!important;min-height:60px!important;}
+#mob-menu-blog{position:fixed;inset:0;z-index:200;background:rgba(6,4,2,0.97);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);display:flex;flex-direction:column;overflow-y:auto;transform:translateX(100%);transition:transform 0.32s cubic-bezier(0.32,0,0.15,1);}
+#mob-menu-blog.open{transform:translateX(0);}
+</style>
+<header id="site-header" class="w-full">
+  <nav class="max-w-[1140px] mx-auto px-4 sm:px-5 flex items-center justify-between" style="height:64px;min-height:64px">
+    <a href="../index" class="flex items-center shrink-0">
+      <img src="../images/travelhub.png" alt="CSNExplore" class="h-8 sm:h-9 object-contain" loading="lazy"/>
+    </a>
+    <div class="hidden md:flex items-center gap-0.5">
+      <a href="../listing/stays" class="text-sm font-semibold px-4 py-2 rounded-full text-white/65 hover:bg-white/10 hover:text-white transition-colors">Stays</a>
+      <a href="../listing/cars" class="text-sm font-semibold px-4 py-2 rounded-full text-white/65 hover:bg-white/10 hover:text-white transition-colors">Cars</a>
+      <a href="../listing/bikes" class="text-sm font-semibold px-4 py-2 rounded-full text-white/65 hover:bg-white/10 hover:text-white transition-colors">Bikes</a>
+      <a href="../listing/attractions" class="text-sm font-semibold px-4 py-2 rounded-full text-white/65 hover:bg-white/10 hover:text-white transition-colors">Attractions</a>
+      <a href="../listing/restaurants" class="text-sm font-semibold px-4 py-2 rounded-full text-white/65 hover:bg-white/10 hover:text-white transition-colors">Dine</a>
+      <a href="../listing/buses" class="text-sm font-semibold px-4 py-2 rounded-full text-white/65 hover:bg-white/10 hover:text-white transition-colors">Buses</a>
     </div>
-    <script>
-        document.getElementById("mob-btn").addEventListener("click", function(){
-            document.getElementById("mob-menu").classList.toggle("hidden");
-        });
-        (function(){
-            var h = document.getElementById("site-header");
-            function updateHeader() {
-                if (window.scrollY === 0) { h.classList.add("header-solid"); }
-                else { h.classList.remove("header-solid"); }
-            }
-            updateHeader();
-            window.addEventListener("scroll", updateHeader, {passive:true});
-        })();
-        function addPageReady(){document.body.classList.add("page-ready");}
-        if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",addPageReady);}else{addPageReady();}
-        document.addEventListener("click", function(e) {
-            var a = e.target.closest("a");
-            if (!a) return;
-            var href = a.getAttribute("href");
-            if (!href || href.startsWith("#") || href.startsWith("mailto:") || href.startsWith("tel:") || href.startsWith("javascript") || a.target === "_blank") return;
-            e.preventDefault();
-            document.body.style.transition = "opacity 0.18s ease";
-            document.body.style.opacity = "0";
-            setTimeout(function(){ window.location.href = href; }, 190);
-        });
-
-      (function(){
-        var token=localStorage.getItem("csn_token");
-        var user=JSON.parse(localStorage.getItem("csn_user")||"null");
-        function clearAll(){
-          localStorage.removeItem("csn_token");localStorage.removeItem("csn_user");
-          localStorage.removeItem("csn_admin_token");localStorage.removeItem("csn_admin_user");
-          token=null;user=null;
-        }
-        if(token){try{var parts=token.split(".");if(parts.length===3){var p=JSON.parse(atob(parts[1].replace(/-/g,"+").replace(/_/g,"/")));if(p.exp&&p.exp<Math.floor(Date.now()/1000)){clearAll();}}else{clearAll();}}catch(e){clearAll();}}
-        if(token&&user){
-          var pl=document.getElementById("hdr-login-btn");
-          var pu=document.getElementById("hdr-user-menu");
-          var pn=document.getElementById("hdr-user-name");
-          if(pl)pl.style.display="none";
-          if(pu)pu.classList.remove("hidden");
-          if(pn)pn.textContent=user.name?user.name.split(" ")[0]:"Account";
-        }
-        var userBtn=document.getElementById("hdr-user-btn");
-        var dropdown=document.getElementById("hdr-dropdown");
-        if(userBtn){
-          userBtn.addEventListener("click",function(e){e.stopPropagation();dropdown.classList.toggle("hidden");});
-          document.addEventListener("click",function(){if(dropdown)dropdown.classList.add("hidden");});
-        }
-        function doLogout(){clearAll();window.location.href="../index";}
-        var lb=document.getElementById("hdr-logout-btn");
-        if(lb)lb.addEventListener("click",doLogout);
-      })();
-    </script>
+    <div class="flex items-center gap-1.5">
+      <div class="hidden lg:flex items-center gap-1.5">
+        <a href="tel:+918600968888" class="flex items-center gap-1.5 bg-slate-800 text-white h-9 px-4 rounded-full hover:bg-slate-700 transition-all border border-slate-700 text-sm font-bold">
+          <span class="material-symbols-outlined text-[17px] text-[#ec5b13]">call</span>
+          <span class="hdr-call-text">+91 86009 68888</span>
+        </a>
+        <a href="https://wa.me/918600968888" target="_blank" class="flex items-center gap-1.5 bg-[#25D366] text-white h-9 px-3 rounded-full hover:bg-[#1ebe5d] transition-all text-sm font-bold">
+          <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+          <span class="hdr-wa-text">WhatsApp</span>
+        </a>
+      </div>
+      <div class="h-5 w-px bg-white/10 mx-0.5 hidden lg:block"></div>
+      <a href="../login" id="hdr-login-btn" class="text-white text-[13px] font-bold px-3 py-1.5 hover:bg-white/10 rounded-full transition-all">Login</a>
+      <div id="hdr-user-menu" class="hidden relative">
+        <button id="hdr-user-btn" class="size-9 flex items-center justify-center hover:bg-white/10 rounded-full transition-all">
+          <span class="material-symbols-outlined text-[22px] text-[#ec5b13]" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24">account_circle</span>
+        </button>
+        <div id="hdr-dropdown" class="hidden absolute right-0 top-full mt-2 w-44 bg-white border border-slate-200 rounded-2xl shadow-xl py-2 z-[300]">
+          <div class="px-4 py-2 border-b border-slate-100 mb-1"><p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">My Account</p></div>
+          <button id="hdr-logout-btn" class="w-full flex items-center gap-2 px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors font-bold text-left">
+            <span class="material-symbols-outlined text-red-500 text-[18px]">logout</span> Sign Out
+          </button>
+        </div>
+      </div>
+      <button id="mob-btn" class="md:hidden size-9 flex items-center justify-center rounded-full text-white active:bg-white/10 transition-colors ml-0.5">
+        <span class="material-symbols-outlined text-xl">menu</span>
+      </button>
+    </div>
+  </nav>
 </header>
+
+<!-- Mobile menu (outside header so z-index works) -->
+<div id="mob-menu-blog">
+  <div class="flex items-center justify-between px-5 py-4 shrink-0" style="border-bottom:1px solid rgba(255,255,255,0.08)">
+    <img src="../images/travelhub.png" alt="CSNExplore" class="h-8 object-contain"/>
+    <button id="mob-close" style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;color:rgba(255,255,255,0.7);background:none;border:none;cursor:pointer">
+      <span class="material-symbols-outlined" style="font-size:24px">close</span>
+    </button>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:4px;padding:20px 16px 12px">
+    <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.2em;color:rgba(255,255,255,0.3);margin-bottom:8px;padding:0 12px">Menu</p>
+    <a href="../index" style="display:flex;align-items:center;font-size:16px;font-weight:600;padding:14px 16px;border-radius:16px;color:rgba(255,255,255,0.85);text-decoration:none">Home</a>
+    <a href="../about" style="display:flex;align-items:center;font-size:16px;font-weight:600;padding:14px 16px;border-radius:16px;color:rgba(255,255,255,0.85);text-decoration:none">About Us</a>
+    <a href="../contact" style="display:flex;align-items:center;font-size:16px;font-weight:600;padding:14px 16px;border-radius:16px;color:rgba(255,255,255,0.85);text-decoration:none">Contact Us</a>
+    <a href="../blogs" style="display:flex;align-items:center;font-size:16px;font-weight:600;padding:14px 16px;border-radius:16px;color:rgba(255,255,255,0.85);text-decoration:none">Our Blogs</a>
+    <a href="../listing/stays" style="display:flex;align-items:center;font-size:16px;font-weight:600;padding:14px 16px;border-radius:16px;color:rgba(255,255,255,0.85);text-decoration:none">Stays</a>
+    <a href="../listing/cars" style="display:flex;align-items:center;font-size:16px;font-weight:600;padding:14px 16px;border-radius:16px;color:rgba(255,255,255,0.85);text-decoration:none">Cars</a>
+    <a href="../listing/bikes" style="display:flex;align-items:center;font-size:16px;font-weight:600;padding:14px 16px;border-radius:16px;color:rgba(255,255,255,0.85);text-decoration:none">Bikes</a>
+    <a href="../listing/attractions" style="display:flex;align-items:center;font-size:16px;font-weight:600;padding:14px 16px;border-radius:16px;color:rgba(255,255,255,0.85);text-decoration:none">Attractions</a>
+  </div>
+  <div style="flex:1;min-height:16px"></div>
+  <div style="padding:16px 16px 32px;border-top:1px solid rgba(255,255,255,0.08);display:flex;flex-direction:column;gap:10px">
+    <div id="mob-auth-login" style="display:flex;gap:8px">
+      <a href="../login" style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px;background:#ec5b13;color:#fff;font-weight:700;border-radius:16px;font-size:14px;text-decoration:none">
+        <span class="material-symbols-outlined" style="font-size:17px">login</span> Sign In
+      </a>
+      <a href="../register" style="flex:1;display:flex;align-items:center;justify-content:center;padding:12px;background:rgba(255,255,255,0.08);color:#fff;font-weight:700;border-radius:16px;font-size:14px;border:1px solid rgba(255,255,255,0.12);text-decoration:none">Register</a>
+    </div>
+    <div id="mob-auth-user" style="display:none">
+      <button id="mob-logout-btn" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;color:#f87171;font-weight:700;background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.15);border-radius:16px;font-size:14px;cursor:pointer">
+        <span class="material-symbols-outlined" style="font-size:17px">logout</span> Sign Out
+      </button>
+    </div>
+    <a href="tel:+918600968888" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:#1e293b;color:#fff;font-weight:700;padding:14px;border-radius:16px;border:1px solid #334155;font-size:14px;text-decoration:none">
+      <span class="material-symbols-outlined" style="font-size:17px;color:#ec5b13">call</span> +91 86009 68888
+    </a>
+    <a href="https://wa.me/918600968888" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:#25D366;color:#fff;font-weight:700;padding:14px;border-radius:16px;font-size:14px;text-decoration:none">
+      <svg style="width:16px;height:16px;fill:currentColor;flex-shrink:0" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+      WhatsApp Us
+    </a>
+  </div>
+</div>
+<script>
+// Mobile menu
+(function(){
+  var btn=document.getElementById('mob-btn'), menu=document.getElementById('mob-menu-blog'), close=document.getElementById('mob-close');
+  if(!btn||!menu)return;
+  btn.addEventListener('click',function(){menu.classList.add('open');document.body.style.overflow='hidden';});
+  if(close)close.addEventListener('click',function(){menu.classList.remove('open');document.body.style.overflow='';});
+})();
+// Pill header scroll
+(function(){
+  var h=document.getElementById('site-header'),ph=document.getElementById('site-header-placeholder'),mb=document.getElementById('marquee-bar');
+  if(!h)return;
+  var MH=0,ticking=false;
+  function measure(){if(!mb)return 0;mb.style.transition='none';mb.classList.remove('hidden-bar');var v=mb.offsetHeight;mb.style.transition='';return v;}
+  function normal(){if(mb){mb.style.transition='none';mb.classList.remove('hidden-bar');mb.offsetHeight;mb.style.transition='';}h.classList.remove('pill-mode');h.style.top=MH+'px';if(ph)ph.style.height=(MH+64)+'px';}
+  function pill(){if(mb)mb.classList.add('hidden-bar');h.classList.add('pill-mode');h.style.top='';if(ph)ph.style.height=(MH+64)+'px';}
+  function upd(){window.scrollY>40?pill():normal();ticking=false;}
+  MH=measure();h.style.top=MH+'px';if(ph)ph.style.height=(MH+64)+'px';
+  window.addEventListener('scroll',function(){if(!ticking){requestAnimationFrame(upd);ticking=true;}},{passive:true});
+  window.addEventListener('load',function(){MH=measure();upd();});
+  upd();
+})();
+// Auth
+(function(){
+  var tok=localStorage.getItem('csn_token'),usr=JSON.parse(localStorage.getItem('csn_user')||'null');
+  if(tok&&usr){
+    var lb=document.getElementById('hdr-login-btn');if(lb)lb.style.display='none';
+    var um=document.getElementById('hdr-user-menu');if(um)um.classList.remove('hidden');
+    var mal=document.getElementById('mob-auth-login');if(mal)mal.classList.add('hidden');
+    var mau=document.getElementById('mob-auth-user');if(mau)mau.classList.remove('hidden');
+  }
+  var ub=document.getElementById('hdr-user-btn'),dd=document.getElementById('hdr-dropdown');
+  if(ub&&dd){ub.addEventListener('click',function(e){e.stopPropagation();dd.classList.toggle('hidden');});document.addEventListener('click',function(){dd.classList.add('hidden');});}
+  function logout(){['csn_token','csn_user','csn_admin_token','csn_admin_user'].forEach(function(k){localStorage.removeItem(k);});location.href='../index';}
+  var dl=document.getElementById('hdr-logout-btn');if(dl)dl.addEventListener('click',logout);
+  var ml=document.getElementById('mob-logout-btn');if(ml)ml.addEventListener('click',logout);
+})();
+// Ensure body is visible
+document.body.style.opacity='1';
+</script>
 
 <main class="bg-white min-h-screen">
   <!-- Hero: shared image with breadcrumb at top, blog title at bottom -->
@@ -351,7 +401,7 @@ body.page-ready{animation:pageFadeIn 0.2s ease forwards;}
   </div>
 </main>
 <footer class="bg-slate-900 text-white pt-14 pb-8">
-    <div class="max-w-7xl mx-auto px-6">
+    <div class="max-w-[1140px] mx-auto px-5">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
             <!-- Brand -->
             <div data-reveal data-reveal="left">

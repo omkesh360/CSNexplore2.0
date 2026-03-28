@@ -134,9 +134,11 @@ $extra_styles = '
           .search-row { flex-wrap:wrap; gap:8px; }
           .search-field { flex:1 1 100%; height:46px; }
           .date-field { flex:1 1 calc(50% - 4px); height:46px; min-width:0; }
-          .search-btn { width:100%; justify-content:center; height:46px; font-size:14px; padding:0 16px; }
-          .tab-btn { padding:6px 10px; font-size:12px; }
-          .tab-btn .material-symbols-outlined { font-size:15px; }
+          .search-btn { width:100%; justify-content:center; height:46px; font-size:14px; padding:0 16px; border-radius:14px; }
+          .tab-btn { padding:6px 12px; font-size:12px; flex:1; justify-content:center; }
+          .tab-btn .material-symbols-outlined { font-size:16px; }
+          #search-tabs-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; display: flex; gap: 4px; padding-bottom: 2px; }
+          #search-tabs-scroll::-webkit-scrollbar { display: none; }
         }
         @media(max-width:400px){ .date-field { flex:1 1 100%; } }
         .search-panel { display:none; }
@@ -174,7 +176,7 @@ require 'header.php';
         <div class="orb w-64 h-64 bg-orange-400/10 bottom-1/3 right-10 z-[5]" style="animation-delay:3s"></div>
         <!-- Particles container -->
         <div id="particles" class="absolute inset-0 z-[6] overflow-hidden"></div>    </div>
-    <div class="relative z-20 text-center px-4 w-full max-w-5xl mx-auto pt-8 pb-6">
+    <div class="relative z-20 text-center px-4 w-full max-w-[1140px] mx-auto pt-8 pb-6">
         <p id="hero-label" class="text-primary font-bold text-xs uppercase tracking-widest mb-3">Chhatrapati Sambhajinagar</p>
         <h1 class="font-serif text-3xl sm:text-4xl md:text-6xl text-white mb-4 leading-tight font-black">
             <span id="hero-pre">Explore </span><span class="text-primary" id="hero-highlight">Your City</span><span id="hero-post"> Your Way</span>
@@ -183,7 +185,7 @@ require 'header.php';
 
         <!-- Search Box -->
         <div class="search-box max-w-4xl mx-auto w-full">
-            <div class="flex flex-wrap gap-1.5 mb-4 pb-3 border-b border-white/10 justify-center">
+            <div id="search-tabs-scroll" class="flex flex-wrap gap-1.5 mb-4 pb-3 border-b border-white/10 justify-center">
                 <?php
                 $tabs = [
                     ['id' => 'stays',       'icon' => 'bed',                  'label' => 'Stays'],
@@ -301,33 +303,70 @@ document.addEventListener('DOMContentLoaded', function() {    var today = new Da
 });
 </script>
 
-<!-- Stats Bar -->
-<div class="bg-[#0a0705] border-t border-white/5 py-8">
-    <div class="max-w-7xl mx-auto px-6">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            <?php
-            $stats = [
-                ['icon' => 'hotel',                    'label' => $hp_settings['stat1_label'], 'color' => 'text-primary'],
-                ['icon' => 'confirmation_number',      'label' => $hp_settings['stat2_label'], 'color' => 'text-amber-400'],
-                ['icon' => 'restaurant',               'label' => $hp_settings['stat3_label'], 'color' => 'text-green-400'],
-                ['icon' => 'sentiment_very_satisfied', 'label' => $hp_settings['stat4_label'], 'color' => 'text-blue-400'],
-            ];
-            foreach ($stats as $i => $stat): ?>
-            <div class="flex flex-col items-center gap-2 group" data-reveal data-delay="<?php echo $i+1; ?>">
-                <div class="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors group-hover:scale-110 transition-transform duration-300">
-                    <span class="material-symbols-outlined <?php echo $stat['color']; ?> text-2xl"><?php echo $stat['icon']; ?></span>
+
+<!-- Banner Section -->
+<section class="py-16 bg-white overflow-hidden">
+    <div class="max-w-[1140px] mx-auto px-5">
+        <div class="flex flex-col lg:flex-row items-center gap-12 mb-16">
+            <div class="flex-1" data-reveal data-reveal="left">
+                <p class="text-primary font-bold text-xs uppercase tracking-widest mb-2">Explore Your Way</p>
+                <h2 class="font-serif text-3xl md:text-5xl text-slate-900 leading-tight mb-6">Experience the essence of <span class="bg-gradient-to-r from-primary to-orange-400 bg-clip-text text-transparent italic px-1">Maharashtra.</span></h2>
+                <div class="space-y-4">
+                    <div class="flex items-start gap-3">
+                        <div class="w-1.5 h-1.5 rounded-full bg-primary mt-2"></div>
+                        <p class="text-slate-600 text-sm italic">"Chhatrapati Sambhajinagar is more than a city; it's a living museum of ancient artistry."</p>
+                    </div>
                 </div>
-                <p class="font-black text-white text-lg leading-tight"><?php echo htmlspecialchars($stat['label']); ?></p>
+            </div>
+            <div class="flex-1 hidden sm:grid grid-cols-2 gap-4">
+                <!-- Car Rentals Card -->
+                <div data-reveal data-reveal="right" class="group relative overflow-hidden rounded-2xl h-40 sm:h-64 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500">
+                    <img alt="Car Rentals" loading="lazy" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800&q=80"/>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-3 sm:p-5">
+                        <h4 class="text-white text-sm sm:text-lg font-bold mb-1">Car Rentals</h4>
+                        <a href="<?php echo BASE_PATH; ?>/listing/cars" class="text-white/80 text-xs hover:text-white transition-colors flex items-center gap-1">Browse Cars <span class="material-symbols-outlined text-[10px]">arrow_forward</span></a>
+                    </div>
+                </div>
+                <!-- Bike Rentals Card -->
+                <div data-reveal data-reveal="right" class="group relative overflow-hidden rounded-2xl h-40 sm:h-64 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500">
+                    <img alt="Bike Rentals" loading="lazy" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=800&q=80"/>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-3 sm:p-5">
+                        <h4 class="text-white text-sm sm:text-lg font-bold mb-1">Bike Rentals</h4>
+                        <a href="<?php echo BASE_PATH; ?>/listing/bikes" class="text-white/80 text-xs hover:text-white transition-colors flex items-center gap-1">Browse Bikes <span class="material-symbols-outlined text-[10px]">arrow_forward</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Highlight Cards (Inside Banner Section) -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            <?php 
+            $highlights = [
+                ['icon'=>'hotel', 'label'=>'500+ Hotels', 'sub' => 'Premium Stays'],
+                ['icon'=>'directions_car', 'label'=>'50+ Rentals', 'sub' => 'Cars & Bikes'],
+                ['icon'=>'restaurant', 'label'=>'200+ Eateries', 'sub' => 'Best Dining'],
+                ['icon'=>'map', 'label'=>'50+ Wonders', 'sub' => 'Heritage Sites'],
+                ['icon'=>'groups', 'label'=>'10K+ Travelers', 'sub' => 'Happy Guests']
+            ];
+            foreach($highlights as $h): ?>
+            <div data-reveal class="bg-white p-6 rounded-2xl shadow-xl shadow-black/5 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 border border-slate-100 group flex flex-col items-center text-center">
+                <div class="size-11 rounded-xl bg-orange-50 flex items-center justify-center mb-4 group-hover:bg-primary transition-colors shadow-sm">
+                    <span class="material-symbols-outlined text-primary group-hover:text-white transition-colors text-2xl"><?php echo $h['icon']; ?></span>
+                </div>
+                <h4 class="text-slate-900 font-bold text-sm leading-tight italic"><?php echo $h['label']; ?></h4>
+                <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest mt-1.5"><?php echo $h['sub']; ?></p>
             </div>
             <?php endforeach; ?>
         </div>
     </div>
-</div>
+</section>
 
 <?php if (!empty($hp_settings['city_intro'])): ?>
 <!-- City Intro -->
 <div class="bg-white py-10">
-    <div class="max-w-7xl mx-auto px-6">
+    <div class="max-w-[1140px] mx-auto px-5">
         <p class="text-slate-600 text-base md:text-lg leading-relaxed text-center max-w-3xl mx-auto">
             <?php echo nl2br(htmlspecialchars($hp_settings['city_intro'])); ?>
         </p>
@@ -335,43 +374,6 @@ document.addEventListener('DOMContentLoaded', function() {    var today = new Da
 </div>
 <?php endif; ?>
 
-<!-- Ride & Explore -->
-<section class="py-12 bg-white">
-    <div class="max-w-7xl mx-auto px-6">
-        <div class="flex items-end justify-between mb-6" data-reveal>
-            <div>
-                <p class="text-primary font-bold text-xs uppercase tracking-widest mb-1">Self-Drive & Chauffeur</p>
-                <h2 class="font-serif text-2xl md:text-3xl text-slate-900">Ride &amp; Explore</h2>
-            </div>
-            <div class="flex gap-3 text-sm font-bold text-primary">
-                <a href="<?php echo BASE_PATH; ?>/listing/cars" class="hover:underline">Cars →</a>
-                <a href="<?php echo BASE_PATH; ?>/listing/bikes" class="hover:underline">Bikes →</a>
-            </div>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div data-reveal data-reveal="left" class="group relative overflow-hidden rounded-2xl h-64 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 img-shimmer">
-                <img alt="Luxury Car" loading="lazy" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlDMSSDq5u4EWTtyLrL2T01rG1QVLx79iWAxTc-Q5v-4DB7Qaf3se4mMQ0OXya60SgJNz-esA3YItuP3cAQgCOUMELZ93GiboDiWUtyGlo3vcROCcNprMWU9HsV96e-umpDcBQWbOJp3OcHtPHXGe0NfG1iYfBR6dtozOW1-x0kzci9SbakuCN5LahXPRRgoI5AgrCPrXLIv8hlg56V8HPrYua2wCw58U5qNgwuVnf4hEy-HOTzh45fEkiS4W70yyelAJTlwjmXCUK"/>
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                <div class="absolute bottom-0 left-0 right-0 p-5">
-                    <span class="text-primary text-[10px] font-bold uppercase tracking-widest mb-1 block">Self-Drive & Chauffeur</span>
-                    <h4 class="text-white text-xl font-serif mb-1">Premium Car Rentals</h4>
-                    <p class="text-white/70 text-xs mb-3">Luxury sedans, SUVs & hatchbacks at your service.</p>
-                    <a href="<?php echo BASE_PATH; ?>/listing/cars" class="inline-block bg-white text-black px-5 py-2 rounded-full font-bold text-xs hover:bg-primary hover:text-white transition-all btn-pulse">Explore Cars</a>
-                </div>
-            </div>
-            <div data-reveal data-reveal="right" class="group relative overflow-hidden rounded-2xl h-64 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 img-shimmer">
-                <img alt="Adventure Bike" loading="lazy" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFYIfhiyxiKGSvW26EEi6qWok9NLO6cRlbBw0oCLlVCiV9F1e_mtQoiJK-2Dnb5uwU3K6b01miWgbmBQaNlDcPazf_LXbqwv3zx4f_F6Jsl627xYGPA3B5kQg_01L4gEPJseizInfQycEdL6o-IO9u7fAjGuMEnr_iPgYZShZ5e9VLbqTAdlhGFW8Tnss81gBfiFHSmzorGkalt_cF3Hi8ycEbYCGC_a4e9UyOZAQ8J4m9XHF2EcZwdaPo2OpFbnwwGvVRYdxLSxsT"/>
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                <div class="absolute bottom-0 left-0 right-0 p-5">
-                    <span class="text-primary text-[10px] font-bold uppercase tracking-widest mb-1 block">Scooters to Royal Enfields</span>
-                    <h4 class="text-white text-xl font-serif mb-1">Bike Rentals</h4>
-                    <p class="text-white/70 text-xs mb-3">Ride the city your way — any road, any time.</p>
-                    <a href="<?php echo BASE_PATH; ?>/listing/bikes" class="inline-block bg-white text-black px-5 py-2 rounded-full font-bold text-xs hover:bg-primary hover:text-white transition-all btn-pulse">Explore Bikes</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
 
 <?php
 // Base counts — if more items than this are shown, switch to horizontal scroll
@@ -400,7 +402,7 @@ foreach ($hp_settings['section_order'] as $_sec_key):
     $_sec_bg_toggle = !$_sec_bg_toggle;
 ?>
 <section class="py-12 <?php echo $_bg; ?>">
-    <div class="max-w-7xl mx-auto px-6">
+    <div class="max-w-[1140px] mx-auto px-5">
         <div class="flex items-end justify-between mb-6" data-reveal>
             <?php if ($_sec_key === 'blogs'): ?>
             <div>
