@@ -57,8 +57,8 @@ class DatabaseInitializer
     {
         $sql = "
         CREATE TABLE IF NOT EXISTS cache_metadata (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            cache_key TEXT UNIQUE NOT NULL,
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            cache_key VARCHAR(255) UNIQUE NOT NULL,
             url TEXT NOT NULL,
             query_params TEXT,
             tags TEXT,
@@ -67,7 +67,7 @@ class DatabaseInitializer
             expires_at DATETIME,
             hit_count INTEGER DEFAULT 0,
             last_accessed DATETIME
-        )
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         ";
         $this->db->exec($sql);
     }
@@ -81,7 +81,7 @@ class DatabaseInitializer
     {
         $sql = "
         CREATE TABLE IF NOT EXISTS performance_metrics (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id INT AUTO_INCREMENT PRIMARY KEY,
             page_url TEXT NOT NULL,
             page_load_time_ms REAL,
             ttfb_ms REAL,
@@ -92,7 +92,7 @@ class DatabaseInitializer
             image_count INTEGER,
             image_size_bytes INTEGER,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        )
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         ";
         $this->db->exec($sql);
     }
@@ -106,15 +106,15 @@ class DatabaseInitializer
     {
         $sql = "
         CREATE TABLE IF NOT EXISTS query_cache_stats (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            query_hash TEXT UNIQUE NOT NULL,
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            query_hash VARCHAR(255) UNIQUE NOT NULL,
             query_text TEXT,
             execution_time_ms REAL,
             cache_hits INTEGER DEFAULT 0,
             cache_misses INTEGER DEFAULT 0,
             last_executed DATETIME,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        )
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         ";
         $this->db->exec($sql);
     }
@@ -128,12 +128,12 @@ class DatabaseInitializer
     {
         $sql = "
         CREATE TABLE IF NOT EXISTS slow_queries (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id INT AUTO_INCREMENT PRIMARY KEY,
             query_text TEXT NOT NULL,
             execution_time_ms REAL,
             table_name TEXT,
             detected_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        )
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         ";
         $this->db->exec($sql);
     }
@@ -147,7 +147,7 @@ class DatabaseInitializer
     {
         $sql = "
         CREATE TABLE IF NOT EXISTS image_optimization_stats (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id INT AUTO_INCREMENT PRIMARY KEY,
             original_filename TEXT NOT NULL,
             original_size_bytes INTEGER,
             optimized_size_bytes INTEGER,
@@ -155,7 +155,7 @@ class DatabaseInitializer
             compression_ratio REAL,
             processing_time_ms REAL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        )
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         ";
         $this->db->exec($sql);
     }

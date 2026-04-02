@@ -4,14 +4,15 @@ class Database {
     private $db;
 
     private function __construct() {
-        $dbPath = __DIR__ . '/../database/csnexplore.db';
-        $dbDir  = dirname($dbPath);
-        if (!is_dir($dbDir)) mkdir($dbDir, 0755, true);
-
-        $this->db = new PDO('sqlite:' . $dbPath);
+        $host = getenv('DB_HOST') ?: 'localhost';
+        $dbName = getenv('DB_DATABASE') ?: 'csnexplore';
+        $user = getenv('DB_USERNAME') ?: 'root';
+        $pass = getenv('DB_PASSWORD') ?: '';
+        
+        $dsn = "mysql:host=$host;dbname=$dbName;charset=utf8mb4";
+        $this->db = new PDO($dsn, $user, $pass);
         $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $this->db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-        $this->db->exec('PRAGMA foreign_keys = ON');
         $this->initSchema();
     }
 
@@ -24,127 +25,141 @@ class Database {
 
     private function initSchema() {
         $this->db->exec("
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            email TEXT UNIQUE NOT NULL,
-            password_hash TEXT NOT NULL,
-            name TEXT NOT NULL,
-            phone TEXT,
-            role TEXT NOT NULL DEFAULT 'user' CHECK(role IN ('user','admin','vendor')),
-            is_verified INTEGER DEFAULT 0,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        );
-        CREATE TABLE IF NOT EXISTS stays (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL, type TEXT, location TEXT NOT NULL,
-            description TEXT, price_per_night REAL NOT NULL DEFAULT 0,
-            rating REAL DEFAULT 0, reviews INTEGER DEFAULT 0,
-            badge TEXT, image TEXT, gallery TEXT, amenities TEXT,
-            room_type TEXT, max_guests INTEGER DEFAULT 2,
-            is_active INTEGER DEFAULT 1, display_order INTEGER DEFAULT 0,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        );
-        CREATE TABLE IF NOT EXISTS cars (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL, type TEXT, location TEXT NOT NULL,
-            description TEXT, price_per_day REAL NOT NULL DEFAULT 0,
-            rating REAL DEFAULT 0, reviews INTEGER DEFAULT 0,
-            badge TEXT, image TEXT, gallery TEXT, features TEXT,
-            fuel_type TEXT, transmission TEXT, seats INTEGER DEFAULT 5,
-            is_active INTEGER DEFAULT 1, display_order INTEGER DEFAULT 0,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        );
-        CREATE TABLE IF NOT EXISTS bikes (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL, type TEXT, location TEXT NOT NULL,
-            description TEXT, price_per_day REAL NOT NULL DEFAULT 0,
-            rating REAL DEFAULT 0, reviews INTEGER DEFAULT 0,
-            badge TEXT, image TEXT, gallery TEXT, features TEXT,
-            fuel_type TEXT, cc TEXT,
-            is_active INTEGER DEFAULT 1, display_order INTEGER DEFAULT 0,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        );
-        CREATE TABLE IF NOT EXISTS restaurants (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL, type TEXT, cuisine TEXT, location TEXT NOT NULL,
-            description TEXT, price_per_person REAL DEFAULT 0,
-            rating REAL DEFAULT 0, reviews INTEGER DEFAULT 0,
-            badge TEXT, image TEXT, gallery TEXT, menu_highlights TEXT,
-            is_active INTEGER DEFAULT 1, display_order INTEGER DEFAULT 0,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        );
-        CREATE TABLE IF NOT EXISTS attractions (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL, type TEXT, location TEXT NOT NULL,
-            description TEXT, entry_fee REAL DEFAULT 0,
-            rating REAL DEFAULT 0, reviews INTEGER DEFAULT 0,
-            badge TEXT, image TEXT, gallery TEXT,
-            opening_hours TEXT, best_time TEXT,
-            is_active INTEGER DEFAULT 1, display_order INTEGER DEFAULT 0,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        );
-        CREATE TABLE IF NOT EXISTS buses (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            operator TEXT NOT NULL, bus_type TEXT, from_location TEXT NOT NULL,
-            to_location TEXT NOT NULL, departure_time TEXT, arrival_time TEXT,
-            duration TEXT, price REAL DEFAULT 0,
-            rating REAL DEFAULT 0, reviews INTEGER DEFAULT 0,
-            badge TEXT, image TEXT, amenities TEXT, seats_available INTEGER DEFAULT 40,
-            is_active INTEGER DEFAULT 1, display_order INTEGER DEFAULT 0,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        );
-        CREATE TABLE IF NOT EXISTS bookings (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            full_name TEXT NOT NULL, phone TEXT NOT NULL, email TEXT,
-            booking_date TEXT, number_of_people INTEGER DEFAULT 1,
-            service_type TEXT, listing_id INTEGER, listing_name TEXT,
-            status TEXT DEFAULT 'pending' CHECK(status IN ('pending','completed','cancelled')),
-            notes TEXT,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        );
-        CREATE TABLE IF NOT EXISTS blogs (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            title TEXT NOT NULL, content TEXT NOT NULL,
-            author TEXT DEFAULT 'Admin', image TEXT,
-            status TEXT DEFAULT 'published' CHECK(status IN ('published','draft')),
-            category TEXT DEFAULT 'General',
-            read_time TEXT, tags TEXT, meta_description TEXT,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        );
-        CREATE TABLE IF NOT EXISTS about_contact (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            section TEXT UNIQUE NOT NULL,
-            content TEXT NOT NULL,
-            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        );
-        CREATE TABLE IF NOT EXISTS contact_messages (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            first_name TEXT NOT NULL,
-            last_name TEXT,
-            email TEXT NOT NULL,
-            interest TEXT,
-            message TEXT NOT NULL,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        );
-        CREATE TABLE IF NOT EXISTS password_resets (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id INTEGER NOT NULL,
-            token_hash TEXT NOT NULL,
-            expires_at DATETIME NOT NULL,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-        );
-        ");
+        CREATE TABLE IF NOT EXISTS `users` (
+          `id` INT AUTO_INCREMENT PRIMARY KEY,
+          `email` VARCHAR(255) UNIQUE NOT NULL,
+          `password_hash` VARCHAR(255) NOT NULL,
+          `name` VARCHAR(255) NOT NULL,
+          `phone` VARCHAR(50),
+          `role` ENUM('user','admin','vendor') NOT NULL DEFAULT 'user',
+          `is_verified` TINYINT(1) DEFAULT 0,
+          `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+          `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+        CREATE TABLE IF NOT EXISTS `stays` (
+          `id` INT AUTO_INCREMENT PRIMARY KEY,
+          `name` VARCHAR(255) NOT NULL, `type` VARCHAR(100), `location` VARCHAR(255) NOT NULL,
+          `description` TEXT, `price_per_night` DECIMAL(10,2) NOT NULL DEFAULT 0,
+          `rating` DECIMAL(3,1) DEFAULT 0, `reviews` INT DEFAULT 0,
+          `badge` VARCHAR(100), `image` VARCHAR(255), `gallery` TEXT, `amenities` TEXT,
+          `room_type` VARCHAR(100), `max_guests` INT DEFAULT 2,
+          `is_active` TINYINT(1) DEFAULT 1, `display_order` INT DEFAULT 0,
+          `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+          `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+        CREATE TABLE IF NOT EXISTS `cars` (
+          `id` INT AUTO_INCREMENT PRIMARY KEY,
+          `name` VARCHAR(255) NOT NULL, `type` VARCHAR(100), `location` VARCHAR(255) NOT NULL,
+          `description` TEXT, `price_per_day` DECIMAL(10,2) NOT NULL DEFAULT 0,
+          `rating` DECIMAL(3,1) DEFAULT 0, `reviews` INT DEFAULT 0,
+          `badge` VARCHAR(100), `image` VARCHAR(255), `gallery` TEXT, `features` TEXT,
+          `fuel_type` VARCHAR(50), `transmission` VARCHAR(50), `seats` INT DEFAULT 5,
+          `is_active` TINYINT(1) DEFAULT 1, `display_order` INT DEFAULT 0,
+          `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+          `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+        CREATE TABLE IF NOT EXISTS `bikes` (
+          `id` INT AUTO_INCREMENT PRIMARY KEY,
+          `name` VARCHAR(255) NOT NULL, `type` VARCHAR(100), `location` VARCHAR(255) NOT NULL,
+          `description` TEXT, `price_per_day` DECIMAL(10,2) NOT NULL DEFAULT 0,
+          `rating` DECIMAL(3,1) DEFAULT 0, `reviews` INT DEFAULT 0,
+          `badge` VARCHAR(100), `image` VARCHAR(255), `gallery` TEXT, `features` TEXT,
+          `fuel_type` VARCHAR(50), `cc` VARCHAR(50),
+          `is_active` TINYINT(1) DEFAULT 1, `display_order` INT DEFAULT 0,
+          `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+          `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+        CREATE TABLE IF NOT EXISTS `restaurants` (
+          `id` INT AUTO_INCREMENT PRIMARY KEY,
+          `name` VARCHAR(255) NOT NULL, `type` VARCHAR(100), `cuisine` VARCHAR(100), `location` VARCHAR(255) NOT NULL,
+          `description` TEXT, `price_per_person` DECIMAL(10,2) DEFAULT 0,
+          `rating` DECIMAL(3,1) DEFAULT 0, `reviews` INT DEFAULT 0,
+          `badge` VARCHAR(100), `image` VARCHAR(255), `gallery` TEXT, `menu_highlights` TEXT,
+          `is_active` TINYINT(1) DEFAULT 1, `display_order` INT DEFAULT 0,
+          `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+          `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+        CREATE TABLE IF NOT EXISTS `attractions` (
+          `id` INT AUTO_INCREMENT PRIMARY KEY,
+          `name` VARCHAR(255) NOT NULL, `type` VARCHAR(100), `location` VARCHAR(255) NOT NULL,
+          `description` TEXT, `entry_fee` DECIMAL(10,2) DEFAULT 0,
+          `rating` DECIMAL(3,1) DEFAULT 0, `reviews` INT DEFAULT 0,
+          `badge` VARCHAR(100), `image` VARCHAR(255), `gallery` TEXT,
+          `opening_hours` TEXT, `best_time` TEXT,
+          `is_active` TINYINT(1) DEFAULT 1, `display_order` INT DEFAULT 0,
+          `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+          `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+        CREATE TABLE IF NOT EXISTS `buses` (
+          `id` INT AUTO_INCREMENT PRIMARY KEY,
+          `operator` VARCHAR(255) NOT NULL, `bus_type` VARCHAR(100), `from_location` VARCHAR(255) NOT NULL,
+          `to_location` VARCHAR(255) NOT NULL, `departure_time` VARCHAR(100), `arrival_time` VARCHAR(100),
+          `duration` VARCHAR(100), `price` DECIMAL(10,2) DEFAULT 0,
+          `rating` DECIMAL(3,1) DEFAULT 0, `reviews` INT DEFAULT 0,
+          `badge` VARCHAR(100), `image` VARCHAR(255), `amenities` TEXT, `seats_available` INT DEFAULT 40,
+          `is_active` TINYINT(1) DEFAULT 1, `display_order` INT DEFAULT 0,
+          `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+          `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+          `gallery` TEXT
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+        CREATE TABLE IF NOT EXISTS `bookings` (
+          `id` INT AUTO_INCREMENT PRIMARY KEY,
+          `full_name` VARCHAR(255) NOT NULL, `phone` VARCHAR(50) NOT NULL, `email` VARCHAR(255),
+          `booking_date` VARCHAR(100), `number_of_people` INT DEFAULT 1,
+          `service_type` VARCHAR(50), `listing_id` INT, `listing_name` VARCHAR(255),
+          `status` ENUM('pending','completed','cancelled') DEFAULT 'pending',
+          `notes` TEXT,
+          `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+          `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+          `checkin_date` VARCHAR(100),
+          `checkout_date` VARCHAR(100)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+        CREATE TABLE IF NOT EXISTS `blogs` (
+          `id` INT AUTO_INCREMENT PRIMARY KEY,
+          `title` VARCHAR(255) NOT NULL, `content` LONGTEXT NOT NULL,
+          `author` VARCHAR(100) DEFAULT 'Admin', `image` VARCHAR(255),
+          `status` ENUM('published','draft') DEFAULT 'published',
+          `category` VARCHAR(100) DEFAULT 'General',
+          `read_time` VARCHAR(50), `tags` VARCHAR(255), `meta_description` TEXT,
+          `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+          `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+        CREATE TABLE IF NOT EXISTS `about_contact` (
+          `id` INT AUTO_INCREMENT PRIMARY KEY,
+          `section` VARCHAR(100) UNIQUE NOT NULL,
+          `content` TEXT NOT NULL,
+          `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+        CREATE TABLE IF NOT EXISTS `contact_messages` (
+          `id` INT AUTO_INCREMENT PRIMARY KEY,
+          `first_name` VARCHAR(100) NOT NULL,
+          `last_name` VARCHAR(100),
+          `email` VARCHAR(255) NOT NULL,
+          `interest` VARCHAR(100),
+          `message` TEXT NOT NULL,
+          `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+        CREATE TABLE IF NOT EXISTS `password_resets` (
+          `id` INT AUTO_INCREMENT PRIMARY KEY,
+          `user_id` INT NOT NULL,
+          `token_hash` VARCHAR(255) NOT NULL,
+          `expires_at` DATETIME NOT NULL,
+          `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ");
+        
         // Seed admin user if not exists
         $admin = $this->fetchOne("SELECT id FROM users WHERE email = ?", [ADMIN_EMAIL]);
         if (!$admin) {
@@ -158,6 +173,7 @@ class Database {
             ]);
         }
     }
+
 
     public function query($sql, $params = []) {
         $stmt = $this->db->prepare($sql);

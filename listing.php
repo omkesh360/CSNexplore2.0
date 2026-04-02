@@ -369,7 +369,7 @@ $category_nav = [
 
           <div class="relative h-52 overflow-hidden">
             <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                 src="<?php echo htmlspecialchars($item['image'] ?? ''); ?>"
+                 src="<?php echo (strpos($item['image'] ?? '', 'http') === 0) ? htmlspecialchars($item['image']) : BASE_PATH . '/' . ltrim(htmlspecialchars($item['image'] ?? ''), '/'); ?>"
                  alt="<?php echo htmlspecialchars($item['name'] ?? $item['operator'] ?? ''); ?>"
                  loading="lazy"
                  onerror="this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80'"/>

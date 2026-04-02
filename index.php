@@ -431,7 +431,8 @@ foreach ($hp_settings['section_order'] as $_sec_key):
         if ($_sec_key === 'attractions'):
             $render_fn = function($a) {
                 $slug = BASE_PATH . '/listing-detail/' . generateSlug('attractions', $a['id'], $a['name']) . '.html';
-                $img=htmlspecialchars($a['image']); $name=htmlspecialchars($a['name']);
+                $img = strpos($a['image'] ?? '', 'http') === 0 ? htmlspecialchars($a['image']) : BASE_PATH . '/' . ltrim(htmlspecialchars($a['image'] ?? ''), '/');
+                $name=htmlspecialchars($a['name']);
                 $tag=htmlspecialchars($a['type']??'Attraction');
                 $price=$a['entry_fee']>0 ? '&#8377;'.number_format($a['entry_fee']) : 'Free';
                 $rating=number_format((float)($a['rating']??0),1);
@@ -449,7 +450,8 @@ foreach ($hp_settings['section_order'] as $_sec_key):
         elseif ($_sec_key === 'bikes'):
             $render_fn = function($b) {
                 $slug = BASE_PATH . '/listing-detail/' . generateSlug('bikes', $b['id'], $b['name']) . '.html';
-                $img=htmlspecialchars($b['image']); $name=htmlspecialchars($b['name']);
+                $img = strpos($b['image'] ?? '', 'http') === 0 ? htmlspecialchars($b['image']) : BASE_PATH . '/' . ltrim(htmlspecialchars($b['image'] ?? ''), '/');
+                $name=htmlspecialchars($b['name']);
                 $type=htmlspecialchars($b['type']); $price=number_format($b['price_per_day']);
                 $rating=number_format((float)($b['rating']??0),1);
                 return '<a href="'.$slug.'" class="group overflow-hidden rounded-2xl bg-white border border-slate-100 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex-shrink-0" style="width:VAR_W">'
@@ -466,7 +468,8 @@ foreach ($hp_settings['section_order'] as $_sec_key):
         elseif ($_sec_key === 'restaurants'):
             $render_fn = function($r) {
                 $slug = BASE_PATH . '/listing-detail/' . generateSlug('restaurants', $r['id'], $r['name']) . '.html';
-                $img=htmlspecialchars($r['image']); $name=htmlspecialchars($r['name']);
+                $img = strpos($r['image'] ?? '', 'http') === 0 ? htmlspecialchars($r['image']) : BASE_PATH . '/' . ltrim(htmlspecialchars($r['image'] ?? ''), '/');
+                $name=htmlspecialchars($r['name']);
                 $cuisine=htmlspecialchars($r['cuisine']??$r['type']); $price=number_format($r['price_per_person']??0);
                 $rating=number_format((float)($r['rating']??0),1);
                 return '<a href="'.$slug.'" class="group relative overflow-hidden rounded-2xl bg-white border border-slate-100 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex-shrink-0" style="width:VAR_W">'
@@ -505,7 +508,8 @@ foreach ($hp_settings['section_order'] as $_sec_key):
                 $t=preg_replace('/[^a-z0-9\s-]/','',$t);
                 $t=preg_replace('/[\s-]+/','-',$t);
                 $slug = BASE_PATH . '/blogs/'.$blog['id'].'-'.substr(trim($t,'-'),0,60) . '.html';
-                $img=htmlspecialchars($blog['image']??''); $title=htmlspecialchars($blog['title']);
+                $img = strpos($blog['image'] ?? '', 'http') === 0 ? htmlspecialchars($blog['image'] ?? '') : BASE_PATH . '/' . ltrim(htmlspecialchars($blog['image'] ?? ''), '/');
+                $title=htmlspecialchars($blog['title']);
                 $cat=htmlspecialchars($blog['category']??'Travel');
                 return '<a href="'.$slug.'" class="group cursor-pointer flex-shrink-0 hover:-translate-y-1 transition-all duration-300" style="width:VAR_W">'
                     .'<div class="rounded-2xl overflow-hidden aspect-[16/10] mb-3 shadow-md relative">'

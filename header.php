@@ -111,6 +111,7 @@ $active_listing_type = $listing_type ?? '';
         }
         <?php if (!empty($extra_styles)) echo $extra_styles; ?>
     </style>
+    <?php if (!empty($extra_head)) echo $extra_head; ?>
 </head>
 <body class="bg-white font-display text-slate-900">
 <!-- Top Announcement Marquee -->
