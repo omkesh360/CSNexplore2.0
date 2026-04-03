@@ -37,7 +37,7 @@ body { font-family: 'Inter', sans-serif; }
         var token = localStorage.getItem('csn_vendor_token');
         var vendor = JSON.parse(localStorage.getItem('csn_vendor_user') || 'null');
         if (token && vendor) {
-            window.location.href = 'dashboard.php';
+            window.location.href = '<?php echo VENDOR_API_BASE; ?>/vendor/dashboard.php';
         }
     } catch(e) {}
 })();
@@ -141,7 +141,7 @@ document.getElementById('login-form').addEventListener('submit', async function(
 
         localStorage.setItem('csn_vendor_token', data.token);
         localStorage.setItem('csn_vendor_user',  JSON.stringify(data.vendor));
-        window.location.href = 'dashboard.php';
+        window.location.href = '<?php echo VENDOR_API_BASE; ?>/vendor/dashboard.php';
 
     } catch(ex) {
         errText.textContent = ex.message;

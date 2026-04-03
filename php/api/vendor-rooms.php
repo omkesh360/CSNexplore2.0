@@ -48,8 +48,8 @@ if ($action === 'list') {
         FROM room_types rt
         WHERE rt.vendor_id = ?
         ORDER BY rt.created_at DESC
-        LIMIT ?
-    ", [$vendor_id, $limit]);
+        LIMIT $limit
+    ", [$vendor_id]);
     
     sendJson(['rooms' => $roomTypes]);
 }

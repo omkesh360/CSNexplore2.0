@@ -1,112 +1,90 @@
 <?php
-// Ultra-simple vendor auth - uses existing database connection
+// Ultra-simple vendor auth — uses existing database + JWT
 header('Content-Type: application/json');
-
-// Disable all error display
 error_reporting(0);
 ini_set('display_errors', 0);
-
-// Start fresh
 ob_clean();
 
-// Load config and database
 require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../jwt.php';
 
-// Get input
-$input = json_decode(file_get_contents('php://input'), true) ?? [];
+$input  = json_decode(file_get_contents('php://input'), true) ?? [];
 $action = $_GET['action'] ?? '';
 
-// Simple response
+// ── LOGIN ────────────────────────────────────────────────────────────────────
 if ($action === 'login') {
-    $username = $input['username'] ?? '';
+    $username = trim($input['username'] ?? '');
     $password = $input['password'] ?? '';
-    
+
     if (!$username || !$password) {
         http_response_code(400);
         echo json_encode(['error' => 'Username and password required']);
         exit;
     }
-    
-    // Try to connect to database
+
     try {
-        $pdo = getDB()->getConnection();
-        
-        // Get vendor
+        $pdo  = getDB()->getConnection();
         $stmt = $pdo->prepare("SELECT * FROM vendors WHERE username = ?");
         $stmt->execute([$username]);
         $vendor = $stmt->fetch(PDO::FETCH_ASSOC);
-        
+
         if (!$vendor) {
             http_response_code(401);
             echo json_encode(['error' => 'Invalid username or password']);
             exit;
         }
-        
+
         if ($vendor['status'] !== 'active') {
             http_response_code(403);
-            echo json_encode(['error' => 'Account inactive']);
+            echo json_encode(['error' => 'Account is inactive. Contact admin.']);
             exit;
         }
-        
+
         if (!password_verify($password, $vendor['password_hash'])) {
             http_response_code(401);
             echo json_encode(['error' => 'Invalid username or password']);
             exit;
         }
-        
-        // Generate simple token (not JWT, just base64)
-        $token = base64_encode(json_encode([
-            'vendor_id' => $vendor['id'],
-            'username' => $vendor['username'],
-            'type' => 'vendor',
-            'exp' => time() + (7 * 24 * 60 * 60)
-        ]));
-        
+
+        // Generate proper JWT (7 days) — compatible with vendor-rooms.php / vendor-cars.php
+        $token = createJWT([
+            'vendor_id' => (int)$vendor['id'],
+            'username'  => $vendor['username'],
+            'name'      => $vendor['name'],
+            'type'      => 'vendor',
+        ], JWT_SECRET, 7 * 24 * 3600);
+
         unset($vendor['password_hash']);
-        
-        echo json_encode([
-            'success' => true,
-            'token' => $token,
-            'vendor' => $vendor
-        ]);
+        echo json_encode(['success' => true, 'token' => $token, 'vendor' => $vendor]);
         exit;
-        
-    } catch (PDOException $e) {
-        http_response_code(500);
-        echo json_encode(['error' => 'Database error: ' . $e->getMessage()]);
-        exit;
+
     } catch (Exception $e) {
         http_response_code(500);
-        echo json_encode(['error' => 'Error: ' . $e->getMessage()]);
+        echo json_encode(['error' => 'Server error: ' . $e->getMessage()]);
         exit;
     }
 }
 
+// ── VERIFY ───────────────────────────────────────────────────────────────────
 if ($action === 'verify') {
-    $token = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
-    $token = str_replace('Bearer ', '', $token);
-    
+    $auth  = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+    $token = str_replace('Bearer ', '', $auth);
+
     if (!$token) {
         http_response_code(401);
         echo json_encode(['error' => 'No token']);
         exit;
     }
-    
-    try {
-        $payload = json_decode(base64_decode($token), true);
-        if (!$payload || $payload['exp'] < time()) {
-            http_response_code(401);
-            echo json_encode(['error' => 'Invalid token']);
-            exit;
-        }
-        
-        echo json_encode(['success' => true, 'vendor' => $payload]);
-        exit;
-    } catch (Exception $e) {
+
+    $payload = verifyJWT($token, JWT_SECRET);
+    if (!$payload || ($payload['type'] ?? '') !== 'vendor') {
         http_response_code(401);
-        echo json_encode(['error' => 'Token error']);
+        echo json_encode(['error' => 'Invalid or expired token']);
         exit;
     }
+
+    echo json_encode(['success' => true, 'vendor' => $payload]);
+    exit;
 }
 
 http_response_code(400);

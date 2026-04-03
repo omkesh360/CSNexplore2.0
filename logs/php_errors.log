@@ -61,3 +61,52 @@ Stack trace:
 #4 {main}
   thrown in C:\xampp\htdocs\CSNexplore2.0\php\database.php on line 13
 [03-Apr-2026 21:32:29 Europe/Berlin] PHP Parse error:  syntax error, unexpected token "\" in C:\xampp\htdocs\CSNexplore2.0\php\database.php on line 210
+[03-Apr-2026 23:16:35 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ''3'' at line 6 in C:\xampp\htdocs\CSNexplore2.0\php\database.php:244
+Stack trace:
+#0 C:\xampp\htdocs\CSNexplore2.0\php\database.php(244): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\CSNexplore2.0\php\database.php(249): Database->query('\r\n        SELEC...', Array)
+#2 C:\xampp\htdocs\CSNexplore2.0\php\api\vendor-rooms.php(45): Database->fetchAll('\r\n        SELEC...', Array)
+#3 {main}
+  thrown in C:\xampp\htdocs\CSNexplore2.0\php\database.php on line 244
+[03-Apr-2026 23:16:35 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ''3'' at line 4 in C:\xampp\htdocs\CSNexplore2.0\php\database.php:244
+Stack trace:
+#0 C:\xampp\htdocs\CSNexplore2.0\php\database.php(244): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\CSNexplore2.0\php\database.php(249): Database->query('\r\n        SELEC...', Array)
+#2 C:\xampp\htdocs\CSNexplore2.0\php\api\vendor-cars.php(45): Database->fetchAll('\r\n        SELEC...', Array)
+#3 {main}
+  thrown in C:\xampp\htdocs\CSNexplore2.0\php\database.php on line 244
+[03-Apr-2026 23:16:49 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ''100'' at line 6 in C:\xampp\htdocs\CSNexplore2.0\php\database.php:244
+Stack trace:
+#0 C:\xampp\htdocs\CSNexplore2.0\php\database.php(244): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\CSNexplore2.0\php\database.php(249): Database->query('\r\n        SELEC...', Array)
+#2 C:\xampp\htdocs\CSNexplore2.0\php\api\vendor-rooms.php(45): Database->fetchAll('\r\n        SELEC...', Array)
+#3 {main}
+  thrown in C:\xampp\htdocs\CSNexplore2.0\php\database.php on line 244
+[03-Apr-2026 23:17:00 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ''100'' at line 4 in C:\xampp\htdocs\CSNexplore2.0\php\database.php:244
+Stack trace:
+#0 C:\xampp\htdocs\CSNexplore2.0\php\database.php(244): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\CSNexplore2.0\php\database.php(249): Database->query('\r\n        SELEC...', Array)
+#2 C:\xampp\htdocs\CSNexplore2.0\php\api\vendor-cars.php(45): Database->fetchAll('\r\n        SELEC...', Array)
+#3 {main}
+  thrown in C:\xampp\htdocs\CSNexplore2.0\php\database.php on line 244
+[03-Apr-2026 23:17:19 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ''100'' at line 4 in C:\xampp\htdocs\CSNexplore2.0\php\database.php:244
+Stack trace:
+#0 C:\xampp\htdocs\CSNexplore2.0\php\database.php(244): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\CSNexplore2.0\php\database.php(249): Database->query('\r\n        SELEC...', Array)
+#2 C:\xampp\htdocs\CSNexplore2.0\php\api\vendor-cars.php(45): Database->fetchAll('\r\n        SELEC...', Array)
+#3 {main}
+  thrown in C:\xampp\htdocs\CSNexplore2.0\php\database.php on line 244
+[03-Apr-2026 23:17:32 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ''100'' at line 6 in C:\xampp\htdocs\CSNexplore2.0\php\database.php:244
+Stack trace:
+#0 C:\xampp\htdocs\CSNexplore2.0\php\database.php(244): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\CSNexplore2.0\php\database.php(249): Database->query('\r\n        SELEC...', Array)
+#2 C:\xampp\htdocs\CSNexplore2.0\php\api\vendor-rooms.php(45): Database->fetchAll('\r\n        SELEC...', Array)
+#3 {main}
+  thrown in C:\xampp\htdocs\CSNexplore2.0\php\database.php on line 244
+[03-Apr-2026 23:34:19 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY093]: Invalid parameter number: mixed named and positional parameters in C:\xampp\htdocs\CSNexplore2.0\php\database.php:244
+Stack trace:
+#0 C:\xampp\htdocs\CSNexplore2.0\php\database.php(244): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\CSNexplore2.0\php\database.php(271): Database->query('UPDATE stays SE...', Array)
+#2 C:\xampp\htdocs\CSNexplore2.0\php\api\vendor-stays.php(123): Database->update('stays', Array, 'id = ?', Array)
+#3 {main}
+  thrown in C:\xampp\htdocs\CSNexplore2.0\php\database.php on line 244

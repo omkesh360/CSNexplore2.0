@@ -46,8 +46,8 @@ if ($action === 'list') {
         SELECT * FROM cars
         WHERE vendor_id = ?
         ORDER BY created_at DESC
-        LIMIT ?
-    ", [$vendor_id, $limit]);
+        LIMIT $limit
+    ", [$vendor_id]);
     
     sendJson(['cars' => $cars]);
 }

@@ -132,12 +132,12 @@ if ($action === 'login_as') {
     $vendor = $db->fetchOne("SELECT * FROM vendors WHERE id = ?", [$id]);
     if (!$vendor) sendError('Vendor not found', 404);
 
-    $token = base64_encode(json_encode([
-        'vendor_id' => $vendor['id'],
-        'username' => $vendor['username'],
-        'type' => 'vendor',
-        'exp' => time() + (7 * 24 * 60 * 60)
-    ]));
+    $token = createJWT([
+        'vendor_id' => (int)$vendor['id'],
+        'username'  => $vendor['username'],
+        'name'      => $vendor['name'],
+        'type'      => 'vendor',
+    ], JWT_SECRET, 7 * 24 * 3600);
 
     unset($vendor['password_hash']);
     sendJson(['success' => true, 'token' => $token, 'vendor' => $vendor, 'message' => 'Logged in successfully']);

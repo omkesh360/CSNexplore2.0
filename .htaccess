@@ -175,8 +175,15 @@ ServerSignature Off
     RewriteCond %{REQUEST_FILENAME} -d
     RewriteRule ^ - [L]
 
-    # ── 6. Vendor login route (/vendorlogin → /vendor/vendorlogin.php) ───────
-    RewriteRule ^vendorlogin/?$ vendor/vendorlogin.php [L]
+    # ── 6. Vendor Portal shortcuts ────────────────────────────────────────────
+    # /vendorlogin  → vendor login page
+    RewriteRule ^vendorlogin/?$      vendor/vendorlogin.php [L,QSA]
+    # /vendor-login → same
+    RewriteRule ^vendor-login/?$     vendor/vendorlogin.php [L,QSA]
+    # /vendor-portal → vendor login page
+    RewriteRule ^vendor-portal/?$    vendor/vendorlogin.php [L,QSA]
+    # /vendor-dashboard → vendor dashboard
+    RewriteRule ^vendor-dashboard/?$ vendor/dashboard.php   [L,QSA]
 
     # ── 7. Extensionless PHP files (/about → about.php) ──────────────────────
     RewriteCond %{REQUEST_FILENAME}.php -f
