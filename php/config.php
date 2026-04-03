@@ -77,6 +77,16 @@ $_dir = dirname($_SERVER['SCRIPT_NAME'] ?? '');
 $_base = trim($_dir, '/\\');
 $_base = str_replace(['php/api', 'php'], '', $_base);
 $_base = trim($_base, '/\\');
+
+// Normalize case: use actual filesystem folder name to prevent case mismatch
+// e.g. /csNexplore2.0 → /CSNexplore2.0
+if ($_base && $_base !== '.') {
+    $_realBase = basename(dirname(__DIR__));
+    // Only override if it's a case-insensitive match (same letters, different case)
+    if (strtolower($_realBase) === strtolower($_base)) {
+        $_base = $_realBase;
+    }
+}
 define('BASE_PATH', $_base && $_base !== '.' ? '/' . $_base : '');
 
 // Security Headers

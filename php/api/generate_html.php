@@ -25,7 +25,28 @@ function htmlHead($title, $depth = 0, $canonical = '', $desc = 'Discover the bes
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="dns-prefetch" href="https://images.unsplash.com">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="format-detection" content="telephone=no"/>
+<link rel="apple-touch-icon" sizes="57x57" href="' . $base . 'images/fevicon/apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="' . $base . 'images/fevicon/apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="' . $base . 'images/fevicon/apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="' . $base . 'images/fevicon/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="' . $base . 'images/fevicon/apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="' . $base . 'images/fevicon/apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="' . $base . 'images/fevicon/apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="' . $base . 'images/fevicon/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="' . $base . 'images/fevicon/apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192"  href="' . $base . 'images/fevicon/android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="' . $base . 'images/fevicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="' . $base . 'images/fevicon/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="' . $base . 'images/fevicon/favicon-16x16.png">
+<link rel="shortcut icon" href="' . $base . 'images/fevicon/favicon.ico" type="image/x-icon">
+<meta name="msapplication-TileColor" content="#000000">
+<meta name="msapplication-TileImage" content="' . $base . 'images/fevicon/ms-icon-144x144.png">
+<meta name="theme-color" content="#000000">
 <title>' . htmlspecialchars($title) . '</title>
 
 <meta name="description" content="' . htmlspecialchars($desc) . '">
@@ -54,6 +75,7 @@ function htmlHead($title, $depth = 0, $canonical = '', $desc = 'Discover the bes
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link rel="stylesheet" href="' . $base . 'mobile-responsive.css"/>
 <script>tailwind.config={{darkMode:"class",theme:{{extend:{{colors:{{"primary":"#ec5b13","whatsapp":"#25D366","background-dark":"#0a0705"}},fontFamily:{{display:["Inter","sans-serif"],serif:["Playfair Display","serif"]}}}}}}}}</script>
 <style>
 body{opacity:0;will-change:opacity;}
@@ -358,7 +380,8 @@ foreach ($blogs as $blog) {
             $mainImg = '../' . $mainImg;
         }
 
-    $desc = mb_strimwidth(strip_tags((string)($blog['content'] ?? '')), 0, 155, '...');
+    $desc_raw = strip_tags((string)($blog['content'] ?? ''));
+    $desc = strlen($desc_raw) > 155 ? substr($desc_raw, 0, 152) . '...' : $desc_raw;
     $canonical = 'https://csnexplore.com/blogs/' . $slug;
     $absImg = (strpos($mainImg, 'http') === 0) ? $mainImg : 'https://csnexplore.com' . ltrim($mainImg, '.');
     
@@ -386,7 +409,7 @@ foreach ($blogs as $blog) {
     <!-- Breadcrumb at very top -->
     <div class="absolute top-0 left-0 right-0 pt-5">
       <div class="max-w-4xl mx-auto px-4 flex items-center gap-2 text-sm text-white/60 flex-wrap">
-        <a href="../index" class="hover:text-white transition-colors flex items-center gap-1"><span class="material-symbols-outlined text-base">home</span>Home</a>
+        <a href="../" class="hover:text-white transition-colors flex items-center gap-1"><span class="material-symbols-outlined text-base">home</span>Home</a>
         <span class="material-symbols-outlined text-base">chevron_right</span>
         <a href="../blogs" class="hover:text-white transition-colors">Blogs</a>
         <span class="material-symbols-outlined text-base">chevron_right</span>
@@ -535,11 +558,20 @@ foreach ($types as $type) {
             $mainImg = '../' . $mainImg;
         }
 
-        $desc = mb_strimwidth(strip_tags((string)($item['description'] ?? '')), 0, 155, '...');
+        $desc_raw = strip_tags((string)($item['description'] ?? ''));
+        $desc = strlen($desc_raw) > 155 ? substr($desc_raw, 0, 152) . '...' : $desc_raw;
         $canonical = 'https://csnexplore.com/listing-detail/' . $slug;
         $absImg = (strpos($mainImg, 'http') === 0) ? $mainImg : 'https://csnexplore.com' . ltrim($mainImg, '.');
         
-        $schemaType = in_array($type, ['stays', 'restaurants', 'attractions']) ? 'LocalBusiness' : 'Product';
+        $schemaTypeMap = [
+            'stays'       => 'LodgingBusiness',
+            'restaurants' => 'FoodEstablishment',
+            'attractions' => 'TouristAttraction',
+            'cars'        => 'Product',
+            'bikes'       => 'Product',
+            'buses'       => 'BusReservation',
+        ];
+        $schemaType = $schemaTypeMap[$type] ?? 'LocalBusiness';
         $schema = [
             '@context' => 'https://schema.org',
             '@type' => $schemaType,
@@ -569,7 +601,7 @@ foreach ($types as $type) {
     <!-- Breadcrumb top-left -->
     <div class="absolute top-0 left-0 right-0 pt-5 px-6">
       <div class="max-w-7xl mx-auto flex items-center gap-2 text-sm text-white/70 flex-wrap">
-        <a href="../index" class="hover:text-white transition-colors flex items-center gap-1"><span class="material-symbols-outlined text-base">home</span>Home</a>
+        <a href="../" class="hover:text-white transition-colors flex items-center gap-1"><span class="material-symbols-outlined text-base">home</span>Home</a>
         <span class="material-symbols-outlined text-sm opacity-50">chevron_right</span>
         <a href="../listing/'.$type.'" class="hover:text-white transition-colors">'.htmlspecialchars($meta['label']).'</a>
         <span class="material-symbols-outlined text-sm opacity-50">chevron_right</span>
@@ -662,6 +694,31 @@ foreach ($types as $type) {
             <p class="text-slate-800 text-sm font-medium">'.$location.'</p>
           </div>
         </div>
+
+        '.( count($resolvedGalleryImages) > 1 ? '
+        <!-- ── Full Photo Gallery Section ── -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+          <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+            <h2 class="text-sm font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2">
+              <span class="material-symbols-outlined text-[#ec5b13] text-base">photo_library</span>
+              Photo Gallery
+              <span class="ml-2 bg-slate-100 text-slate-500 text-xs font-bold px-2 py-0.5 rounded-full">'.count($resolvedGalleryImages).' photos</span>
+            </h2>
+            <button onclick="openLightbox(0)" class="text-xs font-bold text-[#ec5b13] hover:underline flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm">open_in_full</span>View All
+            </button>
+          </div>
+          <div class="p-4">
+            <div class="gallery-grid">
+              '.implode('', array_map(function($img, $i) use ($item) {
+                  return '<div class="gallery-thumb" onclick="openLightbox('.$i.')" title="Click to enlarge">
+                    <img src="'.htmlspecialchars($img).'" loading="lazy" alt="'.htmlspecialchars($item['name']).' photo '.($i+1).'" onerror="this.src=\'../images/travelhub.png\'"/>
+                  </div>';
+              }, $resolvedGalleryImages, array_keys($resolvedGalleryImages))).
+            '
+            </div>
+          </div>
+        </div>' : '' ).'
 
         <a href="../listing/'.$type.'" class="inline-flex items-center gap-2 text-[#ec5b13] font-bold text-sm hover:underline">
           <span class="material-symbols-outlined text-base">arrow_back</span>Back to '.htmlspecialchars($meta['label']).'

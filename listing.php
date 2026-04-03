@@ -156,7 +156,16 @@ $extra_styles = "
 
   /* Sidebar transition */
   #sidebar-filters { transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; }
-  #sidebar-filters.collapsed { width: 0; margin-right: 0; opacity: 0; transform: translateX(-20px); pointer-events: none; }
+  /* Desktop: width-based collapse */
+  @media (min-width: 1024px) {
+    #sidebar-filters.collapsed { width: 0; margin-right: 0; opacity: 0; transform: translateX(-20px); pointer-events: none; }
+  }
+  /* Mobile/Tablet: height-based collapse */
+  @media (max-width: 1023px) {
+    #sidebar-filters { width: 100% !important; transform: none !important; max-height: 2000px; }
+    #sidebar-filters.collapsed { max-height: 0 !important; opacity: 0 !important; margin-bottom: 0 !important; pointer-events: none !important; }
+    #sidebar-filters:not(.collapsed) { max-height: 2000px !important; opacity: 1 !important; margin-bottom: 12px !important; }
+  }
   .grid-container-anim { transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
 
   /* Adaptive card footer when filters are open */
@@ -186,7 +195,7 @@ $category_nav = [
     <!-- Breadcrumb at very top -->
     <div class="absolute top-0 left-0 right-0 pt-5">
         <div class="max-w-[1140px] mx-auto px-5 flex items-center gap-2 text-sm text-white/60 flex-wrap">
-            <a href="<?php echo BASE_PATH; ?>/index" class="hover:text-white transition-colors flex items-center gap-1">
+            <a href="<?php echo BASE_PATH; ?>/" class="hover:text-white transition-colors flex items-center gap-1">
                 <span class="material-symbols-outlined text-base">home</span>Home
             </a>
             <span class="material-symbols-outlined text-base">chevron_right</span>
@@ -206,7 +215,7 @@ $category_nav = [
 </div>
 
 <main class="min-h-screen" style="background:#f8f6f6">
-<div class="max-w-[1140px] mx-auto px-3 sm:px-5 py-4 sm:py-8">
+<div class="max-w-[1140px] mx-auto px-3 sm:px-5 py-4 sm:py-8" style="width:100%;box-sizing:border-box;overflow-x:hidden">
     <!-- Page Title & Search Bar -->
     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-3">
       <div>
@@ -225,7 +234,7 @@ $category_nav = [
     </div>
 
     <!-- Filter & Sort Bar (Spans full width above content) -->
-    <div class="mb-4 flex flex-col sm:flex-row items-center justify-between bg-white px-4 py-3 rounded-2xl border border-slate-100 shadow-sm gap-3">
+    <div class="mb-3 flex flex-col sm:flex-row items-center justify-between bg-white px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl border border-slate-100 shadow-sm gap-2 sm:gap-3">
       <div class="flex items-center gap-2 w-full sm:w-auto">
         <button onclick="document.getElementById('sidebar-filters').classList.toggle('collapsed'); document.getElementById('listings-wrapper').classList.toggle('grid-filtered')" 
                 class="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2.5 bg-slate-900 text-white rounded-xl text-sm font-bold hover:bg-slate-800 transition-all shadow active:scale-95 group">
@@ -259,9 +268,9 @@ $category_nav = [
       </div>
     </div>
 
-    <div id="listings-wrapper" class="flex flex-col lg:flex-row gap-0 lg:gap-8 items-start grid-container-anim collapsed-active">
+    <div id="listings-wrapper" class="flex flex-col lg:flex-row gap-0 lg:gap-8 items-start grid-container-anim collapsed-active" style="width:100%;min-width:0">
       <!-- Sidebar (Hidden by default, shown via toggle) -->
-      <aside id="sidebar-filters" class="collapsed w-full lg:w-72 shrink-0 sticky top-24">
+      <aside id="sidebar-filters" class="collapsed w-full lg:w-72 shrink-0 lg:sticky lg:top-24" style="min-width:0">
       <div class="bg-white/80 p-6 rounded-2xl shadow-sm border border-slate-100">
         <div class="flex items-center justify-between mb-5">
           <h3 class="text-lg font-bold text-slate-900">Filters</h3>
@@ -332,9 +341,9 @@ $category_nav = [
 
 
       <!-- Main content -->
-      <div class="flex-1 min-w-0">
+      <div class="flex-1 min-w-0" style="width:100%;overflow-x:hidden">
         <!-- Cards grid -->
-        <div id="listings-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div id="listings-grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5 lg:gap-6" style="width:100%">
         <?php if (empty($items)): ?>
         <div class="col-span-3 text-center py-16 text-slate-400">
             <span class="material-symbols-outlined text-5xl mb-3 block">search_off</span>
@@ -403,6 +412,13 @@ $category_nav = [
               <span class="material-symbols-outlined text-sm text-primary/70">location_on</span>
               <span class="line-clamp-1"><?php echo $subtitle; ?></span>
             </div>
+            <?php if ($type === 'restaurants'): ?>
+            <div class="space-y-1.5 text-xs text-slate-600 mb-4">
+              <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm" style="color:#ec5b13">verified</span><span class="font-semibold">Verified</span></div>
+              <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm" style="color:#ec5b13">cancel</span><span>Free cancellation</span></div>
+              <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm" style="color:#ec5b13">info</span><span>No hidden charges</span></div>
+            </div>
+            <?php endif; ?>
             <div class="card-footer mt-auto flex items-center justify-between border-t border-slate-100 pt-4">
               <div>
                 <span class="text-xl font-black text-primary"><?php echo $price_fmt; ?></span>

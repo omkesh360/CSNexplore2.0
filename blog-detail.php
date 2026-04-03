@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once 'php/config.php';
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
@@ -42,7 +42,7 @@ require 'header.php';
         <!-- Breadcrumb at very top of hero -->
         <div class="absolute top-0 left-0 right-0 z-10 pt-5">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-2 text-sm text-white/60 flex-wrap">
-                <a href="<?php echo BASE_PATH; ?>/index" class="hover:text-white transition-colors flex items-center gap-1">
+                <a href="<?php echo BASE_PATH; ?>/" class="hover:text-white transition-colors flex items-center gap-1">
                     <span class="material-symbols-outlined text-base">home</span>Home
                 </a>
                 <span class="material-symbols-outlined text-base">chevron_right</span>

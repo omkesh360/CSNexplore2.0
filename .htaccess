@@ -71,6 +71,8 @@ ServerSignature Off
 # ── Browser Caching ───────────────────────────────────────────────────────────
 <IfModule mod_expires.c>
     ExpiresActive On
+    
+    # Images - 1 year
     ExpiresByType image/jpg         "access plus 1 year"
     ExpiresByType image/jpeg        "access plus 1 year"
     ExpiresByType image/png         "access plus 1 year"
@@ -78,13 +80,56 @@ ServerSignature Off
     ExpiresByType image/webp        "access plus 1 year"
     ExpiresByType image/svg+xml     "access plus 1 year"
     ExpiresByType image/x-icon      "access plus 1 year"
+    
+    # Fonts - 1 year
     ExpiresByType font/woff         "access plus 1 year"
     ExpiresByType font/woff2        "access plus 1 year"
+    ExpiresByType font/ttf          "access plus 1 year"
+    ExpiresByType font/otf          "access plus 1 year"
+    ExpiresByType application/font-woff "access plus 1 year"
+    ExpiresByType application/font-woff2 "access plus 1 year"
+    
+    # CSS and JavaScript - 1 month
     ExpiresByType text/css          "access plus 1 month"
     ExpiresByType text/javascript   "access plus 1 month"
     ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType application/x-javascript "access plus 1 month"
+    
+    # HTML - No cache (dynamic content)
     ExpiresByType text/html         "access plus 0 seconds"
+    
+    # JSON and XML - No cache
     ExpiresByType application/json  "access plus 0 seconds"
+    ExpiresByType application/xml   "access plus 0 seconds"
+    ExpiresByType text/xml          "access plus 0 seconds"
+    
+    # Default - 1 week
+    ExpiresDefault                  "access plus 1 week"
+</IfModule>
+
+# Cache-Control headers for better caching
+<IfModule mod_headers.c>
+    # Images
+    <FilesMatch "\.(jpg|jpeg|png|gif|webp|svg|ico)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+    
+    # Fonts
+    <FilesMatch "\.(woff|woff2|ttf|otf|eot)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+    
+    # CSS and JavaScript
+    <FilesMatch "\.(css|js)$">
+        Header set Cache-Control "public, max-age=2592000"
+    </FilesMatch>
+    
+    # HTML - no cache
+    <FilesMatch "\.(html|htm|php)$">
+        Header set Cache-Control "no-cache, no-store, must-revalidate"
+        Header set Pragma "no-cache"
+        Header set Expires "0"
+    </FilesMatch>
 </IfModule>
 
 # ── URL Rewriting ─────────────────────────────────────────────────────────────
@@ -94,18 +139,29 @@ ServerSignature Off
     # Pass Authorization header (required for JWT)
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
+    # ── 0. Enforce correct folder case (CSNexplore2.0 not csNexplore2.0) ────
+    RewriteCond %{REQUEST_URI} ^/[Cc][Ss][Nn][Ee][Xx][Pp][Ll][Oo][Rr][Ee]2\.0(/.*)?$ [NC]
+    RewriteCond %{REQUEST_URI} !^/CSNexplore2\.0(/.*)?$
+    RewriteRule ^(.*)$ /CSNexplore2.0/$1 [R=301,L]
+
     # Remove RewriteBase if present or set to current dir
-    # RewriteBase /
+    # RewriteBase /CSNexplore2.0/
 
     # ── 1. Remove trailing slashes (except for real directories) ───────────
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} (.+)/$
     RewriteRule ^ %1 [R=301,L]
 
+    # ── 1b. Redirect /index and /index.php to canonical base URL ────────────
+    RewriteCond %{REQUEST_URI} ^(.*/)index(\.php)?$
+    RewriteRule ^ %1 [R=301,L]
+
     # ── 2. Handle Blog pages: /blogs/1-my-slug → blog-detail.php?id=1 ────────
     # Extract blog ID from URL and route to dynamic blog-detail.php
-    # This must come BEFORE the "Serve real static files" rule
     RewriteRule ^blogs/([0-9]+)-[a-z0-9-]+(?:\.html)?$ blog-detail.php?id=$1 [L,QSA]
+
+    # Explicitly handle /blogs to blogs.php if it's being hijacked by directory redirect
+    RewriteRule ^blogs/?$ blogs.php [L,QSA]
 
     # ── 3. Handle Listing detail: /listing-detail/cars-5-slug ───────────────
     # If a match is found, rewrite to the .html file inside listing-detail/
@@ -119,11 +175,14 @@ ServerSignature Off
     RewriteCond %{REQUEST_FILENAME} -d
     RewriteRule ^ - [L]
 
-    # ── 6. Extensionless PHP files (/about → about.php) ──────────────────────
+    # ── 6. Vendor login route (/vendorlogin → /vendor/vendorlogin.php) ───────
+    RewriteRule ^vendorlogin/?$ vendor/vendorlogin.php [L]
+
+    # ── 7. Extensionless PHP files (/about → about.php) ──────────────────────
     RewriteCond %{REQUEST_FILENAME}.php -f
     RewriteRule ^([^/.]+)$ $1.php [L]
 
-    # ── 7. Home & Listing fallback ──────────────────────────────────────────
+    # ── 8. Home & Listing fallback ──────────────────────────────────────────
     RewriteRule ^$                    index.php       [L]
     RewriteRule ^index/?$             index.php       [L]
     RewriteRule ^listing/([a-z-]+)/?$ listing.php?type=$1 [QSA,L]

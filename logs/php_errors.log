@@ -1,1 +1,63 @@
 [02-Apr-2026 23:07:06 Europe/Berlin] Booking #24 email status: {"user_sent":false,"admin_sent":false,"errors":[]}
+[03-Apr-2026 09:35:55 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it in C:\xampp\htdocs\CSNexplore2.0\php\database.php:13
+Stack trace:
+#0 C:\xampp\htdocs\CSNexplore2.0\php\database.php(13): PDO->__construct('mysql:host=loca...', 'root', Object(SensitiveParameterValue))
+#1 C:\xampp\htdocs\CSNexplore2.0\php\database.php(20): Database->__construct()
+#2 C:\xampp\htdocs\CSNexplore2.0\php\config.php(68): Database::getInstance()
+#3 C:\xampp\htdocs\CSNexplore2.0\index.php(6): getDB()
+#4 {main}
+  thrown in C:\xampp\htdocs\CSNexplore2.0\php\database.php on line 13
+[03-Apr-2026 09:36:12 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it in C:\xampp\htdocs\CSNexplore2.0\php\database.php:13
+Stack trace:
+#0 C:\xampp\htdocs\CSNexplore2.0\php\database.php(13): PDO->__construct('mysql:host=loca...', 'root', Object(SensitiveParameterValue))
+#1 C:\xampp\htdocs\CSNexplore2.0\php\database.php(20): Database->__construct()
+#2 C:\xampp\htdocs\CSNexplore2.0\php\config.php(68): Database::getInstance()
+#3 C:\xampp\htdocs\CSNexplore2.0\index.php(6): getDB()
+#4 {main}
+  thrown in C:\xampp\htdocs\CSNexplore2.0\php\database.php on line 13
+[03-Apr-2026 07:36:28 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it in C:\xampp\htdocs\CSNexplore2.0\php\database.php:13
+Stack trace:
+#0 C:\xampp\htdocs\CSNexplore2.0\php\database.php(13): PDO->__construct()
+#1 C:\xampp\htdocs\CSNexplore2.0\php\database.php(20): Database->__construct()
+#2 C:\xampp\htdocs\CSNexplore2.0\php\config.php(68): Database::getInstance()
+#3 C:\xampp\htdocs\CSNexplore2.0\index.php(6): getDB()
+#4 {main}
+  thrown in C:\xampp\htdocs\CSNexplore2.0\php\database.php on line 13
+[03-Apr-2026 08:59:37 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function mb_strimwidth() in C:\xampp\htdocs\CSNexplore2.0\php\api\generate_html.php:361
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\CSNexplore2.0\php\api\generate_html.php on line 361
+[03-Apr-2026 08:59:45 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function mb_strimwidth() in C:\xampp\htdocs\CSNexplore2.0\php\api\generate_html.php:361
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\CSNexplore2.0\php\api\generate_html.php on line 361
+[03-Apr-2026 09:00:42 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function mb_strimwidth() in C:\xampp\htdocs\CSNexplore2.0\php\api\generate_html.php:361
+Stack trace:
+#0 Command line code(1): require()
+#1 {main}
+  thrown in C:\xampp\htdocs\CSNexplore2.0\php\api\generate_html.php on line 361
+[03-Apr-2026 17:02:26 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it in C:\xampp\htdocs\CSNexplore2.0\php\database.php:13
+Stack trace:
+#0 C:\xampp\htdocs\CSNexplore2.0\php\database.php(13): PDO->__construct('mysql:host=loca...', 'root', Object(SensitiveParameterValue))
+#1 C:\xampp\htdocs\CSNexplore2.0\php\database.php(20): Database->__construct()
+#2 C:\xampp\htdocs\CSNexplore2.0\php\config.php(68): Database::getInstance()
+#3 C:\xampp\htdocs\CSNexplore2.0\listing.php(10): getDB()
+#4 {main}
+  thrown in C:\xampp\htdocs\CSNexplore2.0\php\database.php on line 13
+[03-Apr-2026 17:02:33 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it in C:\xampp\htdocs\CSNexplore2.0\php\database.php:13
+Stack trace:
+#0 C:\xampp\htdocs\CSNexplore2.0\php\database.php(13): PDO->__construct('mysql:host=loca...', 'root', Object(SensitiveParameterValue))
+#1 C:\xampp\htdocs\CSNexplore2.0\php\database.php(20): Database->__construct()
+#2 C:\xampp\htdocs\CSNexplore2.0\php\config.php(68): Database::getInstance()
+#3 C:\xampp\htdocs\CSNexplore2.0\listing.php(10): getDB()
+#4 {main}
+  thrown in C:\xampp\htdocs\CSNexplore2.0\php\database.php on line 13
+[03-Apr-2026 17:02:39 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it in C:\xampp\htdocs\CSNexplore2.0\php\database.php:13
+Stack trace:
+#0 C:\xampp\htdocs\CSNexplore2.0\php\database.php(13): PDO->__construct('mysql:host=loca...', 'root', Object(SensitiveParameterValue))
+#1 C:\xampp\htdocs\CSNexplore2.0\php\database.php(20): Database->__construct()
+#2 C:\xampp\htdocs\CSNexplore2.0\php\config.php(68): Database::getInstance()
+#3 C:\xampp\htdocs\CSNexplore2.0\index.php(6): getDB()
+#4 {main}
+  thrown in C:\xampp\htdocs\CSNexplore2.0\php\database.php on line 13
+[03-Apr-2026 21:32:29 Europe/Berlin] PHP Parse error:  syntax error, unexpected token "\" in C:\xampp\htdocs\CSNexplore2.0\php\database.php on line 210

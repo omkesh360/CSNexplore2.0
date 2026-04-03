@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 $page_title   = "Bus Routes from Chhatrapati Sambhajinagar | CSNExplore";
 $current_page = "bus.php";
 $extra_styles = "
@@ -97,7 +97,7 @@ $category_nav = [
             </div>
 
             <div class="flex gap-4">
-                <a href="<?php echo BASE_PATH; ?>/index" class="flex items-center gap-1.5 text-slate-500 hover:text-primary text-sm font-bold transition-colors">
+                <a href="<?php echo BASE_PATH; ?>/" class="flex items-center gap-1.5 text-slate-500 hover:text-primary text-sm font-bold transition-colors">
                     <span class="material-symbols-outlined text-base">home</span> Back to Home
                 </a>
                 <a href="<?php echo BASE_PATH; ?>/listing/stays" class="flex items-center gap-1.5 text-slate-500 hover:text-primary text-sm font-bold transition-colors">

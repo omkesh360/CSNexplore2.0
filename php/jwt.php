@@ -23,16 +23,43 @@ function verifyJWT($jwt, $secret) {
 }
 
 function getAuthToken() {
-    $headers = getallheaders();
-    $auth = $headers['Authorization'] ?? $headers['authorization'] ?? '';
-    // Fallback for Apache mod_rewrite env passthrough
+    // Try multiple methods to get the Authorization header
+    $auth = null;
+    
+    // Method 1: getallheaders() if available
+    if (function_exists('getallheaders')) {
+        $headers = getallheaders();
+        $auth = $headers['Authorization'] ?? $headers['authorization'] ?? null;
+    }
+    
+    // Method 2: $_SERVER variables
     if (!$auth && !empty($_SERVER['HTTP_AUTHORIZATION'])) {
         $auth = $_SERVER['HTTP_AUTHORIZATION'];
     }
+    
+    // Method 3: Apache mod_rewrite passthrough
     if (!$auth && !empty($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
         $auth = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
     }
-    return str_replace('Bearer ', '', $auth) ?: null;
+    
+    // Method 4: Check for Authorization in $_SERVER with different cases
+    foreach ($_SERVER as $key => $value) {
+        if (strtolower($key) === 'http_authorization') {
+            $auth = $value;
+            break;
+        }
+    }
+    
+    if (!$auth) {
+        return null;
+    }
+    
+    // Remove 'Bearer ' prefix if present
+    if (stripos($auth, 'Bearer ') === 0) {
+        return substr($auth, 7);
+    }
+    
+    return $auth;
 }
 
 function verifyToken() {

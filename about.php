@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once 'php/config.php';
 $page_title  = "About Us | CSNExplore – Chhatrapati Sambhajinagar";
 $current_page = "about.php";
@@ -18,7 +18,7 @@ require 'header.php';
     </div>
     <div class="absolute top-0 left-0 right-0 z-20 pt-5">
         <div class="max-w-[1140px] mx-auto px-5 flex items-center gap-2 text-sm text-white/60 flex-wrap">
-            <a href="<?php echo BASE_PATH; ?>/index" class="hover:text-white transition-colors flex items-center gap-1">
+            <a href="<?php echo BASE_PATH; ?>/" class="hover:text-white transition-colors flex items-center gap-1">
                 <span class="material-symbols-outlined text-base">home</span>Home
             </a>
             <span class="material-symbols-outlined text-base">chevron_right</span>

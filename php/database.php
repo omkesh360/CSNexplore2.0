@@ -158,14 +158,78 @@ class Database {
           `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
           FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+        CREATE TABLE IF NOT EXISTS `vendors` (
+          `id` INT AUTO_INCREMENT PRIMARY KEY,
+          `name` VARCHAR(255) NOT NULL,
+          `username` VARCHAR(100) UNIQUE NOT NULL,
+          `password_hash` VARCHAR(255) NOT NULL,
+          `email` VARCHAR(255),
+          `phone` VARCHAR(50),
+          `business_name` VARCHAR(255),
+          `status` ENUM('active','inactive') DEFAULT 'active',
+          `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+          `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+        CREATE TABLE IF NOT EXISTS `room_types` (
+          `id` INT AUTO_INCREMENT PRIMARY KEY,
+          `vendor_id` INT NULL,
+          `stay_id` INT NULL,
+          `name` VARCHAR(255) NOT NULL,
+          `description` TEXT,
+          `base_price` DECIMAL(10,2) DEFAULT 0,
+          `max_guests` INT DEFAULT 2,
+          `amenities` TEXT,
+          `is_active` TINYINT(1) DEFAULT 1,
+          `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+          `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+          INDEX `idx_vendor_room_types` (`vendor_id`),
+          INDEX `idx_stay_room_types` (`stay_id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+        CREATE TABLE IF NOT EXISTS `rooms` (
+          `id` INT AUTO_INCREMENT PRIMARY KEY,
+          `room_type_id` INT NOT NULL,
+          `vendor_id` INT NULL,
+          `room_number` VARCHAR(50) NOT NULL,
+          `floor` VARCHAR(20),
+          `price` DECIMAL(10,2) NOT NULL,
+          `is_available` TINYINT(1) DEFAULT 1,
+          `status` ENUM('available','occupied','maintenance') DEFAULT 'available',
+          `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+          `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+          FOREIGN KEY (`room_type_id`) REFERENCES `room_types`(`id`) ON DELETE CASCADE,
+          INDEX `idx_vendor_rooms` (`vendor_id`),
+          INDEX `idx_room_type` (`room_type_id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         ");
         
+        // Add vendor_id columns if they don't exist
+        try {
+            $this->db->exec("ALTER TABLE `stays` ADD COLUMN `vendor_id` INT NULL AFTER `id`, ADD INDEX `idx_vendor_stays` (`vendor_id`)");
+        } catch (Exception $e) {
+            // Column already exists
+        }
+        
+        try {
+            $this->db->exec("ALTER TABLE `cars` ADD COLUMN `vendor_id` INT NULL AFTER `id`, ADD INDEX `idx_vendor_cars` (`vendor_id`)");
+        } catch (Exception $e) {
+            // Column already exists
+        }
+        
+        try {
+            $this->db->exec("ALTER TABLE `cars` ADD COLUMN `is_available` TINYINT(1) DEFAULT 1 AFTER `is_active`");
+        } catch (Exception $e) {
+            // Column already exists
+        }
+        
         // Seed admin user if not exists
-        $admin = $this->fetchOne("SELECT id FROM users WHERE email = ?", [ADMIN_EMAIL]);
+        $admin = $this->fetchOne("SELECT id FROM users WHERE email = ?", ['admin@csnexplore.com']);
         if (!$admin) {
             $hash = password_hash('admin123', PASSWORD_DEFAULT);
             $this->insert('users', [
-                'email' => ADMIN_EMAIL,
+                'email' => 'admin@csnexplore.com',
                 'password_hash' => $hash,
                 'name' => 'CSNExplore Admin',
                 'role' => 'admin',

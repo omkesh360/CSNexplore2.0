@@ -7,62 +7,135 @@
   --glass-white: rgba(255, 255, 255, 0.7);
   --glass-border: rgba(255, 255, 255, 0.3);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-top: env(safe-area-inset-top, 0px);
 }
 
-/* Base Mobile Fixes */
+/* ── Base Resets ── */
+*, *::before, *::after { box-sizing: border-box; }
+
 html {
   overflow-x: hidden;
   -webkit-tap-highlight-color: transparent;
   scroll-padding-top: 80px;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
   overflow-x: hidden;
-  width: 100vw;
-  max-width: 100%;
+  width: 100%;
+  max-width: 100vw;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
-/* Fluid Typography */
-h1 { font-size: clamp(1.75rem, 5vw, 3.5rem); }
-h2 { font-size: clamp(1.5rem, 4vw, 2.5rem); }
-h3 { font-size: clamp(1.25rem, 3vw, 1.875rem); }
+/* ── Fluid Typography ── */
+h1 { font-size: clamp(1.5rem, 5vw, 3.5rem); }
+h2 { font-size: clamp(1.25rem, 4vw, 2.5rem); }
+h3 { font-size: clamp(1.1rem, 3vw, 1.875rem); }
 
-/* Input Focus Fix (iOS) */
+/* ── Input Focus Fix (iOS prevents auto-zoom) ── */
 input, select, textarea {
-  font-size: 16px !important; /* Prevents auto-zoom on iOS */
+  font-size: 16px !important;
 }
 
-/* Mobile-Specific Utilities */
+/* ── Images ── */
+img { max-width: 100%; height: auto; }
+
+/* ── Prevent horizontal overflow ── */
+section, main, article, aside, div {
+  max-width: 100%;
+}
+
+/* ── Mobile Utilities ── */
 @media (max-width: 768px) {
   .mobile-container {
     padding-left: 1rem;
     padding-right: 1rem;
   }
-  
+
   .mobile-no-scroll {
     overflow: hidden !important;
   }
-  
-  /* Make buttons more touch-friendly */
+
+  /* Touch-friendly tap targets */
   button, a.btn, .clickable {
     min-height: 44px;
     min-width: 44px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
   }
 
-  /* Improved Grid for small screens */
   .mobile-grid-1 { grid-template-columns: 1fr !important; }
   .mobile-grid-2 { grid-template-columns: repeat(2, 1fr) !important; }
-  
-  /* Hide desktop-only elements */
+
   .desktop-only { display: none !important; }
+
+  /* Reduce excessive padding on mobile */
+  .py-16 { padding-top: 2.5rem !important; padding-bottom: 2.5rem !important; }
+  .py-14 { padding-top: 2rem !important; padding-bottom: 2rem !important; }
+  .py-12 { padding-top: 1.75rem !important; padding-bottom: 1.75rem !important; }
+  .mb-16 { margin-bottom: 2rem !important; }
+  .mb-12 { margin-bottom: 1.5rem !important; }
+  .gap-12 { gap: 1.5rem !important; }
+  .gap-10 { gap: 1.25rem !important; }
 }
 
-/* Premium Motion & Glassmorphism */
+/* ── Listing Page Mobile Fixes ── */
+@media (max-width: 1023px) {
+  /* Sidebar collapses vertically on mobile/tablet */
+  #sidebar-filters {
+    width: 100% !important;
+    transform: none !important;
+    transition: max-height 0.45s cubic-bezier(0.4,0,0.2,1), opacity 0.35s ease, margin 0.35s ease !important;
+    overflow: hidden !important;
+  }
+  #sidebar-filters.collapsed {
+    max-height: 0 !important;
+    opacity: 0 !important;
+    margin-bottom: 0 !important;
+    pointer-events: none !important;
+  }
+  #sidebar-filters:not(.collapsed) {
+    max-height: 2000px !important;
+    opacity: 1 !important;
+    margin-bottom: 12px !important;
+  }
+  #listings-wrapper {
+    gap: 0 !important;
+    flex-direction: column !important;
+  }
+  #listings-wrapper .flex-1 {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+}
+
+/* ── Listing Grid Responsive ── */
+@media (max-width: 479px) {
+  #listings-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+}
+@media (min-width: 480px) and (max-width: 767px) {
+  #listings-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+  #listings-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
+  }
+}
+
+/* ── Card Fixes ── */
+.listing-card-anim {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+/* ── Glassmorphism ── */
 .glass-panel {
   background: var(--glass-white);
   backdrop-filter: blur(20px);
@@ -70,6 +143,7 @@ input, select, textarea {
   border: 1px solid var(--glass-border);
 }
 
+/* ── Scroll Reveal ── */
 .card-reveal {
   opacity: 0;
   transform: translateY(20px);
@@ -80,16 +154,7 @@ input, select, textarea {
   transform: translateY(0);
 }
 
-/* Improved Listing Card for Mobile */
-.listing-card-mobile {
-  border-radius: 20px;
-  overflow: hidden;
-  background: white;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  margin-bottom: 1rem;
-}
-
-/* Sticky Mobile Bottom Bar (Optional for dynamic CTAs) */
+/* ── Sticky Mobile Bottom Bar ── */
 .mobile-sticky-cta {
   position: fixed;
   bottom: 0;
@@ -104,13 +169,66 @@ input, select, textarea {
   z-index: 1000;
 }
 
-/* Fix for horizontal scroll on swipe */
-.no-bounce {
-  overscroll-behavior-y: contain;
-}
-
-/* Image zoom effect */
+/* ── Image Zoom ── */
 .hover-zoom { overflow: hidden; }
 .hover-zoom img { transition: transform 0.5s ease; }
 .hover-zoom:hover img { transform: scale(1.08); }
 
+/* ── Fix horizontal scroll on swipe ── */
+.no-bounce { overscroll-behavior-y: contain; }
+
+/* ── Hero section mobile ── */
+@media (max-width: 640px) {
+  .hero-section { min-height: 60vh !important; }
+  .hero-title { font-size: clamp(1.5rem, 7vw, 2.5rem) !important; }
+}
+
+/* ── Footer mobile ── */
+@media (max-width: 768px) {
+  footer .grid { gap: 1.5rem !important; }
+  footer { padding-top: 2.5rem !important; padding-bottom: 2rem !important; }
+}
+
+/* ── Tablet (768px - 1023px) ── */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .max-w-\[1140px\] {
+    padding-left: 1.25rem !important;
+    padding-right: 1.25rem !important;
+  }
+}
+
+/* ── Safe area for notched phones ── */
+@supports (padding: env(safe-area-inset-bottom)) {
+  #site-header {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+  #mob-menu {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* ── WhatsApp float button ── */
+#whatsapp-float {
+  bottom: calc(20px + var(--safe-bottom)) !important;
+}
+
+/* ── Smooth page transitions ── */
+.page-transition {
+  animation: pageFadeIn 0.25s ease forwards;
+}
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Listing detail mobile ── */
+@media (max-width: 768px) {
+  .listing-detail-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .listing-detail-sidebar {
+    position: static !important;
+    width: 100% !important;
+  }
+}

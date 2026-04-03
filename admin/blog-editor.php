@@ -110,7 +110,18 @@ $blog_id = $_GET['id'] ?? '';
                         <span class="text-[10px] font-bold uppercase tracking-wider">Set Featured Image</span>
                     </div>
                 </div>
-                <input type="url" id="post-image" placeholder="Image URL" oninput="previewImage(this.value)" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm">
+                <div class="flex gap-2 mb-2">
+                    <label for="post-image-file"
+                           class="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-primary text-white text-xs font-bold rounded-lg cursor-pointer hover:bg-orange-600 transition-all">
+                        <span class="material-symbols-outlined text-sm">upload</span>
+                        Upload Image
+                    </label>
+                    <input type="file" id="post-image-file" accept="image/*" class="hidden" onchange="uploadBlogImage(this)">
+                </div>
+                <input type="url" id="post-image" placeholder="Or paste image URL" oninput="previewImage(this.value)" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm">
+                <div id="upload-progress" class="hidden mt-2 text-xs text-slate-500 flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-sm animate-spin">progress_activity</span> Uploading...
+                </div>
             </section>
 
             <!-- Metadata -->
@@ -263,6 +274,35 @@ $blog_id = $_GET['id'] ?? '';
         errBox.textContent = msg;
         errBox.classList.remove('hidden');
         setTimeout(() => errBox.classList.add('hidden'), 5000);
+    }
+
+    // [A3.10] Image upload wired to /php/api/upload.php
+    async function uploadBlogImage(input) {
+        if (!input.files || !input.files[0]) return;
+        const progress = document.getElementById('upload-progress');
+        progress.classList.remove('hidden');
+        const formData = new FormData();
+        formData.append('image', input.files[0]);
+        try {
+            const token = localStorage.getItem('csn_admin_token');
+            const res = await fetch('../php/api/upload.php', {
+                method: 'POST',
+                headers: token ? {'Authorization': 'Bearer ' + token} : {},
+                body: formData
+            });
+            const data = await res.json();
+            if (data.url) {
+                document.getElementById('post-image').value = data.url;
+                previewImage(data.url);
+            } else {
+                showErr(data.error || 'Upload failed');
+            }
+        } catch(e) {
+            showErr('Upload error: ' + e.message);
+        } finally {
+            progress.classList.add('hidden');
+            input.value = '';
+        }
     }
 </script>
 

@@ -9,6 +9,23 @@ $admin_title = $admin_title ?? 'Admin | CSNExplore';
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+<link rel="apple-touch-icon" sizes="57x57" href="../images/fevicon/apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="../images/fevicon/apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="../images/fevicon/apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="../images/fevicon/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="../images/fevicon/apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="../images/fevicon/apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="../images/fevicon/apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="../images/fevicon/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="../images/fevicon/apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192"  href="../images/fevicon/android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../images/fevicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="../images/fevicon/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../images/fevicon/favicon-16x16.png">
+<link rel="shortcut icon" href="../images/fevicon/favicon.ico" type="image/x-icon">
+<meta name="msapplication-TileColor" content="#000000">
+<meta name="msapplication-TileImage" content="../images/fevicon/ms-icon-144x144.png">
+<meta name="theme-color" content="#000000">
 <title><?php echo htmlspecialchars($admin_title); ?></title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
@@ -83,6 +100,7 @@ body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e29
             ['href'=>'bookings.php',  'icon'=>'calendar_today',  'label'=>'Bookings',     'key'=>'bookings',  'badge'=>true],
             ['href'=>'blogs.php',     'icon'=>'article',          'label'=>'Our Blogs',    'key'=>'blogs'],
             ['href'=>'gallery.php',   'icon'=>'photo_library',    'label'=>'Gallery',      'key'=>'gallery'],
+            ['href'=>'vendors.php',   'icon'=>'store',           'label'=>'Vendors',      'key'=>'vendors'],
             ['href'=>'users.php',     'icon'=>'group',           'label'=>'Users',        'key'=>'users'],
             ['href'=>'content.php',   'icon'=>'edit_note',        'label'=>'Page Content', 'key'=>'content'],
             ['href'=>'performance.php', 'icon'=>'bolt',          'label'=>'Performance',  'key'=>'performance'],

@@ -18,9 +18,15 @@ if ($path !== '' && file_exists($path) && !is_dir($path)) {
 }
 
 // ── 2. Root / index ───────────────────────────────────────────────────────────
-if ($path === '' || $path === 'index' || $path === 'index.php') {
+if ($path === '' || $path === 'index.php') {
     include 'index.php';
     return;
+}
+// Redirect /index → / (canonical URL)
+if ($path === 'index') {
+    $base = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/');
+    header('Location: ' . $base . '/', true, 301);
+    exit;
 }
 
 // ── 3. Listing detail pages: /listing-detail/cars-5-slug ─────────────────────

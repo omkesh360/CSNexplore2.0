@@ -12,7 +12,7 @@
                 </span>
                 <p class="text-white/50 text-sm leading-relaxed mb-5">Your premium gateway to the wonders of Chhatrapati Sambhajinagar, Maharashtra.</p>
                 <div class="flex gap-3 mt-6">
-                    <a href="#" aria-label="Share" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-primary hover:border-primary hover:scale-110 transition-all duration-300"><span class="material-symbols-outlined text-base">share</span></a>
+                    <button id="footer-share-btn" aria-label="Share" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-primary hover:border-primary hover:scale-110 transition-all duration-300"><span class="material-symbols-outlined text-base">share</span></button>
                     <a href="mailto:supportcsnexplore@gmail.com" target="_blank" rel="noopener noreferrer" aria-label="Email Us" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-primary hover:border-primary hover:scale-110 transition-all duration-300"><span class="material-symbols-outlined text-base">mail</span></a>
                     <a href="https://wa.me/918600968888" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp Us" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-primary hover:border-primary hover:scale-110 transition-all duration-300">
                         <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.417-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.305 1.652zm6.599-3.825c1.63.975 3.41 1.487 5.23 1.488 5.439 0 9.861-4.422 9.863-9.861.001-2.636-1.024-5.115-2.884-6.977-1.862-1.864-4.341-2.887-6.979-2.888-5.439 0-9.861-4.422-9.863 9.862 0 1.842.511 3.641 1.478 5.187l-.995 3.637 3.73-.978zm11.367-7.643c-.31-.155-1.837-.906-2.12-.108-.285.103-.55.515-.674.654-.124.14-.248.155-.558.001-.31-.155-1.31-.483-2.498-1.543-.924-.824-1.548-1.841-1.73-2.15-.181-.31-.019-.477.135-.631.14-.139.31-.36.465-.541.155-.181.206-.31.31-.515.103-.206.052-.386-.026-.541-.077-.155-.674-1.626-.924-2.228-.243-.585-.491-.504-.674-.513-.175-.008-.375-.01-.575-.01s-.525.075-.8.375c-.275.3-1.05 1.026-1.05 2.5s1.075 2.9 1.225 3.1c.15.2 2.11 3.221 5.113 4.513.714.307 1.272.49 1.706.629.718.227 1.37.195 1.886.118.575-.085 1.837-.75 2.096-1.475.258-.725.258-1.346.181-1.475-.077-.129-.283-.206-.593-.361z"/></svg>
@@ -74,7 +74,7 @@
                 <form method="POST" action="subscribe.php" class="flex flex-col gap-4">
                     <input type="email" name="email" placeholder="Your email address" required
                            class="bg-white/5 border border-white/10 text-white placeholder:text-white/30 px-3 py-2.5 rounded-xl text-sm focus:outline-none focus:border-primary transition-colors"/>
-                    <button type="submit" class="bg-primary text-white font-bold py-2.5 rounded-xl text-sm hover:bg-orange-600 hover:scale-[1.02] transition-all duration-200">Subscribe</button>
+                    <button type="submit" style="background-color: #ec5b13;" class="text-white font-bold py-2.5 rounded-xl text-sm hover:scale-[1.02] transition-all duration-200" onmouseover="this.style.backgroundColor='#d44e0e'" onmouseout="this.style.backgroundColor='#ec5b13'">Subscribe</button>
                 </form>
             </div>
         </div>
@@ -91,12 +91,56 @@
 
 <!-- Go to Top Button -->
 <button id="go-top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})"
-    style="position:fixed;bottom:28px;right:24px;z-index:9999;width:48px;height:48px;border-radius:50%;background:#ec5b13;color:#fff;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(236,91,19,0.5);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity .25s ease,visibility .25s ease,transform .25s ease;"
+    style="position:fixed;bottom:calc(28px + env(safe-area-inset-bottom, 0px));right:24px;z-index:9999;width:48px;height:48px;border-radius:50%;background:#ec5b13;color:#fff;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(236,91,19,0.5);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity .25s ease,visibility .25s ease,transform .25s ease;"
     aria-label="Go to top">
     <span class="material-symbols-outlined" style="font-size:22px;line-height:1;pointer-events:none;">arrow_upward</span>
 </button>
+
+<!-- ── Floating WhatsApp Chat Button ─────────────────────────────── -->
+<a href="https://wa.me/918600968888?text=Hi%20CSNExplore!%20I%20need%20help%20with%20my%20booking."
+   target="_blank" rel="noopener noreferrer"
+   id="whatsapp-float"
+   aria-label="Chat on WhatsApp"
+   style="position:fixed;bottom:calc(88px + env(safe-area-inset-bottom, 0px));right:24px;z-index:9998;width:52px;height:52px;border-radius:50%;background:#25D366;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,0.5);text-decoration:none;transition:transform .25s ease,box-shadow .25s ease;"
+   onmouseover="this.style.transform='scale(1.12)';this.style.boxShadow='0 6px 28px rgba(37,211,102,0.65)'"
+   onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 4px 20px rgba(37,211,102,0.5)'"
+   ontouchstart="this.style.transform='scale(1.08)'"
+   ontouchend="this.style.transform='scale(1)'">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.417-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+</a>
+<!-- WhatsApp pulse ring -->
+<style>
+#whatsapp-float::before{content:'';position:absolute;width:100%;height:100%;border-radius:50%;background:#25D366;opacity:.4;animation:wa-pulse 2s infinite;}
+@keyframes wa-pulse{0%{transform:scale(1);opacity:.4;}70%{transform:scale(1.4);opacity:0;}100%{transform:scale(1.4);opacity:0;}}
+</style>
+
+<!-- ── Cookie Consent Banner [B4.1] ──────────────────────────────────────── -->
+<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:99999;background:#1e293b;color:#f8fafc;padding:16px 24px;box-shadow:0 -4px 20px rgba(0,0,0,0.3);">
+    <div style="max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:16px;justify-content:space-between;">
+        <p style="margin:0;font-size:13px;color:#cbd5e1;line-height:1.6;flex:1;min-width:280px;">
+            🍪 We use cookies to enhance your experience, analyze traffic, and improve our services.
+            By continuing to use CSNExplore, you agree to our
+            <a href="<?php echo BASE_PATH; ?>/privacy" style="color:#ec5b13;text-decoration:underline;">Privacy Policy</a>.
+        </p>
+        <div style="display:flex;gap:10px;flex-shrink:0;">
+            <button onclick="setCookieConsent('declined')"
+                    style="padding:8px 18px;border:1px solid rgba(255,255,255,0.2);border-radius:8px;background:transparent;color:#94a3b8;font-size:13px;cursor:pointer;transition:all .2s"
+                    onmouseover="this.style.borderColor='#ec5b13';this.style.color='#ec5b13'"
+                    onmouseout="this.style.borderColor='rgba(255,255,255,0.2)';this.style.color='#94a3b8'">
+                Decline
+            </button>
+            <button onclick="setCookieConsent('accepted')"
+                    style="padding:8px 22px;border:none;border-radius:8px;background:#ec5b13;color:#fff;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s"
+                    onmouseover="this.style.background='#d94a0a'"
+                    onmouseout="this.style.background='#ec5b13'">
+                Accept All
+            </button>
+        </div>
+    </div>
+</div>
 <script>
 (function(){
+    // ── Go-to-top ──
     var btn = document.getElementById('go-top-btn');
     function updateBtn() {
         if (window.scrollY > 200) {
@@ -111,6 +155,91 @@
     }
     updateBtn();
     window.addEventListener('scroll', updateBtn, {passive:true});
+
+    // ── Share button (Web Share API with clipboard fallback) ──
+    var shareBtn = document.getElementById('footer-share-btn');
+    if (shareBtn) {
+        shareBtn.addEventListener('click', function() {
+            var shareData = {
+                title: document.title || 'CSNExplore',
+                text: 'Discover hotels, bikes, cars & attractions in Chhatrapati Sambhajinagar!',
+                url: window.location.href
+            };
+            if (navigator.share) {
+                navigator.share(shareData).catch(function(){});
+            } else {
+                // Clipboard fallback
+                var url = window.location.href;
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(url).then(function() {
+                        shareBtn.innerHTML = '<span class="material-symbols-outlined text-base">check</span>';
+                        setTimeout(function(){ shareBtn.innerHTML = '<span class="material-symbols-outlined text-base">share</span>'; }, 2000);
+                    });
+                } else {
+                    var ta = document.createElement('textarea');
+                    ta.value = url; ta.style.position = 'fixed'; ta.style.opacity = '0';
+                    document.body.appendChild(ta); ta.select();
+                    try { document.execCommand('copy'); } catch(e){}
+                    document.body.removeChild(ta);
+                    shareBtn.innerHTML = '<span class="material-symbols-outlined text-base">check</span>';
+                    setTimeout(function(){ shareBtn.innerHTML = '<span class="material-symbols-outlined text-base">share</span>'; }, 2000);
+                }
+            }
+        });
+    }
+
+    // ── Scroll Reveal (IntersectionObserver) ──
+    if ('IntersectionObserver' in window) {
+        var revealObs = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                    revealObs.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+        document.querySelectorAll('[data-reveal]').forEach(function(el) {
+            revealObs.observe(el);
+        });
+    } else {
+        // Fallback: reveal all immediately
+        document.querySelectorAll('[data-reveal]').forEach(function(el) {
+            el.classList.add('revealed');
+        });
+    }
+
+    // ── Smooth page transitions (fade out on link click) ──
+    document.addEventListener('click', function(e) {
+        var a = e.target.closest('a');
+        if (!a) return;
+        var href = a.getAttribute('href');
+        if (!href || href === '#' || href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('javascript') || a.target === '_blank' || e.ctrlKey || e.metaKey || e.shiftKey) return;
+        // Only same-origin
+        try {
+            var url = new URL(href, window.location.href);
+            if (url.origin !== window.location.origin) return;
+        } catch(err) { return; }
+        e.preventDefault();
+        document.body.style.transition = 'opacity 0.18s ease';
+        document.body.style.opacity = '0';
+        setTimeout(function(){ window.location.href = href; }, 190);
+    });
+
+    // ── Cookie consent ──
+    function getCookie(name){var v=document.cookie.match('(^|;)\\s*'+name+'\\s*=\\s*([^;]+)');return v?v.pop():'';}
+    window.setCookieConsent=function(val){
+        document.cookie='csn_cookie_consent='+val+';max-age=31536000;path=/;SameSite=Lax';
+        document.getElementById('cookie-banner').style.display='none';
+    };
+    if(!getCookie('csn_cookie_consent')){
+        setTimeout(function(){document.getElementById('cookie-banner').style.display='block';},1200);
+    }
+
+    // ── Restore opacity on page show (back/forward cache) ──
+    window.addEventListener('pageshow', function(e) {
+        document.body.style.transition = '';
+        document.body.style.opacity = '1';
+    });
 })();
 </script>
 </body>

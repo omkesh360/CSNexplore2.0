@@ -3,7 +3,7 @@ require_once 'php/config.php';
 $current_page = $current_page ?? '';
 $page_title = $page_title ?? 'CSNExplore – Chhatrapati Sambhajinagar';
 $nav_links = [
-    ['href' => BASE_PATH . '/index', 'label' => 'Home'],
+    ['href' => BASE_PATH . '/', 'label' => 'Home'],
     ['href' => BASE_PATH . '/about', 'label' => 'About Us'],
     ['href' => BASE_PATH . '/contact', 'label' => 'Contact Us'],
     ['href' => BASE_PATH . '/blogs', 'label' => 'Our Blogs'],
@@ -25,11 +25,33 @@ $active_listing_type = $listing_type ?? '';
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="format-detection" content="telephone=no" />
+    <link rel="apple-touch-icon" sizes="57x57" href="<?php echo BASE_PATH; ?>/images/fevicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="<?php echo BASE_PATH; ?>/images/fevicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="<?php echo BASE_PATH; ?>/images/fevicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="<?php echo BASE_PATH; ?>/images/fevicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="<?php echo BASE_PATH; ?>/images/fevicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="<?php echo BASE_PATH; ?>/images/fevicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="<?php echo BASE_PATH; ?>/images/fevicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="<?php echo BASE_PATH; ?>/images/fevicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="<?php echo BASE_PATH; ?>/images/fevicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="<?php echo BASE_PATH; ?>/images/fevicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="<?php echo BASE_PATH; ?>/images/fevicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="<?php echo BASE_PATH; ?>/images/fevicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="<?php echo BASE_PATH; ?>/images/fevicon/favicon-16x16.png">
+    <link rel="shortcut icon" href="<?php echo BASE_PATH; ?>/images/fevicon/favicon.ico" type="image/x-icon">
+    <meta name="msapplication-TileColor" content="#000000">
+    <meta name="msapplication-TileImage" content="<?php echo BASE_PATH; ?>/images/fevicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#000000">
     <title><?php echo htmlspecialchars($page_title); ?></title>
     <script src="https://cdn.tailwindcss.com?plugins=container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+    <link rel="stylesheet" href="<?php echo BASE_PATH; ?>/mobile-responsive.css"/>
     <script>
         tailwind.config = {
             darkMode: "class",
@@ -99,6 +121,8 @@ $active_listing_type = $listing_type ?? '';
         .hdr-call-btn::before, .hdr-wa-btn::before { display: none !important; }
         #site-header-placeholder { display: block; background: #000; }
         /* ── Global mobile fixes ── */
+        html, body { overflow-x: hidden; max-width: 100vw; }
+        * { box-sizing: border-box; }
         @media (max-width: 640px) {
             .max-w-\[1140px\] { padding-left: 12px !important; padding-right: 12px !important; }
             section { padding-top: 2.5rem !important; padding-bottom: 2.5rem !important; }
@@ -109,9 +133,50 @@ $active_listing_type = $listing_type ?? '';
             .mb-12 { margin-bottom: 1.5rem !important; }
             .gap-12 { gap: 1.5rem !important; }
         }
+        /* ── Listing page mobile layout ── */
+        @media (max-width: 1023px) {
+            #sidebar-filters { width: 100% !important; transform: none !important; }
+            #sidebar-filters.collapsed { max-height: 0 !important; padding: 0 !important; margin: 0 !important; opacity: 0 !important; overflow: hidden !important; pointer-events: none !important; }
+            #sidebar-filters:not(.collapsed) { max-height: 2000px !important; opacity: 1 !important; }
+            #listings-wrapper { gap: 0 !important; }
+        }
+        @media (max-width: 640px) {
+            #listings-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+            .listing-card-anim { width: 100% !important; }
+        }
+        @media (min-width: 641px) and (max-width: 1023px) {
+            #listings-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 16px !important; }
+        }
         <?php if (!empty($extra_styles)) echo $extra_styles; ?>
     </style>
+    <?php
+    // ── Dynamic SEO Meta Tags [A4.1] ─────────────────────────────────────────
+    $page_meta = $page_meta ?? [];
+    $meta_description = $page_meta['description'] ?? 'Discover the best hotels, bikes, cars & attractions in Chhatrapati Sambhajinagar with CSNExplore — your premium travel partner.';
+    $meta_canonical   = $page_meta['canonical'] ?? 'https://csnexplore.com';
+    $meta_image       = $page_meta['image'] ?? 'https://csnexplore.com/images/og-image.jpg';
+    $meta_type        = $page_meta['type'] ?? 'website';
+    ?>
+    <meta name="description" content="<?php echo htmlspecialchars($meta_description); ?>">
+    <link rel="canonical" href="<?php echo htmlspecialchars($meta_canonical); ?>">
+    <meta property="og:type" content="<?php echo htmlspecialchars($meta_type); ?>">
+    <meta property="og:title" content="<?php echo htmlspecialchars($page_title); ?>">
+    <meta property="og:description" content="<?php echo htmlspecialchars($meta_description); ?>">
+    <meta property="og:image" content="<?php echo htmlspecialchars($meta_image); ?>">
+    <meta property="og:url" content="<?php echo htmlspecialchars($meta_canonical); ?>">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<?php echo htmlspecialchars($page_title); ?>">
+    <meta name="twitter:description" content="<?php echo htmlspecialchars($meta_description); ?>">
+    <meta name="twitter:image" content="<?php echo htmlspecialchars($meta_image); ?>">
     <?php if (!empty($extra_head)) echo $extra_head; ?>
+    <!-- ── Google Analytics 4 [B3.4] ──────────────────────────────────────── -->
+    <!-- IMPORTANT: Replace G-XXXXXXXXXX with your real GA4 Measurement ID    -->
+    <!-- Get it from: analytics.google.com → Admin → Data Streams             -->
+    <?php if (getenv('GA4_ID') || defined('GA4_ID')): ?>
+    <?php $ga4 = getenv('GA4_ID') ?: (defined('GA4_ID') ? GA4_ID : ''); ?>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo htmlspecialchars($ga4); ?>"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','<?php echo htmlspecialchars($ga4); ?>');</script>
+    <?php endif; ?>
 </head>
 <body class="bg-white font-display text-slate-900">
 <!-- Top Announcement Marquee -->
@@ -133,14 +198,14 @@ $active_listing_type = $listing_type ?? '';
 <div id="site-header-placeholder" class="w-full"></div>
 <header id="site-header" class="w-full">
     <nav class="max-w-[1140px] mx-auto px-4 sm:px-5 flex items-center justify-between" style="height:64px;min-height:64px">
-        <a href="<?php echo BASE_PATH; ?>/index" class="flex items-center shrink-0">
+        <a href="<?php echo BASE_PATH; ?>/" class="flex items-center shrink-0">
             <img src="<?php echo BASE_PATH; ?>/images/travelhub.png" alt="CSNExplore" class="h-8 sm:h-9 object-contain"/>
         </a>
         <div class="hidden md:flex items-center gap-0.5">
             <?php foreach (($is_listing_page ? $listing_nav : $nav_links) as $link):
                 $is_active = ($is_listing_page
                     ? ($link['type'] === $active_listing_type)
-                    : (trim($link['href'],'/') === trim($current_page,'/') || ($current_page==='home' && strpos($link['href'],'/index')!==false)));
+                    : (trim($link['href'],'/') === trim($current_page,'/') || ($current_page==='home' && ($link['href'] === BASE_PATH.'/' || strpos($link['href'],'/index')!==false))));
             ?>
             <a href="<?php echo $link['href']; ?>"
                class="text-sm font-semibold px-4 py-2 rounded-full transition-colors duration-200 <?php echo $is_active ? 'text-white bg-white/10' : 'text-white/65 hover:bg-white/10 hover:text-white'; ?>">

@@ -32,7 +32,7 @@ $hp_defaults = [
     'stat4_label'       => '10K+ Happy Travelers',
     'count_attractions' => 4,
     'count_bikes'       => 4,
-    'count_restaurants' => 6,
+    'count_restaurants' => 4,
     'count_buses'       => 2,
     'count_blogs'       => 3,
     'layout_attractions'=> '4-col',
@@ -423,7 +423,7 @@ foreach ($hp_settings['section_order'] as $_sec_key):
         </div>
         <?php
         // ── Visible-cards-per-section config ─────────────────────────────────
-        $_vis = ['attractions'=>4,'bikes'=>4,'restaurants'=>6,'buses'=>2,'blogs'=>3];
+        $_vis = ['attractions'=>4,'bikes'=>4,'restaurants'=>4,'buses'=>2,'blogs'=>3];
         $_vis_count = $_vis[$_sec_key] ?? 4;
         // Mobile: fixed 80vw so ~1.1 cards visible. Desktop: percentage of container.
         $_card_w = 'var(--card-w-' . $_sec_key . ')';
@@ -476,8 +476,14 @@ foreach ($hp_settings['section_order'] as $_sec_key):
                     .'<div class="h-44 overflow-hidden relative"><img alt="'.$name.'" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="'.$img.'"/>'
                     .'<div class="absolute top-2.5 right-2.5 flex items-center gap-1 bg-black/60 backdrop-blur-sm text-white text-xs font-bold px-2 py-0.5 rounded-full z-20"><span style="font-family:Material Symbols Outlined;font-size:12px;color:#fbbf24">star</span>'.$rating.'</div></div>'
                     .'<div class="p-4"><span class="text-primary text-[10px] font-bold uppercase tracking-widest relative z-20">'.$cuisine.'</span>'
-                    .'<h5 class="font-serif text-base text-slate-900 mt-1 mb-3 line-clamp-1 relative z-20">'.$name.'</h5>'
-                    .'<div class="flex items-center justify-between relative z-20">'
+                    .'<h5 class="font-serif text-base text-slate-900 mt-1 mb-2 line-clamp-1 relative z-20">'.$name.'</h5>'
+                    .'<div class="flex items-center gap-1 text-slate-500 text-xs mb-3 relative z-20"><span style="font-family:Material Symbols Outlined;font-size:14px">location_on</span><span class="line-clamp-1">'.htmlspecialchars($r['location']??'').'</span></div>'
+                    .'<div class="space-y-1.5 text-xs text-slate-600 mb-3 relative z-20">'
+                    .'<div class="flex items-center gap-2"><span style="font-family:Material Symbols Outlined;font-size:14px;color:#ec5b13">verified</span><span class="font-semibold">Verified</span></div>'
+                    .'<div class="flex items-center gap-2"><span style="font-family:Material Symbols Outlined;font-size:14px;color:#ec5b13">cancel</span><span>Free cancellation</span></div>'
+                    .'<div class="flex items-center gap-2"><span style="font-family:Material Symbols Outlined;font-size:14px;color:#ec5b13">info</span><span>No hidden charges</span></div>'
+                    .'</div>'
+                    .'<div class="flex items-center justify-between relative z-20 border-t border-slate-100 pt-3">'
                     .'<p class="font-black text-slate-900 text-sm">&#8377;'.$price.' <span class="text-xs text-slate-400 font-normal">for two</span></p>'
                     .'<span class="bg-primary text-white px-3 py-1.5 rounded-full font-bold text-xs group-hover:bg-orange-600 transition-all">Check Details</span>'
                     .'</div></div></a>';

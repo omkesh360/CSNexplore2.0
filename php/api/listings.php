@@ -77,6 +77,8 @@ try {
         $newId = $db->insert($category, $row);
         $item  = $db->fetchOne("SELECT * FROM $category WHERE id = ?", [$newId]);
         decodeJson($item);
+        // Auto-regenerate static HTML [A2.1]
+        try { regenerateListingHtml($category, $newId); } catch(Exception $e) { error_log('HTML regen: '.$e->getMessage()); }
         sendJson($item, 201);
     }
 
@@ -104,6 +106,8 @@ try {
         $db->update($category, $row, 'id = :id', [':id' => $id]);
         $item = $db->fetchOne("SELECT * FROM $category WHERE id = ?", [$id]);
         decodeJson($item);
+        // Auto-regenerate static HTML [A2.1]
+        try { regenerateListingHtml($category, $id); } catch(Exception $e) { error_log('HTML regen: '.$e->getMessage()); }
         sendJson($item);
     }
 
@@ -121,6 +125,19 @@ try {
 } catch (Exception $e) {
     error_log('Listings error: ' . $e->getMessage());
     sendError('Server error', 500);
+}
+
+/**
+ * Regenerates a single listing's static HTML file [A2.1]
+ */
+function regenerateListingHtml(string $type, int $id): void {
+    $genScript = __DIR__ . '/generate_html.php';
+    if (!file_exists($genScript)) return;
+    if (PHP_OS_FAMILY === 'Windows') {
+        pclose(popen("start /B php \"$genScript\" listing $type $id", 'r'));
+    } else {
+        exec("php \"$genScript\" listing $type $id > /dev/null 2>&1 &");
+    }
 }
 
 function buildRow($data, $category, $pc, $partial = false) {
