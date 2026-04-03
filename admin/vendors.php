@@ -234,6 +234,9 @@ function renderVendors(list) {
             </td>
             <td class="px-5 py-4 text-right">
                 <div class="flex items-center justify-end gap-2">
+                    <button onclick="loginAsVendor(${v.id}, '${v.name}')" class="p-2 text-slate-600 hover:text-green-600 hover:bg-green-50 rounded-lg transition-all" title="Login as Vendor">
+                        <span class="material-symbols-outlined text-lg">login</span>
+                    </button>
                     <button onclick="editVendor(${v.id})" class="p-2 text-slate-600 hover:text-primary hover:bg-primary/5 rounded-lg transition-all" title="Edit">
                         <span class="material-symbols-outlined text-lg">edit</span>
                     </button>
@@ -281,6 +284,19 @@ function closeVendorModal() {
 
 async function editVendor(id) {
     openVendorModal(id);
+}
+
+async function loginAsVendor(id, name) {
+    if (!confirm(`Are you sure you want to log in as vendor "${name}"?`)) return;
+
+    const data = await api(`../php/api/vendors.php?action=login_as&id=${id}`);
+    if (data && data.success) {
+        localStorage.setItem('csn_vendor_token', data.token);
+        localStorage.setItem('csn_vendor_user', JSON.stringify(data.vendor));
+        window.open('../vendor/dashboard.php', '_blank'); 
+    } else {
+        showAdminToast(data?.error || 'Failed to generate vendor session', 'error');
+    }
 }
 
 async function deleteVendor(id, name) {

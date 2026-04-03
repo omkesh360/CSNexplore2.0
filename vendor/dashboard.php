@@ -110,14 +110,14 @@ require 'vendor-header.php';
 <script>
 async function loadDashboardStats() {
     // Load rooms stats
-    const roomsData = await vendorApi('../php/api/vendor-rooms.php?action=stats');
+    const roomsData = await vendorApi('<?php echo VENDOR_API_BASE; ?>/php/api/vendor-rooms.php?action=stats');
     if (roomsData) {
         document.getElementById('stat-rooms').textContent = roomsData.total || 0;
         document.getElementById('stat-rooms-available').textContent = roomsData.available || 0;
     }
 
     // Load cars stats
-    const carsData = await vendorApi('../php/api/vendor-cars.php?action=stats');
+    const carsData = await vendorApi('<?php echo VENDOR_API_BASE; ?>/php/api/vendor-cars.php?action=stats');
     if (carsData) {
         document.getElementById('stat-cars').textContent = carsData.total || 0;
         document.getElementById('stat-cars-available').textContent = carsData.available || 0;
@@ -131,8 +131,8 @@ async function loadRecentListings() {
     const container = document.getElementById('recent-listings');
     
     // Fetch recent rooms and cars
-    const roomsData = await vendorApi('../php/api/vendor-rooms.php?action=list&limit=3');
-    const carsData = await vendorApi('../php/api/vendor-cars.php?action=list&limit=3');
+    const roomsData = await vendorApi('<?php echo VENDOR_API_BASE; ?>/php/api/vendor-rooms.php?action=list&limit=3');
+    const carsData = await vendorApi('<?php echo VENDOR_API_BASE; ?>/php/api/vendor-cars.php?action=list&limit=3');
     
     const rooms = roomsData?.rooms || [];
     const cars = carsData?.cars || [];

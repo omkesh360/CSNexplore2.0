@@ -483,9 +483,9 @@ foreach ($hp_settings['section_order'] as $_sec_key):
                     .'<div class="flex items-center gap-2"><span style="font-family:Material Symbols Outlined;font-size:14px;color:#ec5b13">cancel</span><span>Free cancellation</span></div>'
                     .'<div class="flex items-center gap-2"><span style="font-family:Material Symbols Outlined;font-size:14px;color:#ec5b13">info</span><span>No hidden charges</span></div>'
                     .'</div>'
-                    .'<div class="flex items-center justify-between relative z-20 border-t border-slate-100 pt-3">'
+                    .'<div class="flex items-center justify-between gap-3 relative z-20 border-t border-slate-100 pt-3">'
                     .'<p class="font-black text-slate-900 text-sm">&#8377;'.$price.' <span class="text-xs text-slate-400 font-normal">for two</span></p>'
-                    .'<span class="bg-primary text-white px-3 py-1.5 rounded-full font-bold text-xs group-hover:bg-orange-600 transition-all">Check Details</span>'
+                    .'<span class="bg-primary text-white px-4 py-1.5 rounded-full font-bold text-xs group-hover:bg-orange-600 transition-all whitespace-nowrap">Check Details</span>'
                     .'</div></div></a>';
             };
             $items = $hp_restaurants;

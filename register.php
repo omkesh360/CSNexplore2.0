@@ -186,7 +186,7 @@ require 'header.php';
         }
 
         try {
-            const res  = await fetch('php/api/auth.php?action=register', {
+            const res  = await fetch('<?php echo BASE_PATH; ?>/php/api/auth.php?action=register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name: `${firstName} ${lastName}`.trim(), email, phone, password, turnstileResponse })

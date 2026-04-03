@@ -2,6 +2,21 @@
 // vendor/vendor-header.php – shared vendor layout
 $vendor_page = $vendor_page ?? '';
 $vendor_title = $vendor_title ?? 'Vendor Dashboard | CSNExplore';
+
+// Load config if not already loaded (dashboard pages include this directly)
+if (!defined('BASE_PATH')) {
+    require_once __DIR__ . '/../php/config.php';
+}
+
+// Compute correct site-root URL — BASE_PATH is wrong here because SCRIPT_NAME
+// contains /vendor/ so BASE_PATH ends up as /CSNexplore2.0/vendor.
+// We go up two directory levels from /vendor/xxx.php to get /CSNexplore2.0
+if (!defined('VENDOR_API_BASE')) {
+    $_vendor_script = $_SERVER['SCRIPT_NAME'] ?? '';
+    $_site_base = dirname(dirname($_vendor_script));
+    if ($_site_base === '/' || $_site_base === '\\') $_site_base = '';
+    define('VENDOR_API_BASE', rtrim($_site_base, '/'));
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

@@ -124,4 +124,23 @@ if ($action === 'delete') {
     sendJson(['success' => true, 'message' => 'Vendor deleted successfully']);
 }
 
+// ── LOGIN AS VENDOR (IMPERSONATION) ───────────────────────────────────────────
+if ($action === 'login_as') {
+    $id = (int)($_GET['id'] ?? 0);
+    if (!$id) sendError('Vendor ID required', 400);
+    
+    $vendor = $db->fetchOne("SELECT * FROM vendors WHERE id = ?", [$id]);
+    if (!$vendor) sendError('Vendor not found', 404);
+
+    $token = base64_encode(json_encode([
+        'vendor_id' => $vendor['id'],
+        'username' => $vendor['username'],
+        'type' => 'vendor',
+        'exp' => time() + (7 * 24 * 60 * 60)
+    ]));
+
+    unset($vendor['password_hash']);
+    sendJson(['success' => true, 'token' => $token, 'vendor' => $vendor, 'message' => 'Logged in successfully']);
+}
+
 sendError('Invalid action', 400);

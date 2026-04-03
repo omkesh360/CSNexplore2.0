@@ -157,7 +157,7 @@ require 'header.php';
         const turnstileResponse = document.querySelector('[name="cf-turnstile-response"]')?.value || "";
 
         try {
-            const res  = await fetch('php/api/auth.php?action=login', {
+            const res  = await fetch('<?php echo BASE_PATH; ?>/php/api/auth.php?action=login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password, turnstileResponse })

@@ -1,6 +1,15 @@
 <?php
 // Vendor login page – accessible at /vendor/vendorlogin.php
+require_once __DIR__ . '/../php/config.php';
 $page_title = 'Vendor Login | CSNExplore';
+
+// Compute the correct API base URL (parent of /vendor/)
+// SCRIPT_NAME = /CSNexplore2.0/vendor/vendorlogin.php
+// We want     = /CSNexplore2.0
+$_vendor_script = $_SERVER['SCRIPT_NAME'] ?? '';
+$_site_base = dirname(dirname($_vendor_script)); // go up two levels: vendor/ → root
+if ($_site_base === '/' || $_site_base === '\\') $_site_base = '';
+define('VENDOR_API_BASE', rtrim($_site_base, '/'));
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -87,7 +96,7 @@ body { font-family: 'Inter', sans-serif; }
         </div>
 
         <div class="mt-4 text-center">
-            <a href="../index.php" class="text-sm text-slate-500 hover:text-primary transition-colors flex items-center justify-center gap-1">
+            <a href="<?php echo VENDOR_API_BASE; ?>/index.php" class="text-sm text-slate-500 hover:text-primary transition-colors flex items-center justify-center gap-1">
                 <span class="material-symbols-outlined text-base">arrow_back</span> Back to Website
             </a>
         </div>
@@ -116,7 +125,7 @@ document.getElementById('login-form').addEventListener('submit', async function(
     err.classList.add('hidden');
 
     try {
-        var res = await fetch('../php/api/vendor-auth-simple.php?action=login', {
+        var res = await fetch('<?php echo VENDOR_API_BASE; ?>/php/api/vendor-auth-simple.php?action=login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
