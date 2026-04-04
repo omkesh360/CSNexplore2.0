@@ -42,7 +42,7 @@ try {
     $sql = "SELECT id, {$nameColumn} as name, {$imageColumn} as image_url, rating, {$priceColumn} as price
             FROM {$type} 
             WHERE is_active = 1 AND id != ? 
-            ORDER BY rating DESC, display_order ASC 
+            ORDER BY RAND() 
             LIMIT {$limit}";
     
     $listings = $db->fetchAll($sql, [$exclude]);

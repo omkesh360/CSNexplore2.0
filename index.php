@@ -19,11 +19,15 @@ $hp_defaults = [
     'title_restaurants' => 'Taste the City',
     'title_buses'       => 'Travel Your Way',
     'title_blogs'       => 'Travel Insights',
+    'title_cars'        => 'Self Drive Cars',
+    'title_stays'       => 'Premium Stays',
     'show_attractions'  => true,
     'show_bikes'        => true,
     'show_restaurants'  => true,
     'show_buses'        => true,
     'show_blogs'        => true,
+    'show_cars'         => true,
+    'show_stays'        => true,
     'hero_subtext'      => 'Stays, cars, bikes, restaurants, attractions and buses — all in one place.',
     'city_intro'        => '',
     'stat1_label'       => '500+ Hotels',
@@ -35,17 +39,23 @@ $hp_defaults = [
     'count_restaurants' => 4,
     'count_buses'       => 2,
     'count_blogs'       => 3,
+    'count_cars'        => 4,
+    'count_stays'       => 4,
     'layout_attractions'=> '4-col',
     'layout_bikes'      => '4-col',
     'layout_restaurants'=> '3-col',
     'layout_buses'      => '2-col',
     'layout_blogs'      => '3-col',
-    'section_order'     => ['attractions','bikes','restaurants','buses','blogs'],
+    'layout_cars'       => '4-col',
+    'layout_stays'      => '4-col',
+    'section_order'     => ['cars','bikes','attractions','stays','restaurants','buses','blogs'],
     'picks_attractions' => [],
     'picks_bikes'       => [],
     'picks_restaurants' => [],
     'picks_buses'       => [],
     'picks_blogs'       => [],
+    'picks_cars'        => [],
+    'picks_stays'       => [],
 ];
 foreach ($hp_defaults as $k => $v) {
     if (!isset($hp_settings[$k]) || $hp_settings[$k] === '') {
@@ -54,7 +64,7 @@ foreach ($hp_defaults as $k => $v) {
 }
 // Ensure section_order is always a valid array
 if (!is_array($hp_settings['section_order']) || count($hp_settings['section_order']) < 5) {
-    $hp_settings['section_order'] = ['attractions','bikes','restaurants','buses','blogs'];
+    $hp_settings['section_order'] = ['cars','bikes','attractions','stays','restaurants','buses','blogs'];
 }
 
 // Helper: layout string → Tailwind grid/flex class
@@ -94,10 +104,14 @@ $hp_bikes = hp_fetch_picks($db, 'bikes', $hp_settings['picks_bikes'], 'is_active
     "SELECT * FROM bikes WHERE is_active=1 ORDER BY display_order ASC, rating DESC LIMIT " . (int)$hp_settings['count_bikes']);
 $hp_restaurants = hp_fetch_picks($db, 'restaurants', $hp_settings['picks_restaurants'], 'is_active=1',
     "SELECT * FROM restaurants WHERE is_active=1 ORDER BY display_order ASC, rating DESC LIMIT " . (int)$hp_settings['count_restaurants']);
-$hp_buses = hp_fetch_picks($db, 'buses', $hp_settings['picks_buses'], 'is_active=1',
+$hp_buses = hp_fetch_picks($db, 'buses', $hp_settings['picks_buses'] ?? [], 'is_active=1',
     "SELECT * FROM buses WHERE is_active=1 ORDER BY display_order ASC LIMIT " . (int)$hp_settings['count_buses']);
-$hp_blogs = hp_fetch_picks($db, 'blogs', $hp_settings['picks_blogs'], "status='published'",
+$hp_blogs = hp_fetch_picks($db, 'blogs', $hp_settings['picks_blogs'] ?? [], "status='published'",
     "SELECT * FROM blogs WHERE status='published' ORDER BY created_at DESC LIMIT " . (int)$hp_settings['count_blogs']);
+$hp_cars = hp_fetch_picks($db, 'cars', $hp_settings['picks_cars'] ?? [], 'is_active=1',
+    "SELECT * FROM cars WHERE is_active=1 ORDER BY display_order ASC, rating DESC LIMIT " . (int)$hp_settings['count_cars']);
+$hp_stays = hp_fetch_picks($db, 'stays', $hp_settings['picks_stays'] ?? [], 'is_active=1',
+    "SELECT * FROM stays WHERE is_active=1 ORDER BY display_order ASC, rating DESC LIMIT " . (int)$hp_settings['count_stays']);
 ?>
 <?php
 $page_desc = "Your premium gateway to the wonders of Chhatrapati Sambhajinagar, Maharashtra. Book hotels, cars, bikes, and explore attractions easily.";
@@ -106,9 +120,9 @@ $extra_styles = '
         .hide-scrollbar::-webkit-scrollbar { display:none; }
         .hide-scrollbar { -ms-overflow-style:none; scrollbar-width:none; }
         .card-hover:hover { box-shadow:0 0 30px rgba(236,91,19,0.15); }
-        :root { --card-w-attractions: 80vw; --card-w-bikes: 80vw; --card-w-restaurants: 80vw; --card-w-buses: 80vw; --card-w-blogs: 80vw; }
-        @media (min-width: 640px) { :root { --card-w-attractions: calc(50% - 14px); --card-w-bikes: calc(50% - 14px); --card-w-restaurants: calc(50% - 14px); --card-w-buses: calc(50% - 14px); --card-w-blogs: calc(50% - 14px); } }
-        @media (min-width: 1024px) { :root { --card-w-attractions: calc(25% - 15px); --card-w-bikes: calc(25% - 15px); --card-w-restaurants: calc(20% - 16px); --card-w-buses: calc(50% - 10px); --card-w-blogs: calc(33.333% - 14px); } }
+        :root { --card-w-attractions: 80vw; --card-w-bikes: 80vw; --card-w-restaurants: 80vw; --card-w-buses: 80vw; --card-w-blogs: 80vw; --card-w-cars: 80vw; --card-w-stays: 80vw; }
+        @media (min-width: 640px) { :root { --card-w-attractions: calc(50% - 14px); --card-w-bikes: calc(50% - 14px); --card-w-restaurants: calc(50% - 14px); --card-w-buses: calc(50% - 14px); --card-w-blogs: calc(50% - 14px); --card-w-cars: calc(50% - 14px); --card-w-stays: calc(50% - 14px); } }
+        @media (min-width: 1024px) { :root { --card-w-attractions: calc(25% - 15px); --card-w-bikes: calc(25% - 15px); --card-w-restaurants: calc(20% - 16px); --card-w-buses: calc(50% - 10px); --card-w-blogs: calc(33.333% - 14px); --card-w-cars: calc(25% - 15px); --card-w-stays: calc(25% - 15px); } }
         #hero-label, #hero-pre, #hero-highlight, #hero-post, #hero-desc { transition: opacity 0.25s ease; }
         .search-box { background:rgba(255,255,255,0.08); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,0.15); border-radius:16px; padding:20px 22px; }
         .tab-btn { display:flex; align-items:center; gap:6px; padding:8px 16px; border-radius:50px; font-size:13px; font-weight:700; color:rgba(255,255,255,0.55); cursor:pointer; transition:all .2s; border:none; background:transparent; white-space:nowrap; }
@@ -130,14 +144,19 @@ $extra_styles = '
         .search-btn:hover { background:#d44e0e; }
         .search-btn .material-symbols-outlined { font-size:18px; }
         @media(max-width:768px){
-          .search-box { padding:14px; }
-          .search-row { flex-wrap:wrap; gap:8px; }
-          .search-field { flex:1 1 100%; height:46px; }
-          .date-field { flex:1 1 calc(50% - 4px); height:46px; min-width:0; }
-          .search-btn { width:100%; justify-content:center; height:46px; font-size:14px; padding:0 16px; border-radius:14px; }
-          .tab-btn { padding:6px 12px; font-size:12px; flex:1; justify-content:center; }
-          .tab-btn .material-symbols-outlined { font-size:16px; }
-          #search-tabs-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; display: flex; gap: 4px; padding-bottom: 2px; }
+          .search-box { padding:12px; border-radius:12px; }
+          .search-row { flex-wrap:wrap; gap:6px; }
+          .search-field { flex:1 1 100%; height:44px; padding:0 12px; }
+          .search-field .material-symbols-outlined { font-size:18px; }
+          .search-field input { font-size:14px; }
+          .date-field { flex:1 1 calc(50% - 3px); height:44px; min-width:0; padding:0 12px; }
+          .date-field .material-symbols-outlined { font-size:18px; }
+          .date-field input { font-size:14px; }
+          .search-btn { width:100%; justify-content:center; height:44px; font-size:14px; padding:0 16px; border-radius:12px; }
+          .tab-btn { padding:7px 14px; font-size:12px; flex:0 0 auto; justify-content:center; }
+          .tab-btn .material-symbols-outlined { font-size:15px; }
+          #search-tabs-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; display: flex; flex-wrap: nowrap; gap: 6px; padding-bottom: 4px; justify-content: flex-start; scroll-snap-type: x mandatory; margin-bottom: 10px; }
+          .tab-btn { scroll-snap-align: start; }
           #search-tabs-scroll::-webkit-scrollbar { display: none; }
         }
         @media(max-width:400px){ .date-field { flex:1 1 100%; } }
@@ -165,7 +184,7 @@ require 'header.php';
 
 <main>
 <!-- Hero -->
-<section class="relative min-h-[100svh] md:min-h-[80vh] flex flex-col items-center justify-center overflow-hidden">
+<section class="relative min-h-[100svh] md:min-h-[85vh] flex flex-col items-center justify-center overflow-hidden pt-20 md:pt-24 pb-8 md:pb-12 w-full">
     <div class="absolute inset-0 z-0">
         <div class="absolute inset-0 bg-gradient-to-b from-black/75 via-black/50 to-[#0a0705] z-10"></div>
         <div id="hero-bg" class="w-full h-full bg-cover bg-center transition-all duration-1000"
@@ -176,16 +195,16 @@ require 'header.php';
         <div class="orb w-64 h-64 bg-orange-400/10 bottom-1/3 right-10 z-[5]" style="animation-delay:3s"></div>
         <!-- Particles container -->
         <div id="particles" class="absolute inset-0 z-[6] overflow-hidden"></div>    </div>
-    <div class="relative z-20 text-center px-4 w-full max-w-[1140px] mx-auto pt-8 pb-6">
-        <p id="hero-label" class="text-primary font-bold text-xs uppercase tracking-widest mb-3">Chhatrapati Sambhajinagar</p>
-        <h1 class="font-serif text-3xl sm:text-4xl md:text-6xl text-white mb-4 leading-tight font-black">
+    <div class="relative z-20 text-center px-4 w-full max-w-[1140px] mx-auto pt-4 md:pt-8 pb-4 md:pb-6">
+        <p id="hero-label" class="text-primary font-bold text-[10px] md:text-xs uppercase tracking-widest mb-2 md:mb-3">Chhatrapati Sambhajinagar</p>
+        <h1 class="font-serif text-2xl sm:text-3xl md:text-5xl lg:text-6xl text-white mb-3 md:mb-4 leading-tight font-black px-2">
             <span id="hero-pre">Explore </span><span class="text-primary" id="hero-highlight">Your City</span><span id="hero-post"> Your Way</span>
         </h1>
-        <p id="hero-desc" class="text-white/70 text-sm md:text-lg mb-6 md:mb-10 max-w-2xl mx-auto px-2"><?php echo htmlspecialchars($hp_settings['hero_subtext']); ?></p>
+        <p id="hero-desc" class="text-white/70 text-xs sm:text-sm md:text-lg mb-6 md:mb-8 lg:mb-10 max-w-2xl mx-auto px-2"><?php echo htmlspecialchars($hp_settings['hero_subtext']); ?></p>
 
         <!-- Search Box -->
         <div class="search-box max-w-4xl mx-auto w-full">
-            <div id="search-tabs-scroll" class="flex flex-wrap gap-1.5 mb-4 pb-3 border-b border-white/10 justify-center">
+            <div id="search-tabs-scroll" class="flex sm:flex-wrap md:flex-wrap gap-1.5 mb-4 pb-3 border-b border-white/10 sm:justify-center overflow-x-auto hide-scrollbar w-full">
                 <?php
                 $tabs = [
                     ['id' => 'stays',       'icon' => 'bed',                  'label' => 'Stays'],
@@ -202,22 +221,22 @@ require 'header.php';
                 <?php endforeach; ?>
             </div>
 
-            <!-- STAYS panel -->
-            <div id="panel-stays" class="search-panel active">
-                <div class="search-row" style="gap: 16px;">
-                    <div class="search-field"><span class="material-symbols-outlined">location_on</span><input id="stays-location" type="text" placeholder="Chhatrapati Sambhajinagar" value="Chhatrapati Sambhajinagar"/></div>
-                    <div class="date-field" onclick="document.getElementById('stays-checkin').focus()"><span class="material-symbols-outlined">calendar_month</span><input id="stays-checkin" type="text" placeholder="Check-in" readonly/></div>
-                    <div class="date-field" onclick="document.getElementById('stays-checkout').focus()"><span class="material-symbols-outlined">calendar_month</span><input id="stays-checkout" type="text" placeholder="Check-out" readonly/></div>
-                    <button class="search-btn" onclick="doSearch('stays')"><span class="material-symbols-outlined">search</span>Search</button>
-                </div>
-            </div>
             <!-- CARS panel -->
-            <div id="panel-cars" class="search-panel">
+            <div id="panel-cars" class="search-panel active">
                 <div class="search-row" style="gap: 16px;">
                     <div class="search-field"><span class="material-symbols-outlined">trip_origin</span><input id="cars-pickup" type="text" placeholder="Chhatrapati Sambhajinagar" value="Chhatrapati Sambhajinagar"/></div>
                     <div class="search-field"><span class="material-symbols-outlined">location_on</span><input id="cars-drop" type="text" placeholder="Drop location"/></div>
                     <div class="date-field" onclick="document.getElementById('cars-date').focus()"><span class="material-symbols-outlined">calendar_month</span><input id="cars-date" type="text" placeholder="Select date" readonly/></div>
                     <button class="search-btn" onclick="doSearch('cars')"><span class="material-symbols-outlined">search</span>Search</button>
+                </div>
+            </div>
+            <!-- STAYS panel -->
+            <div id="panel-stays" class="search-panel">
+                <div class="search-row" style="gap: 16px;">
+                    <div class="search-field"><span class="material-symbols-outlined">location_on</span><input id="stays-location" type="text" placeholder="Chhatrapati Sambhajinagar" value="Chhatrapati Sambhajinagar"/></div>
+                    <div class="date-field" onclick="document.getElementById('stays-checkin').focus()"><span class="material-symbols-outlined">calendar_month</span><input id="stays-checkin" type="text" placeholder="Check-in" readonly/></div>
+                    <div class="date-field" onclick="document.getElementById('stays-checkout').focus()"><span class="material-symbols-outlined">calendar_month</span><input id="stays-checkout" type="text" placeholder="Check-out" readonly/></div>
+                    <button class="search-btn" onclick="doSearch('stays')"><span class="material-symbols-outlined">search</span>Search</button>
                 </div>
             </div>
             <!-- BIKES panel -->
@@ -265,14 +284,18 @@ function switchTab(tab, fromAuto) {
     document.querySelectorAll('.search-panel').forEach(function(p){ p.classList.remove('active'); });
     document.getElementById('panel-'+tab).classList.add('active');
     var heroData = {
-        stays:       { label:'Find Your Stay',       pre:'Discover ',   highlight:'Perfect Hotels',    post:' Near You',    desc:'The best hotels, guesthouses and homestays in Chhatrapati Sambhajinagar.' },
-        cars:        { label:'Rent a Car',            pre:'Drive in ',   highlight:'Premium Style',     post:' Today',       desc:'Luxury sedans, SUVs and hatchbacks with professional chauffeurs at your service.' },
-        bikes:       { label:'Rent a Bike',           pre:'Ride ',       highlight:'The Open Road',     post:' Your Way',    desc:'Scooters, cruisers and sports bikes — ride the city your way, anytime.' },
-        attractions: { label:'Discover Attractions',  pre:'Explore ',    highlight:'Ancient Marvels',   post:' Around You',  desc:'Ellora, Ajanta, Bibi Ka Maqbara and more — heritage wonders await you.' },
-        dine:        { label:'Taste the City',        pre:'Savour ',     highlight:'Local Flavours',    post:' Tonight',     desc:'From Mughlai feasts to street food — find the best restaurants near you.' },
-        buses:       { label:'Book a Bus',            pre:'Travel ',     highlight:'Your Way',          post:' Comfortably', desc:'AC sleepers, Volvo coaches and MSRTC buses to and from Sambhajinagar.' }
+        cars:        { img: 'images/car-rental-hero-section%20(3).webp', label:'Rent a Car',            pre:'Drive in ',   highlight:'Premium Style',     post:' Today',       desc:'Luxury sedans, SUVs and hatchbacks with professional chauffeurs at your service.' },
+        bikes:       { img: 'images/bike%20rentals-hero-section%20(6).webp', label:'Rent a Bike',           pre:'Ride ',       highlight:'The Open Road',     post:' Your Way',    desc:'Scooters, cruisers and sports bikes — ride the city your way, anytime.' },
+        attractions: { img: 'images/attractions-hero-section%20(7).webp', label:'Discover Attractions',  pre:'Explore ',    highlight:'Ancient Marvels',   post:' Around You',  desc:'Ellora, Ajanta, Bibi Ka Maqbara and more — heritage wonders await you.' },
+        stays:       { img: 'images/hotel-hero-section%20(4).webp', label:'Find Your Stay',       pre:'Discover ',   highlight:'Perfect Hotels',    post:' Near You',    desc:'The best hotels, guesthouses and homestays in Chhatrapati Sambhajinagar.' },
+        dine:        { img: 'images/dine-hero-section%20(1).webp', label:'Taste the City',        pre:'Savour ',     highlight:'Local Flavours',    post:' Tonight',     desc:'From Mughlai feasts to street food — find the best restaurants near you.' },
+        buses:       { img: 'images/bus-hero-section%20(2).webp', label:'Book a Bus',            pre:'Travel ',     highlight:'Your Way',          post:' Comfortably', desc:'AC sleepers, Volvo coaches and MSRTC buses to and from Sambhajinagar.' }
     };
     var d = heroData[tab];
+    
+    // Update background image
+    if (d.img) document.getElementById('hero-bg').style.backgroundImage = "url('" + d.img + "')";
+
     ['hero-label','hero-pre','hero-highlight','hero-post','hero-desc'].forEach(function(id){ document.getElementById(id).style.opacity='0'; });
     setTimeout(function(){
         document.getElementById('hero-label').textContent = d.label;
@@ -282,9 +305,28 @@ function switchTab(tab, fromAuto) {
         document.getElementById('hero-desc').textContent = d.desc;
         ['hero-label','hero-pre','hero-highlight','hero-post','hero-desc'].forEach(function(id){ document.getElementById(id).style.opacity='1'; });
     }, 250);
-    if (!fromAuto) { /* Interval logic removed */ }
+    
+    // Stop auto-rotation when user manually selects a tab
+    if (!fromAuto) {
+        if (window.heroInterval) {
+            clearInterval(window.heroInterval);
+            window.heroInterval = null;
+        }
+    }
 }
-// Auto-rotation disabled per user request
+
+// Auto-rotation functionality
+var tabsList = ['cars', 'bikes', 'attractions', 'stays', 'dine', 'buses'];
+var currentTabIndex = 0;
+function autoSwitch() {
+    currentTabIndex = (currentTabIndex + 1) % tabsList.length;
+    switchTab(tabsList[currentTabIndex], true);
+}
+window.heroInterval = setInterval(autoSwitch, 3000);
+
+// Initialize with the first background (cars)
+document.getElementById('hero-bg').style.backgroundImage = "url('images/car-rental-hero-section%20(3).webp')";
+
 var searchUrls = { stays:'<?php echo BASE_PATH; ?>/listing/stays', cars:'<?php echo BASE_PATH; ?>/listing/cars', bikes:'<?php echo BASE_PATH; ?>/listing/bikes', attractions:'<?php echo BASE_PATH; ?>/listing/attractions', dine:'<?php echo BASE_PATH; ?>/listing/restaurants', buses:'<?php echo BASE_PATH; ?>/listing/buses' };
 function doSearch(tab) {
     window.location.href = searchUrls[tab];
@@ -301,6 +343,55 @@ document.addEventListener('DOMContentLoaded', function() {    var today = new Da
     flatpickr('#dine-date', Object.assign({},opts,{ defaultDate:today }));
     flatpickr('#buses-date', Object.assign({},opts,{ defaultDate:today }));
 });
+
+// Banner Text Auto-Rotation
+document.addEventListener('DOMContentLoaded', function() {
+    var bannerData = [
+        {
+            tracking: "Explore Your Way",
+            heading: "Experience the essence of <span class='bg-gradient-to-r from-primary to-orange-400 bg-clip-text text-transparent italic px-1'>Maharashtra.</span>",
+            quote: "\"Chhatrapati Sambhajinagar is more than a city; it's a living museum of ancient artistry.\""
+        },
+        {
+            tracking: "Uncover Hidden Gems",
+            heading: "Journey through <span class='bg-gradient-to-r from-primary to-orange-400 bg-clip-text text-transparent italic px-1'>Time.</span>",
+            quote: "\"From majestic forts to silent caves, every stone here tells a forgotten tale.\""
+        },
+        {
+            tracking: "Adventure Awaits",
+            heading: "Feel the pulse of <span class='bg-gradient-to-r from-primary to-orange-400 bg-clip-text text-transparent italic px-1'>The Deccan.</span>",
+            quote: "\"Taste the vibrant culture and escape into the ultimate local adventure.\""
+        },
+        {
+            tracking: "Your Premium Guide",
+            heading: "Travel seamlessly <span class='bg-gradient-to-r from-primary to-orange-400 bg-clip-text text-transparent italic px-1'>Everywhere.</span>",
+            quote: "\"Premium stays, fast rides, and flawless itineraries, all curated just for you.\""
+        }
+    ];
+    var bannerIndex = 0;
+    var container = document.getElementById('banner-text-container');
+    
+    if (container) {
+        setInterval(function() {
+            bannerIndex = (bannerIndex + 1) % bannerData.length;
+            
+            // Fade out
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(10px)';
+            
+            setTimeout(function() {
+                var d = bannerData[bannerIndex];
+                document.getElementById('banner-tracking').innerHTML = d.tracking;
+                document.getElementById('banner-heading').innerHTML = d.heading;
+                document.getElementById('banner-quote').innerHTML = d.quote;
+                
+                // Fade in
+                container.style.opacity = '1';
+                container.style.transform = 'translateY(0)';
+            }, 500); // Matches transition duration
+        }, 3000); // changes every 3 seconds
+    }
+});
 </script>
 
 
@@ -308,13 +399,13 @@ document.addEventListener('DOMContentLoaded', function() {    var today = new Da
 <section class="py-16 bg-white overflow-hidden">
     <div class="max-w-[1140px] mx-auto px-5">
         <div class="flex flex-col lg:flex-row items-center gap-12 mb-16">
-            <div class="flex-1" data-reveal data-reveal="left">
-                <p class="text-primary font-bold text-xs uppercase tracking-widest mb-2">Explore Your Way</p>
-                <h2 class="font-serif text-3xl md:text-5xl text-slate-900 leading-tight mb-6">Experience the essence of <span class="bg-gradient-to-r from-primary to-orange-400 bg-clip-text text-transparent italic px-1">Maharashtra.</span></h2>
+            <div class="flex-1 transition-all duration-500" id="banner-text-container" style="opacity: 1; transform: translateY(0);" data-reveal data-reveal="left">
+                <p id="banner-tracking" class="text-primary font-bold text-xs uppercase tracking-widest mb-2">Explore Your Way</p>
+                <h2 id="banner-heading" class="font-serif text-3xl md:text-5xl text-slate-900 leading-tight mb-6">Experience the essence of <span class="bg-gradient-to-r from-primary to-orange-400 bg-clip-text text-transparent italic px-1">Maharashtra.</span></h2>
                 <div class="space-y-4">
                     <div class="flex items-start gap-3">
                         <div class="w-1.5 h-1.5 rounded-full bg-primary mt-2"></div>
-                        <p class="text-slate-600 text-sm italic">"Chhatrapati Sambhajinagar is more than a city; it's a living museum of ancient artistry."</p>
+                        <p id="banner-quote" class="text-slate-600 text-sm italic">"Chhatrapati Sambhajinagar is more than a city; it's a living museum of ancient artistry."</p>
                     </div>
                 </div>
             </div>
@@ -383,6 +474,8 @@ $_sec_base_counts = [
     'restaurants' => 6,
     'buses'       => 2,
     'blogs'       => 3,
+    'cars'        => 4,
+    'stays'       => 4,
 ];
 
 // ── Render sections in saved order ───────────────────────────────────────────
@@ -391,7 +484,7 @@ foreach ($hp_settings['section_order'] as $_sec_key):
     if (empty($hp_settings['show_' . $_sec_key])) continue;
     $_layout = $hp_settings['layout_' . $_sec_key];
     // If more items than base count → force horizontal scroll
-    $_sec_items_map = ['attractions'=>$hp_attractions,'bikes'=>$hp_bikes,'restaurants'=>$hp_restaurants,'buses'=>$hp_buses,'blogs'=>$hp_blogs];
+    $_sec_items_map = ['attractions'=>$hp_attractions,'bikes'=>$hp_bikes,'restaurants'=>$hp_restaurants,'buses'=>$hp_buses,'blogs'=>$hp_blogs,'cars'=>$hp_cars,'stays'=>$hp_stays];
     $_sec_item_count = count($_sec_items_map[$_sec_key] ?? []);
     $_base = $_sec_base_counts[$_sec_key] ?? 4;
     if ($_sec_item_count > $_base) {
@@ -413,7 +506,7 @@ foreach ($hp_settings['section_order'] as $_sec_key):
             <?php else: ?>
             <div>
                 <p class="text-primary font-bold text-xs uppercase tracking-widest mb-1"><?php
-                    $sec_subtitles = ['attractions'=>'Heritage & Culture','bikes'=>'Two-Wheeler Rentals','restaurants'=>'Food & Dining','buses'=>'Intercity Travel'];
+                    $sec_subtitles = ['attractions'=>'Heritage & Culture','bikes'=>'Two-Wheeler Rentals','restaurants'=>'Food & Dining','buses'=>'Intercity Travel','cars'=>'Self-Drive & Taxis','stays'=>'Hotels & Resorts'];
                     echo $sec_subtitles[$_sec_key] ?? 'Explore';
                 ?></p>
                 <h2 class="font-serif text-2xl md:text-3xl text-slate-900"><?php echo htmlspecialchars($hp_settings['title_' . $_sec_key]); ?></h2>
@@ -489,6 +582,43 @@ foreach ($hp_settings['section_order'] as $_sec_key):
                     .'</div></div></a>';
             };
             $items = $hp_restaurants;
+        elseif ($_sec_key === 'cars'):
+            $render_fn = function($c) {
+                $slug = BASE_PATH . '/listing-detail/' . generateSlug('cars', $c['id'], $c['name']) . '.html';
+                $img = strpos($c['image'] ?? '', 'http') === 0 ? htmlspecialchars($c['image']) : BASE_PATH . '/' . ltrim(htmlspecialchars($c['image'] ?? ''), '/');
+                $name=htmlspecialchars($c['name']);
+                $type=htmlspecialchars($c['type']??'Sedan'); $price=number_format($c['price_per_day']??0);
+                $rating=number_format((float)($c['rating']??0),1);
+                return '<a href="'.$slug.'" class="group overflow-hidden rounded-2xl bg-white border border-slate-100 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex-shrink-0" style="width:VAR_W">'
+                    .'<div class="h-44 overflow-hidden relative"><img alt="'.$name.'" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="'.$img.'"/>'
+                    .'<div class="absolute top-2.5 right-2.5 flex items-center gap-1 bg-black/60 backdrop-blur-sm text-white text-xs font-bold px-2 py-0.5 rounded-full"><span style="font-family:Material Symbols Outlined;font-size:12px;color:#fbbf24">star</span>'.$rating.'</div></div>'
+                    .'<div class="p-4"><span class="text-primary text-[10px] font-bold uppercase tracking-widest">'.$type.'</span>'
+                    .'<h5 class="font-serif text-base text-slate-900 mt-1 mb-3 line-clamp-1">'.$name.'</h5>'
+                    .'<div class="flex items-center justify-between">'
+                    .'<p class="font-black text-slate-900 text-sm">&#8377;'.$price.' <span class="text-xs text-slate-400 font-normal">/day</span></p>'
+                    .'<span class="bg-primary text-white px-3 py-1.5 rounded-full font-bold text-xs group-hover:bg-orange-600 transition-all">Check Availability</span>'
+                    .'</div></div></a>';
+            };
+            $items = $hp_cars;
+        elseif ($_sec_key === 'stays'):
+            $render_fn = function($s) {
+                $slug = BASE_PATH . '/listing-detail/' . generateSlug('stays', $s['id'], $s['name']) . '.html';
+                $img = strpos($s['image'] ?? '', 'http') === 0 ? htmlspecialchars($s['image']) : BASE_PATH . '/' . ltrim(htmlspecialchars($s['image'] ?? ''), '/');
+                $name=htmlspecialchars($s['name']);
+                $type=htmlspecialchars($s['type']??'Hotel'); $price=number_format($s['price_per_night']??0);
+                $rating=number_format((float)($s['rating']??0),1);
+                return '<a href="'.$slug.'" class="group relative overflow-hidden rounded-2xl bg-white border border-slate-100 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex-shrink-0" style="width:VAR_W">'
+                    .'<div class="h-44 overflow-hidden relative"><img alt="'.$name.'" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="'.$img.'"/>'
+                    .'<div class="absolute top-2.5 right-2.5 flex items-center gap-1 bg-black/60 backdrop-blur-sm text-white text-xs font-bold px-2 py-0.5 rounded-full z-20"><span style="font-family:Material Symbols Outlined;font-size:12px;color:#fbbf24">star</span>'.$rating.'</div></div>'
+                    .'<div class="p-4"><span class="text-primary text-[10px] font-bold uppercase tracking-widest relative z-20">'.$type.'</span>'
+                    .'<h5 class="font-serif text-base text-slate-900 mt-1 mb-2 line-clamp-1 relative z-20">'.$name.'</h5>'
+                    .'<div class="flex items-center gap-1 text-slate-500 text-xs mb-3 relative z-20"><span style="font-family:Material Symbols Outlined;font-size:14px">location_on</span><span class="line-clamp-1">'.htmlspecialchars($s['location']??'').'</span></div>'
+                    .'<div class="flex items-center justify-between gap-3 relative z-20 border-t border-slate-100 pt-3">'
+                    .'<p class="font-black text-slate-900 text-sm">&#8377;'.$price.' <span class="text-xs text-slate-400 font-normal">/night</span></p>'
+                    .'<span class="bg-primary text-white px-4 py-1.5 rounded-full font-bold text-xs group-hover:bg-orange-600 transition-all whitespace-nowrap">Check Details</span>'
+                    .'</div></div></a>';
+            };
+            $items = $hp_stays;
         elseif ($_sec_key === 'buses'):
             $render_fn = function($bus) {
                 $op=htmlspecialchars($bus['operator']); $bt=htmlspecialchars($bus['bus_type']);

@@ -222,3 +222,30 @@ Stack trace:
 #2 C:\xampp\htdocs\CSNexplore2.0\regenerate-html-with-maps.php(36): Database->fetchAll()
 #3 {main}
   thrown in C:\xampp\htdocs\CSNexplore2.0\php\database.php on line 260
+[04-Apr-2026 18:03:17 Europe/Berlin] PHP Warning:  Undefined array key "features" in C:\xampp\htdocs\CSNexplore2.0\listing-detail.php on line 163
+[04-Apr-2026 16:10:21 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'name' in 'field list' in C:\xampp\htdocs\CSNexplore2.0\php\database.php:260
+Stack trace:
+#0 C:\xampp\htdocs\CSNexplore2.0\php\database.php(260): PDOStatement->execute()
+#1 C:\xampp\htdocs\CSNexplore2.0\php\database.php(265): Database->query()
+#2 C:\xampp\htdocs\CSNexplore2.0\regenerate-html-with-maps.php(36): Database->fetchAll()
+#3 {main}
+  thrown in C:\xampp\htdocs\CSNexplore2.0\php\database.php on line 260
+[04-Apr-2026 16:10:33 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\CSNexplore2.0\run-regenerate-now.php:1) in C:\xampp\htdocs\CSNexplore2.0\php\config.php on line 93
+[04-Apr-2026 16:10:33 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\CSNexplore2.0\run-regenerate-now.php:1) in C:\xampp\htdocs\CSNexplore2.0\php\config.php on line 94
+[04-Apr-2026 16:10:33 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\CSNexplore2.0\run-regenerate-now.php:1) in C:\xampp\htdocs\CSNexplore2.0\php\config.php on line 95
+[04-Apr-2026 16:10:33 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\CSNexplore2.0\run-regenerate-now.php:1) in C:\xampp\htdocs\CSNexplore2.0\php\config.php on line 96
+[04-Apr-2026 16:10:33 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\CSNexplore2.0\run-regenerate-now.php:1) in C:\xampp\htdocs\CSNexplore2.0\php\config.php on line 97
+[04-Apr-2026 16:11:00 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'name' in 'field list' in C:\xampp\htdocs\CSNexplore2.0\php\database.php:260
+Stack trace:
+#0 C:\xampp\htdocs\CSNexplore2.0\php\database.php(260): PDOStatement->execute()
+#1 C:\xampp\htdocs\CSNexplore2.0\php\database.php(265): Database->query()
+#2 C:\xampp\htdocs\CSNexplore2.0\regenerate-html-with-maps.php(36): Database->fetchAll()
+#3 {main}
+  thrown in C:\xampp\htdocs\CSNexplore2.0\php\database.php on line 260
+[04-Apr-2026 16:12:27 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'name' in 'field list' in C:\xampp\htdocs\CSNexplore2.0\php\database.php:260
+Stack trace:
+#0 C:\xampp\htdocs\CSNexplore2.0\php\database.php(260): PDOStatement->execute()
+#1 C:\xampp\htdocs\CSNexplore2.0\php\database.php(265): Database->query()
+#2 C:\xampp\htdocs\CSNexplore2.0\regenerate-html-with-maps.php(36): Database->fetchAll()
+#3 {main}
+  thrown in C:\xampp\htdocs\CSNexplore2.0\php\database.php on line 260
