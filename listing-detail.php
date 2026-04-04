@@ -123,9 +123,9 @@ body.page-ready{animation:pageFadeIn 0.2s ease forwards;}
 <!-- Main Content -->
 <div class="max-w-6xl mx-auto px-4 py-8 mt-20">
     <!-- Listing Header -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+    <div class="flex flex-col lg:grid lg:grid-cols-3 gap-8 mb-12 lg:items-start">
         <!-- Left: Image & Details -->
-        <div class="lg:col-span-2">
+        <div class="lg:col-span-2 order-1 lg:order-1 w-full">
             <!-- Main Image -->
             <div class="mb-6 rounded-lg overflow-hidden bg-gray-200 h-96">
                 <?php if ($image): ?>
@@ -177,61 +177,10 @@ body.page-ready{animation:pageFadeIn 0.2s ease forwards;}
                     </div>
                 </div>
             <?php endif; ?>
+        </div> <!-- End of Left Volume 1 -->
 
-            <!-- Similar Listings Section -->
-            <div class="mb-8">
-                <h3 class="text-xl font-bold mb-4">Similar Listings</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <?php foreach (array_slice($similar_listings, 0, 4) as $item): 
-                        $item_price = $item[$price_col] ?? 0;
-                        $item_image = $item['image'] ?? '';
-                        $item_name = htmlspecialchars($item['name'] ?? $item['operator'] ?? 'Listing');
-                        $item_location = htmlspecialchars($item['location'] ?? '');
-                        $item_rating = $item['rating'] ?? 0;
-                    ?>
-                        <a href="listing-detail.php?category=<?php echo $category; ?>&id=<?php echo $item['id']; ?>" class="group">
-                            <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition">
-                                <!-- Image -->
-                                <div class="relative h-40 bg-gray-200 overflow-hidden">
-                                    <?php if ($item_image): ?>
-                                        <img src="<?php echo htmlspecialchars($item_image); ?>" alt="<?php echo $item_name; ?>" class="w-full h-full object-cover group-hover:scale-105 transition">
-                                    <?php else: ?>
-                                        <div class="w-full h-full flex items-center justify-center bg-gray-300">
-                                            <span class="material-symbols-outlined text-4xl text-gray-400">image</span>
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
-
-                                <!-- Content -->
-                                <div class="p-3">
-                                    <h4 class="font-bold text-sm mb-1 line-clamp-2"><?php echo $item_name; ?></h4>
-                                    
-                                    <?php if ($item_location): ?>
-                                        <p class="text-xs text-gray-600 mb-2 flex items-center gap-1">
-                                            <span class="material-symbols-outlined text-xs">location_on</span>
-                                            <?php echo $item_location; ?>
-                                        </p>
-                                    <?php endif; ?>
-
-                                    <div class="flex items-center justify-between">
-                                        <div class="text-primary font-bold text-sm">₹<?php echo number_format($item_price, 0); ?></div>
-                                        <?php if ($item_rating): ?>
-                                            <div class="flex items-center gap-1 text-xs">
-                                                <span class="material-symbols-outlined text-xs text-yellow-500">star</span>
-                                                <?php echo number_format($item_rating, 1); ?>
-                                            </div>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    <?php endforeach; ?>
-                </div>
-            </div>
-        </div>
-
-        <!-- Right: Booking Card -->
-        <div class="lg:col-span-1">
+        <!-- Right: Booking Card (order-2 on mobile) -->
+        <div class="lg:col-span-1 order-2 lg:order-2 w-full">
             <div class="sticky top-24 bg-white border border-gray-200 rounded-lg p-6 shadow-lg">
                 <!-- Price -->
                 <div class="mb-4">
@@ -273,72 +222,84 @@ body.page-ready{animation:pageFadeIn 0.2s ease forwards;}
                     </div>
                 <?php endif; ?>
 
-                <!-- Booking Form -->
-                <?php if ($user): ?>
-                    <!-- User is logged in - show booking form -->
-                    <form id="booking-form" class="space-y-4">
-                        <input type="hidden" name="service_type" value="<?php echo $category; ?>">
-                        <input type="hidden" name="listing_id" value="<?php echo $id; ?>">
-                        <input type="hidden" name="listing_name" value="<?php echo htmlspecialchars($listing['name']); ?>">
-                        
-                        <div>
-                            <label class="block text-sm font-bold mb-1">Full Name</label>
-                            <input type="text" name="full_name" value="<?php echo htmlspecialchars($user['name'] ?? ''); ?>" required class="w-full border border-gray-300 rounded-lg p-2 text-sm">
-                        </div>
+                <!-- Booking / Login Container -->
+                <div id="check-availability-gate">
+                    <button type="button" id="btn-check-availability" class="w-full bg-[#ec5b13] text-white font-black py-4 rounded-xl shadow-md hover:bg-orange-600 transition-all text-base">
+                        Check Availability
+                    </button>
+                    <p class="text-center text-xs text-slate-600 font-medium mt-3">Free cancellation · No hidden charges</p>
+                </div>
 
-                        <div>
-                            <label class="block text-sm font-bold mb-1">Email</label>
-                            <input type="email" name="email" value="<?php echo htmlspecialchars($user['email'] ?? ''); ?>" required class="w-full border border-gray-300 rounded-lg p-2 text-sm">
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-bold mb-1">Phone</label>
-                            <input type="tel" name="phone" required class="w-full border border-gray-300 rounded-lg p-2 text-sm" placeholder="+91 XXXXX XXXXX">
-                        </div>
-
-                        <?php if ($category === 'stays'): ?>
+                <div id="booking-actions-container" class="hidden">
+                    <!-- Booking Form -->
+                    <?php if ($user): ?>
+                        <!-- User is logged in - show booking form -->
+                        <form id="booking-form" class="space-y-4">
+                            <input type="hidden" name="service_type" value="<?php echo $category; ?>">
+                            <input type="hidden" name="listing_id" value="<?php echo $id; ?>">
+                            <input type="hidden" name="listing_name" value="<?php echo htmlspecialchars($listing['name']); ?>">
+                            
                             <div>
-                                <label class="block text-sm font-bold mb-1">Check-in Date</label>
-                                <input type="date" name="checkin_date" required class="w-full border border-gray-300 rounded-lg p-2 text-sm">
+                                <label class="block text-sm font-bold mb-1">Full Name</label>
+                                <input type="text" name="full_name" value="<?php echo htmlspecialchars($user['name'] ?? ''); ?>" required class="w-full border border-gray-300 rounded-lg p-2 text-sm">
                             </div>
 
                             <div>
-                                <label class="block text-sm font-bold mb-1">Check-out Date</label>
-                                <input type="date" name="checkout_date" required class="w-full border border-gray-300 rounded-lg p-2 text-sm">
+                                <label class="block text-sm font-bold mb-1">Email</label>
+                                <input type="email" name="email" value="<?php echo htmlspecialchars($user['email'] ?? ''); ?>" required class="w-full border border-gray-300 rounded-lg p-2 text-sm">
                             </div>
-                        <?php else: ?>
+
                             <div>
-                                <label class="block text-sm font-bold mb-1">Booking Date</label>
-                                <input type="date" name="booking_date" required class="w-full border border-gray-300 rounded-lg p-2 text-sm">
+                                <label class="block text-sm font-bold mb-1">Phone</label>
+                                <input type="tel" name="phone" required class="w-full border border-gray-300 rounded-lg p-2 text-sm" placeholder="+91 XXXXX XXXXX">
                             </div>
-                        <?php endif; ?>
 
-                        <div>
-                            <label class="block text-sm font-bold mb-1">Number of People</label>
-                            <input type="number" name="number_of_people" value="1" min="1" required class="w-full border border-gray-300 rounded-lg p-2 text-sm">
+                            <?php if ($category === 'stays'): ?>
+                                <div>
+                                    <label class="block text-sm font-bold mb-1">Check-in Date</label>
+                                    <input type="date" name="checkin_date" required class="w-full border border-gray-300 rounded-lg p-2 text-sm">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-bold mb-1">Check-out Date</label>
+                                    <input type="date" name="checkout_date" required class="w-full border border-gray-300 rounded-lg p-2 text-sm">
+                                </div>
+                            <?php else: ?>
+                                <div>
+                                    <label class="block text-sm font-bold mb-1">Booking Date</label>
+                                    <input type="date" name="booking_date" required class="w-full border border-gray-300 rounded-lg p-2 text-sm">
+                                </div>
+                            <?php endif; ?>
+
+                            <div>
+                                <label class="block text-sm font-bold mb-1">Number of People</label>
+                                <input type="number" name="number_of_people" value="1" min="1" required class="w-full border border-gray-300 rounded-lg p-2 text-sm">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-bold mb-1">Notes (Optional)</label>
+                                <textarea name="notes" class="w-full border border-gray-300 rounded-lg p-2 text-sm" rows="3" placeholder="Any special requests?"></textarea>
+                            </div>
+
+                            <button type="submit" class="w-full bg-primary text-white font-bold py-3 rounded-lg hover:bg-orange-600 transition">
+                                Book Now
+                            </button>
+                        </form>
+                    <?php else: ?>
+                        <!-- User not logged in - show login prompt -->
+                        <div class="text-center bg-amber-50 border border-amber-200 rounded-xl p-5">
+                            <span class="material-symbols-outlined text-amber-500 text-3xl mb-2 block">lock</span>
+                            <p class="font-bold text-slate-900 mb-1">Sign in to book</p>
+                            <p class="text-sm text-slate-700 mb-4">Please log in to make a booking request.</p>
+                            <a href="login" class="block w-full bg-[#ec5b13] text-white font-black py-3 rounded-xl hover:bg-orange-600 transition mb-2">
+                                Sign In
+                            </a>
+                            <a href="register" class="block w-full bg-transparent border-2 border-primary text-primary font-bold py-2.5 rounded-xl hover:bg-orange-50 transition text-sm">
+                                Create Account
+                            </a>
                         </div>
-
-                        <div>
-                            <label class="block text-sm font-bold mb-1">Notes (Optional)</label>
-                            <textarea name="notes" class="w-full border border-gray-300 rounded-lg p-2 text-sm" rows="3" placeholder="Any special requests?"></textarea>
-                        </div>
-
-                        <button type="submit" class="w-full bg-primary text-white font-bold py-3 rounded-lg hover:bg-orange-600 transition">
-                            Book Now
-                        </button>
-                    </form>
-                <?php else: ?>
-                    <!-- User not logged in - show login prompt -->
-                    <div class="text-center">
-                        <p class="text-gray-600 mb-4">Sign in to make a booking</p>
-                        <a href="login" class="block w-full bg-primary text-white font-bold py-3 rounded-lg hover:bg-orange-600 transition mb-2">
-                            Sign In
-                        </a>
-                        <a href="register" class="block w-full bg-gray-200 text-gray-800 font-bold py-3 rounded-lg hover:bg-gray-300 transition">
-                            Create Account
-                        </a>
-                    </div>
-                <?php endif; ?>
+                    <?php endif; ?>
+                </div>
 
                 <!-- Contact Info -->
                 <div class="mt-6 pt-6 border-t border-gray-200">
@@ -376,6 +337,12 @@ body.page-ready{animation:pageFadeIn 0.2s ease forwards;}
 <?php include 'footer.php'; ?>
 
 <script>
+// Check Availability toggler
+document.getElementById('btn-check-availability')?.addEventListener('click', function() {
+    document.getElementById('check-availability-gate').style.display = 'none';
+    document.getElementById('booking-actions-container').classList.remove('hidden');
+});
+
 // Booking form submission
 document.getElementById('booking-form')?.addEventListener('submit', async (e) => {
     e.preventDefault();

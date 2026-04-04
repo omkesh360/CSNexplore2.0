@@ -158,8 +158,10 @@ require 'admin-header.php';
         </div>
         <?php
         $hp_sections = [
-            'attractions' => ['icon' => '🏛️', 'default' => 'Ancient Marvels',    'desc' => 'Heritage sites & attractions', 'layouts' => ['4-col','3-col','2-col'], 'counts' => [4,6,8]],
+            'cars'        => ['icon' => '🚗', 'default' => 'Self Drive Cars',    'desc' => 'Car rentals & self-drive',    'layouts' => ['4-col','3-col','2-col'], 'counts' => [4,6,8]],
             'bikes'       => ['icon' => '🏍️', 'default' => 'Quick Bike Rentals', 'desc' => 'Bikes & scooters for rent',    'layouts' => ['4-col','3-col','2-col'], 'counts' => [4,6,8]],
+            'attractions' => ['icon' => '🏛️', 'default' => 'Ancient Marvels',    'desc' => 'Heritage sites & attractions', 'layouts' => ['4-col','3-col','2-col'], 'counts' => [4,6,8]],
+            'stays'       => ['icon' => '🏨', 'default' => 'Premium Stays',      'desc' => 'Hotels & resorts',             'layouts' => ['4-col','3-col','2-col'], 'counts' => [4,6,8]],
             'restaurants' => ['icon' => '🍽️', 'default' => 'Taste the City',     'desc' => 'Restaurants & dining',         'layouts' => ['3-col','4-col','2-col'], 'counts' => [6,8,12]],
             'buses'       => ['icon' => '🚌', 'default' => 'Travel Your Way',    'desc' => 'Bus routes & operators',       'layouts' => ['2-col','3-col','list'],   'counts' => [2,4,6]],
             'blogs'       => ['icon' => '📝', 'default' => 'Travel Insights',    'desc' => 'Blog posts & travel guides',   'layouts' => ['3-col','2-col','4-col'], 'counts' => [3,4,6]],
@@ -362,7 +364,7 @@ async function loadHomepage() {
     if (data.stat2_label !== undefined) document.getElementById("hp-stat2-label").value = data.stat2_label;
     if (data.stat3_label !== undefined) document.getElementById("hp-stat3-label").value = data.stat3_label;
     if (data.stat4_label !== undefined) document.getElementById("hp-stat4-label").value = data.stat4_label;
-    ["attractions","bikes","restaurants","buses","blogs"].forEach(function(k){
+    ["cars","bikes","attractions","stays","restaurants","buses","blogs"].forEach(function(k){
         var cb = document.getElementById("hp-show-" + k);
         var ti = document.getElementById("hp-title-" + k);
         var co = document.getElementById("hp-count-" + k);
@@ -447,7 +449,7 @@ async function saveHomepage() {
     // Section order from DOM
     var order = Array.from(document.querySelectorAll("#hp-sections-list .hp-section-row")).map(function(r){ return r.dataset.key; });
     data.section_order = order;
-    ["attractions","bikes","restaurants","buses","blogs"].forEach(function(k){
+    ["cars","bikes","attractions","stays","restaurants","buses","blogs"].forEach(function(k){
         var cb = document.getElementById("hp-show-" + k);
         var ti = document.getElementById("hp-title-" + k);
         var co = document.getElementById("hp-count-" + k);
