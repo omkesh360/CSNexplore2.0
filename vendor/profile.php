@@ -4,206 +4,203 @@ $vendor_title = 'My Profile | Vendor Portal';
 require 'vendor-header.php';
 ?>
 
-<div class="mb-5">
-    <h2 class="text-xl font-black text-slate-900">My Profile</h2>
-    <p class="text-xs text-slate-500 mt-0.5">Manage your account details and security</p>
+<style>
+.page-header h1 { font-size: 28px; margin-bottom: 5px; }
+.page-header p { font-size: 14px; color: #666; }
+.profile-container { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; }
+.profile-card { background: white; padding: 20px; border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); text-align: center; }
+.profile-avatar { width: 80px; height: 80px; background: linear-gradient(135deg, #ec5b13, #ff8c42); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 32px; margin: 0 auto 15px; }
+.profile-name { font-size: 18px; font-weight: bold; color: #333; margin-bottom: 5px; }
+.profile-username { font-size: 14px; color: #666; margin-bottom: 15px; }
+.profile-info { text-align: left; }
+.info-item { padding: 10px 0; border-bottom: 1px solid #eee; }
+.info-item:last-child { border-bottom: none; }
+.info-label { font-size: 12px; color: #999; font-weight: 500; }
+.info-value { font-size: 14px; color: #333; margin-top: 3px; }
+.form-section { background: white; padding: 20px; border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px; }
+.form-section h2 { font-size: 18px; margin-bottom: 15px; color: #333; }
+.form-group { margin-bottom: 15px; }
+.form-group label { display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 5px; }
+.form-group input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; font-family: Arial, sans-serif; }
+.form-group input:focus { outline: none; border-color: #ec5b13; box-shadow: 0 0 0 2px rgba(236, 91, 19, 0.1); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.btn { background: #ec5b13; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 500; }
+.btn:hover { background: #d94a0f; }
+.btn-secondary { background: #666; }
+.btn-secondary:hover { background: #555; }
+.btn-danger { background: #dc3545; }
+.btn-danger:hover { background: #c82333; }
+.danger-zone { background: #fff5f5; border: 1px solid #ffcccc; padding: 20px; border-radius: 5px; margin-top: 20px; }
+.danger-zone h3 { color: #dc3545; margin-bottom: 10px; }
+.danger-zone p { font-size: 14px; color: #666; margin-bottom: 15px; }
+@media (max-width: 768px) {
+    .profile-container { grid-template-columns: 1fr; }
+}
+</style>
+
+<div class="page-header">
+    <h1>My Profile</h1>
+    <p>Manage your account details and security</p>
 </div>
 
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-
-    <!-- Left: profile info card -->
-    <div class="vendor-card p-5 text-center">
-        <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary to-orange-400 flex items-center justify-center text-white font-black text-3xl mx-auto mb-3" id="profile-avatar">V</div>
-        <p id="profile-name" class="font-black text-slate-900 text-base">—</p>
-        <p id="profile-username" class="text-[11px] text-slate-400 font-bold mb-1">@—</p>
-        <p id="profile-business" class="text-[11px] text-primary font-bold mb-3"></p>
-        <div class="flex items-center justify-center gap-1.5 text-[10px] font-bold text-green-700 bg-green-50 border border-green-100 px-3 py-1 rounded-full mb-4">
-            <span class="w-2 h-2 bg-green-500 rounded-full"></span> Active Vendor
-        </div>
-        <div class="text-left space-y-2 border-t border-slate-100 pt-4">
-            <div class="flex items-center gap-2 text-xs text-slate-600">
-                <span class="material-symbols-outlined text-slate-400 text-base">email</span>
-                <span id="profile-email">—</span>
+<div class="profile-container">
+    <!-- Profile Info Card -->
+    <div class="profile-card">
+        <div class="profile-avatar" id="profile-avatar">V</div>
+        <div class="profile-name" id="profile-name">Vendor Name</div>
+        <div class="profile-username" id="profile-username">@username</div>
+        <div class="profile-info">
+            <div class="info-item">
+                <div class="info-label">Email</div>
+                <div class="info-value" id="profile-email">—</div>
             </div>
-            <div class="flex items-center gap-2 text-xs text-slate-600">
-                <span class="material-symbols-outlined text-slate-400 text-base">phone</span>
-                <span id="profile-phone">—</span>
+            <div class="info-item">
+                <div class="info-label">Phone</div>
+                <div class="info-value" id="profile-phone">—</div>
             </div>
-            <div class="flex items-center gap-2 text-xs text-slate-600">
-                <span class="material-symbols-outlined text-slate-400 text-base">calendar_today</span>
-                <span id="profile-joined">Member since —</span>
+            <div class="info-item">
+                <div class="info-label">Business Name</div>
+                <div class="info-value" id="profile-business">—</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Member Since</div>
+                <div class="info-value" id="profile-joined">—</div>
             </div>
         </div>
     </div>
 
-    <!-- Right: edit form + password -->
-    <div class="lg:col-span-2 space-y-5">
-
-        <!-- Edit profile -->
-        <div class="vendor-card">
-            <div class="p-4 border-b border-slate-100">
-                <p class="text-sm font-bold text-slate-700">Edit Profile</p>
-            </div>
-            <form id="profile-form" onsubmit="saveProfile(event)" class="p-5 space-y-4">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Full Name</label>
-                        <input id="p-name" required class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"/>
+    <!-- Edit Forms -->
+    <div>
+        <!-- Edit Profile -->
+        <div class="form-section">
+            <h2>Edit Profile</h2>
+            <form id="profile-form" onsubmit="saveProfile(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="p-name" required>
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Business Name</label>
-                        <input id="p-business" class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"/>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Email</label>
-                        <input id="p-email" type="email" class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"/>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Phone</label>
-                        <input id="p-phone" type="tel" class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"/>
+                    <div class="form-group">
+                        <label>Business Name</label>
+                        <input type="text" id="p-business">
                     </div>
                 </div>
-                <div class="pt-1">
-                    <button type="submit" id="profile-save-btn" class="bg-primary text-white px-6 py-2.5 rounded-xl text-sm font-bold hover:bg-orange-600 transition-all">
-                        Save Changes
-                    </button>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="p-email">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" id="p-phone">
+                    </div>
                 </div>
+                <button type="submit" class="btn">Save Changes</button>
             </form>
         </div>
 
-        <!-- Change password -->
-        <div class="vendor-card">
-            <div class="p-4 border-b border-slate-100">
-                <p class="text-sm font-bold text-slate-700">Change Password</p>
-                <p class="text-[11px] text-slate-400 mt-0.5">Minimum 8 characters</p>
-            </div>
-            <form id="password-form" onsubmit="changePassword(event)" class="p-5 space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Current Password</label>
-                    <div class="relative">
-                        <input id="pw-current" type="password" required class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary pr-10"/>
-                        <button type="button" onclick="togglePw('pw-current')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
-                            <span class="material-symbols-outlined text-lg">visibility</span>
-                        </button>
+        <!-- Change Password -->
+        <div class="form-section">
+            <h2>Change Password</h2>
+            <form id="password-form" onsubmit="changePassword(event)">
+                <div class="form-group">
+                    <label>Current Password</label>
+                    <input type="password" id="pw-current" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>New Password (min 8 characters)</label>
+                        <input type="password" id="pw-new" required minlength="8">
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm New Password</label>
+                        <input type="password" id="pw-confirm" required minlength="8">
                     </div>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">New Password</label>
-                        <div class="relative">
-                            <input id="pw-new" type="password" required minlength="8" class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary pr-10"/>
-                            <button type="button" onclick="togglePw('pw-new')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
-                                <span class="material-symbols-outlined text-lg">visibility</span>
-                            </button>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Confirm New Password</label>
-                        <input id="pw-confirm" type="password" required minlength="8" class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"/>
-                    </div>
-                </div>
-                <div class="pt-1">
-                    <button type="submit" id="pw-save-btn" class="bg-slate-800 text-white px-6 py-2.5 rounded-xl text-sm font-bold hover:bg-slate-700 transition-all">
-                        Update Password
-                    </button>
-                </div>
+                <button type="submit" class="btn">Update Password</button>
             </form>
         </div>
 
-        <!-- Danger zone -->
-        <div class="vendor-card border-red-100 border">
-            <div class="p-4 border-b border-red-50">
-                <p class="text-sm font-bold text-red-600">Sign Out</p>
-            </div>
-            <div class="p-5 flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-bold text-slate-700">Sign out of vendor portal</p>
-                    <p class="text-[11px] text-slate-400">You'll need to log in again to access your dashboard</p>
-                </div>
-                <button onclick="vendorLogout()" class="flex items-center gap-1.5 bg-red-50 border border-red-100 text-red-600 px-4 py-2 rounded-xl text-xs font-bold hover:bg-red-100 transition-all">
-                    <span class="material-symbols-outlined text-base">logout</span> Sign Out
-                </button>
-            </div>
+        <!-- Danger Zone -->
+        <div class="danger-zone">
+            <h3>Sign Out</h3>
+            <p>Sign out of your vendor account. You'll need to log in again to access your dashboard.</p>
+            <button onclick="vendorLogout()" class="btn btn-danger">Sign Out</button>
         </div>
-
     </div>
 </div>
+
+</div> <!-- End main-content -->
 
 <script>
 const BASE = '<?php echo VENDOR_API_BASE; ?>';
 
 async function loadProfile() {
-    const d = await vendorApi(`${BASE}/php/api/vendor-profile.php?action=get`);
-    if (!d?.vendor) return;
-    const v = d.vendor;
-    const name = v.name||'Vendor';
+    const data = await vendorApi(`${BASE}/php/api/vendor-profile.php?action=get`);
+    if (!data?.vendor) return;
+    
+    const v = data.vendor;
+    const name = v.name || 'Vendor';
+    
     document.getElementById('profile-avatar').textContent = name.charAt(0).toUpperCase();
-    document.getElementById('profile-name').textContent     = name;
-    document.getElementById('profile-username').textContent = '@'+(v.username||'');
-    document.getElementById('profile-business').textContent = v.business_name||'';
-    document.getElementById('profile-email').textContent    = v.email||'Not set';
-    document.getElementById('profile-phone').textContent    = v.phone||'Not set';
-    document.getElementById('profile-joined').textContent   = 'Member since ' + (v.created_at||'').substring(0,10);
-    // Fill form
-    document.getElementById('p-name').value     = v.name||'';
-    document.getElementById('p-business').value = v.business_name||'';
-    document.getElementById('p-email').value    = v.email||'';
-    document.getElementById('p-phone').value    = v.phone||'';
+    document.getElementById('profile-name').textContent = name;
+    document.getElementById('profile-username').textContent = '@' + (v.username || '');
+    document.getElementById('profile-email').textContent = v.email || '—';
+    document.getElementById('profile-phone').textContent = v.phone || '—';
+    document.getElementById('profile-business').textContent = v.business_name || '—';
+    document.getElementById('profile-joined').textContent = (v.created_at || '').substring(0, 10);
+    
+    document.getElementById('p-name').value = v.name || '';
+    document.getElementById('p-business').value = v.business_name || '';
+    document.getElementById('p-email').value = v.email || '';
+    document.getElementById('p-phone').value = v.phone || '';
 }
 
 async function saveProfile(e) {
     e.preventDefault();
-    const btn = document.getElementById('profile-save-btn');
-    btn.disabled = true; btn.textContent = 'Saving…';
-    const d = await vendorApi(`${BASE}/php/api/vendor-profile.php?action=update`, {
-        method:'POST',
+    const data = await vendorApi(`${BASE}/php/api/vendor-profile.php?action=update`, {
+        method: 'POST',
         body: JSON.stringify({
-            name:          document.getElementById('p-name').value.trim(),
+            name: document.getElementById('p-name').value.trim(),
             business_name: document.getElementById('p-business').value.trim(),
-            email:         document.getElementById('p-email').value.trim(),
-            phone:         document.getElementById('p-phone').value.trim(),
+            email: document.getElementById('p-email').value.trim(),
+            phone: document.getElementById('p-phone').value.trim(),
         })
     });
-    btn.disabled = false; btn.textContent = 'Save Changes';
-    if (d?.success) {
-        showVendorToast('Profile updated successfully');
-        // Update localStorage user
-        var u = JSON.parse(localStorage.getItem('csn_vendor_user')||'{}');
-        u.name = document.getElementById('p-name').value.trim();
-        localStorage.setItem('csn_vendor_user', JSON.stringify(u));
+    
+    if (data?.success) {
+        showToast('Profile updated successfully', 'success');
         loadProfile();
     } else {
-        showVendorToast(d?.error||'Failed to update', 'error');
+        showToast(data?.error || 'Failed to update profile', 'error');
     }
 }
 
 async function changePassword(e) {
     e.preventDefault();
-    const nw = document.getElementById('pw-new').value;
-    const co = document.getElementById('pw-confirm').value;
-    if (nw !== co) { showVendorToast('New passwords do not match', 'error'); return; }
-    const btn = document.getElementById('pw-save-btn');
-    btn.disabled = true; btn.textContent = 'Updating…';
-    const d = await vendorApi(`${BASE}/php/api/vendor-profile.php?action=change_password`, {
-        method:'POST',
+    const newPw = document.getElementById('pw-new').value;
+    const confirmPw = document.getElementById('pw-confirm').value;
+    
+    if (newPw !== confirmPw) {
+        showToast('Passwords do not match', 'error');
+        return;
+    }
+    
+    const data = await vendorApi(`${BASE}/php/api/vendor-profile.php?action=change_password`, {
+        method: 'POST',
         body: JSON.stringify({
             current_password: document.getElementById('pw-current').value,
-            new_password: nw
+            new_password: newPw
         })
     });
-    btn.disabled = false; btn.textContent = 'Update Password';
-    if (d?.success) {
-        showVendorToast('Password updated! Please log in again.');
+    
+    if (data?.success) {
+        showToast('Password updated! Please log in again.', 'success');
         document.getElementById('password-form').reset();
         setTimeout(vendorLogout, 2000);
     } else {
-        showVendorToast(d?.error||'Failed', 'error');
+        showToast(data?.error || 'Failed to change password', 'error');
     }
-}
-
-function togglePw(id) {
-    var el = document.getElementById(id);
-    el.type = el.type==='password' ? 'text' : 'password';
 }
 
 loadProfile();

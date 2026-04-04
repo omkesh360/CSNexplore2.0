@@ -18,11 +18,13 @@ CREATE TABLE IF NOT EXISTS `vendors` (
 -- 2. Add vendor_id to stays table (rooms/hotels)
 ALTER TABLE `stays` 
 ADD COLUMN `vendor_id` INT NULL AFTER `id`,
+ADD COLUMN `map_embed` LONGTEXT NULL AFTER `gallery`,
 ADD INDEX `idx_vendor_stays` (`vendor_id`);
 
 -- 3. Add vendor_id to cars table
 ALTER TABLE `cars` 
 ADD COLUMN `vendor_id` INT NULL AFTER `id`,
+ADD COLUMN `map_embed` LONGTEXT NULL AFTER `gallery`,
 ADD INDEX `idx_vendor_cars` (`vendor_id`);
 
 -- 4. Create room_types table for room management

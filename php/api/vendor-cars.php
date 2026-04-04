@@ -78,6 +78,7 @@ if ($action === 'create') {
     $image = sanitize($input['image'] ?? '');
     $gallery = $input['gallery'] ?? '';
     $features = $input['features'] ?? '';
+    $map_embed = $input['map_embed'] ?? '';
     $is_available = isset($input['is_available']) ? (int)$input['is_available'] : 1;
     $is_active = isset($input['is_active']) ? (int)$input['is_active'] : 1;
 
@@ -98,6 +99,7 @@ if ($action === 'create') {
         'image' => $image,
         'gallery' => $gallery,
         'features' => $features,
+        'map_embed' => $map_embed,
         'is_available' => $is_available,
         'is_active' => $is_active,
         'rating' => 0,
@@ -130,6 +132,7 @@ if ($action === 'update') {
     if (isset($input['image'])) $data['image'] = sanitize($input['image']);
     if (isset($input['gallery'])) $data['gallery'] = $input['gallery'];
     if (isset($input['features'])) $data['features'] = $input['features'];
+    if (isset($input['map_embed'])) $data['map_embed'] = $input['map_embed'];
     if (isset($input['is_available'])) $data['is_available'] = (int)$input['is_available'];
     if (isset($input['is_active'])) $data['is_active'] = (int)$input['is_active'];
 

@@ -4,127 +4,169 @@ $vendor_title = 'Hotel & Stay Listings | Vendor Portal';
 require 'vendor-header.php';
 ?>
 
-<div class="mb-5 flex items-start justify-between gap-4 flex-wrap">
-    <div>
-        <h2 class="text-xl font-black text-slate-900">Hotel &amp; Stay Listings</h2>
-        <p class="text-xs text-slate-500 mt-0.5">Create and manage your property listings shown on the website</p>
-    </div>
-    <button onclick="openModal()" class="flex items-center gap-2 bg-primary text-white px-4 py-2.5 rounded-xl text-xs font-bold hover:bg-orange-600 transition-all shadow-sm shadow-primary/30">
-        <span class="material-symbols-outlined text-base">add</span> Add Stay Listing
-    </button>
-</div>
+<style>
+.page-content { background: white; padding: 20px; margin-bottom: 20px; border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.btn { background: #ec5b13; color: white; border: none; padding: 12px 20px; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold; }
+.btn:hover { background: #d94a0f; }
+.btn-secondary { background: #666; }
+.btn-secondary:hover { background: #555; }
+.btn-danger { background: #dc3545; }
+.btn-danger:hover { background: #c82333; }
+.search-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+.search-bar input, .search-bar select { padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; }
+.search-bar input { flex: 1; min-width: 200px; }
+.listings { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+.listing-card { background: white; border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; border: 1px solid #ddd; }
+.listing-image { width: 100%; height: 200px; background: #e0e0e0; display: flex; align-items: center; justify-content: center; color: #999; font-size: 12px; }
+.listing-content { padding: 15px; }
+.listing-title { font-size: 16px; font-weight: bold; color: #333; margin: 0 0 5px 0; }
+.listing-location { font-size: 13px; color: #666; margin: 0 0 8px 0; }
+.listing-price { font-size: 18px; font-weight: bold; color: #ec5b13; margin: 10px 0; }
+.listing-status { display: inline-block; padding: 4px 8px; border-radius: 3px; font-size: 12px; font-weight: bold; margin-bottom: 10px; }
+.status-active { background: #d4edda; color: #155724; }
+.status-inactive { background: #f8d7da; color: #721c24; }
+.listing-actions { display: flex; gap: 8px; margin-top: 10px; }
+.listing-actions button { flex: 1; padding: 8px; font-size: 12px; border: none; border-radius: 4px; cursor: pointer; }
+.btn-edit { background: #007bff; color: white; }
+.btn-edit:hover { background: #0056b3; }
+.btn-delete { background: #dc3545; color: white; }
+.btn-delete:hover { background: #c82333; }
+.btn-toggle { background: #28a745; color: white; }
+.btn-toggle:hover { background: #218838; }
+.empty-state { background: white; padding: 40px; text-align: center; border-radius: 5px; }
+.empty-state p { color: #666; margin: 10px 0; }
+.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; }
+.modal.show { display: flex; align-items: center; justify-content: center; }
+.modal-content { background: white; padding: 30px; border-radius: 5px; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto; }
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.modal-header h2 { margin: 0; font-size: 22px; }
+.close-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: #666; }
+.form-group { margin-bottom: 15px; }
+.form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; font-size: 14px; }
+.form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; font-family: Arial, sans-serif; }
+.form-group textarea { resize: vertical; min-height: 80px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.info-box { background: #e7f3ff; border-left: 4px solid #2196F3; padding: 12px; margin-bottom: 15px; border-radius: 4px; }
+.info-box p { margin: 0; color: #1565c0; font-size: 13px; }
+.info-box strong { display: block; margin-bottom: 5px; }
+.toast { position: fixed; bottom: 20px; right: 20px; background: #333; color: white; padding: 15px 20px; border-radius: 4px; z-index: 2000; }
+.toast.success { background: #28a745; }
+.toast.error { background: #dc3545; }
+@media (max-width: 768px) {
+    .search-bar { flex-direction: column; }
+    .search-bar input, .search-bar select { width: 100%; }
+    .listings { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+}
+</style>
 
-<!-- Search + filters bar -->
-<div class="vendor-card p-3 mb-4 flex items-center gap-3 flex-wrap">
-    <div class="relative flex-1 min-w-48">
-        <span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 text-lg">search</span>
-        <input id="search-input" type="text" placeholder="Search stays…" oninput="filterStays()"
-               class="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"/>
+<div class="page-content">
+    <div class="page-header">
+        <h1>Hotel & Stay Listings</h1>
+        <p>Manage your property listings</p>
     </div>
-    <select id="filter-status" onchange="filterStays()" class="px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary">
-        <option value="">All Status</option>
-        <option value="1">Active</option>
-        <option value="0">Hidden</option>
-    </select>
-    <select id="filter-type" onchange="filterStays()" class="px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary">
-        <option value="">All Types</option>
-        <option>Hotel</option><option>Guest House</option><option>Resort</option>
-        <option>Hostel</option><option>Homestay</option><option>Villa</option>
-    </select>
-</div>
 
-<!-- Grid -->
-<div id="stays-container">
-    <div class="vendor-card p-10 text-center text-slate-400">
-        <span class="material-symbols-outlined text-4xl animate-spin">progress_activity</span>
-        <p class="text-sm mt-3">Loading listings…</p>
+    <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Search by name or location..." oninput="filterListings()">
+        <select id="filter-status" onchange="filterListings()">
+            <option value="">All Status</option>
+            <option value="1">Active</option>
+            <option value="0">Hidden</option>
+        </select>
+        <button class="btn" onclick="openModal()">+ Add New Listing</button>
     </div>
-</div>
-<div id="no-stays" class="hidden vendor-card p-12 text-center text-slate-400">
-    <span class="material-symbols-outlined text-5xl mb-3">apartment</span>
-    <p class="font-bold text-slate-600 mb-1">No stays found</p>
-    <p class="text-sm mb-4">Add your first hotel or property listing</p>
-    <button onclick="openModal()" class="bg-primary text-white px-5 py-2 rounded-xl text-xs font-bold hover:bg-orange-600 transition-all">
-        + Add Stay Listing
-    </button>
-</div>
 
-<!-- ── Modal ─────────────────────────────────────────────────────────────── -->
-<div id="modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-start justify-center p-4 overflow-y-auto">
-    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl my-4">
-        <div class="p-5 border-b border-slate-100 flex items-center justify-between sticky top-0 bg-white z-10 rounded-t-2xl">
-            <h3 id="modal-title" class="text-lg font-black text-slate-900">Add Stay Listing</h3>
-            <button onclick="closeModal()" class="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg">
-                <span class="material-symbols-outlined">close</span>
-            </button>
+    <div id="listings-container" class="listings">
+        <div class="empty-state">
+            <p>Loading listings...</p>
         </div>
-        <form id="stay-form" onsubmit="submitForm(event)" class="p-5 space-y-4">
-            <input type="hidden" id="stay-id"/>
+    </div>
+</div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div class="sm:col-span-2">
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Property Name *</label>
-                    <input id="s-name" required placeholder="e.g. The Royal Heritage Hotel"
-                           class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"/>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Type *</label>
-                    <select id="s-type" class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary">
-                        <option>Hotel</option><option>Guest House</option><option>Resort</option>
-                        <option>Hostel</option><option>Homestay</option><option>Villa</option>
+<!-- Modal -->
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="modal-title">Add New Listing</h2>
+            <button class="close-btn" onclick="closeModal()">×</button>
+        </div>
+        <form id="listing-form" onsubmit="submitForm(event)">
+            <input type="hidden" id="listing-id">
+
+            <div class="form-group">
+                <label>Property Name *</label>
+                <input type="text" id="name" required placeholder="e.g. The Royal Heritage Hotel">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Type *</label>
+                    <select id="type" required>
+                        <option>Hotel</option>
+                        <option>Guest House</option>
+                        <option>Resort</option>
+                        <option>Hostel</option>
+                        <option>Homestay</option>
+                        <option>Villa</option>
                     </select>
                 </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Location *</label>
-                    <input id="s-location" required placeholder="Chhatrapati Sambhajinagar"
-                           class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"/>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Price per Night (₹) *</label>
-                    <input id="s-price" type="number" min="1" step="0.01" required
-                           class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"/>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Max Guests</label>
-                    <input id="s-guests" type="number" min="1" value="2"
-                           class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"/>
-                </div>
-                <div class="sm:col-span-2">
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Description</label>
-                    <textarea id="s-desc" rows="3" placeholder="Describe your property…"
-                              class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none"></textarea>
-                </div>
-                <div class="sm:col-span-2">
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Amenities (comma-separated)</label>
-                    <input id="s-amenities" placeholder="Free WiFi, Breakfast, Parking, AC, AC, Swimming Pool"
-                           class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"/>
-                </div>
-                <div class="sm:col-span-2">
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Main Image URL</label>
-                    <input id="s-image" type="url" placeholder="https://images.unsplash.com/..."
-                           class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"/>
-                    <div id="img-preview" class="hidden mt-2 rounded-lg overflow-hidden h-32 bg-slate-100">
-                        <img id="img-preview-img" class="w-full h-full object-cover"/>
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Badge Label</label>
-                    <input id="s-badge" placeholder="e.g. Popular, Budget Friendly"
-                           class="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"/>
-                </div>
-                <div class="flex items-center gap-6 pt-2">
-                    <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" id="s-active" checked class="w-4 h-4 accent-primary"/>
-                        <span class="text-xs font-bold text-slate-700">Active (visible on site)</span>
-                    </label>
+                <div class="form-group">
+                    <label>Location *</label>
+                    <input type="text" id="location" required placeholder="e.g. Chhatrapati Sambhajinagar">
                 </div>
             </div>
 
-            <div class="flex gap-3 pt-2">
-                <button type="submit" id="submit-btn" class="flex-1 bg-primary text-white px-5 py-3 rounded-xl font-bold text-sm hover:bg-orange-600 transition-all">
-                    <span id="submit-text">Create Listing</span>
-                </button>
-                <button type="button" onclick="closeModal()" class="px-5 py-3 border border-slate-200 rounded-xl font-bold text-sm text-slate-600 hover:bg-slate-50">Cancel</button>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Price per Night (₹) *</label>
+                    <input type="number" id="price" min="1" step="0.01" required placeholder="e.g. 2500">
+                </div>
+                <div class="form-group">
+                    <label>Max Guests</label>
+                    <input type="number" id="guests" min="1" value="2" placeholder="e.g. 4">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="description" placeholder="Describe your property..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Amenities (comma-separated)</label>
+                <input type="text" id="amenities" placeholder="e.g. Free WiFi, Breakfast, Parking, AC, Swimming Pool">
+            </div>
+
+            <div class="form-group">
+                <label>Google Maps Embed Code</label>
+                <textarea id="map-embed" placeholder="Paste your Google Maps embed code here. Get it from: https://www.google.com/maps → Share → Embed a map"></textarea>
+                <div class="info-box">
+                    <strong>How to get Google Maps embed code:</strong>
+                    <p>1. Go to Google Maps and find your location<br>2. Click "Share" button<br>3. Click "Embed a map"<br>4. Copy the entire iframe code and paste it here</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Badge Label (Optional)</label>
+                <input type="text" id="badge" placeholder="e.g. Popular, Budget Friendly, Best Value">
+            </div>
+
+            <div class="form-group">
+                <div class="info-box">
+                    <strong>📸 Images</strong>
+                    <p>To add or update images for your listing, please contact the website admin at admin@csnexplore.com</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="active" checked> Active (visible on website)
+                </label>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <button type="submit" class="btn" style="flex: 1;">Save Listing</button>
+                <button type="button" class="btn btn-secondary" onclick="closeModal()" style="flex: 1;">Cancel</button>
             </div>
         </form>
     </div>
@@ -132,155 +174,151 @@ require 'vendor-header.php';
 
 <script>
 const BASE = '<?php echo VENDOR_API_BASE; ?>';
-let allStays = [];
+let allListings = [];
 
-async function loadStays() {
-    const d = await vendorApi(`${BASE}/php/api/vendor-stays.php?action=list&limit=100`);
-    if (!d) { document.getElementById('stays-container').innerHTML = `<div class="vendor-card p-8 text-center text-red-400"><p>Failed to load stays. Please refresh.</p></div>`; return; }
-    allStays = d.stays || [];
-    renderStays(allStays);
+async function loadListings() {
+    const data = await vendorApi(`${BASE}/php/api/vendor-stays.php?action=list&limit=100`);
+    if (!data) {
+        document.getElementById('listings-container').innerHTML = '<div class="empty-state"><p>Error loading listings. Please refresh.</p></div>';
+        return;
+    }
+    allListings = data.stays || [];
+    renderListings(allListings);
 }
 
-function filterStays() {
-    const q    = document.getElementById('search-input').value.toLowerCase();
-    const stat = document.getElementById('filter-status').value;
-    const type = document.getElementById('filter-type').value;
-    renderStays(allStays.filter(s =>
-        (!q    || s.name.toLowerCase().includes(q) || (s.location||'').toLowerCase().includes(q)) &&
-        (stat === '' || String(s.is_active) === stat) &&
-        (!type || s.type === type)
-    ));
+function filterListings() {
+    const search = document.getElementById('search-input').value.toLowerCase();
+    const status = document.getElementById('filter-status').value;
+    const filtered = allListings.filter(s =>
+        (!search || s.name.toLowerCase().includes(search) || (s.location || '').toLowerCase().includes(search)) &&
+        (!status || String(s.is_active) === status)
+    );
+    renderListings(filtered);
 }
 
-function renderStays(list) {
-    const c = document.getElementById('stays-container');
-    const n = document.getElementById('no-stays');
-    if (list.length === 0) { c.innerHTML=''; n.classList.remove('hidden'); return; }
-    n.classList.add('hidden');
-    c.innerHTML = `<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-    ${list.map(s=>`
-        <div class="vendor-card overflow-hidden flex flex-col group">
-            <div class="relative h-44 bg-slate-100 overflow-hidden">
-                ${s.image ? `<img src="${s.image}" alt="${s.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"/>` :
-                    `<div class="w-full h-full flex items-center justify-center"><span class="material-symbols-outlined text-slate-300 text-5xl">apartment</span></div>`}
-                <div class="absolute top-2 left-2 flex gap-1.5">
-                    ${s.badge ? `<span class="px-2 py-0.5 bg-primary text-white text-[9px] font-bold rounded-full shadow">${s.badge}</span>` : ''}
-                </div>
-                <div class="absolute top-2 right-2">
-                    <span class="px-2 py-1 rounded-full text-[10px] font-bold shadow ${s.is_active ? 'bg-green-500 text-white':'bg-slate-600 text-white'}">${s.is_active?'Active':'Hidden'}</span>
+function renderListings(listings) {
+    const container = document.getElementById('listings-container');
+    if (listings.length === 0) {
+        container.innerHTML = '<div class="empty-state"><p>No listings found</p><button class="btn" onclick="openModal()">+ Add Your First Listing</button></div>';
+        return;
+    }
+    container.innerHTML = listings.map(s => `
+        <div class="listing-card">
+            <div class="listing-image">📷 No Image</div>
+            <div class="listing-content">
+                <p class="listing-title">${s.name}</p>
+                <p class="listing-location">📍 ${s.location}</p>
+                <p class="listing-price">₹${parseFloat(s.price_per_night).toLocaleString()}/night</p>
+                <span class="listing-status ${s.is_active ? 'status-active' : 'status-inactive'}">${s.is_active ? 'Active' : 'Hidden'}</span>
+                <div class="listing-actions">
+                    <button class="btn-toggle" onclick="toggleListing(${s.id})">${s.is_active ? 'Hide' : 'Show'}</button>
+                    <button class="btn-edit" onclick="editListing(${s.id})">Edit</button>
+                    <button class="btn-delete" onclick="deleteListing(${s.id}, '${s.name.replace(/'/g, "\\'")}')" >Delete</button>
                 </div>
             </div>
-            <div class="p-4 flex-1 flex flex-col">
-                <div class="flex items-start justify-between gap-2 mb-1">
-                    <p class="font-bold text-slate-900 text-sm leading-tight flex-1">${s.name}</p>
-                    <p class="text-primary font-black text-base shrink-0">${fmt(s.price_per_night)}<span class="text-[10px] text-slate-400 font-normal">/night</span></p>
-                </div>
-                <p class="text-[11px] text-slate-500 flex items-center gap-1 mb-1">
-                    <span class="material-symbols-outlined text-sm">location_on</span>${s.location}
-                </p>
-                <p class="text-[10px] text-slate-400 mb-3">${s.type}</p>
-                <div class="mt-auto flex gap-1.5">
-                    <button onclick="toggleStay(${s.id})" class="flex-1 py-2 border border-slate-200 rounded-lg text-[11px] font-bold text-slate-600 hover:bg-slate-50 transition-all">
-                        ${s.is_active ? 'Hide' : 'Activate'}
-                    </button>
-                    <button onclick="editStay(${s.id})" class="p-2 text-primary hover:bg-primary/5 rounded-lg transition-all" title="Edit">
-                        <span class="material-symbols-outlined text-lg">edit</span>
-                    </button>
-                    <button onclick="deleteStay(${s.id},'${s.name.replace(/'/g,"\\'")}')" class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-all" title="Delete">
-                        <span class="material-symbols-outlined text-lg">delete</span>
-                    </button>
-                </div>
-            </div>
-        </div>`).join('')}
-    </div>`;
+        </div>
+    `).join('');
 }
-
-// Image URL preview
-document.getElementById('s-image').addEventListener('input', function(){
-    var p = document.getElementById('img-preview');
-    var img = document.getElementById('img-preview-img');
-    if (this.value) { img.src = this.value; p.classList.remove('hidden'); }
-    else p.classList.add('hidden');
-});
 
 function openModal(id) {
-    document.getElementById('modal').classList.remove('hidden');
-    document.getElementById('stay-form').reset();
-    document.getElementById('stay-id').value = '';
-    document.getElementById('s-active').checked = true;
-    document.getElementById('img-preview').classList.add('hidden');
-    document.getElementById('modal-title').textContent = 'Add Stay Listing';
-    document.getElementById('submit-text').textContent = 'Create Listing';
-    if (!id) return;
-
-    const s = allStays.find(x=>x.id==id);
-    if (!s) return;
-    document.getElementById('modal-title').textContent = 'Edit Stay Listing';
-    document.getElementById('submit-text').textContent = 'Update Listing';
-    document.getElementById('stay-id').value = s.id;
-    document.getElementById('s-name').value     = s.name||'';
-    document.getElementById('s-type').value     = s.type||'Hotel';
-    document.getElementById('s-location').value = s.location||'';
-    document.getElementById('s-price').value    = s.price_per_night||0;
-    document.getElementById('s-guests').value   = s.max_guests||2;
-    document.getElementById('s-amenities').value= s.amenities||'';
-    document.getElementById('s-image').value    = s.image||'';
-    document.getElementById('s-badge').value    = s.badge||'';
-    document.getElementById('s-active').checked = !!s.is_active;
-    if (s.image) { document.getElementById('img-preview-img').src=s.image; document.getElementById('img-preview').classList.remove('hidden'); }
-    // Load description (needs a separate get call)
-    vendorApi(`${BASE}/php/api/vendor-stays.php?action=get&id=${id}`).then(d=>{
-        if (d?.stay) document.getElementById('s-desc').value = d.stay.description||'';
-    });
-}
-function closeModal() { document.getElementById('modal').classList.add('hidden'); }
-function editStay(id) { openModal(id); }
-
-async function submitForm(e) {
-    e.preventDefault();
-    const id = document.getElementById('stay-id').value;
-    const payload = {
-        name:           document.getElementById('s-name').value.trim(),
-        type:           document.getElementById('s-type').value,
-        location:       document.getElementById('s-location').value.trim(),
-        price_per_night:parseFloat(document.getElementById('s-price').value)||0,
-        max_guests:     parseInt(document.getElementById('s-guests').value)||2,
-        description:    document.getElementById('s-desc').value.trim(),
-        amenities:      document.getElementById('s-amenities').value.trim(),
-        image:          document.getElementById('s-image').value.trim(),
-        badge:          document.getElementById('s-badge').value.trim(),
-        is_active:      document.getElementById('s-active').checked ? 1 : 0,
-    };
-    if (id) payload.id = parseInt(id);
-    const action = id ? 'update' : 'create';
-    const btn = document.getElementById('submit-btn');
-    btn.disabled = true;
-
-    const d = await vendorApi(`${BASE}/php/api/vendor-stays.php?action=${action}`, {method:'POST', body:JSON.stringify(payload)});
-    btn.disabled = false;
-    if (d?.success) {
-        showVendorToast(d.message, 'success');
-        closeModal();
-        loadStays();
-    } else {
-        showVendorToast(d?.error || 'Failed to save', 'error');
+    document.getElementById('modal').classList.add('show');
+    document.getElementById('listing-form').reset();
+    document.getElementById('listing-id').value = '';
+    document.getElementById('modal-title').textContent = 'Add New Listing';
+    
+    if (id) {
+        const listing = allListings.find(s => s.id == id);
+        if (!listing) return;
+        document.getElementById('modal-title').textContent = 'Edit Listing';
+        document.getElementById('listing-id').value = listing.id;
+        document.getElementById('name').value = listing.name || '';
+        document.getElementById('type').value = listing.type || 'Hotel';
+        document.getElementById('location').value = listing.location || '';
+        document.getElementById('price').value = listing.price_per_night || '';
+        document.getElementById('guests').value = listing.max_guests || 2;
+        document.getElementById('amenities').value = listing.amenities || '';
+        document.getElementById('badge').value = listing.badge || '';
+        document.getElementById('active').checked = !!listing.is_active;
+        
+        vendorApi(`${BASE}/php/api/vendor-stays.php?action=get&id=${id}`).then(d => {
+            if (d?.stay) {
+                document.getElementById('description').value = d.stay.description || '';
+                document.getElementById('map-embed').value = d.stay.map_embed || '';
+            }
+        });
     }
 }
 
-async function toggleStay(id) {
-    const d = await vendorApi(`${BASE}/php/api/vendor-stays.php?action=toggle&id=${id}`);
-    if (d?.success) { showVendorToast(d.message); loadStays(); }
-    else showVendorToast(d?.error||'Failed', 'error');
+function closeModal() {
+    document.getElementById('modal').classList.remove('show');
 }
 
-async function deleteStay(id, name) {
-    if (!confirmAction(`Delete "${name}"? This cannot be undone.`)) return;
-    const d = await vendorApi(`${BASE}/php/api/vendor-stays.php?action=delete&id=${id}`);
-    if (d?.success) { showVendorToast('Listing deleted'); loadStays(); }
-    else showVendorToast(d?.error||'Failed', 'error');
+function editListing(id) {
+    openModal(id);
 }
 
-loadStays();
+async function submitForm(e) {
+    e.preventDefault();
+    const id = document.getElementById('listing-id').value;
+    const payload = {
+        name: document.getElementById('name').value.trim(),
+        type: document.getElementById('type').value,
+        location: document.getElementById('location').value.trim(),
+        price_per_night: parseFloat(document.getElementById('price').value) || 0,
+        max_guests: parseInt(document.getElementById('guests').value) || 2,
+        description: document.getElementById('description').value.trim(),
+        amenities: document.getElementById('amenities').value.trim(),
+        map_embed: document.getElementById('map-embed').value.trim(),
+        badge: document.getElementById('badge').value.trim(),
+        is_active: document.getElementById('active').checked ? 1 : 0,
+    };
+    if (id) payload.id = parseInt(id);
+    
+    const action = id ? 'update' : 'create';
+    const data = await vendorApi(`${BASE}/php/api/vendor-stays.php?action=${action}`, {
+        method: 'POST',
+        body: JSON.stringify(payload)
+    });
+    
+    if (data?.success) {
+        showToast(data.message || 'Listing saved successfully', 'success');
+        closeModal();
+        loadListings();
+    } else {
+        showToast(data?.error || 'Failed to save listing', 'error');
+    }
+}
+
+async function toggleListing(id) {
+    const data = await vendorApi(`${BASE}/php/api/vendor-stays.php?action=toggle&id=${id}`);
+    if (data?.success) {
+        showToast('Listing updated', 'success');
+        loadListings();
+    } else {
+        showToast(data?.error || 'Failed to update', 'error');
+    }
+}
+
+async function deleteListing(id, name) {
+    if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
+    const data = await vendorApi(`${BASE}/php/api/vendor-stays.php?action=delete&id=${id}`);
+    if (data?.success) {
+        showToast('Listing deleted', 'success');
+        loadListings();
+    } else {
+        showToast(data?.error || 'Failed to delete', 'error');
+    }
+}
+
+function showToast(message, type = 'success') {
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+}
+
+loadListings();
 </script>
 
 <?php require 'vendor-footer.php'; ?>

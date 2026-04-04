@@ -4,35 +4,67 @@ $vendor_title = 'Bookings | Vendor Portal';
 require 'vendor-header.php';
 ?>
 
-<div class="mb-5 flex items-start justify-between gap-4 flex-wrap">
-    <div>
-        <h2 class="text-xl font-black text-slate-900">Bookings</h2>
-        <p class="text-xs text-slate-500 mt-0.5">All customer bookings on your stay listings</p>
+<style>
+.page-header h1 { font-size: 28px; margin-bottom: 5px; }
+.page-header p { font-size: 14px; color: #666; }
+.stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px; }
+.stat-box { background: white; padding: 15px; border-radius: 5px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.stat-number { font-size: 24px; font-weight: bold; color: #ec5b13; }
+.stat-label { font-size: 12px; color: #666; margin-top: 5px; }
+.filters { background: white; padding: 15px; margin-bottom: 20px; border-radius: 5px; display: flex; gap: 10px; flex-wrap: wrap; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.filters input, .filters select { padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; }
+.filters input { flex: 1; min-width: 200px; }
+.bookings-table { background: white; border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; }
+.table-header { display: grid; grid-template-columns: 2fr 2fr 1fr 1fr 1fr; gap: 15px; padding: 15px; background: #f5f5f5; font-weight: 500; font-size: 13px; color: #666; border-bottom: 1px solid #ddd; }
+.table-row { display: grid; grid-template-columns: 2fr 2fr 1fr 1fr 1fr; gap: 15px; padding: 15px; border-bottom: 1px solid #eee; align-items: center; }
+.table-row:last-child { border-bottom: none; }
+.table-row:hover { background: #f9f9f9; }
+.guest-name { font-weight: 500; color: #333; }
+.guest-contact { font-size: 12px; color: #666; margin-top: 3px; }
+.listing-name { color: #333; }
+.listing-type { font-size: 12px; color: #666; }
+.status-badge { display: inline-block; padding: 4px 8px; border-radius: 3px; font-size: 12px; font-weight: 500; }
+.status-pending { background: #fff3cd; color: #856404; }
+.status-completed { background: #d4edda; color: #155724; }
+.status-cancelled { background: #f8d7da; color: #721c24; }
+.empty-state { text-align: center; padding: 40px 20px; color: #999; }
+.empty-state p { margin: 10px 0; }
+@media (max-width: 768px) {
+    .table-header, .table-row { grid-template-columns: 1fr; }
+    .filters { flex-direction: column; }
+    .filters input { min-width: auto; }
+}
+</style>
+
+<div class="page-header">
+    <h1>Bookings</h1>
+    <p>All customer bookings on your listings</p>
+</div>
+
+<!-- Statistics -->
+<div class="stats-row">
+    <div class="stat-box">
+        <div class="stat-number" id="stat-total">0</div>
+        <div class="stat-label">Total Bookings</div>
     </div>
-    <div id="booking-summary" class="flex gap-3">
-        <div class="vendor-card px-4 py-2 text-center">
-            <p class="text-lg font-black text-slate-900" id="bs-total">–</p>
-            <p class="text-[10px] text-slate-400 font-bold">TOTAL</p>
-        </div>
-        <div class="vendor-card px-4 py-2 text-center">
-            <p class="text-lg font-black text-yellow-600" id="bs-pending">–</p>
-            <p class="text-[10px] text-slate-400 font-bold">PENDING</p>
-        </div>
-        <div class="vendor-card px-4 py-2 text-center">
-            <p class="text-lg font-black text-green-600" id="bs-completed">–</p>
-            <p class="text-[10px] text-slate-400 font-bold">COMPLETED</p>
-        </div>
+    <div class="stat-box">
+        <div class="stat-number" id="stat-pending">0</div>
+        <div class="stat-label">Pending</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-number" id="stat-completed">0</div>
+        <div class="stat-label">Completed</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-number" id="stat-cancelled">0</div>
+        <div class="stat-label">Cancelled</div>
     </div>
 </div>
 
-<!-- Filter bar -->
-<div class="vendor-card p-3 mb-4 flex flex-wrap gap-3 items-center">
-    <div class="relative flex-1 min-w-44">
-        <span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 text-lg">search</span>
-        <input id="b-search" type="text" placeholder="Search guest name or listing…" oninput="filterBookings()"
-               class="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"/>
-    </div>
-    <select id="b-status" onchange="filterBookings()" class="px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary">
+<!-- Filters -->
+<div class="filters">
+    <input type="text" id="search-input" placeholder="Search by guest name or listing..." oninput="filterBookings()">
+    <select id="filter-status" onchange="filterBookings()">
         <option value="">All Status</option>
         <option value="pending">Pending</option>
         <option value="completed">Completed</option>
@@ -40,102 +72,92 @@ require 'vendor-header.php';
     </select>
 </div>
 
-<!-- Bookings table -->
-<div class="vendor-card overflow-hidden">
-    <div id="bookings-loading" class="p-10 text-center text-slate-400">
-        <span class="material-symbols-outlined text-4xl animate-spin">progress_activity</span>
-        <p class="text-sm mt-3">Loading bookings…</p>
+<!-- Bookings Table -->
+<div class="bookings-table">
+    <div class="table-header">
+        <div>Guest</div>
+        <div>Listing</div>
+        <div>Dates</div>
+        <div>Guests</div>
+        <div>Status</div>
     </div>
-    <div id="bookings-empty" class="hidden p-12 text-center text-slate-400">
-        <span class="material-symbols-outlined text-5xl mb-3">event_busy</span>
-        <p class="font-bold text-slate-600">No bookings found</p>
-        <p class="text-sm mt-1">Bookings on your stay listings will appear here</p>
-    </div>
-    <div id="bookings-table" class="hidden overflow-x-auto">
-        <table class="w-full text-xs">
-            <thead class="bg-slate-50 border-b border-slate-100">
-                <tr class="text-[10px] uppercase tracking-wider text-slate-500 text-left">
-                    <th class="px-5 py-3">Guest</th>
-                    <th class="px-4 py-3">Contact</th>
-                    <th class="px-4 py-3">Listing</th>
-                    <th class="px-4 py-3">Check-in / Check-out</th>
-                    <th class="px-4 py-3">Guests</th>
-                    <th class="px-4 py-3">Status</th>
-                    <th class="px-4 py-3">Booked On</th>
-                </tr>
-            </thead>
-            <tbody id="bookings-tbody" class="divide-y divide-slate-50"></tbody>
-        </table>
+    <div id="bookings-list">
+        <div class="empty-state">
+            <p>Loading bookings...</p>
+        </div>
     </div>
 </div>
+
+</div> <!-- End main-content -->
 
 <script>
 const BASE = '<?php echo VENDOR_API_BASE; ?>';
 let allBookings = [];
 
 async function loadBookings() {
-    const d = await vendorApi(`${BASE}/php/api/vendor-stays.php?action=bookings&limit=200`);
-    document.getElementById('bookings-loading').classList.add('hidden');
-
-    if (!d) { document.getElementById('bookings-empty').classList.remove('hidden'); return; }
-    allBookings = d.bookings || [];
-
-    // Summary
-    document.getElementById('bs-total').textContent = d.total || 0;
-    const pending   = allBookings.filter(b=>b.status==='pending').length;
-    const completed = allBookings.filter(b=>b.status==='completed').length;
-    document.getElementById('bs-pending').textContent   = pending;
-    document.getElementById('bs-completed').textContent = completed;
-
+    const data = await vendorApi(`${BASE}/php/api/vendor-stays.php?action=bookings&limit=200`);
+    
+    if (!data) {
+        document.getElementById('bookings-list').innerHTML = '<div class="empty-state"><p>Error loading bookings</p></div>';
+        return;
+    }
+    
+    allBookings = data.bookings || [];
+    
+    // Update statistics
+    document.getElementById('stat-total').textContent = data.total || 0;
+    const pending = allBookings.filter(b => b.status === 'pending').length;
+    const completed = allBookings.filter(b => b.status === 'completed').length;
+    const cancelled = allBookings.filter(b => b.status === 'cancelled').length;
+    
+    document.getElementById('stat-pending').textContent = pending;
+    document.getElementById('stat-completed').textContent = completed;
+    document.getElementById('stat-cancelled').textContent = cancelled;
+    
     renderBookings(allBookings);
 }
 
 function filterBookings() {
-    const q  = document.getElementById('b-search').value.toLowerCase();
-    const st = document.getElementById('b-status').value;
-    renderBookings(allBookings.filter(b =>
-        (!q  || b.full_name?.toLowerCase().includes(q) || b.listing_name?.toLowerCase().includes(q)) &&
-        (!st || b.status === st)
-    ));
+    const search = document.getElementById('search-input').value.toLowerCase();
+    const status = document.getElementById('filter-status').value;
+    
+    const filtered = allBookings.filter(b =>
+        (!search || (b.full_name || '').toLowerCase().includes(search) || (b.listing_name || '').toLowerCase().includes(search)) &&
+        (!status || b.status === status)
+    );
+    
+    renderBookings(filtered);
 }
 
-function renderBookings(list) {
-    const empty = document.getElementById('bookings-empty');
-    const table = document.getElementById('bookings-table');
-    const tbody = document.getElementById('bookings-tbody');
-
-    if (list.length === 0) { empty.classList.remove('hidden'); table.classList.add('hidden'); return; }
-    empty.classList.add('hidden');
-    table.classList.remove('hidden');
-
-    const statusClass = (s) => s==='completed'
-        ? 'bg-green-50 text-green-700 border-green-100'
-        : s==='cancelled'
-        ? 'bg-red-50 text-red-700 border-red-100'
-        : 'bg-yellow-50 text-yellow-700 border-yellow-100';
-
-    tbody.innerHTML = list.map(b=>`
-        <tr class="hover:bg-slate-50 transition-colors">
-            <td class="px-5 py-3.5">
-                <p class="font-bold text-slate-900">${b.full_name||'—'}</p>
-            </td>
-            <td class="px-4 py-3.5">
-                <p class="text-slate-600">${b.phone||'—'}</p>
-                <p class="text-slate-400">${b.email||''}</p>
-            </td>
-            <td class="px-4 py-3.5">
-                <p class="font-medium text-slate-700">${b.listing_name||'—'}</p>
-                <p class="text-slate-400 capitalize">${b.service_type||''}</p>
-            </td>
-            <td class="px-4 py-3.5">
-                ${b.checkin_date ? `<p>${b.checkin_date} → ${b.checkout_date||'?'}</p>` : `<p class="text-slate-400">${b.booking_date||'—'}</p>`}
-            </td>
-            <td class="px-4 py-3.5 text-center font-bold text-slate-700">${b.number_of_people||1}</td>
-            <td class="px-4 py-3.5">
-                <span class="px-2 py-1 rounded-full text-[10px] font-bold border ${statusClass(b.status)} capitalize">${b.status}</span>
-            </td>
-            <td class="px-4 py-3.5 text-slate-400">${(b.created_at||'').substring(0,10)}</td>
-        </tr>`).join('');
+function renderBookings(bookings) {
+    const container = document.getElementById('bookings-list');
+    
+    if (bookings.length === 0) {
+        container.innerHTML = '<div class="empty-state"><p>No bookings found</p></div>';
+        return;
+    }
+    
+    const statusClass = (s) => {
+        if (s === 'completed') return 'status-completed';
+        if (s === 'cancelled') return 'status-cancelled';
+        return 'status-pending';
+    };
+    
+    container.innerHTML = bookings.map(b => `
+        <div class="table-row">
+            <div>
+                <div class="guest-name">${b.full_name || 'Guest'}</div>
+                <div class="guest-contact">${b.phone || ''} ${b.email || ''}</div>
+            </div>
+            <div>
+                <div class="listing-name">${b.listing_name || 'Booking'}</div>
+                <div class="listing-type">${b.service_type || ''}</div>
+            </div>
+            <div>${b.checkin_date ? b.checkin_date + ' → ' + (b.checkout_date || '?') : (b.booking_date || '—')}</div>
+            <div>${b.number_of_people || 1} ${b.number_of_people == 1 ? 'guest' : 'guests'}</div>
+            <div><span class="status-badge ${statusClass(b.status)}">${b.status || 'pending'}</span></div>
+        </div>
+    `).join('');
 }
 
 loadBookings();

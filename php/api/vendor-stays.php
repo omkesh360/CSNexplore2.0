@@ -69,6 +69,7 @@ if ($action === 'create') {
     $amenities   = $input['amenities'] ?? '';
     $image       = sanitize($input['image'] ?? '');
     $badge       = sanitize($input['badge'] ?? '');
+    $map_embed   = $input['map_embed'] ?? '';
     $is_active   = ($input['is_active'] ?? 1) ? 1 : 0;
 
     if (!$name || !$location) sendError('Name and location are required', 400);
@@ -85,6 +86,7 @@ if ($action === 'create') {
         'amenities'      => $amenities,
         'image'          => $image,
         'badge'          => $badge,
+        'map_embed'      => $map_embed,
         'is_active'      => $is_active,
         'rating'         => 0,
         'reviews'        => 0,
@@ -101,7 +103,7 @@ if ($action === 'update') {
     if (!$stay) sendError('Not found or access denied', 404);
 
     $data = [];
-    foreach (['name','type','location','description','image','badge'] as $f)
+    foreach (['name','type','location','description','image','badge','map_embed'] as $f)
         if (isset($input[$f])) $data[$f] = sanitize($input[$f]);
     if (isset($input['price_per_night'])) $data['price_per_night'] = round((float)$input['price_per_night'], 2);
     if (isset($input['max_guests']))      $data['max_guests']      = max(1,(int)$input['max_guests']);
