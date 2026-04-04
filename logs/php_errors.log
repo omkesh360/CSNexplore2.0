@@ -187,3 +187,7 @@ Stack trace:
 #2 C:\xampp\htdocs\CSNexplore2.0\php\api\vendor-rooms.php(193): Database->update('rooms', Array, 'id = ?', Array)
 #3 {main}
   thrown in C:\xampp\htdocs\CSNexplore2.0\php\database.php on line 244
+[04-Apr-2026 08:23:51 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Database::execute() in C:\xampp\htdocs\CSNexplore2.0\php\api\add-map-embed-column.php:15
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\CSNexplore2.0\php\api\add-map-embed-column.php on line 15
