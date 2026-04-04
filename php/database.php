@@ -44,6 +44,7 @@ class Database {
           `rating` DECIMAL(3,1) DEFAULT 0, `reviews` INT DEFAULT 0,
           `badge` VARCHAR(100), `image` VARCHAR(255), `gallery` TEXT, `amenities` TEXT,
           `room_type` VARCHAR(100), `max_guests` INT DEFAULT 2,
+          `map_embed` LONGTEXT NULL,
           `is_active` TINYINT(1) DEFAULT 1, `display_order` INT DEFAULT 0,
           `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
           `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -56,6 +57,7 @@ class Database {
           `rating` DECIMAL(3,1) DEFAULT 0, `reviews` INT DEFAULT 0,
           `badge` VARCHAR(100), `image` VARCHAR(255), `gallery` TEXT, `features` TEXT,
           `fuel_type` VARCHAR(50), `transmission` VARCHAR(50), `seats` INT DEFAULT 5,
+          `map_embed` LONGTEXT NULL,
           `is_active` TINYINT(1) DEFAULT 1, `display_order` INT DEFAULT 0,
           `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
           `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -68,6 +70,7 @@ class Database {
           `rating` DECIMAL(3,1) DEFAULT 0, `reviews` INT DEFAULT 0,
           `badge` VARCHAR(100), `image` VARCHAR(255), `gallery` TEXT, `features` TEXT,
           `fuel_type` VARCHAR(50), `cc` VARCHAR(50),
+          `map_embed` LONGTEXT NULL,
           `is_active` TINYINT(1) DEFAULT 1, `display_order` INT DEFAULT 0,
           `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
           `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -79,6 +82,7 @@ class Database {
           `description` TEXT, `price_per_person` DECIMAL(10,2) DEFAULT 0,
           `rating` DECIMAL(3,1) DEFAULT 0, `reviews` INT DEFAULT 0,
           `badge` VARCHAR(100), `image` VARCHAR(255), `gallery` TEXT, `menu_highlights` TEXT,
+          `map_embed` LONGTEXT NULL,
           `is_active` TINYINT(1) DEFAULT 1, `display_order` INT DEFAULT 0,
           `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
           `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -91,6 +95,7 @@ class Database {
           `rating` DECIMAL(3,1) DEFAULT 0, `reviews` INT DEFAULT 0,
           `badge` VARCHAR(100), `image` VARCHAR(255), `gallery` TEXT,
           `opening_hours` TEXT, `best_time` TEXT,
+          `map_embed` LONGTEXT NULL,
           `is_active` TINYINT(1) DEFAULT 1, `display_order` INT DEFAULT 0,
           `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
           `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -103,6 +108,7 @@ class Database {
           `duration` VARCHAR(100), `price` DECIMAL(10,2) DEFAULT 0,
           `rating` DECIMAL(3,1) DEFAULT 0, `reviews` INT DEFAULT 0,
           `badge` VARCHAR(100), `image` VARCHAR(255), `amenities` TEXT, `seats_available` INT DEFAULT 40,
+          `map_embed` LONGTEXT NULL,
           `is_active` TINYINT(1) DEFAULT 1, `display_order` INT DEFAULT 0,
           `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
           `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -222,6 +228,16 @@ class Database {
             $this->db->exec("ALTER TABLE `cars` ADD COLUMN `is_available` TINYINT(1) DEFAULT 1 AFTER `is_active`");
         } catch (Exception $e) {
             // Column already exists
+        }
+        
+        // Add map_embed column to all listing tables if they don't exist
+        $tables = ['stays', 'cars', 'bikes', 'restaurants', 'attractions', 'buses'];
+        foreach ($tables as $table) {
+            try {
+                $this->db->exec("ALTER TABLE `$table` ADD COLUMN `map_embed` LONGTEXT NULL");
+            } catch (Exception $e) {
+                // Column already exists
+            }
         }
         
         // Seed admin user if not exists

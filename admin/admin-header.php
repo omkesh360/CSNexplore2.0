@@ -98,6 +98,8 @@ body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e29
             ['href'=>'dashboard.php', 'icon'=>'grid_view',       'label'=>'Dashboard',    'key'=>'dashboard'],
             ['href'=>'listings.php',  'icon'=>'database',        'label'=>'Listings',     'key'=>'listings'],
             ['href'=>'bookings.php',  'icon'=>'calendar_today',  'label'=>'Bookings',     'key'=>'bookings',  'badge'=>true],
+            ['href'=>'map-embeds.php', 'icon'=>'map',            'label'=>'Map Embeds',   'key'=>'map-embeds'],
+            ['href'=>'regenerate-pages.php', 'icon'=>'refresh',  'label'=>'Regenerate',   'key'=>'regenerate'],
             ['href'=>'blogs.php',     'icon'=>'article',          'label'=>'Our Blogs',    'key'=>'blogs'],
             ['href'=>'gallery.php',   'icon'=>'photo_library',    'label'=>'Gallery',      'key'=>'gallery'],
             ['href'=>'vendors.php',   'icon'=>'store',           'label'=>'Vendors',      'key'=>'vendors'],

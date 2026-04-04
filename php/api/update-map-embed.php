@@ -41,9 +41,11 @@ if (!in_array($category, $valid_categories)) {
 
 try {
     $db = getDB();
-    $db->execute(
-        "UPDATE $category SET map_embed = ? WHERE id = ?",
-        [$map_embed, $id]
+    $db->update(
+        $category,
+        ['map_embed' => $map_embed],
+        'id = ?',
+        [$id]
     );
     
     echo json_encode([

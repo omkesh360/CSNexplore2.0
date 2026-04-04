@@ -178,22 +178,63 @@ body.page-ready{animation:pageFadeIn 0.2s ease forwards;}
                 </div>
             <?php endif; ?>
 
-            <!-- Embedded Map -->
-            <?php if ($map_embed): ?>
-                <div class="mb-8">
-                    <h3 class="text-xl font-bold mb-4">Location Map</h3>
-                    <div class="rounded-lg overflow-hidden border border-gray-200 h-96">
-                        <?php echo $map_embed; ?>
-                    </div>
+            <!-- Similar Listings Section -->
+            <div class="mb-8">
+                <h3 class="text-xl font-bold mb-4">Similar Listings</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <?php foreach (array_slice($similar_listings, 0, 4) as $item): 
+                        $item_price = $item[$price_col] ?? 0;
+                        $item_image = $item['image'] ?? '';
+                        $item_name = htmlspecialchars($item['name'] ?? $item['operator'] ?? 'Listing');
+                        $item_location = htmlspecialchars($item['location'] ?? '');
+                        $item_rating = $item['rating'] ?? 0;
+                    ?>
+                        <a href="listing-detail.php?category=<?php echo $category; ?>&id=<?php echo $item['id']; ?>" class="group">
+                            <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition">
+                                <!-- Image -->
+                                <div class="relative h-40 bg-gray-200 overflow-hidden">
+                                    <?php if ($item_image): ?>
+                                        <img src="<?php echo htmlspecialchars($item_image); ?>" alt="<?php echo $item_name; ?>" class="w-full h-full object-cover group-hover:scale-105 transition">
+                                    <?php else: ?>
+                                        <div class="w-full h-full flex items-center justify-center bg-gray-300">
+                                            <span class="material-symbols-outlined text-4xl text-gray-400">image</span>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+
+                                <!-- Content -->
+                                <div class="p-3">
+                                    <h4 class="font-bold text-sm mb-1 line-clamp-2"><?php echo $item_name; ?></h4>
+                                    
+                                    <?php if ($item_location): ?>
+                                        <p class="text-xs text-gray-600 mb-2 flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-xs">location_on</span>
+                                            <?php echo $item_location; ?>
+                                        </p>
+                                    <?php endif; ?>
+
+                                    <div class="flex items-center justify-between">
+                                        <div class="text-primary font-bold text-sm">₹<?php echo number_format($item_price, 0); ?></div>
+                                        <?php if ($item_rating): ?>
+                                            <div class="flex items-center gap-1 text-xs">
+                                                <span class="material-symbols-outlined text-xs text-yellow-500">star</span>
+                                                <?php echo number_format($item_rating, 1); ?>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    <?php endforeach; ?>
                 </div>
-            <?php endif; ?>
+            </div>
         </div>
 
         <!-- Right: Booking Card -->
         <div class="lg:col-span-1">
             <div class="sticky top-24 bg-white border border-gray-200 rounded-lg p-6 shadow-lg">
                 <!-- Price -->
-                <div class="mb-6">
+                <div class="mb-4">
                     <div class="text-3xl font-bold text-primary mb-1">₹<?php echo number_format($price, 0); ?></div>
                     <div class="text-sm text-gray-600">
                         <?php 
@@ -204,6 +245,17 @@ body.page-ready{animation:pageFadeIn 0.2s ease forwards;}
                         elseif ($category === 'buses') echo 'per ticket';
                         ?>
                     </div>
+                </div>
+
+                <!-- Verified Badge -->
+                <div class="mb-4 flex items-center gap-2 text-sm text-green-600">
+                    <span class="material-symbols-outlined text-lg">verified</span>
+                    <span class="font-medium">Verified</span>
+                </div>
+
+                <!-- Free Cancellation Notice -->
+                <div class="mb-6 p-3 bg-green-50 border border-green-200 rounded-lg">
+                    <p class="text-sm text-green-800 font-medium">Free cancellation · No hidden charges</p>
                 </div>
 
                 <!-- Room Type Selection (for stays) -->
@@ -301,61 +353,24 @@ body.page-ready{animation:pageFadeIn 0.2s ease forwards;}
                     </div>
                 </div>
             </div>
+
+            <!-- Location Map (Below Booking Card) -->
+            <div class="mt-6 bg-white border border-gray-200 rounded-lg p-6 shadow-lg">
+                <h3 class="text-xl font-bold mb-4">Location Map</h3>
+                <div class="rounded-lg overflow-hidden border border-gray-200" style="height: 350px;">
+                    <?php 
+                    if ($map_embed) {
+                        echo $map_embed;
+                    } else {
+                        // Default map if none provided
+                        echo '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d16426.329596104577!2d75.30037121099188!3d19.851617685624074!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bdb98f39ca15447%3A0x96c2632e2aaa42c!2sKamalnayan%20Bajaj%20Hospital!5e0!3m2!1sen!2sin!4v1775290483319!5m2!1sen!2sin" width="100%" height="350" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>';
+                    }
+                    ?>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Similar Listings Section -->
-    <?php if (count($similar_listings) > 0): ?>
-    <div class="mt-16 pt-12 border-t border-gray-200">
-        <h2 class="text-3xl font-bold mb-8">Similar <?php echo ucfirst($category); ?></h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <?php foreach ($similar_listings as $item): 
-                $item_price = $item[$price_col] ?? 0;
-                $item_image = $item['image'] ?? '';
-                $item_name = htmlspecialchars($item['name'] ?? $item['operator'] ?? 'Listing');
-                $item_location = htmlspecialchars($item['location'] ?? '');
-                $item_rating = $item['rating'] ?? 0;
-            ?>
-                <a href="listing-detail.php?category=<?php echo $category; ?>&id=<?php echo $item['id']; ?>" class="group">
-                    <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition">
-                        <!-- Image -->
-                        <div class="relative h-48 bg-gray-200 overflow-hidden">
-                            <?php if ($item_image): ?>
-                                <img src="<?php echo htmlspecialchars($item_image); ?>" alt="<?php echo $item_name; ?>" class="w-full h-full object-cover group-hover:scale-105 transition">
-                            <?php else: ?>
-                                <div class="w-full h-full flex items-center justify-center bg-gray-300">
-                                    <span class="material-symbols-outlined text-4xl text-gray-400">image</span>
-                                </div>
-                            <?php endif; ?>
-                        </div>
-
-                        <!-- Content -->
-                        <div class="p-4">
-                            <h3 class="font-bold text-lg mb-1 line-clamp-2"><?php echo $item_name; ?></h3>
-                            
-                            <?php if ($item_location): ?>
-                                <p class="text-sm text-gray-600 mb-2 flex items-center gap-1">
-                                    <span class="material-symbols-outlined text-sm">location_on</span>
-                                    <?php echo $item_location; ?>
-                                </p>
-                            <?php endif; ?>
-
-                            <div class="flex items-center justify-between">
-                                <div class="text-primary font-bold">₹<?php echo number_format($item_price, 0); ?></div>
-                                <?php if ($item_rating): ?>
-                                    <div class="flex items-center gap-1 text-sm">
-                                        <span class="material-symbols-outlined text-sm text-yellow-500">star</span>
-                                        <?php echo number_format($item_rating, 1); ?>
-                                    </div>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            <?php endforeach; ?>
-        </div>
-    </div>
-    <?php endif; ?>
 </div>
 
 <?php include 'footer.php'; ?>
