@@ -1,171 +1,172 @@
 <?php
-// Admin login gateway – accessible at /adminexplorer.php
-// Redirects to admin dashboard if already logged in (checked client-side)
-$page_title = 'Admin Login | CSNExplore';
+// adminexplorer.php – Admin Login Page
+$page_title = "Admin Login | CSNExplore";
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<link rel="apple-touch-icon" sizes="57x57" href="images/fevicon/apple-icon-57x57.png">
-<link rel="apple-touch-icon" sizes="60x60" href="images/fevicon/apple-icon-60x60.png">
-<link rel="apple-touch-icon" sizes="72x72" href="images/fevicon/apple-icon-72x72.png">
-<link rel="apple-touch-icon" sizes="76x76" href="images/fevicon/apple-icon-76x76.png">
-<link rel="apple-touch-icon" sizes="114x114" href="images/fevicon/apple-icon-114x114.png">
-<link rel="apple-touch-icon" sizes="120x120" href="images/fevicon/apple-icon-120x120.png">
-<link rel="apple-touch-icon" sizes="144x144" href="images/fevicon/apple-icon-144x144.png">
-<link rel="apple-touch-icon" sizes="152x152" href="images/fevicon/apple-icon-152x152.png">
-<link rel="apple-touch-icon" sizes="180x180" href="images/fevicon/apple-icon-180x180.png">
-<link rel="icon" type="image/png" sizes="192x192"  href="images/fevicon/android-icon-192x192.png">
-<link rel="icon" type="image/png" sizes="32x32" href="images/fevicon/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="96x96" href="images/fevicon/favicon-96x96.png">
-<link rel="icon" type="image/png" sizes="16x16" href="images/fevicon/favicon-16x16.png">
-<link rel="shortcut icon" href="images/fevicon/favicon.ico" type="image/x-icon">
-<meta name="msapplication-TileColor" content="#000000">
-<meta name="msapplication-TileImage" content="images/fevicon/ms-icon-144x144.png">
-<meta name="theme-color" content="#000000">
-<title><?php echo $page_title; ?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+<title><?php echo htmlspecialchars($page_title); ?></title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
 <script>
-tailwind.config = { theme: { extend: { colors: { primary: '#ec5b13' }, fontFamily: { display: ['Inter','sans-serif'] } } } }
+tailwind.config = {
+    theme: { extend: {
+        colors: { 
+            primary: '#ec5b13', 
+            'primary-dark': '#c94d0e'
+        },
+        fontFamily: { 
+            sans: ['Inter','sans-serif']
+        }
+    }}
+}
 </script>
 <style>
 body { font-family: 'Inter', sans-serif; }
 .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; }
 </style>
 </head>
-<body class="bg-slate-50 min-h-screen flex items-center justify-center p-4">
+<body class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 min-h-screen flex items-center justify-center p-4">
 
+<!-- Redirect if already logged in -->
 <script>
-// Redirect if already logged in as admin
 (function(){
-    try {
-        var token = localStorage.getItem('csn_admin_token');
-        var user  = JSON.parse(localStorage.getItem('csn_admin_user') || 'null');
-        if (token && user && user.role === 'admin') {
-            window.location.href = 'admin/dashboard.php';
-        }
-    } catch(e) {}
+    var token = localStorage.getItem('csn_admin_token');
+    var user  = JSON.parse(localStorage.getItem('csn_admin_user') || 'null');
+    if (token && user && user.role === 'admin') {
+        window.location.href = 'admin/dashboard.php';
+    }
 })();
 </script>
 
 <div class="w-full max-w-md">
-    <!-- Logo -->
+    <!-- Logo & Title -->
     <div class="text-center mb-8">
-        <div class="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-2xl mb-4 shadow-lg shadow-primary/30">
+        <div class="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-primary/30">
             <span class="material-symbols-outlined text-white text-3xl">admin_panel_settings</span>
         </div>
-        <h1 class="text-2xl font-bold text-slate-900">Admin Portal</h1>
-        <p class="text-slate-500 text-sm mt-1">CSNExplore Management System</p>
+        <h1 class="text-3xl font-bold text-white mb-2">Admin Portal</h1>
+        <p class="text-slate-400 text-sm">Sign in to access the dashboard</p>
     </div>
 
-    <!-- Card -->
-    <div class="bg-white rounded-2xl shadow-xl border border-slate-200 p-8">
-        <!-- Error -->
-        <div id="err" class="hidden mb-5 bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-xl flex items-center gap-2">
-            <span class="material-symbols-outlined text-base">error</span>
-            <span id="err-text">Invalid credentials</span>
-        </div>
+    <!-- Login Card -->
+    <div class="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-2xl">
+        <form id="admin-login-form" class="space-y-5">
+            <!-- Email -->
+            <div>
+                <label class="block text-white text-sm font-semibold mb-2">Email Address</label>
+                <div class="relative">
+                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl">mail</span>
+                    <input type="email" id="email" required
+                           class="w-full bg-white/10 border border-white/20 rounded-xl pl-12 pr-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                           placeholder="admin@csnexplore.com"/>
+                </div>
+            </div>
 
-        <form id="login-form" class="space-y-5">
+            <!-- Password -->
             <div>
-                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Email Address</label>
+                <label class="block text-white text-sm font-semibold mb-2">Password</label>
                 <div class="relative">
-                    <span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 text-xl">mail</span>
-                    <input id="email" type="email" required autocomplete="email"
-                           class="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
-                           placeholder="admin@example.com"/>
+                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl">lock</span>
+                    <input type="password" id="password" required
+                           class="w-full bg-white/10 border border-white/20 rounded-xl pl-12 pr-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                           placeholder="Enter your password"/>
                 </div>
             </div>
-            <div>
-                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Password</label>
-                <div class="relative">
-                    <span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 text-xl">lock</span>
-                    <input id="password" type="password" required autocomplete="current-password"
-                           class="w-full pl-10 pr-10 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
-                           placeholder="••••••••"/>
-                    <button type="button" id="toggle-pw" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
-                        <span class="material-symbols-outlined text-xl">visibility</span>
-                    </button>
-                </div>
+
+            <!-- Error Message -->
+            <div id="error-msg" class="hidden bg-red-500/20 border border-red-500/50 text-red-200 px-4 py-3 rounded-xl text-sm flex items-center gap-2">
+                <span class="material-symbols-outlined text-lg">error</span>
+                <span id="error-text"></span>
             </div>
+
+            <!-- Submit Button -->
             <button type="submit" id="submit-btn"
-                    class="w-full bg-primary text-white font-bold py-3 rounded-xl hover:bg-orange-600 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
-                <span id="btn-text">Sign In to Admin</span>
-                <span id="btn-spinner" class="hidden material-symbols-outlined text-xl animate-spin">progress_activity</span>
+                    class="w-full bg-primary hover:bg-primary-dark text-white font-bold py-3 px-6 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/30">
+                <span class="material-symbols-outlined">login</span>
+                <span>Sign In</span>
             </button>
         </form>
 
-        <div class="flex items-center justify-end mt-2">
-            <a href="forgot-password" class="text-xs font-bold text-primary hover:underline">Forgot password?</a>
-        </div>
-
-        <div class="mt-6 pt-5 border-t border-slate-100 text-center">
-            <a href="index" class="text-sm text-slate-500 hover:text-primary transition-colors flex items-center justify-center gap-1">
-                <span class="material-symbols-outlined text-base">arrow_back</span> Back to Website
+        <!-- Back to Site -->
+        <div class="mt-6 text-center">
+            <a href="index.php" class="text-slate-300 hover:text-white text-sm flex items-center justify-center gap-1 transition-colors">
+                <span class="material-symbols-outlined text-base">arrow_back</span>
+                Back to Website
             </a>
         </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="text-center mt-8 text-slate-400 text-xs">
+        <p>&copy; <?php echo date('Y'); ?> CSNExplore. All rights reserved.</p>
     </div>
 </div>
 
 <script>
-document.getElementById('toggle-pw').addEventListener('click', function(){
-    var pw = document.getElementById('password');
-    var icon = this.querySelector('.material-symbols-outlined');
-    if (pw.type === 'password') { pw.type = 'text'; icon.textContent = 'visibility_off'; }
-    else { pw.type = 'password'; icon.textContent = 'visibility'; }
-});
-
-document.getElementById('login-form').addEventListener('submit', async function(e){
+document.getElementById('admin-login-form').addEventListener('submit', async function(e) {
     e.preventDefault();
-    var btn     = document.getElementById('submit-btn');
-    var spinner = document.getElementById('btn-spinner');
-    var btnText = document.getElementById('btn-text');
-    var err     = document.getElementById('err');
-    var errText = document.getElementById('err-text');
-
-    btn.disabled = true;
-    spinner.classList.remove('hidden');
-    btnText.textContent = 'Signing in...';
-    err.classList.add('hidden');
-
+    
+    var email = document.getElementById('email').value.trim();
+    var password = document.getElementById('password').value;
+    var errorMsg = document.getElementById('error-msg');
+    var errorText = document.getElementById('error-text');
+    var submitBtn = document.getElementById('submit-btn');
+    
+    // Hide previous errors
+    errorMsg.classList.add('hidden');
+    
+    // Disable button
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div><span>Signing in...</span>';
+    
     try {
-        var res = await fetch('php/api/auth.php?action=login', {
+        var response = await fetch('php/api/login.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                email:    document.getElementById('email').value.trim(),
-                password: document.getElementById('password').value,
-            })
+            body: JSON.stringify({ email: email, password: password })
         });
-        var data = await res.json();
-
-        if (!res.ok || !data.token) {
-            throw new Error(data.error || 'Invalid credentials');
+        
+        var data = await response.json();
+        
+        if (response.ok && data.token && data.user) {
+            // Check if user is admin
+            if (data.user.role !== 'admin') {
+                errorText.textContent = 'Access denied. Admin privileges required.';
+                errorMsg.classList.remove('hidden');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<span class="material-symbols-outlined">login</span><span>Sign In</span>';
+                return;
+            }
+            
+            // Store admin credentials
+            localStorage.setItem('csn_admin_token', data.token);
+            localStorage.setItem('csn_admin_user', JSON.stringify(data.user));
+            
+            // Also store in regular storage for site-wide auth
+            localStorage.setItem('csn_token', data.token);
+            localStorage.setItem('csn_user', JSON.stringify(data.user));
+            
+            // Redirect to dashboard
+            window.location.href = 'admin/dashboard.php';
+        } else {
+            errorText.textContent = data.error || 'Invalid credentials. Please try again.';
+            errorMsg.classList.remove('hidden');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<span class="material-symbols-outlined">login</span><span>Sign In</span>';
         }
-
-        if (data.user.role !== 'admin') {
-            throw new Error('Access denied. Admin account required.');
-        }
-
-        localStorage.setItem('csn_admin_token', data.token);
-        localStorage.setItem('csn_admin_user',  JSON.stringify(data.user));
-        // Also set public-site keys so the header shows logged-in state
-        localStorage.setItem('csn_token', data.token);
-        localStorage.setItem('csn_user',  JSON.stringify(data.user));
-        window.location.href = 'admin/dashboard.php';
-
-    } catch(ex) {
-        errText.textContent = ex.message;
-        err.classList.remove('hidden');
-        btn.disabled = false;
-        spinner.classList.add('hidden');
-        btnText.textContent = 'Sign In to Admin';
+    } catch (error) {
+        console.error('Login error:', error);
+        errorText.textContent = 'Connection error. Please try again.';
+        errorMsg.classList.remove('hidden');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span class="material-symbols-outlined">login</span><span>Sign In</span>';
     }
 });
 </script>
+
 </body>
 </html>
