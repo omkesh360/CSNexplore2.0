@@ -43,12 +43,12 @@ $hp_defaults = [
     'count_stays'       => 4,
     'layout_attractions'=> '4-col',
     'layout_bikes'      => '4-col',
-    'layout_restaurants'=> '3-col',
+    'layout_restaurants'=> '4-col',
     'layout_buses'      => '2-col',
     'layout_blogs'      => '3-col',
     'layout_cars'       => '4-col',
     'layout_stays'      => '4-col',
-    'section_order'     => ['cars','bikes','attractions','stays','restaurants','buses','blogs'],
+    'section_order'     => ['stays','cars','bikes','attractions','restaurants','buses','blogs'],
     'picks_attractions' => [],
     'picks_bikes'       => [],
     'picks_restaurants' => [],
@@ -64,7 +64,7 @@ foreach ($hp_defaults as $k => $v) {
 }
 // Ensure section_order is always a valid array
 if (!is_array($hp_settings['section_order']) || count($hp_settings['section_order']) < 5) {
-    $hp_settings['section_order'] = ['cars','bikes','attractions','stays','restaurants','buses','blogs'];
+    $hp_settings['section_order'] = ['stays','cars','bikes','attractions','restaurants','buses','blogs'];
 }
 
 // Helper: layout string → Tailwind grid/flex class
@@ -116,19 +116,69 @@ $hp_stays = hp_fetch_picks($db, 'stays', $hp_settings['picks_stays'] ?? [], 'is_
 <?php
 $page_desc = "Your premium gateway to the wonders of Chhatrapati Sambhajinagar, Maharashtra. Book hotels, cars, bikes, and explore attractions easily.";
 $extra_head = '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css"/><script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>';
-$extra_styles = '
+$extra_styles = "
         .hide-scrollbar::-webkit-scrollbar { display:none; }
         .hide-scrollbar { -ms-overflow-style:none; scrollbar-width:none; }
         .card-hover:hover { box-shadow:0 0 30px rgba(236,91,19,0.15); }
         :root { --card-w-attractions: 80vw; --card-w-bikes: 80vw; --card-w-restaurants: 80vw; --card-w-buses: 80vw; --card-w-blogs: 80vw; --card-w-cars: 80vw; --card-w-stays: 80vw; }
         @media (min-width: 640px) { :root { --card-w-attractions: calc(50% - 14px); --card-w-bikes: calc(50% - 14px); --card-w-restaurants: calc(50% - 14px); --card-w-buses: calc(50% - 14px); --card-w-blogs: calc(50% - 14px); --card-w-cars: calc(50% - 14px); --card-w-stays: calc(50% - 14px); } }
-        @media (min-width: 1024px) { :root { --card-w-attractions: calc(25% - 15px); --card-w-bikes: calc(25% - 15px); --card-w-restaurants: calc(20% - 16px); --card-w-buses: calc(50% - 10px); --card-w-blogs: calc(33.333% - 14px); --card-w-cars: calc(25% - 15px); --card-w-stays: calc(25% - 15px); } }
+        @media (min-width: 1024px) { :root { --card-w-attractions: calc(25% - 15px); --card-w-bikes: calc(25% - 15px); --card-w-restaurants: calc(25% - 15px); --card-w-buses: calc(50% - 10px); --card-w-blogs: calc(33.333% - 14px); --card-w-cars: calc(25% - 15px); --card-w-stays: calc(25% - 15px); } }
         #hero-label, #hero-pre, #hero-highlight, #hero-post, #hero-desc { transition: opacity 0.25s ease; }
         .search-box { background:rgba(255,255,255,0.08); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,0.15); border-radius:16px; padding:20px 22px; }
-        .tab-btn { display:flex; align-items:center; gap:6px; padding:8px 16px; border-radius:50px; font-size:13px; font-weight:700; color:rgba(255,255,255,0.55); cursor:pointer; transition:all .2s; border:none; background:transparent; white-space:nowrap; }
-        .tab-btn:hover { color:#fff; background:rgba(255,255,255,0.08); }
-        .tab-btn.active { color:#fff; background:#ec5b13; box-shadow:0 3px 10px rgba(236,91,19,0.35); }
-        .tab-btn .material-symbols-outlined { font-size:17px; }
+        .tab-btn { 
+            display:flex; align-items:center; gap:8px; padding:12px 20px; 
+            border-radius:16px; font-size:14px; font-weight:700; 
+            color:rgba(255,255,255,0.6); cursor:pointer; 
+            transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            border:2px solid transparent; background:rgba(255,255,255,0.05);
+            backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+            white-space:nowrap; position:relative; overflow:hidden;
+        }
+        .tab-btn::before {
+            content:''; position:absolute; inset:0; 
+            background:linear-gradient(135deg, rgba(236,91,19,0.1) 0%, rgba(236,91,19,0.05) 100%);
+            opacity:0; transition:opacity 0.3s ease;
+        }
+        .tab-btn::after {
+            content:''; position:absolute; bottom:0; left:50%; 
+            transform:translateX(-50%) scaleX(0);
+            width:60%; height:3px; border-radius:3px 3px 0 0;
+            background:linear-gradient(90deg, transparent, #fff, transparent);
+            transition:transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .tab-btn:hover { 
+            color:#fff; background:rgba(255,255,255,0.12); 
+            border-color:rgba(255,255,255,0.15);
+            transform:translateY(-2px);
+        }
+        .tab-btn:hover::before { opacity:1; }
+        .tab-btn.active { 
+            color:#fff; 
+            background:linear-gradient(135deg, #ec5b13 0%, #d94a0a 100%); 
+            border-color:rgba(255,255,255,0.2);
+            box-shadow:0 8px 24px rgba(236,91,19,0.4), 0 0 0 1px rgba(255,255,255,0.1) inset;
+            transform:translateY(-3px) scale(1.02);
+        }
+        .tab-btn.active::before { opacity:0; }
+        .tab-btn.active::after { transform:translateX(-50%) scaleX(1); }
+        .tab-btn .material-symbols-outlined { 
+            font-size:20px; 
+            transition:transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .tab-btn:hover .material-symbols-outlined { transform:scale(1.1) rotate(5deg); }
+        .tab-btn.active .material-symbols-outlined { 
+            animation:iconPop 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        @keyframes iconPop {
+            0%, 100% { transform:scale(1) rotate(0deg); }
+            50% { transform:scale(1.2) rotate(-10deg); }
+        }
+        /* Ripple effect on click */
+        .tab-btn:active { transform:translateY(-1px) scale(0.98); }
+        @media (hover: none) {
+            .tab-btn:hover { transform:none; }
+            .tab-btn.active { transform:scale(1.02); }
+        }
         .search-field { display:flex; align-items:center; gap:9px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:0 16px; flex:1; min-width:0; height:54px; transition:border-color .2s; }
         .search-field:focus-within { border-color:#ec5b13; }
         .search-field .material-symbols-outlined { color:rgba(255,255,255,0.4); font-size:20px; flex-shrink:0; }
@@ -153,15 +203,36 @@ $extra_styles = '
           .date-field .material-symbols-outlined { font-size:18px; }
           .date-field input { font-size:14px; }
           .search-btn { width:100%; justify-content:center; height:44px; font-size:14px; padding:0 16px; border-radius:12px; }
-          .tab-btn { padding:7px 14px; font-size:12px; flex:0 0 auto; justify-content:center; }
-          .tab-btn .material-symbols-outlined { font-size:15px; }
-          #search-tabs-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; display: flex; flex-wrap: nowrap; gap: 6px; padding-bottom: 4px; justify-content: flex-start; scroll-snap-type: x mandatory; margin-bottom: 10px; }
+          .tab-btn { 
+            padding:10px 16px; font-size:13px; flex:0 0 auto; 
+            justify-content:center; border-radius:14px;
+          }
+          .tab-btn .material-symbols-outlined { font-size:18px; }
+          #search-tabs-scroll { 
+            overflow-x: auto; -webkit-overflow-scrolling: touch; 
+            display: flex; flex-wrap: nowrap; gap: 8px; 
+            padding-bottom: 8px; justify-content: flex-start; 
+            scroll-snap-type: x mandatory; margin-bottom: 16px;
+            -ms-overflow-style: none; scrollbar-width: none;
+          }
           .tab-btn { scroll-snap-align: start; }
           #search-tabs-scroll::-webkit-scrollbar { display: none; }
         }
         @media(max-width:400px){ .date-field { flex:1 1 100%; } }
-        .search-panel { display:none; }
-        .search-panel.active { display:flex; flex-direction:column; gap:8px; }
+        .search-panel { 
+            display:none; 
+            opacity:0;
+            transform:translateY(10px);
+            transition:opacity 0.3s ease, transform 0.3s ease;
+        }
+        .search-panel.active { 
+            display:flex; flex-direction:column; gap:8px; 
+            animation:panelFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        @keyframes panelFadeIn {
+            from { opacity:0; transform:translateY(10px); }
+            to { opacity:1; transform:translateY(0); }
+        }
         .flatpickr-calendar { background:#1c1410 !important; border:1px solid rgba(236,91,19,0.3) !important; border-radius:16px !important; box-shadow:0 20px 60px rgba(0,0,0,0.6) !important; }
         .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange { background:#ec5b13 !important; border-color:#ec5b13 !important; }
         .flatpickr-day.inRange { background:rgba(236,91,19,0.2) !important; border-color:transparent !important; }
@@ -178,7 +249,67 @@ $extra_styles = '
         .wave-divider { line-height:0; overflow:hidden; }
         .gradient-text { background:linear-gradient(135deg,#ec5b13,#ff8c42); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
         .glow-badge { box-shadow:0 0 20px rgba(236,91,19,0.4); }
-';
+        
+        /* Scroll-triggered animations */
+        [data-reveal] { 
+            opacity: 0; 
+            transform: translateY(30px); 
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        [data-reveal].revealed { opacity: 1; transform: translateY(0); }
+        [data-reveal='left'] { transform: translateX(-30px) translateY(0); }
+        [data-reveal='left'].revealed { transform: translateX(0) translateY(0); }
+        [data-reveal='right'] { transform: translateX(30px) translateY(0); }
+        [data-reveal='right'].revealed { transform: translateX(0) translateY(0); }
+        [data-reveal='scale'] { transform: scale(0.9); }
+        [data-reveal='scale'].revealed { transform: scale(1); }
+        
+        /* Stagger animation delays */
+        [data-reveal]:nth-child(1) { transition-delay: 0ms; }
+        [data-reveal]:nth-child(2) { transition-delay: 100ms; }
+        [data-reveal]:nth-child(3) { transition-delay: 200ms; }
+        [data-reveal]:nth-child(4) { transition-delay: 300ms; }
+        [data-reveal]:nth-child(5) { transition-delay: 400ms; }
+        [data-reveal]:nth-child(6) { transition-delay: 500ms; }
+        
+        /* Enhanced card hover effects */
+        .card-hover { 
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+            position: relative;
+        }
+        .card-hover::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: linear-gradient(135deg, rgba(236,91,19,0.1), rgba(255,140,66,0.1));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+        .card-hover:hover::before { opacity: 1; }
+        .card-hover:hover { 
+            box-shadow: 0 20px 60px rgba(236,91,19,0.2), 0 0 0 1px rgba(236,91,19,0.1); 
+            transform: translateY(-4px) scale(1.01);
+        }
+        
+        /* Section fade-in animation */
+        section { 
+            animation: sectionFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards; 
+        }
+        @keyframes sectionFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Service button stagger animation */
+        .service-btn-stagger > *:nth-child(1) { animation-delay: 0ms; }
+        .service-btn-stagger > *:nth-child(2) { animation-delay: 100ms; }
+        .service-btn-stagger > *:nth-child(3) { animation-delay: 200ms; }
+        .service-btn-stagger > *:nth-child(4) { animation-delay: 300ms; }
+        .service-btn-stagger > *:nth-child(5) { animation-delay: 400ms; }
+        .service-btn-stagger > *:nth-child(6) { animation-delay: 500ms; }
+    ";
 require 'header.php';
 ?>
 
@@ -202,9 +333,9 @@ require 'header.php';
         </h1>
         <p id="hero-desc" class="text-white/70 text-xs sm:text-sm md:text-lg mb-6 md:mb-8 lg:mb-10 max-w-2xl mx-auto px-2"><?php echo htmlspecialchars($hp_settings['hero_subtext']); ?></p>
 
-        <!-- Search Box -->
+        <!-- Modern Tabs Section -->
         <div class="search-box max-w-4xl mx-auto w-full">
-            <div id="search-tabs-scroll" class="flex sm:flex-wrap md:flex-wrap gap-1.5 mb-4 pb-3 border-b border-white/10 sm:justify-center overflow-x-auto hide-scrollbar w-full">
+            <div id="search-tabs-scroll" class="flex flex-wrap gap-3 mb-6 pb-4 justify-center items-center">
                 <?php
                 $tabs = [
                     ['id' => 'stays',       'icon' => 'bed',                  'label' => 'Stays'],
@@ -216,7 +347,8 @@ require 'header.php';
                 ];
                 foreach ($tabs as $i => $tab): ?>
                     <button class="tab-btn <?php echo $i === 0 ? 'active' : ''; ?>" data-tab="<?php echo $tab['id']; ?>" onclick="switchTab('<?php echo $tab['id']; ?>')">
-                        <span class="material-symbols-outlined"><?php echo $tab['icon']; ?></span><?php echo $tab['label']; ?>
+                        <span class="material-symbols-outlined"><?php echo $tab['icon']; ?></span>
+                        <span><?php echo $tab['label']; ?></span>
                     </button>
                 <?php endforeach; ?>
             </div>
@@ -284,10 +416,10 @@ function switchTab(tab, fromAuto) {
     document.querySelectorAll('.search-panel').forEach(function(p){ p.classList.remove('active'); });
     document.getElementById('panel-'+tab).classList.add('active');
     var heroData = {
+        stays:       { img: 'images/hotel-hero-section%20(4).webp', label:'Find Your Stay',       pre:'Discover ',   highlight:'Perfect Hotels',    post:' Near You',    desc:'The best hotels, guesthouses and homestays in Chhatrapati Sambhajinagar.' },
         cars:        { img: 'images/car-rental-hero-section%20(3).webp', label:'Rent a Car',            pre:'Drive in ',   highlight:'Premium Style',     post:' Today',       desc:'Luxury sedans, SUVs and hatchbacks with professional chauffeurs at your service.' },
         bikes:       { img: 'images/bike%20rentals-hero-section%20(6).webp', label:'Rent a Bike',           pre:'Ride ',       highlight:'The Open Road',     post:' Your Way',    desc:'Scooters, cruisers and sports bikes — ride the city your way, anytime.' },
         attractions: { img: 'images/attractions-hero-section%20(7).webp', label:'Discover Attractions',  pre:'Explore ',    highlight:'Ancient Marvels',   post:' Around You',  desc:'Ellora, Ajanta, Bibi Ka Maqbara and more — heritage wonders await you.' },
-        stays:       { img: 'images/hotel-hero-section%20(4).webp', label:'Find Your Stay',       pre:'Discover ',   highlight:'Perfect Hotels',    post:' Near You',    desc:'The best hotels, guesthouses and homestays in Chhatrapati Sambhajinagar.' },
         dine:        { img: 'images/dine-hero-section%20(1).webp', label:'Taste the City',        pre:'Savour ',     highlight:'Local Flavours',    post:' Tonight',     desc:'From Mughlai feasts to street food — find the best restaurants near you.' },
         buses:       { img: 'images/bus-hero-section%20(2).webp', label:'Book a Bus',            pre:'Travel ',     highlight:'Your Way',          post:' Comfortably', desc:'AC sleepers, Volvo coaches and MSRTC buses to and from Sambhajinagar.' }
     };
@@ -316,7 +448,7 @@ function switchTab(tab, fromAuto) {
 }
 
 // Auto-rotation functionality
-var tabsList = ['cars', 'bikes', 'attractions', 'stays', 'dine', 'buses'];
+var tabsList = ['stays', 'cars', 'bikes', 'attractions', 'dine', 'buses'];
 var currentTabIndex = 0;
 function autoSwitch() {
     currentTabIndex = (currentTabIndex + 1) % tabsList.length;
@@ -409,7 +541,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                 </div>
             </div>
-            <div class="flex-1 hidden sm:grid grid-cols-2 gap-4">
+            
+            <!-- Desktop: Image Cards -->
+            <div class="flex-1 hidden lg:grid grid-cols-2 gap-4">
                 <!-- Car Rentals Card -->
                 <div data-reveal data-reveal="right" class="group relative overflow-hidden rounded-2xl h-40 sm:h-64 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500">
                     <img alt="Car Rentals" loading="lazy" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800&q=80"/>
@@ -429,10 +563,67 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                 </div>
             </div>
+            
+            <!-- Mobile/Tablet: Pill-shaped Service Buttons -->
+            <div class="w-full lg:hidden flex-1" data-reveal>
+                <!-- First Row: Stays, Cars, Bikes (2 columns on mobile, 3 on tablet) -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 service-btn-stagger mb-3">
+                    <!-- 1. Stays -->
+                    <a href="<?php echo BASE_PATH; ?>/listing/stays" class="group flex flex-col items-center gap-2 p-4 bg-gradient-to-br from-slate-50 to-white border border-slate-200 rounded-2xl hover:border-primary hover:shadow-lg transition-all duration-300">
+                        <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center group-hover:bg-primary group-hover:scale-110 transition-all duration-300">
+                            <span class="material-symbols-outlined text-primary group-hover:text-white text-2xl">bed</span>
+                        </div>
+                        <span class="text-slate-900 font-bold text-sm">Stays</span>
+                    </a>
+                    
+                    <!-- 2. Cars -->
+                    <a href="<?php echo BASE_PATH; ?>/listing/cars" class="group flex flex-col items-center gap-2 p-4 bg-gradient-to-br from-slate-50 to-white border border-slate-200 rounded-2xl hover:border-primary hover:shadow-lg transition-all duration-300">
+                        <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center group-hover:bg-primary group-hover:scale-110 transition-all duration-300">
+                            <span class="material-symbols-outlined text-blue-600 group-hover:text-white text-2xl">directions_car</span>
+                        </div>
+                        <span class="text-slate-900 font-bold text-sm">Cars</span>
+                    </a>
+                    
+                    <!-- 3. Bikes -->
+                    <a href="<?php echo BASE_PATH; ?>/listing/bikes" class="group flex flex-col items-center gap-2 p-4 bg-gradient-to-br from-slate-50 to-white border border-slate-200 rounded-2xl hover:border-primary hover:shadow-lg transition-all duration-300">
+                        <div class="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center group-hover:bg-primary group-hover:scale-110 transition-all duration-300">
+                            <span class="material-symbols-outlined text-purple-600 group-hover:text-white text-2xl">motorcycle</span>
+                        </div>
+                        <span class="text-slate-900 font-bold text-sm">Bikes</span>
+                    </a>
+                </div>
+                
+                <!-- Second Row: Attractions, Dine, Buses (2 columns on mobile, 3 on tablet) -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 service-btn-stagger">
+                    <!-- 4. Attractions -->
+                    <a href="<?php echo BASE_PATH; ?>/listing/attractions" class="group flex flex-col items-center gap-2 p-4 bg-gradient-to-br from-slate-50 to-white border border-slate-200 rounded-2xl hover:border-primary hover:shadow-lg transition-all duration-300">
+                        <div class="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center group-hover:bg-primary group-hover:scale-110 transition-all duration-300">
+                            <span class="material-symbols-outlined text-indigo-600 group-hover:text-white text-2xl">confirmation_number</span>
+                        </div>
+                        <span class="text-slate-900 font-bold text-sm">Attractions</span>
+                    </a>
+                    
+                    <!-- 5. Dine -->
+                    <a href="<?php echo BASE_PATH; ?>/listing/restaurants" class="group flex flex-col items-center gap-2 p-4 bg-gradient-to-br from-slate-50 to-white border border-slate-200 rounded-2xl hover:border-primary hover:shadow-lg transition-all duration-300">
+                        <div class="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center group-hover:bg-primary group-hover:scale-110 transition-all duration-300">
+                            <span class="material-symbols-outlined text-emerald-600 group-hover:text-white text-2xl">restaurant</span>
+                        </div>
+                        <span class="text-slate-900 font-bold text-sm">Dine</span>
+                    </a>
+                    
+                    <!-- 6. Buses -->
+                    <a href="<?php echo BASE_PATH; ?>/listing/buses" class="group flex flex-col items-center gap-2 p-4 bg-gradient-to-br from-slate-50 to-white border border-slate-200 rounded-2xl hover:border-primary hover:shadow-lg transition-all duration-300">
+                        <div class="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center group-hover:bg-primary group-hover:scale-110 transition-all duration-300">
+                            <span class="material-symbols-outlined text-orange-600 group-hover:text-white text-2xl">directions_bus</span>
+                        </div>
+                        <span class="text-slate-900 font-bold text-sm">Buses</span>
+                    </a>
+                </div>
+            </div>
         </div>
 
-        <!-- Highlight Cards (Inside Banner Section) -->
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <!-- Highlight Cards (Inside Banner Section) - Hidden on Mobile -->
+        <div class="hidden md:grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             <?php 
             $highlights = [
                 ['icon'=>'hotel', 'label'=>'500+ Hotels', 'sub' => 'Premium Stays'],
@@ -506,7 +697,7 @@ foreach ($hp_settings['section_order'] as $_sec_key):
             <?php else: ?>
             <div>
                 <p class="text-primary font-bold text-xs uppercase tracking-widest mb-1"><?php
-                    $sec_subtitles = ['attractions'=>'Heritage & Culture','bikes'=>'Two-Wheeler Rentals','restaurants'=>'Food & Dining','buses'=>'Intercity Travel','cars'=>'Self-Drive & Taxis','stays'=>'Hotels & Resorts'];
+                    $sec_subtitles = ['attractions'=>'Heritage & Culture','bikes'=>'Two-Wheeler Rentals','restaurants'=>'Food & Dining','buses'=>'Travel Your Way','cars'=>'Self-Drive & Taxis','stays'=>'Hotels & Resorts'];
                     echo $sec_subtitles[$_sec_key] ?? 'Explore';
                 ?></p>
                 <h2 class="font-serif text-2xl md:text-3xl text-slate-900"><?php echo htmlspecialchars($hp_settings['title_' . $_sec_key]); ?></h2>
@@ -683,82 +874,93 @@ foreach ($hp_settings['section_order'] as $_sec_key):
 
 <?php require 'footer.php'; ?>
 
-<!-- Infinite carousel auto-scroll for all sections -->
+<!-- Infinite carousel with seamless loop -->
 <script>
 (function(){
-    ['attractions','bikes','restaurants','buses','blogs'].forEach(function(key) {
-        var wrap  = document.getElementById('carousel-wrap-' + key);
-        var track = document.getElementById('carousel-track-' + key);
-        if (!wrap || !track) return;
-        var paused = false, pos = 0, speed = 0.7;
+    // Process each carousel section
+    var sections = ['stays','cars','bikes','attractions','restaurants','buses','blogs'];
+    
+    sections.forEach(function(sectionKey) {
+        var wrapper = document.getElementById('carousel-wrap-' + sectionKey);
+        var track = document.getElementById('carousel-track-' + sectionKey);
+        
+        if (!wrapper || !track) return;
+        
+        var isPaused = false;
+        var scrollPosition = 0;
+        var scrollSpeed = 0.5; // Smooth scrolling speed
         var oneSetWidth = 0;
-        var isDragging = false, dragStartX = 0, dragStartPos = 0;
-
-        function calcWidth() {
+        
+        // Calculate the width of one complete set
+        function calculateSetWidth() {
+            // The track has 3 identical sets, so divide by 3
             oneSetWidth = track.scrollWidth / 3;
         }
-
-        requestAnimationFrame(function(){
-            calcWidth();
-            if (oneSetWidth <= 0) return;
-            window.addEventListener('resize', function(){ calcWidth(); if (pos >= oneSetWidth) pos = pos % oneSetWidth; });
-
-            function step() {
-                if (!paused && !isDragging) {
-                    pos += speed;
-                    if (pos >= oneSetWidth) pos -= oneSetWidth;
-                    track.style.transform = 'translateX(-' + pos + 'px)';
+        
+        // Initialize
+        function init() {
+            calculateSetWidth();
+            
+            // Start from the middle set (second set) for seamless looping
+            scrollPosition = oneSetWidth;
+            track.style.transform = 'translateX(-' + scrollPosition + 'px)';
+            
+            // Start animation
+            animate();
+        }
+        
+        function animate() {
+            if (!isPaused) {
+                // Move forward
+                scrollPosition += scrollSpeed;
+                
+                // When we reach the end of the second set, jump back to start of second set
+                // This creates seamless infinite loop because all 3 sets are identical
+                if (scrollPosition >= oneSetWidth * 2) {
+                    // Jump back to the start of the middle set (no transition)
+                    scrollPosition = oneSetWidth;
                 }
-                requestAnimationFrame(step);
+                
+                // Apply the transform
+                track.style.transform = 'translateX(-' + scrollPosition + 'px)';
             }
-
-            // Pause on hover
-            wrap.addEventListener('mouseenter', function(){ paused = true; });
-            wrap.addEventListener('mouseleave', function(){ if(!isDragging) paused = false; });
-
-            // Mouse drag — use document for move/up so it works outside the clipped wrap
-            wrap.addEventListener('mousedown', function(e){
-                isDragging = true; paused = true;
-                dragStartX = e.clientX; dragStartPos = pos;
-                wrap.style.cursor = 'grabbing';
-                e.preventDefault();
-            });
-            document.addEventListener('mousemove', function(e){
-                if (!isDragging) return;
-                var dx = dragStartX - e.clientX;
-                pos = dragStartPos + dx;
-                if (pos < 0) pos += oneSetWidth;
-                if (pos >= oneSetWidth) pos -= oneSetWidth;
-                track.style.transform = 'translateX(-' + pos + 'px)';
-            });
-            document.addEventListener('mouseup', function(){
-                if (!isDragging) return;
-                isDragging = false;
-                wrap.style.cursor = '';
-                setTimeout(function(){ paused = false; }, 300);
-            });
-
-            // Touch drag
-            var touchStartX = 0, touchStartPos = 0;
-            wrap.addEventListener('touchstart', function(e){ paused=true; touchStartX=e.touches[0].clientX; touchStartPos=pos; }, {passive:true});
-            wrap.addEventListener('touchmove', function(e){
-                var dx = touchStartX - e.touches[0].clientX;
-                pos = touchStartPos + dx;
-                if (pos < 0) pos += oneSetWidth;
-                if (pos >= oneSetWidth) pos -= oneSetWidth;
-                track.style.transform = 'translateX(-' + pos + 'px)';
-            }, {passive:true});
-            wrap.addEventListener('touchend', function(){ setTimeout(function(){ paused=false; }, 1500); }, {passive:true});
-
-            requestAnimationFrame(step);
+            
+            requestAnimationFrame(animate);
+        }
+        
+        // Pause on hover
+        wrapper.addEventListener('mouseenter', function() {
+            isPaused = true;
         });
+        
+        wrapper.addEventListener('mouseleave', function() {
+            isPaused = false;
+        });
+        
+        // Recalculate on window resize
+        window.addEventListener('resize', function() {
+            calculateSetWidth();
+            // Keep position relative to the new width
+            if (scrollPosition > oneSetWidth * 2) {
+                scrollPosition = oneSetWidth;
+            }
+        });
+        
+        // Initialize when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            // DOM already loaded
+            setTimeout(init, 100); // Small delay to ensure images are loaded
+        }
     });
 })();
 </script>
 
-<!-- Go to Top Button -->
+<!-- Go to Top Button - Desktop/Laptop Only -->
 <button id="go-top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})"
-    style="position:fixed;bottom:28px;right:24px;z-index:9999;width:48px;height:48px;border-radius:50%;background:#ec5b13;color:#fff;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(236,91,19,0.5);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity .25s ease,visibility .25s ease,transform .25s ease;"
+    class="hidden md:flex"
+    style="position:fixed;bottom:28px;right:24px;z-index:9999;width:48px;height:48px;border-radius:50%;background:#ec5b13;color:#fff;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(236,91,19,0.5);align-items:center;justify-content:center;opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity .25s ease,visibility .25s ease,transform .25s ease;"
     aria-label="Go to top">
     <span class="material-symbols-outlined" style="font-size:22px;line-height:1;pointer-events:none;">arrow_upward</span>
 </button>
@@ -778,6 +980,36 @@ foreach ($hp_settings['section_order'] as $_sec_key):
     }
     updateBtn();
     window.addEventListener('scroll', updateBtn, {passive:true});
+})();
+</script>
+
+<!-- Scroll-triggered reveal animations -->
+<script>
+(function(){
+    // Intersection Observer for scroll-triggered animations
+    var observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1
+    };
+    
+    var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+                // Optional: unobserve after revealing to improve performance
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+    
+    // Observe all elements with data-reveal attribute
+    document.addEventListener('DOMContentLoaded', function() {
+        var revealElements = document.querySelectorAll('[data-reveal]');
+        revealElements.forEach(function(el) {
+            observer.observe(el);
+        });
+    });
 })();
 </script>
 </body>

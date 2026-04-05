@@ -1,0 +1,41 @@
+===========================================
+HOSTINGER DEPLOYMENT INSTRUCTIONS
+===========================================
+
+STEP 1: Upload Files
+--------------------
+Upload all files to your Hostinger public_html folder
+
+STEP 2: Configure Database
+---------------------------
+Edit the .env file with your Hostinger database credentials:
+
+DB_HOST=localhost
+DB_DATABASE=your_database_name
+DB_USERNAME=your_database_username
+DB_PASSWORD=your_database_password
+
+You can find these credentials in:
+Hostinger Panel > Databases > MySQL Databases
+
+STEP 3: Import Database
+------------------------
+1. Go to Hostinger Panel > phpMyAdmin
+2. Create a new database (if not already created)
+3. Import the database/csnexplore_mysql.sql file
+4. Or let the system auto-create tables on first visit
+
+STEP 4: Update .htaccess (if needed)
+-------------------------------------
+If your site is in a subdirectory, update the RewriteBase in .htaccess
+
+STEP 5: Test Your Site
+-----------------------
+Visit your domain and check if everything works
+
+IMPORTANT FILES:
+- .env (database credentials)
+- php/database.php (reads from .env)
+- php/config.php (loads .env file)
+
+===========================================

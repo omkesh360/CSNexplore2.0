@@ -204,10 +204,10 @@ function sharedFooter($base) {
                     <span class="font-serif font-black text-white text-lg tracking-tight">CSNExplore</span>
                 </span>
                 <p class="text-white/50 text-sm leading-relaxed mb-5">Your premium gateway to the wonders of Chhatrapati Sambhajinagar, Maharashtra.</p>
-                <div class="flex gap-3">
-                    <a href="#" aria-label="Share" class="w-9 h-9 rounded-full glass flex items-center justify-center hover:bg-primary hover:scale-110 transition-all duration-300"><span class="material-symbols-outlined text-sm">share</span></a>
-                    <a href="mailto:supportcsnexplore@gmail.com" target="_blank" rel="noopener noreferrer" aria-label="Email Us" class="w-9 h-9 rounded-full glass flex items-center justify-center hover:bg-primary hover:scale-110 transition-all duration-300"><span class="material-symbols-outlined text-sm">mail</span></a>
-                    <a href="https://wa.me/918600968888" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp Us" class="w-9 h-9 rounded-full glass flex items-center justify-center hover:bg-primary hover:scale-110 transition-all duration-300">
+                <div class="flex gap-3 mt-6">
+                    <button id="footer-share-btn" aria-label="Share" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-primary hover:border-primary hover:scale-110 transition-all duration-300"><span class="material-symbols-outlined text-base">share</span></button>
+                    <a href="mailto:supportcsnexplore@gmail.com" target="_blank" rel="noopener noreferrer" aria-label="Email Us" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-primary hover:border-primary hover:scale-110 transition-all duration-300"><span class="material-symbols-outlined text-base">mail</span></a>
+                    <a href="https://wa.me/918600968888" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp Us" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-primary hover:border-primary hover:scale-110 transition-all duration-300">
                         <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.417-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.305 1.652zm6.599-3.825c1.63.975 3.41 1.487 5.23 1.488 5.439 0 9.861-4.422 9.863-9.861.001-2.636-1.024-5.115-2.884-6.977-1.862-1.864-4.341-2.887-6.979-2.888-5.439 0-9.861 4.422-9.863 9.862 0 1.842.511 3.641 1.478 5.187l-.995 3.637 3.73-.978zm11.367-7.643c-.31-.155-1.837-.906-2.12-.108-.285.103-.55.515-.674.654-.124.14-.248.155-.558.001-.31-.155-1.31-.483-2.498-1.543-.924-.824-1.548-1.841-1.73-2.15-.181-.31-.019-.477.135-.631.14-.139.31-.36.465-.541.155-.181.206-.31.31-.515.103-.206.052-.386-.026-.541-.077-.155-.674-1.626-.924-2.228-.243-.585-.491-.504-.674-.513-.175-.008-.375-.01-.575-.01s-.525.075-.8.375c-.275.3-1.05 1.026-1.05 2.5s1.075 2.9 1.225 3.1c.15.2 2.11 3.221 5.113 4.513.714.307 1.272.49 1.706.629.718.227 1.37.195 1.886.118.575-.085 1.837-.75 2.096-1.475.258-.725.258-1.346.181-1.475-.077-.129-.283-.206-.593-.361z"/></svg>
                     </a>
                 </div>
@@ -233,21 +233,30 @@ function sharedFooter($base) {
             <!-- Contact Info -->
             <div data-reveal data-delay="3">
                 <h5 class="font-bold text-sm mb-4">Contact Info</h5>
-                <ul class="flex flex-col gap-3 text-white/50 text-sm">
-                    <li class="flex items-start gap-2">
-                        <span class="material-symbols-outlined text-primary text-base mt-0.5 shrink-0">location_on</span>
-                        <a href="https://maps.google.com/?q=Behind+State+Bank+Of+India,+Plot+No.+273+Samarth+Nagar,+Central+Bus+Stand,+Chhatrapati+Sambhajinagar,+Maharashtra+431001" target="_blank" rel="noopener noreferrer" class="hover:text-primary transition-colors">Behind State Bank Of India, Plot No. 273 Samarth Nagar, Central Bus Stand, Chhatrapati Sambhajinagar, Maharashtra 431001</a>
+                <ul class="flex flex-col gap-4 text-white/50 text-sm">
+                    <li class="flex items-start gap-3">
+                        <span class="size-8 rounded-full border border-white/20 flex items-center justify-center shrink-0 mt-0.5">
+                            <span class="material-symbols-outlined text-primary text-base">location_on</span>
+                        </span>
+                        <a href="https://maps.google.com/?q=Behind+State+Bank+Of+India,+Plot+No.+273+Samarth+Nagar,+Central+Bus+Stand,+Chhatrapati+Sambhajinagar,+Maharashtra+431001" target="_blank" rel="noopener noreferrer" class="hover:text-primary transition-colors pt-1">Behind State Bank Of India, Plot No. 273 Samarth Nagar, Central Bus Stand, Chhatrapati Sambhajinagar, Maharashtra 431001</a>
                     </li>
-                    <li class="flex items-center gap-2">
-                        <span class="material-symbols-outlined text-primary text-base">call</span>
+                    <li class="flex items-center gap-3">
+                        <span class="size-8 rounded-full border border-white/20 flex items-center justify-center shrink-0">
+                            <span class="material-symbols-outlined text-primary text-base">call</span>
+                        </span>
                         <a href="tel:+918600968888" class="hover:text-primary transition-colors">+91 86009 68888</a>
                     </li>
-                    <li class="flex items-center gap-2">
-                        <span class="material-symbols-outlined text-primary text-base">mail</span>
+                    <li class="flex items-center gap-3">
+                        <span class="size-8 rounded-full border border-white/20 flex items-center justify-center shrink-0">
+                            <span class="material-symbols-outlined text-primary text-base">mail</span>
+                        </span>
                         <a href="mailto:supportcsnexplore@gmail.com" class="hover:text-primary transition-colors">supportcsnexplore@gmail.com</a>
                     </li>
-                    <li class="flex items-center gap-2">
-                        <span class="material-symbols-outlined text-primary text-base">schedule</span>Mon–Sat: 9am – 7pm
+                    <li class="flex items-center gap-3">
+                        <span class="size-8 rounded-full border border-white/20 flex items-center justify-center shrink-0">
+                            <span class="material-symbols-outlined text-primary text-base">schedule</span>
+                        </span>
+                        <span class="pt-0.5">Mon–Sat: 9am – 7pm</span>
                     </li>
                 </ul>
             </div>
@@ -255,10 +264,10 @@ function sharedFooter($base) {
             <div data-reveal data-reveal="right" data-delay="4">
                 <h5 class="font-bold text-sm mb-4">Stay Updated</h5>
                 <p class="text-white/50 text-sm mb-4">Get travel tips and exclusive deals in your inbox.</p>
-                <form method="POST" action="'.$base.'subscribe.php" class="flex flex-col gap-2">
+                <form method="POST" action="'.$base.'subscribe.php" class="flex flex-col gap-4">
                     <input type="email" name="email" placeholder="Your email address" required
                            class="bg-white/5 border border-white/10 text-white placeholder:text-white/30 px-3 py-2.5 rounded-xl text-sm focus:outline-none focus:border-primary transition-colors"/>
-                    <button type="submit" class="bg-primary text-white font-bold py-2.5 rounded-xl text-sm hover:bg-orange-600 hover:scale-[1.02] transition-all duration-200">Subscribe</button>
+                    <button type="submit" style="background-color: #ec5b13;" class="text-white font-bold py-2.5 rounded-xl text-sm hover:scale-[1.02] transition-all duration-200" onmouseover="this.style.backgroundColor=\'#d44e0e\'" onmouseout="this.style.backgroundColor=\'#ec5b13\'">Subscribe</button>
                 </form>
             </div>
         </div>
@@ -273,14 +282,70 @@ function sharedFooter($base) {
     </div>
 </footer>
 
-<!-- Go to Top Button -->
+<!-- Go to Top Button - Desktop/Tablet Only -->
 <button id="go-top-btn" onclick="window.scrollTo({top:0,behavior:\'smooth\'})"
-    style="position:fixed;bottom:28px;right:24px;z-index:9999;width:48px;height:48px;border-radius:50%;background:#ec5b13;color:#fff;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(236,91,19,0.5);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity .25s ease,visibility .25s ease,transform .25s ease;"
+    class="hidden md:flex"
+    style="position:fixed;bottom:calc(24px + env(safe-area-inset-bottom, 0px));right:20px;z-index:9999;width:46px;height:46px;border-radius:50%;background:#ec5b13;color:#fff;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(236,91,19,0.5);align-items:center;justify-content:center;opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity .25s ease,visibility .25s ease,transform .25s ease;"
     aria-label="Go to top">
     <span class="material-symbols-outlined" style="font-size:22px;line-height:1;pointer-events:none;">arrow_upward</span>
 </button>
+
+<!-- ── Floating Action Buttons - Mobile Only ─────────────────────────────── -->
+<!-- Call Button - Mobile Only (Blue) -->
+<a href="tel:+918600968888"
+   id="call-float"
+   class="md:hidden"
+   aria-label="Call Now"
+   style="position:fixed;bottom:calc(88px + env(safe-area-inset-bottom, 0px));right:20px;z-index:9998;width:52px;height:52px;border-radius:50%;background:#2563eb;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,99,235,0.5);text-decoration:none;transition:transform .25s ease,box-shadow .25s ease;"
+   ontouchstart="this.style.transform=\'scale(1.08)\'"
+   ontouchend="this.style.transform=\'scale(1)\'">  
+    <span class="material-symbols-outlined" style="font-size:26px;font-variation-settings:\'FILL\' 1,\'wght\' 600,\'GRAD\' 0,\'opsz\' 24;">call</span>
+</a>
+
+<!-- WhatsApp Button - Mobile Only -->
+<a href="https://wa.me/918600968888?text=Hi%20CSNExplore!%20I%20need%20help%20with%20my%20booking."
+   target="_blank" rel="noopener noreferrer"
+   id="whatsapp-float"
+   class="md:hidden"
+   aria-label="Chat on WhatsApp"
+   style="position:fixed;bottom:calc(24px + env(safe-area-inset-bottom, 0px));right:20px;z-index:9998;width:52px;height:52px;border-radius:50%;background:#25D366;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,0.5);text-decoration:none;transition:transform .25s ease,box-shadow .25s ease;"
+   ontouchstart="this.style.transform=\'scale(1.08)\'"
+   ontouchend="this.style.transform=\'scale(1)\'">  
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.417-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+</a>
+<!-- WhatsApp pulse ring -->
+<style>
+#whatsapp-float::before{content:\'\';position:absolute;width:100%;height:100%;border-radius:50%;background:#25D366;opacity:.4;animation:wa-pulse 2s infinite;}
+@keyframes wa-pulse{0%{transform:scale(1);opacity:.4;}70%{transform:scale(1.4);opacity:0;}100%{transform:scale(1.4);opacity:0;}}
+</style>
+
+<!-- ── Cookie Consent Banner ──────────────────────────────────────────────── -->
+<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:99999;background:#1e293b;color:#f8fafc;padding:16px 24px;box-shadow:0 -4px 20px rgba(0,0,0,0.3);">
+    <div style="max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:16px;justify-content:space-between;">
+        <p style="margin:0;font-size:13px;color:#cbd5e1;line-height:1.6;flex:1;min-width:280px;">
+            🍪 We use cookies to enhance your experience, analyze traffic, and improve our services.
+            By continuing to use CSNExplore, you agree to our
+            <a href="'.$base.'privacy" style="color:#ec5b13;text-decoration:underline;">Privacy Policy</a>.
+        </p>
+        <div style="display:flex;gap:10px;flex-shrink:0;">
+            <button onclick="setCookieConsent(\'declined\')"
+                    style="padding:8px 18px;border:1px solid rgba(255,255,255,0.2);border-radius:8px;background:transparent;color:#94a3b8;font-size:13px;cursor:pointer;transition:all .2s"
+                    onmouseover="this.style.borderColor=\'#ec5b13\';this.style.color=\'#ec5b13\'"
+                    onmouseout="this.style.borderColor=\'rgba(255,255,255,0.2)\';this.style.color=\'#94a3b8\'">
+                Decline
+            </button>
+            <button onclick="setCookieConsent(\'accepted\')"
+                    style="padding:8px 22px;border:none;border-radius:8px;background:#ec5b13;color:#fff;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s"
+                    onmouseover="this.style.background=\'#d94a0a\'"
+                    onmouseout="this.style.background=\'#ec5b13\'">
+                Accept All
+            </button>
+        </div>
+    </div>
+</div>
 <script>
 (function(){
+    // ── Go-to-top ──
     var btn = document.getElementById(\'go-top-btn\');
     function updateBtn() {
         if (window.scrollY > 200) {
@@ -295,17 +360,91 @@ function sharedFooter($base) {
     }
     updateBtn();
     window.addEventListener(\'scroll\', updateBtn, {passive:true});
-})();
-</script>
 
-<script>
-(function(){
-  if(!window.IntersectionObserver)return;
-  var io=new IntersectionObserver(function(entries){
-    entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add(\'revealed\');io.unobserve(e.target);}});
-  },{threshold:0.1,rootMargin:\'0px 0px -30px 0px\'});
-  function obs(){document.querySelectorAll(\'[data-reveal]\').forEach(function(el){io.observe(el);});}
-  if(document.readyState===\'loading\'){document.addEventListener(\'DOMContentLoaded\',obs);}else{obs();}
+    // ── Share button (Web Share API with clipboard fallback) ──
+    var shareBtn = document.getElementById(\'footer-share-btn\');
+    if (shareBtn) {
+        shareBtn.addEventListener(\'click\', function() {
+            var shareData = {
+                title: document.title || \'CSNExplore\',
+                text: \'Discover hotels, bikes, cars & attractions in Chhatrapati Sambhajinagar!\',
+                url: window.location.href
+            };
+            if (navigator.share) {
+                navigator.share(shareData).catch(function(){});
+            } else {
+                // Clipboard fallback
+                var url = window.location.href;
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(url).then(function() {
+                        shareBtn.innerHTML = \'<span class="material-symbols-outlined text-base">check</span>\';
+                        setTimeout(function(){ shareBtn.innerHTML = \'<span class="material-symbols-outlined text-base">share</span>\'; }, 2000);
+                    });
+                } else {
+                    var ta = document.createElement(\'textarea\');
+                    ta.value = url; ta.style.position = \'fixed\'; ta.style.opacity = \'0\';
+                    document.body.appendChild(ta); ta.select();
+                    try { document.execCommand(\'copy\'); } catch(e){}
+                    document.body.removeChild(ta);
+                    shareBtn.innerHTML = \'<span class="material-symbols-outlined text-base">check</span>\';
+                    setTimeout(function(){ shareBtn.innerHTML = \'<span class="material-symbols-outlined text-base">share</span>\'; }, 2000);
+                }
+            }
+        });
+    }
+
+    // ── Scroll Reveal (IntersectionObserver) ──
+    if (\'IntersectionObserver\' in window) {
+        var revealObs = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add(\'revealed\');
+                    revealObs.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12, rootMargin: \'0px 0px -40px 0px\' });
+        document.querySelectorAll(\'[data-reveal]\').forEach(function(el) {
+            revealObs.observe(el);
+        });
+    } else {
+        // Fallback: reveal all immediately
+        document.querySelectorAll(\'[data-reveal]\').forEach(function(el) {
+            el.classList.add(\'revealed\');
+        });
+    }
+
+    // ── Smooth page transitions (fade out on link click) ──
+    document.addEventListener(\'click\', function(e) {
+        var a = e.target.closest(\'a\');
+        if (!a) return;
+        var href = a.getAttribute(\'href\');
+        if (!href || href === \'#\' || href.startsWith(\'mailto:\') || href.startsWith(\'tel:\') || href.startsWith(\'javascript\') || a.target === \'_blank\' || e.ctrlKey || e.metaKey || e.shiftKey) return;
+        // Only same-origin
+        try {
+            var url = new URL(href, window.location.href);
+            if (url.origin !== window.location.origin) return;
+        } catch(err) { return; }
+        e.preventDefault();
+        document.body.style.transition = \'opacity 0.18s ease\';
+        document.body.style.opacity = \'0\';
+        setTimeout(function(){ window.location.href = href; }, 190);
+    });
+
+    // ── Cookie consent ──
+    function getCookie(name){var v=document.cookie.match(\'(^|;)\\\\s*\'+name+\'\\\\s*=\\\\s*([^;]+)\');return v?v.pop():\'\';}
+    window.setCookieConsent=function(val){
+        document.cookie=\'csn_cookie_consent=\'+val+\';max-age=31536000;path=/;SameSite=Lax\';
+        document.getElementById(\'cookie-banner\').style.display=\'none\';
+    };
+    if(!getCookie(\'csn_cookie_consent\')){
+        setTimeout(function(){document.getElementById(\'cookie-banner\').style.display=\'block\';},1200);
+    }
+
+    // ── Restore opacity on page show (back/forward cache) ──
+    window.addEventListener(\'pageshow\', function(e) {
+        document.body.style.transition = \'\';
+        document.body.style.opacity = \'1\';
+    });
 })();
 </script>
 
@@ -323,6 +462,10 @@ function sharedFooter($base) {
     </div>
   </div>
 </div>
+<script>
+// Mark page as ready (fade in body)
+document.body.classList.add(\'page-ready\');
+</script>
 </body></html>';
 }
 
@@ -508,19 +651,38 @@ foreach ($types as $type) {
             $featuresList .= '<li class="flex items-center gap-2 text-sm text-slate-800 font-medium"><span class="material-symbols-outlined text-[#ec5b13] text-base">check_circle</span>'.htmlspecialchars($feat).'</li>';
         }
 
-        // Gallery
+        // Resolve main image path FIRST
+        $mainImg = trim($item['image'] ?? '');
+        if (empty($mainImg)) {
+            $mainImg = '../images/travelhub.png';
+        } elseif (strpos($mainImg, 'http') !== 0 && strpos($mainImg, '../') !== 0 && strpos($mainImg, '/') !== 0) {
+            $mainImg = '../' . $mainImg;
+        }
+
+        // Gallery - ensure main image is ALWAYS first
         $galleryImages = is_array($item['gallery']) ? $item['gallery'] : json_decode($item['gallery'] ?? '[]', true) ?? [];
 
         $galleryHtml = '';
         $resolvedGalleryImages = [];
+        
+        // Add main image as first gallery image
+        $resolvedGalleryImages[] = $mainImg;
+        
+        // Then add other gallery images (skip if they're the same as main image)
         foreach ($galleryImages as $idx => $img) {
             // Fix path for uploaded images
             $resolvedImg = $img;
             if (strpos($resolvedImg, 'http') !== 0 && strpos($resolvedImg, '../') !== 0 && strpos($resolvedImg, '/') !== 0) {
                 $resolvedImg = '../' . $resolvedImg;
             }
-            $resolvedGalleryImages[] = $resolvedImg;
-            
+            // Skip if this is the same as main image
+            if ($resolvedImg !== $mainImg) {
+                $resolvedGalleryImages[] = $resolvedImg;
+            }
+        }
+        
+        // Build gallery HTML
+        foreach ($resolvedGalleryImages as $idx => $resolvedImg) {
             $galleryHtml .= '<div class="gallery-thumb" onclick="openLightbox('.$idx.')" title="Click to zoom">'.
                 '<img src="'.htmlspecialchars($resolvedImg).'" loading="lazy" alt="'.htmlspecialchars($item['name']).' photo '.($idx+1).'" onerror="this.src=\'../images/travelhub.png\'"/>'.
                 '</div>';
@@ -550,13 +712,8 @@ foreach ($types as $type) {
             if (!empty($item['duration'])) $extraMeta .= '<div class="flex items-center gap-2 text-sm text-slate-600"><span class="material-symbols-outlined text-[#ec5b13] text-base">timer</span>Duration: '.htmlspecialchars($item['duration']).'</div>';
         }
 
-        // Resolve main image path
-        $mainImg = trim($item['image'] ?? '');
-        if (empty($mainImg)) {
-            $mainImg = '../images/travelhub.png';
-        } elseif (strpos($mainImg, 'http') !== 0 && strpos($mainImg, '../') !== 0 && strpos($mainImg, '/') !== 0) {
-            $mainImg = '../' . $mainImg;
-        }
+        // Map embed
+        $map_embed = trim($item['map_embed'] ?? '');
 
         $desc_raw = strip_tags((string)($item['description'] ?? ''));
         $desc = strlen($desc_raw) > 155 ? substr($desc_raw, 0, 152) . '...' : $desc_raw;
@@ -595,7 +752,7 @@ foreach ($types as $type) {
 
   <!-- ── Full-width hero image ── -->
   <div class="relative w-full bg-slate-900 overflow-hidden" style="height:420px">
-    <img id="slide-main" src="'.htmlspecialchars(!empty($resolvedGalleryImages) ? $resolvedGalleryImages[0] : $mainImg).'" alt="'.htmlspecialchars($item['name']).'" class="w-full h-full object-cover transition-opacity duration-300" onerror="this.src=\'../images/travelhub.png\'"/>
+    <img id="slide-main" src="'.htmlspecialchars($resolvedGalleryImages[0]).'" alt="'.htmlspecialchars($item['name']).'" class="w-full h-full object-cover transition-opacity duration-300" onerror="this.src=\'../images/travelhub.png\'"/>
     <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/30"></div>
 
     <!-- Breadcrumb top-left -->
@@ -665,13 +822,13 @@ foreach ($types as $type) {
           '.$extraMeta.'
         </div>' : '').'
 
-        <!-- Single merged info card: About + Amenities + Location -->
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <!-- Single merged info card: About + Amenities + Location with Glassmorphism -->
+        <div class="glass-card rounded-2xl shadow-lg border border-white/20 overflow-hidden backdrop-blur-xl">
 
           '.(!empty($item['description']) ? '
           <!-- About -->
-          <div class="p-6 border-b border-slate-100">
-            <h2 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3 flex items-center gap-2">
+          <div class="p-6 border-b border-white/10">
+            <h2 class="text-sm font-bold text-slate-700 uppercase tracking-wider mb-3 flex items-center gap-2">
               <span class="material-symbols-outlined text-[#ec5b13] text-base">info</span>About
             </h2>
             <p class="text-slate-800 leading-relaxed text-sm">'.htmlspecialchars($item['description']).'</p>
@@ -679,8 +836,8 @@ foreach ($types as $type) {
 
           '.($featuresList ? '
           <!-- Amenities -->
-          <div class="p-6 border-b border-slate-100">
-            <h2 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4 flex items-center gap-2">
+          <div class="p-6 border-b border-white/10">
+            <h2 class="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4 flex items-center gap-2">
               <span class="material-symbols-outlined text-[#ec5b13] text-base">checklist</span>Features &amp; Amenities
             </h2>
             <ul class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">'.$featuresList.'</ul>
@@ -688,21 +845,21 @@ foreach ($types as $type) {
 
           <!-- Location -->
           <div class="p-6">
-            <h2 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-2">
+            <h2 class="text-sm font-bold text-slate-700 uppercase tracking-wider mb-2 flex items-center gap-2">
               <span class="material-symbols-outlined text-[#ec5b13] text-base">location_on</span>Location
             </h2>
             <p class="text-slate-800 text-sm font-medium">'.$location.'</p>
           </div>
         </div>
 
-        '.( count($resolvedGalleryImages) > 1 ? '
-        <!-- ── Full Photo Gallery Section ── -->
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-          <div class="p-6 border-b border-slate-100 flex items-center justify-between">
-            <h2 class="text-sm font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2">
+        '.( count($resolvedGalleryImages) > 0 ? '
+        <!-- ── Full Photo Gallery Section with Glassmorphism ── -->
+        <div class="glass-card rounded-2xl shadow-lg border border-white/20 overflow-hidden backdrop-blur-xl">
+          <div class="p-6 border-b border-white/10 flex items-center justify-between">
+            <h2 class="text-sm font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
               <span class="material-symbols-outlined text-[#ec5b13] text-base">photo_library</span>
               Photo Gallery
-              <span class="ml-2 bg-slate-100 text-slate-500 text-xs font-bold px-2 py-0.5 rounded-full">'.count($resolvedGalleryImages).' photos</span>
+              <span class="ml-2 bg-[#ec5b13]/10 text-[#ec5b13] text-xs font-bold px-2 py-0.5 rounded-full border border-[#ec5b13]/20">'.count($resolvedGalleryImages).' photo'.(count($resolvedGalleryImages) > 1 ? 's' : '').'</span>
             </h2>
             <button onclick="openLightbox(0)" class="text-xs font-bold text-[#ec5b13] hover:underline flex items-center gap-1">
               <span class="material-symbols-outlined text-sm">open_in_full</span>View All
@@ -755,16 +912,27 @@ foreach ($types as $type) {
             </div>
 
             <div class="border-t border-slate-100"></div>
-          <!-- Login required gate -->
+          
+          <!-- Check Availability Button (Always Visible) -->
+          <div id="check-availability-section">
+            <button type="button" id="btn-check-availability" class="w-full bg-[#ec5b13] text-white font-black py-4 rounded-2xl hover:bg-orange-600 transition-all shadow-lg text-base flex items-center justify-center gap-2">
+              <span class="material-symbols-outlined text-xl">event_available</span>
+              Check Availability
+            </button>
+            <p class="text-center text-xs text-slate-600 font-medium mt-3">Free cancellation · No hidden charges</p>
+          </div>
+
+          <!-- Login required gate (Hidden by default) -->
           <div id="booking-login-gate" class="hidden">
-            <div class="bg-amber-50 border border-amber-200 rounded-2xl p-5 text-center">
+            <div class="glass-card border border-amber-200/50 rounded-2xl p-5 text-center backdrop-blur-xl">
               <span class="material-symbols-outlined text-amber-500 text-3xl mb-2 block">lock</span>
               <p class="font-bold text-slate-900 mb-1">Sign in to book</p>
               <p class="text-sm text-slate-700 mb-4">Please log in to make a booking request.</p>
-              <a href="../login?redirect=listing-detail/'.$slug.'.html" class="inline-block w-full bg-[#ec5b13] text-white font-black py-3 rounded-2xl hover:bg-orange-600 transition-all text-center">Sign In</a>
-              <a href="../register?redirect=listing-detail/'.$slug.'.html" class="inline-block w-full mt-2 border-2 border-[#ec5b13] text-[#ec5b13] font-bold py-3 rounded-2xl hover:bg-orange-50 transition-all text-center text-sm">Create Account</a>
+              <a href="../login?redirect=listing-detail/'.$slug.'.html" class="inline-block w-full bg-[#ec5b13] text-white font-black py-3 rounded-2xl hover:bg-orange-600 transition-all text-center mb-2">Sign In</a>
+              <a href="../register?redirect=listing-detail/'.$slug.'.html" class="inline-block w-full border-2 border-[#ec5b13] text-[#ec5b13] font-bold py-3 rounded-2xl hover:bg-orange-50 transition-all text-center text-sm">Create Account</a>
             </div>
           </div>
+          
           <form id="booking-form" class="space-y-3 hidden">
             <div>
               <label class="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Full Name *</label>
@@ -808,6 +976,17 @@ foreach ($types as $type) {
             <button type="submit" class="w-full bg-[#ec5b13] text-white font-black py-4 rounded-2xl hover:bg-orange-600 transition-all shadow-lg text-base">Book Now</button>
           </form>
           <p class="text-center text-xs text-slate-600 font-medium mt-3">Free cancellation · No hidden charges</p>
+          </div>
+
+          <!-- Location Map (Below Booking Card) -->
+          <div class="mt-6 bg-white border border-gray-200 rounded-lg p-6 shadow-lg">
+            <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+              <span class="material-symbols-outlined text-[#ec5b13] text-xl">location_on</span>
+              Location Map
+            </h3>
+            <div class="rounded-lg overflow-hidden border border-gray-200" style="height: 350px;">
+              '.($map_embed ? $map_embed : '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d16426.329596104577!2d75.30037121099188!3d19.851617685624074!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bdb98f39ca15447%3A0x96c2632e2aaa42c!2sKamalnayan%20Bajaj%20Hospital!5e0!3m2!1sen!2sin!4v1775290483319!5m2!1sen!2sin" width="100%" height="350" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>').'
+            </div>
           </div>
         </div>
       </div>
@@ -988,33 +1167,48 @@ document.addEventListener("keydown",function(e){
 });
 </script>
 <script>
-// ── Auth-gate booking form ──
+// ── Check Availability & Auth-gate booking form ──
 (function(){
-  var token=localStorage.getItem("csn_token");
-  var user=JSON.parse(localStorage.getItem("csn_user")||"null");
-  var isValid=false;
-  if(token&&user){
-    try{
-      var parts=token.split(".");
-      if(parts.length===3){
-        var p=JSON.parse(atob(parts[1].replace(/-/g,"+").replace(/_/g,"/")));
-        if(!p.exp||p.exp>Math.floor(Date.now()/1000))isValid=true;
+  var checkBtn = document.getElementById("btn-check-availability");
+  var checkSection = document.getElementById("check-availability-section");
+  var form = document.getElementById("booking-form");
+  var gate = document.getElementById("booking-login-gate");
+  
+  // Check Availability button click handler
+  if(checkBtn) {
+    checkBtn.addEventListener("click", function() {
+      var token = localStorage.getItem("csn_token");
+      var user = JSON.parse(localStorage.getItem("csn_user")||"null");
+      var isValid = false;
+      
+      if(token && user) {
+        try {
+          var parts = token.split(".");
+          if(parts.length === 3) {
+            var p = JSON.parse(atob(parts[1].replace(/-/g,"+").replace(/_/g,"/")));
+            if(!p.exp || p.exp > Math.floor(Date.now()/1000)) isValid = true;
+          }
+        } catch(e) {}
       }
-    }catch(e){}
-  }
-  var form=document.getElementById("booking-form");
-  var gate=document.getElementById("booking-login-gate");
-  if(isValid){
-    if(form)form.classList.remove("hidden");
-    if(gate)gate.classList.add("hidden");
-    // Auto-fill from user data
-    var nameEl=document.getElementById("b-name");
-    var phoneEl=document.getElementById("b-phone");
-    if(nameEl&&user.name)nameEl.value=user.name;
-    if(phoneEl&&user.phone)phoneEl.value=user.phone;
-  }else{
-    if(gate)gate.classList.remove("hidden");
-    if(form)form.classList.add("hidden");
+      
+      // Hide check availability section
+      checkSection.classList.add("hidden");
+      
+      if(isValid) {
+        // Show booking form
+        form.classList.remove("hidden");
+        gate.classList.add("hidden");
+        // Auto-fill from user data
+        var nameEl = document.getElementById("b-name");
+        var phoneEl = document.getElementById("b-phone");
+        if(nameEl && user.name) nameEl.value = user.name;
+        if(phoneEl && user.phone) phoneEl.value = user.phone;
+      } else {
+        // Show login gate
+        gate.classList.remove("hidden");
+        form.classList.add("hidden");
+      }
+    });
   }
 })();
 </script>
