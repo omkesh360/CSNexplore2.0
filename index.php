@@ -203,20 +203,7 @@ $extra_styles = "
           .date-field .material-symbols-outlined { font-size:18px; }
           .date-field input { font-size:14px; }
           .search-btn { width:100%; justify-content:center; height:44px; font-size:14px; padding:0 16px; border-radius:12px; }
-          .tab-btn { 
-            padding:10px 16px; font-size:13px; flex:0 0 auto; 
-            justify-content:center; border-radius:14px;
-          }
-          .tab-btn .material-symbols-outlined { font-size:18px; }
-          #search-tabs-scroll { 
-            overflow-x: auto; -webkit-overflow-scrolling: touch; 
-            display: flex; flex-wrap: nowrap; gap: 8px; 
-            padding-bottom: 8px; justify-content: flex-start; 
-            scroll-snap-type: x mandatory; margin-bottom: 16px;
-            -ms-overflow-style: none; scrollbar-width: none;
-          }
-          .tab-btn { scroll-snap-align: start; }
-          #search-tabs-scroll::-webkit-scrollbar { display: none; }
+          /* Tab styles removed - handled by mobile-responsive.css */
         }
         @media(max-width:400px){ .date-field { flex:1 1 100%; } }
         .search-panel { 
